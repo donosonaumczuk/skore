@@ -1,19 +1,24 @@
 package ar.edu.itba.paw.models;
 
+
 public class User {
 
-    private String id;
+    private long id;
     private String name;
     private String password;
     public User() {
         name = "Agustin";
-        id = "57774";
+        id = 57774;
         password = "password";
     }
-    public String getId() {
+    public User(String username, long id) {
+        name = username;
+        this.id = id;
+    }
+    public long getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
     public String getName() {
