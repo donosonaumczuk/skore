@@ -34,10 +34,6 @@ public class UserJdbcDao implements UserDao {
             jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                     .withTableName("users")
                     .usingGeneratedKeyColumns("userid");
-//            jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users("
-//                    +"userid SERIAL PRIMARY KEY,"
-//                    +"username varchar(100)"
-//                    +")");
         }
 
         @Override
@@ -52,7 +48,7 @@ public class UserJdbcDao implements UserDao {
         public User create(String username) {
             final Map<String, Object> args =  new HashMap<>();
             args.put("username", username);
-            final Number userid = jdbcInsert.executeAndReturnKey(args);
+            final Number userid = jdbcInsert.execute(args);
 
             return new User(username,userid.longValue());
         }
