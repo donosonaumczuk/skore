@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:800');
+
+:root {
+    --secondary-color: #dec58e;
+    --dark-secondary-color: #b49f71;
+    --light-gray: #f0f0f0;
+    --light-green: #a7d1b4;
+    --dark-green: #7db88f;
+}
+
+body {
+    background-color: var(--light-gray);
+}
+
+.white-text {
+    color: #ffffff;
+}
+
+.filters {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+}
+
+.sidepanel {
+    margin-top: 8.5rem;
+}
+
+.sidepanel-container {
+
+}
+
+.create-match {
+    border-radius: 0.5rem;
+    background-color: var(--light-green);
+}
+
+.btn-green {
+    color: #1c7931;
+    border-color: #28a745;
+    background-color: transparent;
+}
+
+.btn-green:hover {
+    background-color: #a2dfa2;
+}
+
+.btn-white-succ {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: transparent;
+}
+
+.btn-white-succ:hover {
+    background-color: var(--dark-green);
+}
+
+.primary-nav {
+    background-color: #000000;
+}
+
+.match-container {
+    margin-top: 8.5rem;
+}
+
+.match-card {
+    background-color: #ffffff;
+}
+
+.match-card:hover {
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.bg-black {
+    background-color: #000000;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.bg-green {
+    background-color: var(--light-green);
+}
+
+.login-link {
+    color: #ffffff;
+}
+
+.login-link:hover {
+    color: var(--secondary-color);
+}
+
+.rounded-border {
+    border-radius: 0.5rem;
+}
+
+.nav-brand-font {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #ffffff;
+}
+
+.nav-brand-font:hover {
+    color: var(--secondary-color);
+}
+
+.second-nav {
+    background-color:  var(--secondary-color);
+    margin-top: 4.6rem;
+}
+
+.btn-second-nav {
+    background-color: transparent;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.btn-second-nav:hover {
+    background-color: var(--dark-secondary-color);
+}
+
+html {
+    font-size: 0.8rem;
+}
+
+.name-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0rem;
+}
+
+.username-label {
+    font-size: 0.9rem;
+    font-style: italic;
+    font-weight: lighter;
+    color: #747474;
+}
+
+.sport-label {
+    /* font-size:  */
+}
+
+/* sm - Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .primary-nav {
+        background-color: green;
+    }
+
+}
+
+/* md - Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .primary-nav {
+        background-color: red;
+    }
+}
+
+/* lg - Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .primary-nav {
+        background-color: blue;
+    }
+
+    html {
+        font-size: 1rem;
+    }
+}
+
+/* xl - Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .primary-nav {
+        background-color: #000000;
+    }
+}
