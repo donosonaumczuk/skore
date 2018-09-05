@@ -18,7 +18,8 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence", })
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
+"ar.edu.itba.paw.webapp.config"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -52,7 +53,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return dsi;
     }
 
-    private DatabasePopulator databasePopulator() {
+    DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSQL);
         return dbp;

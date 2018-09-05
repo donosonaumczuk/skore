@@ -19,6 +19,8 @@
       <org.postgresql.version>9.3-1102-jdbc41</org.postgresql.version>
       <servlet-api.version>2.5</servlet-api.version>
       <jstl.version>1.2</jstl.version>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <dependencyManagement>
   		<dependencies>
