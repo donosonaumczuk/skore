@@ -48,7 +48,7 @@ public class UserJdbcDao implements UserDao {
         public User create(String username) {
             final Map<String, Object> args =  new HashMap<>();
             args.put("username", username);
-            final Number userid = jdbcInsert.execute(args);
+            final Number userid = jdbcInsert.executeAndReturnKey(args);
 
             return new User(username,userid.longValue());
         }
