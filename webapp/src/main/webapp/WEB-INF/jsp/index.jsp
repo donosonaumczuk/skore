@@ -1,34 +1,17 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="<c:url value="css/main.css" />">
+    <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
+    <jsp:include page="css.jsp"></jsp:include>
 
     <title>skore</title>
 </head>
 <body>
-    <nav class="navbar fixed-top primary-nav">
-        <a class="navbar-brand nav-brand-font" href="<c:url value="/test"/>">skore</a>
-        <form class="form-inline">
-            <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search">
-        </form>
-        <a class="d-none d-sm-block login-link" href="">¿Ya tenes cuenta? Inicia sesion</a>
-    </nav>
 
-
-    <nav class="navbar d-none d-sm-block fixed-top second-nav">
-        <button class="btn offset-4 btn-second-nav" type="submit">RANKINGS</button>
-        <button class="btn offset-3 btn-second-nav" type="submit">TORNEOS</button>
-    </nav>
+    <%-- Include Navigation Bars --%>
+    <jsp:include page="navbar.jsp"></jsp:include>
 
     <div class="container-fluid">
         <div class="row">
@@ -485,11 +468,8 @@
         </div>
     </div>
 
-
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWpIMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <%-- Include JS Scripts --%>
+    <jsp:include page="js.jsp"></jsp:include>
 
 </body>
 </html>
