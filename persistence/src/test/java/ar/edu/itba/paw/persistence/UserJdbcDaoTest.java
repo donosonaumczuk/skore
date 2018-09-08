@@ -102,4 +102,58 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
 
     }
+
+    @Test
+    public void testUpdateFirstName() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newFirstName = "newFirstName";
+
+        //exercise
+        User newUser = userDao.updateFirstName(EXISTANT_ID, newFirstName).get();
+
+        //postconditions
+        Assert.assertEquals(newFirstName, newUser.getFirstName());
+    }
+
+    @Test
+    public void testUpdateFirstNameNonExistatnId() {
+        //TO DO
+    }
+
+    @Test
+    public void testUpdateLastName() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newLastName = "newLastName";
+
+        //exercise
+        User newUser = userDao.updateLastName(EXISTANT_ID, newLastName).get();
+
+        //postconditions
+        Assert.assertEquals(newLastName, newUser.getLastName());
+    }
+
+    @Test
+    public void testUpdateLastNameNonExistatnId() {
+        //TO DO
+    }
+
+    @Test
+    public void testUpdateEmail() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newEmail = "newEmail";
+
+        //exercise
+        User newUser = userDao.updateLastName(EXISTANT_ID, newEmail).get();
+
+        //postconditions
+        Assert.assertEquals(newEmail, newUser.getLastName());
+    }
+
+    @Test
+    public void testUpdateEmailNonExistatnId() {
+        //TO DO
+    }
 }
