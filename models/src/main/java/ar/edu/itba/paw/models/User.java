@@ -25,24 +25,31 @@ public class User {
     public long getUserId() {
         return userId;
     }
+
     public void setUserId(final long userId) {
         this.userId = userId;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public void setFirstName(final String newFirstName) {
         firstName = newFirstName;
     }
+
     public void setLastName(final String newLastName) {
         lastName = newLastName;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(final String newEmail) {
         email = newEmail;
     }
