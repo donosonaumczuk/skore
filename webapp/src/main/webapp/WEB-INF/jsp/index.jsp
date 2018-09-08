@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
@@ -37,32 +38,26 @@
                 <div class="container-fluid sidepanel-container"> <!-- Leftside panel container -->
                     <div class="row">
                         <div class="col text-center create-match p-4">
-                            <p class="">¿No encontras el tipo de partido que buscas?</p>
-                            <button class="btn btn-white-succ" type="submit">ORGANIZAR UN PARTIDO</button>
+                            <p class=""><spring:message code="cantFindMatchMessage"/></p>
+                            <button class="btn btn-white-succ" type="submit"><spring:message code="createAMatchMessage"/></button>
                         </div>
                     </div>
                     <div class="row filters p-4 mt-2">
                         <div class="col">
                             <div class="row">
-                                <p class="">Filtros y categorias</p>
+                                <p class=""><spring:message code="filtersAndCategoriesMessage"/></p>
                             </div>
                             <div class="row">
-                                <p class="">Ordenar por</p>
+                                <p class=""><spring:message code="orderByMessage"/></p>
                             </div>
                             <div class="row">
-                                <p class="">Mas recientes</p>
+                                <p class=""><spring:message code="moreRecentMessage"/></p>
                             </div>
                             <div class="row">
-                                <p class="">Jugadores faltantes</p>
+                                <p class=""><spring:message code="missingPlayersMessage"/></p>
                             </div>
                             <div class="row">
-                                <p class="">Ubicacion</p>
-                            </div>
-                            <div class="row">
-                                <p class="">CABA</p>
-                            </div>
-                            <div class="row">
-                                <p class="">GBA</p>
+                                <p class=""><spring:message code="locationMessage"/></p>
                             </div>
                         </div>
                     </div>
