@@ -20,7 +20,8 @@ public class UserJdbcDao implements UserDao {
         private final SimpleJdbcInsert jdbcInsert;
 
         private final static RowMapper<User> ROW_MAPPER = (resultSet, rowNum) ->
-                new User(resultSet.getString("username"),resultSet.getInt("userid"));
+                new User();
+                //new User(resultSet.getString("username"),resultSet.getInt("userid"));
 
         @Autowired
         public UserJdbcDao(final DataSource dataSource) {
@@ -38,11 +39,20 @@ public class UserJdbcDao implements UserDao {
         }
 
         @Override
-        public User create(String username) {
+        public User create(final String firstName, final String lastName, final String email) {
             final Map<String, Object> args =  new HashMap<>();
-            args.put("username", username);
-            final Number userid = jdbcInsert.execute(args);
+            args.put("firstName", firstName);
+            args.put("lastName", lastName);
+            args.put("email", email);
 
-            return new User(username, userid.longValue());
+            final Number userid = jdbcInsert.execute(args);
+            return new User();
+            //return new User(username, userid.longValue());
+        }
+
+        @Override
+        public Optional<User> findByFirstName(final String firstName) {
+            return Optional.empty();
         }
 }
+

@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 @Sql("classpath:schema.sql")
 public class UserJdbcDaoTest {
     private static final String PASSWORD = "Password";
-    private static final String USERNAME = "Username";
+    private static final String FIRSTNAME = "Username";
 
     @Autowired
     private DataSource dataSource;
@@ -37,10 +37,10 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final User user = userDao.create(USERNAME);
+        final User user = userDao.create(FIRSTNAME,"A","B");
 
         Assert.assertNotNull(user);
-        Assert.assertEquals(USERNAME, user.getName());
+        Assert.assertEquals(FIRSTNAME, user.getFirstName());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
 }

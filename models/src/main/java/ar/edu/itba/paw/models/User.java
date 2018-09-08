@@ -3,35 +3,48 @@ package ar.edu.itba.paw.models;
 
 public class User {
 
-    private long id;
-    private String name;
-    private String password;
+    private long userId;
+    private String firstName;
+    private String lastName;
+    private String email;
+
     public User() {
-        name = "Agustin";
-        id = 57774;
-        password = "password";
+        firstName = "Agustin";
+        userId = 57774;
+        lastName = "Izaguirre";
+        email = "aizaguirre@itba.edu.ar";
     }
-    public User(String username, long id) {
-        name = username;
-        this.id = id;
+
+    public User(String firstName, String lastName, String email, long userId) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.userId = userId;
+
     }
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(final long userId) {
+        this.userId = userId;
     }
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
-    public void setName(String name) {
-        this.name = name;
+    public String getLastName() {
+        return lastName;
     }
-    public String getPassword() {
-        return password;
+    public void setFirstName(final String newFirstName) {
+        firstName = newFirstName;
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLastName(final String newLastName) {
+        lastName = newLastName;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(final String newEmail) {
+        email = newEmail;
     }
 
 }

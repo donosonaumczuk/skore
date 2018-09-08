@@ -29,9 +29,9 @@ public class HelloWorldController {
     }
 
     @RequestMapping("/create")
-    public ModelAndView create(@RequestParam(value = "name", required = true)final String username){
-        final User u = us.create(username);
-        return new ModelAndView("redirect:/userId=" + u.getId());
+    public ModelAndView create(@RequestParam(value = "name", required = true)final String firstName){
+        final User u = us.create(firstName, "a", "b" );
+        return new ModelAndView("redirect:/userId=" + u.getUserId());
     }
 
     @RequestMapping("/createMatch")
