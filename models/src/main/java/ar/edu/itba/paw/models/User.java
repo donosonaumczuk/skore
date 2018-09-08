@@ -20,8 +20,8 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.userId = userId;
-
     }
+
     public long getUserId() {
         return userId;
     }
@@ -47,4 +47,12 @@ public class User {
         email = newEmail;
     }
 
+    @Override
+    public boolean equals(Object aUser) {
+        if(aUser == null || !aUser.getClass().equals(getClass())) {
+            return false;
+        }
+        User otherUser = (User)aUser;
+        return getUserId() == ((User) aUser).getUserId();
+    }
 }
