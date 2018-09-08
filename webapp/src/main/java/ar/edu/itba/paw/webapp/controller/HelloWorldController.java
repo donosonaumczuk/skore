@@ -33,4 +33,9 @@ public class HelloWorldController {
         final User u = us.create(username);
         return new ModelAndView("redirect:/userId=" + u.getId());
     }
+
+    @RequestMapping("/createMatch")
+    public ModelAndView createMatch(){
+        return new ModelAndView("createMatch");
+    }
 }
