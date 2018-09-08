@@ -24,6 +24,7 @@
       <org.hsqldb.version>2.3.1</org.hsqldb.version>
       <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
       <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
+      <org.joda-time.version>2.9.4</org.joda-time.version>
   </properties>
   <dependencyManagement>
   		<dependencies>
@@ -79,6 +80,11 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${org.hibernate.validator}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${org.joda-time.version}</version>
             </dependency>
   		</dependencies>
   	</dependencyManagement>
