@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PremiumUser extends User{
@@ -14,11 +16,27 @@ public class PremiumUser extends User{
     private List<Notification> notifications;
     private List<Sport> likes;
 
+    public PremiumUser(String firstName, String lastName, String email, long userId,
+                       String userName, String cellphone, LocalDateTime birthday,
+                       Place home, int reputation, String password) {
+        super(firstName, lastName, email, userId);
+
+        this.userName       = userName;
+        this.cellphone      = cellphone;
+        this.birthday       = birthday;
+        this.home           = home;
+        this.reputation     = reputation;
+        this.password       = password;
+        this.friends        = new LinkedList<>();
+        this.notifications  = new ArrayList<>();
+        this.likes          = new ArrayList<>();
+    }
+
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public void setUserName(final String userName) {
         this.userName = userName;
     }
 
@@ -26,7 +44,7 @@ public class PremiumUser extends User{
         return cellphone;
     }
 
-    public void setCellphone(String cellphone) {
+    public void setCellphone(final String cellphone) {
         this.cellphone = cellphone;
     }
 
@@ -34,7 +52,7 @@ public class PremiumUser extends User{
         return birthday;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(final LocalDateTime birthday) {
         this.birthday = birthday;
     }
 
@@ -42,7 +60,7 @@ public class PremiumUser extends User{
         return home;
     }
 
-    public void setHome(Place home) {
+    public void setHome(final Place home) {
         this.home = home;
     }
 
@@ -50,7 +68,7 @@ public class PremiumUser extends User{
         return reputation;
     }
 
-    public void setReputation(int reputation) {
+    public void setReputation(final int reputation) {
         this.reputation = reputation;
     }
 
@@ -58,7 +76,7 @@ public class PremiumUser extends User{
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -66,7 +84,7 @@ public class PremiumUser extends User{
         return friends;
     }
 
-    public void setFriends(List<PremiumUser> friends) {
+    public void setFriends(final List<PremiumUser> friends) {
         this.friends = friends;
     }
 
@@ -74,7 +92,7 @@ public class PremiumUser extends User{
         return notifications;
     }
 
-    public void setNotifications(List<Notification> notifications) {
+    public void setNotifications(final List<Notification> notifications) {
         this.notifications = notifications;
     }
 
@@ -82,7 +100,17 @@ public class PremiumUser extends User{
         return likes;
     }
 
-    public void setLikes(List<Sport> likes) {
+    public void setLikes(final List<Sport> likes) {
         this.likes = likes;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        PremiumUser aPremiumUser = ((PremiumUser) object);
+        return getUserName().equals(aPremiumUser.getUserName());
     }
 }

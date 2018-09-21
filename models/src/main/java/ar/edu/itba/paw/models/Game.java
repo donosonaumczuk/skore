@@ -34,7 +34,7 @@ public class Game {
         return place;
     }
 
-    public void setPlace(Place place) {
+    public void setPlace(final Place place) {
         this.place = place;
     }
 
@@ -42,7 +42,7 @@ public class Game {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(final LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -50,11 +50,11 @@ public class Game {
         return finishTime;
     }
 
-    public void setFinishTime(LocalDateTime finishTime) {
+    public void setFinishTime(final LocalDateTime finishTime) {
         this.finishTime = finishTime;
     }
 
-    public void setResult(String result) {
+    public void setResult(final String result) {
         this.result = result;
     }
 
@@ -64,5 +64,18 @@ public class Game {
 
     public boolean isCompetitive() {
         return isCompetitive;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Game aGame = ((Game) object);
+        return getTeam1().equals(aGame.getTeam1())
+                && getTeam2().equals(aGame.getTeam2())
+                && getStartTime().equals(aGame.getStartTime())
+                && getFinishTime().equals(aGame.getFinishTime());
     }
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Tornament {
@@ -7,11 +8,17 @@ public class Tornament {
     private String type;
     private List<Game> games;
 
+    public Tornament(String name, String type) {
+        this.name   = name;
+        this.type   = type;
+        this.games  = new ArrayList<>();
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -23,7 +30,21 @@ public class Tornament {
         return games;
     }
 
-    public void setGames(List<Game> games) {
+    public void setGames(final List<Game> games) {
         this.games = games;
+    }
+
+    public void addGame(Game game) {
+        games.add(game);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Tornament aTornament = ((Tornament) object);
+        return getName().equals(aTornament.getName());
     }
 }

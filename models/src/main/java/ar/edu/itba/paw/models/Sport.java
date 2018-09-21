@@ -6,8 +6,8 @@ public class Sport {
     private int quantity;
 
     public Sport(String name, int quantity) {
-        this.name = name;
-        this.quantity = quantity;
+        this.name       = name;
+        this.quantity   = quantity;
     }
 
     public String getName() {
@@ -16,5 +16,15 @@ public class Sport {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Sport aSport = ((Sport) object);
+        return getName().equals(aSport.getName());
     }
 }

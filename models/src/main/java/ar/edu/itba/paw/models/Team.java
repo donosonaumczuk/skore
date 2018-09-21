@@ -12,12 +12,12 @@ public class Team {
     private Sport sport;
 
     public Team(PremiumUser leader, String acronym, String name, boolean isTemp, Sport sport) {
-        this.leader = leader;
-        this.acronym = acronym;
-        this.name = name;
-        this.isTemp = isTemp;
-        this.sport = sport;
-        this.players = new LinkedList<>();
+        this.leader     = leader;
+        this.acronym    = acronym;
+        this.name       = name;
+        this.isTemp     = isTemp;
+        this.sport      = sport;
+        this.players    = new LinkedList<>();
         this.players.add(leader);
     }
 
@@ -33,7 +33,7 @@ public class Team {
         return name;
     }
 
-    public void setName(String newName) {
+    public void setName(final String newName) {
         name = newName;
     }
 
@@ -41,7 +41,7 @@ public class Team {
         return acronym;
     }
 
-    public void setAcronym(String newAcronym) {
+    public void setAcronym(final String newAcronym) {
         acronym = newAcronym;
     }
 
@@ -49,7 +49,7 @@ public class Team {
         return leader;
     }
 
-    public void setLeader(PremiumUser newLeader) {
+    public void setLeader(final PremiumUser newLeader) {
        leader = newLeader;
     }
 
@@ -57,7 +57,17 @@ public class Team {
         return players;
     }
 
-    public void setPlayers(List<User> players) {
+    public void setPlayers(final List<User> players) {
         this.players = players;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Team aTeam = ((Team) object);
+        return getName().equals(aTeam.getName());
     }
 }

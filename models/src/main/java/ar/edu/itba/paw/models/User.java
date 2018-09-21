@@ -16,10 +16,10 @@ public class User {
     }
 
     public User(String firstName, String lastName, String email, long userId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.userId = userId;
+        this.firstName  = firstName;
+        this.lastName   = lastName;
+        this.email      = email;
+        this.userId     = userId;
     }
 
     public long getUserId() {
@@ -59,7 +59,7 @@ public class User {
         if(aUser == null || !aUser.getClass().equals(getClass())) {
             return false;
         }
-        User otherUser = (User)aUser;
+
         return getUserId() == ((User) aUser).getUserId();
     }
 }

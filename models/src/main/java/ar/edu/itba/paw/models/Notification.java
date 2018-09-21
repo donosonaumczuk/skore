@@ -28,4 +28,15 @@ public class Notification {
     public void setSeen() {
         seen = true;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Notification aNotification = ((Notification) object);
+        return getTime().equals(aNotification.getTime())
+                && getContent().equals(aNotification.getContent());
+    }
 }

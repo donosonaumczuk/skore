@@ -7,30 +7,29 @@ public class Place {
     private String street;
 
     public Place(String country, String state, String city, String street) {
+        this.country    = country;
+        this.state      = state;
+        this.city       = city;
+        this.street     = street;
+    }
+
+    public void setCountry(final String country) {
         this.country = country;
-        this.state = state;
-        this.city = city;
-        this.street = street;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setState(String state) {
+    public void setState(final String state) {
         this.state = state;
     }
 
-    public void setCity(String city) {
+    public void setCity(final String city) {
         this.city = city;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(final String street) {
         this.street = street;
     }
 
     public String getState() {
-
         return state;
     }
 
@@ -44,5 +43,18 @@ public class Place {
 
     public String getCountry() {
         return country;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null || !object.getClass().equals(getClass())) {
+            return false;
+        }
+
+        Place aPlace = ((Place) object);
+        return getCountry().equals(aPlace.getCountry())
+                && getCity().equals(aPlace.getCity())
+                && getState().equals(aPlace.getState())
+                && getStreet().equals(aPlace.getStreet());
     }
 }
