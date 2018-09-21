@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.models;
 
-import org.joda.time.DateTime;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PremiumUser extends User{
     private String userName;
     private String cellphone;
-    private DateTime birthday;
+    private LocalDateTime birthday;
     private Place home;
     private int reputation;
     private String password;
@@ -31,11 +30,11 @@ public class PremiumUser extends User{
         this.cellphone = cellphone;
     }
 
-    public DateTime getBirthday() {
+    public LocalDateTime getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(DateTime birthday) {
+    public void setBirthday(LocalDateTime birthday) {
         this.birthday = birthday;
     }
 

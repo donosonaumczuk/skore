@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.models;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 public class Game {
     private Team team1;
     private Team team2;
     private Place place;
-    private DateTime startTime;
-    private DateTime finishTime;
+    private LocalDateTime startTime;
+    private LocalDateTime finishTime;
     private String result;
     private boolean isCompetitive;
 
-    public Game(Team team1, Team team2, Place place, DateTime startTime,
-                DateTime finishTime, boolean isCompetitive) {
+    public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
+                LocalDateTime finishTime, boolean isCompetitive) {
         this.team1 = team1;
         this.team2 = team2;
         this.place = place;
@@ -38,19 +38,19 @@ public class Game {
         this.place = place;
     }
 
-    public DateTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(DateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public DateTime getFinishTime() {
+    public LocalDateTime getFinishTime() {
         return finishTime;
     }
 
-    public void setFinishTime(DateTime finishTime) {
+    public void setFinishTime(LocalDateTime finishTime) {
         this.finishTime = finishTime;
     }
 

@@ -1,19 +1,19 @@
 package ar.edu.itba.paw.models;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 public class Notification {
-    private DateTime time;
+    private LocalDateTime time;
     private String content;
     private boolean seen;
 
-    public Notification(DateTime time, String content, boolean seen) {
+    public Notification(LocalDateTime time, String content, boolean seen) {
         this.time = time;
         this.content = content;
         this.seen = seen;
     }
 
-    public DateTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
