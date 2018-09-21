@@ -50,9 +50,7 @@ public class UserJdbcDao implements UserDao {
 
             //Should be with these three statements
             //Number userId = jdbcInsert.executeAndReturnKey(args); should be with this statement
-            //final String sqlQuery = "SELECT * FROM users where userid = ?";
-            // List<User> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, userid);
-
+            //return new User(firstName, lastName, email, userId.longValue());
             List<User> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, firstName, lastName, email);
             return userList.stream().findFirst();
 
@@ -69,6 +67,27 @@ public class UserJdbcDao implements UserDao {
             final String sqlQuery = "DELETE FROM users where userid = ?";
             int rowsDeleted = jdbcTemplate.update(sqlQuery, userId);
             return rowsDeleted > 0;
+        }
+
+        @Override
+        public Optional<User> updateFirstName(final long userId, final String newFirstName) {
+            final String sqlQuery = "UPDATE users SET firstName = ? WHERE userId = ?";
+            jdbcTemplate.update(sqlQuery, newFirstName, userId);
+            return findById(userId);
+        }
+
+        @Override
+        public Optional<User> updateLastName(final long userId, final String newLastName) {
+            final String sqlQuery = "UPDATE users SET lastName = ? WHERE userId = ?";
+            jdbcTemplate.update(sqlQuery, newLastName, userId);
+            return findById(userId);
+        }
+
+        @Override
+        public Optional<User> updateEmail(final long userId, final String newEmail) {
+            final String sqlQuery = "UPDATE users SET email = ? WHERE userId = ?";
+            jdbcTemplate.update(sqlQuery, newEmail, userId);
+            return findById(userId);
         }
 }
 

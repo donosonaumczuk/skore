@@ -58,15 +58,6 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void testFindIdWithNonExistantId() {
-        //exercise class
-        final Optional<User> returnedUser = userDao.findById(NONEXISTANT_ID);
-
-        //postconditions
-        Assert.assertTrue(!returnedUser.isPresent());
-    }
-
-    @Test
     public void testFindIdWithExistantId() {
         //set up
         insertUser(EXISTANT_ID);
@@ -78,6 +69,15 @@ public class UserJdbcDaoTest {
         Assert.assertTrue(returnedUser.isPresent());
         final User user = returnedUser.get();
         Assert.assertEquals(EXISTANT_ID, user.getUserId());
+    }
+
+    @Test
+    public void testFindIdWithNonExistantId() {
+        //exercise class
+        final Optional<User> returnedUser = userDao.findById(NONEXISTANT_ID);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
     }
 
     @Test
@@ -100,6 +100,80 @@ public class UserJdbcDaoTest {
         //postconditions
         Assert.assertEquals(true, returnValue);
         Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+    }
 
+    @Test
+    public void testUpdateFirstName() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newFirstName = "newFirstName";
+
+        //exercise
+        User newUser = userDao.updateFirstName(EXISTANT_ID, newFirstName).get();
+
+        //postconditions
+        Assert.assertEquals(newFirstName, newUser.getFirstName());
+    }
+
+    @Test
+    public void testUpdateFirstNameNonExistatnId() {
+        //set up
+        final String newFirstName = "newFirstName";
+
+        //exercise class
+        final Optional<User> returnedUser = userDao.updateFirstName(NONEXISTANT_ID, newFirstName);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
+    }
+
+    @Test
+    public void testUpdateLastName() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newLastName = "newLastName";
+
+        //exercise
+        User newUser = userDao.updateLastName(EXISTANT_ID, newLastName).get();
+
+        //postconditions
+        Assert.assertEquals(newLastName, newUser.getLastName());
+    }
+
+    @Test
+    public void testUpdateLastNameNonExistatnId() {
+        //set up
+        final String newLastName = "newLastName";
+
+        //exercise class
+        final Optional<User> returnedUser = userDao.updateLastName(NONEXISTANT_ID, newLastName);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
+    }
+
+    @Test
+    public void testUpdateEmail() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newEmail = "newEmail";
+
+        //exercise
+        User newUser = userDao.updateEmail(EXISTANT_ID, newEmail).get();
+
+        //postconditions
+        Assert.assertEquals(newEmail, newUser.getEmail());
+    }
+
+    @Test
+    public void testUpdateEmailNonExistatnId() {
+        //set up
+        final String newEmail = "newEmail";
+
+        //exercise class
+        final Optional<User> returnedUser = userDao.updateEmail(NONEXISTANT_ID, newEmail);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
     }
 }

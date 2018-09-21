@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
@@ -22,7 +23,7 @@
                     <div class="row">
                         <div class="col text-center create-match p-4">
                             <p class=""><spring:message code="cantFindMatchMessage"/></p>
-                            <button class="btn btn-white-succ" type="submit"><spring:message code="createAMatchMessage"/></button>
+                            <button id="create-match-btn" class="btn btn-white-succ" type="submit"><spring:message code="createAMatchMessage"/></button>
                         </div>
                     </div>
                     <div class="row filters p-4 mt-2">
@@ -465,6 +466,8 @@
 
     <%-- Include JS Scripts --%>
     <jsp:include page="js.jsp"></jsp:include>
+    <script src="<c:url value="js/index.js"/>"></script>
+
 
 </body>
 </html>
