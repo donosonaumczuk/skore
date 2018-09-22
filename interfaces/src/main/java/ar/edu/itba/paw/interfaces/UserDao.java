@@ -11,6 +11,9 @@ public interface UserDao {
 
     public boolean remove(final long userId);
 
+    public Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
+                                              final String newLastName, final String newEmail);
+
     public Optional<User> updateFirstName(final long userId, final String newFirstName);
 
     public Optional<User> updateLastName(final long userId, final String newLastName);

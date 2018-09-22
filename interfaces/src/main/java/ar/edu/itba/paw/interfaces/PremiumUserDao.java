@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface PremiumUserDao {
+
     public Optional<PremiumUser> findByUserName(final String userName);
 
     public Optional<PremiumUser> create(final String firstName, final String lastName,
@@ -18,10 +19,12 @@ public interface PremiumUserDao {
 
     public boolean remove(final String userName);
 
-    public Optional<PremiumUser> updateUserInfo(final String newUserName, final String newCellphone,
-                                                final String newBirthday, final String newCountry,
-                                                final String newState, final String newCity,
-                                                final String newStreet, final int newReputation,
-                                                final String newPassword, final String oldUserName);
+    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
+                                                final String newEmail,final String newUserName,
+                                                final String newCellphone, final String newBirthday,
+                                                final String newCountry, final String newState,
+                                                final String newCity, final String newStreet,
+                                                final int newReputation, final String newPassword,
+                                                final String oldUserName);
 
 }

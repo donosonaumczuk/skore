@@ -142,8 +142,9 @@ public class PremiumUserJdbcDaoTest {
             final String newBirthday = "2000-05-05";
 
             //exercise class
-            PremiumUser modifyUser = premiumUserDao.updateUserInfo(newUserName, CELLPHONE,
-            newBirthday, COUNTRY, STATE, CITY, STREET, REPUTATION, newPassword, EXISTANT_USERNAME).get();
+            PremiumUser modifyUser = premiumUserDao.updateUserInfo(FIRSTNAME, LASTNAME, EMAIL,
+                    newUserName, CELLPHONE, newBirthday, COUNTRY, STATE, CITY, STREET, REPUTATION,
+                    newPassword, EXISTANT_USERNAME).get();
 
             //postconditions
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

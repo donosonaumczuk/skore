@@ -70,6 +70,15 @@ public class UserJdbcDao implements UserDao {
         }
 
         @Override
+        public Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
+                                                  final String newLastName, final String newEmail) {
+            final String sqlQuery = "UPDATE users SET firstName = ?, lastName = ?, email = ?" +
+                    " WHERE userId = ?";
+            jdbcTemplate.update(sqlQuery, newFirstName, newLastName, newEmail, userId);
+            return findById(userId);
+        }
+
+        @Override
         public Optional<User> updateFirstName(final long userId, final String newFirstName) {
             final String sqlQuery = "UPDATE users SET firstName = ? WHERE userId = ?";
             jdbcTemplate.update(sqlQuery, newFirstName, userId);

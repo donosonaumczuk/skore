@@ -80,17 +80,22 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         return rowsDeleted > 0;
     }
 
-    public Optional<PremiumUser> updateUserInfo(final String newUserName, final String newCellphone,
-                                                final String newBirthday, final String newCountry,
-                                                final String newState, final String newCity,
-                                                final String newStreet, final int newReputation,
-                                                final String newPassword, final String oldUserName) {
-        final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
-                " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
-                "WHERE userName = ?";
-        jdbcTemplate.update(sqlQuery, newUserName , newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, oldUserName);
-
+    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
+                                                final String newEmail,final String newUserName,
+                                                final String newCellphone, final String newBirthday,
+                                                final String newCountry, final String newState,
+                                                final String newCity, final String newStreet,
+                                                final int newReputation, final String newPassword,
+                                                final String oldUserName) {
+        Optional<PremiumUser> currentUser = findByUserName(oldUserName);
+        if(currentUser.isPresent()) {
+            userDao.updateBasicUserInfo(currentUser.get().getUserId(), newFirstName, newLastName, newEmail);
+            final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
+                    " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
+                    "WHERE userName = ?";
+            jdbcTemplate.update(sqlQuery, newUserName, newCellphone, newBirthday, newCountry, newState,
+                    newCity, newStreet, newReputation, newPassword, oldUserName);
+        }
         return findByUserName(newUserName);
     }
 
