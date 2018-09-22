@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -19,38 +21,68 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(final long id) {
-        return userDao.findById(id).get();
+
+        Optional<User> user = userDao.findById(id);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        else {
+            throw new UserNotFoundException("User with id: " + id + " doesn't exist.");
+        }
     }
 
     @Override
     public User create(final String firstName, final String lastName,
                        final String email) {
-        //validate Optional
-        return userDao.create(firstName, lastName, email).get();
+
+        Optional<User> user = userDao.create(firstName, lastName, email);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        else {
+            throw new UserNotFoundException("Couldn't create user.");
+        }
     }
 
     @Override
     public boolean remove(final long userId) {
-        //validate Optional
         return userDao.remove(userId);
     }
 
     @Override
     public User updateFirstName(final long userId, final String newFirstName){
-        //validate Optional
-        return userDao.updateFirstName(userId, newFirstName).get();
+
+        Optional<User> user = userDao.updateFirstName(userId, newFirstName);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        else {
+            throw new UserNotFoundException("User with id: " + userId + " doesn't exist.");
+        }
     }
 
     @Override
     public User updateLastName(final long userId, final String newLastName) {
-        //validate Optional
-        return userDao.updateLastName(userId, newLastName).get();
+
+        Optional<User> user = userDao.updateLastName(userId, newLastName);
+        if(user.isPresent()) {
+            return  user.get();
+        }
+        else {
+            throw new UserNotFoundException("User with id: " + userId + " doesn't exist.");
+        }
     }
 
     @Override
     public User updateEmail(final long userId, final String newEmail) {
-        //validate Optional
-        return userDao.updateEmail(userId, newEmail).get();
+
+        Optional<User> user = userDao.updateEmail(userId, newEmail);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        else {
+            throw new UserNotFoundException("User with id: " + userId + " doesn't exist.");
+        }
     }
 
 }

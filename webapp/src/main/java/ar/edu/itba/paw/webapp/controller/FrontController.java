@@ -18,7 +18,7 @@ public class FrontController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", us.findById(1));
+        //mav.addObject("user", us.updateEmail(10000, "Agustinizag1@gmail.com"));
         return mav;
     }
     @RequestMapping("/test")
