@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,7 +9,7 @@ import java.util.List;
 public class PremiumUser extends User{
     private String userName;
     private String cellphone;
-    private LocalDateTime birthday;
+    private LocalDate birthday;
     private Place home;
     private int reputation;
     private String password;
@@ -17,7 +18,7 @@ public class PremiumUser extends User{
     private List<Sport> likes;
 
     public PremiumUser(String firstName, String lastName, String email, long userId,
-                       String userName, String cellphone, LocalDateTime birthday,
+                       String userName, String cellphone, LocalDate birthday,
                        Place home, int reputation, String password) {
         super(firstName, lastName, email, userId);
 
@@ -48,11 +49,11 @@ public class PremiumUser extends User{
         this.cellphone = cellphone;
     }
 
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(final LocalDateTime birthday) {
+    public void setBirthday(final LocalDate birthday) {
         this.birthday = birthday;
     }
 

@@ -11,13 +11,13 @@ public interface PremiumUserService {
     public PremiumUser findById(final String userName);
 
     public PremiumUser create(final String userName, final String cellphone,
-                              final LocalDateTime birthday, final Place home,
+                              final String birthday, final Place home,
                               final int reputation, final String password);
 
     public boolean remove(final long userId);
 
     public PremiumUser updateUserInfo(final String userName, final String cellphone,
-                                      final LocalDateTime birthday, final Place home,
+                                      final String birthday, final Place home,
                                       final int reputation, final String password);
 
 }

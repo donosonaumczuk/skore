@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
             new PremiumUser(resultSet.getString("firstName"), resultSet.getString("lastName"),
                     resultSet.getString("email"), resultSet.getInt("userid"),
                     resultSet.getString("userName"), resultSet.getString("cellphone"),
-                    LocalDateTime.parse(resultSet.getString("birthday"), DateTimeFormatter.ISO_LOCAL_DATE_TIME), new Place(
+                    resultSet.getObject("birthday", LocalDate.class), new Place(
                             resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getInt("reputation"), resultSet.getString("password"));
@@ -43,7 +44,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
 
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
-        final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts WHERE userName = ?",ROW_MAPPER, userName);
+        final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts natural join users WHERE " +
+                "userName = ?", ROW_MAPPER, userName);
 
         return list.stream().findFirst();
     }
@@ -51,27 +53,25 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
-                                        final String cellphone, final LocalDateTime birthday,
-                                        final Place home, final int reputation, final String password) {
-        final Map<String, Object> args =  new HashMap<>();
-        final String sqlQuery = "SELECT * FROM accounts where userName = ?";
+                                        final String cellphone, final String birthday,
+                                        final String country, final String state, final String city,
+                                        final String street, final int reputation, final String password) {
         User user = userDao.create(firstName, lastName, email).get();
+        final Map<String, Object> args =  new HashMap<>();
 
         args.put("userId", user.getUserId());
         args.put("userName", userName);
         args.put("cellphone", cellphone);
-        args.put("birthday", birthday);//cast localdatetime to datetime
-        args.put("country", home.getCountry());
-        args.put("state", home.getState());
-        args.put("city", home.getCity());
-        args.put("street", home.getStreet());
+        args.put("birthday", birthday);
+        args.put("country", country);
+        args.put("state", state);
+        args.put("city", city);
+        args.put("street", street);
         args.put("reputation", reputation);
         args.put("password", password);
 
-
         jdbcInsert.execute(args);
-        List<PremiumUser> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, firstName, lastName, email);
-        return userList.stream().findFirst();
+        return findByUserName(userName);
     }
 
     public boolean remove(final String userName) {
@@ -81,13 +81,16 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     }
 
     public Optional<PremiumUser> updateUserInfo(final String newUserName, final String newCellphone,
-                                                final LocalDateTime newBirthday, final Place newHome,
-                                                final int newReputation, final String newPassword) {
+                                                final String newBirthday, final String newCountry,
+                                                final String newState, final String newCity,
+                                                final String newStreet, final int newReputation,
+                                                final String newPassword) {
         final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
                 " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
                 "WHERE userName = ?";
-        jdbcTemplate.update(sqlQuery, newUserName , newCellphone, newBirthday, newHome.getCountry(),
-                newHome.getState(), newHome.getCity(), newHome.getStreet());
+        jdbcTemplate.update(sqlQuery, newUserName , newCellphone, newBirthday, newCountry, newState,
+                newCity, newStreet);
+
         return findByUserName(newUserName);
     }
 
