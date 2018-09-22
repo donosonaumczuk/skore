@@ -48,7 +48,7 @@ public class UserJdbcDao implements UserDao {
             args.put("email", email);
             jdbcInsert.execute(args);
 
-            //Should be with these three statements
+            //Should be with these three statements evans
             //Number userId = jdbcInsert.executeAndReturnKey(args); should be with this statement
             //return new User(firstName, lastName, email, userId.longValue());
             List<User> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, firstName, lastName, email);
@@ -57,10 +57,10 @@ public class UserJdbcDao implements UserDao {
 
         }
 
-        @Override
-        public Optional<User> findByFirstName(final String firstName) {
-            return Optional.empty();
-        }
+//        @Override
+//        public Optional<User> findByFirstName(final String firstName) {
+//            return Optional.empty();
+//        }
 
         @Override
         public boolean remove(final long userId) {

@@ -8,12 +8,12 @@ public class User {
     private String lastName;
     private String email;
 
-    public User() {
-        firstName = "Agustin";
-        userId = 57774;
-        lastName = "Izaguirre";
-        email = "aizaguirre@itba.edu.ar";
-    }
+//    public User() {
+//        firstName = "Agustin";
+//        userId = 57774;
+//        lastName = "Izaguirre";
+//        email = "aizaguirre@itba.edu.ar";
+//    }
 
     public User(String firstName, String lastName, String email, long userId) {
         this.firstName  = firstName;

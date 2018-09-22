@@ -18,9 +18,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public User findById(String id) {
-        // TODO Auto-generated method stub
-        return new User();
+    public User findById(final long id) {
+        return userDao.findById(id).get();
     }
 
     @Override
