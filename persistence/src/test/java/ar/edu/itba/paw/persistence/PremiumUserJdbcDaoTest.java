@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Place;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.User;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,8 @@ import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,8 +40,8 @@ public class PremiumUserJdbcDaoTest {
         private static final String STREET = "street";
         private static final int REPUTATION = 10;
         private static final String PASSWORD = "password";
-        private static final long NONEXISTANT_ID = 10;
-        private static final long EXISTANT_ID = 100;
+        private static final String EXISTANT_USERNAME = "ExistantUsername";
+        private static final String NONEXISTANT_USERNMAE = "NonExistantUsername";
 
         @Autowired
         private DataSource dataSource;
@@ -57,14 +61,19 @@ public class PremiumUserJdbcDaoTest {
         @Test
         public void testCreate() {
             //exercise class
-            final User user = premiumUserDao.create(FIRSTNAME, LASTNAME, EMAIL, USERNAME,
+            final PremiumUser user = premiumUserDao.create(FIRSTNAME, LASTNAME, EMAIL, USERNAME,
             CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD).get();
 
             //postconditions
-//            Assert.assertNotNull(user);
-//            Assert.assertEquals(FIRSTNAME, user.getFirstName());
-//            Assert.assertEquals(LASTNAME, user.getLastName());
-//            Assert.assertEquals(EMAIL, user.getEmail());
-//            Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+            Assert.assertNotNull(user);
+            Assert.assertEquals(FIRSTNAME, user.getFirstName());
+            Assert.assertEquals(USERNAME, user.getUserName());
+           // Assert.assertEquals(DateTimeFormatter.ofPattern("yyyy-MM-dd").ofPattern("yyyy-MMM-dd").parseL, user.getBirthday());
+
+            Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "accounts"));
         }
-    }
+
+
+}
+
+

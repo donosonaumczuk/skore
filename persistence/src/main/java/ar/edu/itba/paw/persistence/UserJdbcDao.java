@@ -41,8 +41,8 @@ public class UserJdbcDao implements UserDao {
         @Override
         public Optional<User> create(final String firstName, final String lastName, final String email) {
             final Map<String, Object> args =  new HashMap<>();
-            final String sqlQuery = "SELECT * FROM users where firstname = ? and " +
-                    "lastname = ? and email = ?";
+            final String sqlQuery = "SELECT * FROM users where firstName = ? and " +
+                    "lastName = ? and email = ?";
             args.put("firstName", firstName);
             args.put("lastName", lastName);
             args.put("email", email);

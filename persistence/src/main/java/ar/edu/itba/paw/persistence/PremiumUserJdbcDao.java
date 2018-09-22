@@ -29,7 +29,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
             new PremiumUser(resultSet.getString("firstName"), resultSet.getString("lastName"),
                     resultSet.getString("email"), resultSet.getInt("userid"),
                     resultSet.getString("userName"), resultSet.getString("cellphone"),
-                    resultSet.getObject("birthday", LocalDate.class), new Place(
+                    resultSet.getDate("birthday").toLocalDate(), new Place(
                             resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getInt("reputation"), resultSet.getString("password"));
