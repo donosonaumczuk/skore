@@ -33,7 +33,7 @@ public class UserJdbcDao implements UserDao {
 
         @Override
         public Optional<User> findById(final long id) {
-            final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?",ROW_MAPPER,id);
+            final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", ROW_MAPPER, id);
 
             return list.stream().findFirst();
         }
