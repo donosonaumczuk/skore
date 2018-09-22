@@ -5,9 +5,11 @@ import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUserService{
 
     @Autowired

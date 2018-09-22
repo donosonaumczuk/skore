@@ -21,6 +21,7 @@ public class FrontController {
         //mav.addObject("user", us.updateEmail(10000, "Agustinizag1@gmail.com"));
         return mav;
     }
+
     @RequestMapping("/test")
     public ModelAndView test() {
         final ModelAndView mav = new ModelAndView("test");
@@ -37,5 +38,11 @@ public class FrontController {
     @RequestMapping("/createMatch")
     public ModelAndView createMatch(){
         return new ModelAndView("createMatch");
+    }
+
+    @RequestMapping("/login")
+    public ModelAndView login() {
+        return new ModelAndView("login");
+
     }
 }
