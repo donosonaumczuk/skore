@@ -40,8 +40,9 @@ public class PremiumUserJdbcDaoTest {
         private static final String STREET = "street";
         private static final int REPUTATION = 10;
         private static final String PASSWORD = "password";
+        private static final long   USERID = 14;
         private static final String EXISTANT_USERNAME = "ExistantUsername";
-        private static final String NONEXISTANT_USERNMAE = "NonExistantUsername";
+        private static final String NONEXISTANT_USERNAME = "NonExistantUsername";
 
         @Autowired
         private DataSource dataSource;
@@ -58,6 +59,18 @@ public class PremiumUserJdbcDaoTest {
             JdbcTestUtils.deleteFromTables(jdbcTemplate, "accounts");
         }
 
+        private void insertUser(String userName) {
+            jdbcTemplate.execute(("DELETE FROM users WHERE userId = " + USERID));
+            jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
+                    " VALUES ('" + FIRSTNAME + "' , '" + LASTNAME + "', '" + EMAIL + "', " + USERID + ");");
+
+            jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
+                    " country, state, city, street, reputation, password, userId)" +
+                        " VALUES ('" + userName + "' , '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
+                    COUNTRY + "', '" + STATE + "', '" + CITY + "', '" + STREET + "', " + REPUTATION +
+                    ", '" + PASSWORD +"', " + USERID +");");
+        }
+
         @Test
         public void testCreate() {
             //exercise class
@@ -65,15 +78,80 @@ public class PremiumUserJdbcDaoTest {
             CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD).get();
 
             //postconditions
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             Assert.assertNotNull(user);
             Assert.assertEquals(FIRSTNAME, user.getFirstName());
             Assert.assertEquals(USERNAME, user.getUserName());
-           // Assert.assertEquals(DateTimeFormatter.ofPattern("yyyy-MM-dd").ofPattern("yyyy-MMM-dd").parseL, user.getBirthday());
+            Assert.assertEquals(LocalDate.parse(BIRTHDAY, formatter), user.getBirthday());
 
             Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "accounts"));
         }
 
+        @Test
+        public void testFindByUserNameWithExistantId() {
+            //set up
+            insertUser(EXISTANT_USERNAME);
 
+            //exercise class
+            final Optional<PremiumUser> returnedUser = premiumUserDao.findByUserName(EXISTANT_USERNAME);
+
+            //postconditions
+            Assert.assertTrue(returnedUser.isPresent());
+            final PremiumUser user = returnedUser.get();
+            Assert.assertEquals(EXISTANT_USERNAME, user.getUserName());
+        }
+
+        @Test
+        public void testFindByUserNameWithNonExistantId() {
+            //exercise class
+            final Optional<PremiumUser> returnedUser = premiumUserDao.findByUserName(NONEXISTANT_USERNAME);
+
+            //postconditions
+            Assert.assertTrue(!returnedUser.isPresent());
+        }
+
+        @Test
+        public void testRemoveNonExistantUser(){
+            //exercise class
+            boolean returnValue = premiumUserDao.remove(NONEXISTANT_USERNAME);
+
+            //postconditions
+            Assert.assertEquals(false, returnValue);
+        }
+
+        @Test
+        public void testRemoveExistantUser(){
+            //set up
+            insertUser(EXISTANT_USERNAME);
+
+            //exercise class
+            boolean returnValue = premiumUserDao.remove(EXISTANT_USERNAME);
+
+            //postconditions
+            Assert.assertEquals(true, returnValue);
+            Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate,
+                    "accounts"));
+        }
+
+        @Test
+        public void testUpdateUserInfo(){
+            //set up
+            insertUser(EXISTANT_USERNAME);
+            final String newUserName = "newUserName";
+            final String newPassword = "newPassword";
+            final String newBirthday = "2000-05-05";
+
+            //exercise class
+            PremiumUser modifyUser = premiumUserDao.updateUserInfo(newUserName, CELLPHONE,
+            newBirthday, COUNTRY, STATE, CITY, STREET, REPUTATION, newPassword, EXISTANT_USERNAME).get();
+
+            //postconditions
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            Assert.assertEquals(LocalDate.parse(newBirthday, formatter), modifyUser.getBirthday());
+            Assert.assertEquals(newUserName, modifyUser.getUserName());
+            Assert.assertEquals(newPassword, modifyUser.getPassword());
+            Assert.assertEquals(CELLPHONE, modifyUser.getCellphone());
+        }
 }
 
 

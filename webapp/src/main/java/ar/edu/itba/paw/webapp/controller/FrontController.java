@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.interfaces.UserService;
 @Controller
-public class HelloWorldController {
+public class FrontController {
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService us;

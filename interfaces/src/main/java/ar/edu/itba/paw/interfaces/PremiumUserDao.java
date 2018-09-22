@@ -22,6 +22,6 @@ public interface PremiumUserDao {
                                                 final String newBirthday, final String newCountry,
                                                 final String newState, final String newCity,
                                                 final String newStreet, final int newReputation,
-                                                final String newPassword);
+                                                final String newPassword, final String oldUserName);
 
 }

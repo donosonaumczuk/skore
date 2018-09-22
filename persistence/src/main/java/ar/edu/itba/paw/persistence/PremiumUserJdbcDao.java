@@ -84,12 +84,12 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                                                 final String newBirthday, final String newCountry,
                                                 final String newState, final String newCity,
                                                 final String newStreet, final int newReputation,
-                                                final String newPassword) {
+                                                final String newPassword, final String oldUserName) {
         final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
                 " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
                 "WHERE userName = ?";
         jdbcTemplate.update(sqlQuery, newUserName , newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet);
+                newCity, newStreet, newReputation, newPassword, oldUserName);
 
         return findByUserName(newUserName);
     }
