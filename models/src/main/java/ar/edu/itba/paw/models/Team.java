@@ -18,7 +18,11 @@ public class Team {
         this.isTemp     = isTemp;
         this.sport      = sport;
         this.players    = new LinkedList<>();
-        this.players.add(leader);
+    }
+
+    public Team(String name, Sport sport) {
+        this.name = name;
+        this.sport = sport;
     }
 
     public Sport getSport() {

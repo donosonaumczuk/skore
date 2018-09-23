@@ -9,17 +9,19 @@ public class Game {
     private LocalDateTime startTime;
     private LocalDateTime finishTime;
     private String result;
-    private boolean isCompetitive;
+    private String type;
+    private int quantityOccupiedPlaces;
 
     public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
-                LocalDateTime finishTime, boolean isCompetitive) {
-        this.team1 = team1;
-        this.team2 = team2;
-        this.place = place;
-        this.startTime = startTime;
-        this.finishTime = finishTime;
-        this.isCompetitive = isCompetitive;
-        this.result = null;
+                LocalDateTime finishTime, String type, int quantityOccupiedPlaces) {
+        this.team1                  = team1;
+        this.team2                  = team2;
+        this.place                  = place;
+        this.startTime              = startTime;
+        this.finishTime             = finishTime;
+        this.type                   = type;
+        this.result                 = null;
+        this.quantityOccupiedPlaces = quantityOccupiedPlaces;
     }
 
     public Team getTeam1() {
@@ -62,8 +64,8 @@ public class Game {
         return result;
     }
 
-    public boolean isCompetitive() {
-        return isCompetitive;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -77,5 +79,9 @@ public class Game {
                 && getTeam2().equals(aGame.getTeam2())
                 && getStartTime().equals(aGame.getStartTime())
                 && getFinishTime().equals(aGame.getFinishTime());
+    }
+
+    public int getQuantityOccupiedPlaces() {
+        return quantityOccupiedPlaces;
     }
 }
