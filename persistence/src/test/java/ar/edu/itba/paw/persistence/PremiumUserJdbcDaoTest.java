@@ -83,7 +83,6 @@ public class PremiumUserJdbcDaoTest {
             Assert.assertEquals(FIRSTNAME, user.getFirstName());
             Assert.assertEquals(USERNAME, user.getUserName());
             Assert.assertEquals(LocalDate.parse(BIRTHDAY, formatter), user.getBirthday());
-
             Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "accounts"));
         }
 

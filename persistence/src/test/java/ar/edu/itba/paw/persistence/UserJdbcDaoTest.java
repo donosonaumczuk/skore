@@ -176,4 +176,21 @@ public class UserJdbcDaoTest {
         //postconditions
         Assert.assertTrue(!returnedUser.isPresent());
     }
+
+    @Test
+    public void testUpdateBasicUserInfo() {
+        //set up
+        insertUser(EXISTANT_ID);
+        final String newFirstName = "newFirstName";
+        final String newLastName = "newLastName";
+
+        //exercise class
+        final Optional<User> returnedUser = userDao.updateBasicUserInfo(EXISTANT_ID, newFirstName,
+                newLastName, EMAIL);
+
+        //postconditions
+        Assert.assertEquals(newFirstName, returnedUser.get().getFirstName());
+        Assert.assertEquals(newLastName, returnedUser.get().getLastName());
+        Assert.assertEquals(EMAIL, returnedUser.get().getEmail());
+    }
 }
