@@ -13,14 +13,15 @@ public class Game {
     private int quantityOccupiedPlaces;
 
     public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
-                LocalDateTime finishTime, String type, int quantityOccupiedPlaces) {
+                LocalDateTime finishTime, String type, int quantityOccupiedPlaces,
+                String result) {
         this.team1                  = team1;
         this.team2                  = team2;
         this.place                  = place;
         this.startTime              = startTime;
         this.finishTime             = finishTime;
         this.type                   = type;
-        this.result                 = null;
+        this.result                 = result;
         this.quantityOccupiedPlaces = quantityOccupiedPlaces;
     }
 

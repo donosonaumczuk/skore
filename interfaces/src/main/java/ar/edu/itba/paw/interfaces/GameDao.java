@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface GameDao {
     Optional<Game> findByKey(final String teamName1, final String teamName2,
-                            final LocalDateTime StartTime, final LocalDateTime EndTime);
+                            final String StartTime, final String EndTime);
 
     List<Game> findGames(final String minStartTime, final String maxStartTime,
                          final String minFinishTime, final String maxFinishTime,
