@@ -24,6 +24,14 @@ CREATE TABLE IF NOT EXISTS accounts(
   UNIQUE(userId)
 );
 
+CREATE TABLE IF NOT EXISTS notification(
+  startTime TIMESTAMP,
+  content   VARCHAR(100),
+  seen      INTEGER,
+  userName  VARCHAR(100),
+  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  PRIMARY KEY (startTime, content)
+);
 
 CREATE TABLE IF NOT EXISTS teams(
   teamName    VARCHAR(100) PRIMARY KEY,
