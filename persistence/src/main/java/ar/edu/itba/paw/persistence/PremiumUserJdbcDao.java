@@ -95,8 +95,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                     "WHERE userName = ?";
             jdbcTemplate.update(sqlQuery, newUserName, newCellphone, newBirthday, newCountry, newState,
                     newCity, newStreet, newReputation, newPassword, oldUserName);
+            return findByUserName(newUserName);
         }
-        return findByUserName(newUserName);
+        else {
+            return Optional.empty();
+        }
     }
 
 }
