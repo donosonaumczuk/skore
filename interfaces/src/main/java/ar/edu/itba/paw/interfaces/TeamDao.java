@@ -6,16 +6,21 @@ import java.util.Optional;
 
 public interface TeamDao {
 
-    public Optional<Team> findByName(final String teamName);
+    public Optional<Team> findById(final String teamName, final String sportName);
 
     public Optional<Team> create(final String leaderName, final String acronym,
                                   final String teamName,final boolean isTemp,
                                   final String sportName);
 
-    public boolean remove(final String teamName);
+    public boolean remove(final String teamName, final String sportName);
 
-    public Optional<Team> addPlayer(final String teamName, final long userId);
+    public Optional<Team> addPlayer(final String teamName, final String sportName,
+                                    final long userId);
 
-    public Optional<Team> removePlayer(final String teamName, final long userId);
+    public Optional<Team> removePlayer(final String teamName, final String sportName,
+                                       final long userId);
+
+    public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
+                                         final String newLeaderName);
 
 }

@@ -7,7 +7,7 @@
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
-
+    <link rel="icon" href="img/bullseye-solid.ico"/>
     <title>skore</title>
 </head>
 <body>
@@ -19,7 +19,6 @@
     <div class="row">
 
         <div class="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
-
             <form>
                 <div class="form-group">
                     <label for="match-name-input"><spring:message code="matchNameLabel"/></label>
@@ -89,11 +88,11 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
-                        <label for="locality">City</label>
+                        <label for="locality">City / Locality</label>
                         <input type="text" class="form-control" id="locality" readonly>
                     </div>
                     <div class="form-group col-6">
-                        <label for="administrative_area_level_1">State</label>
+                        <label for="administrative_area_level_1">State / Province</label>
                         <input type="text" class="form-control" id="administrative_area_level_1" readonly>
                     </div>
                 </div>
