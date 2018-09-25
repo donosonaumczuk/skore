@@ -33,6 +33,11 @@ public class PremiumUser extends User{
         this.likes          = new ArrayList<>();
     }
 
+    public PremiumUser(String firstName, String lastName, String email, long userId, String userName) {
+        super(firstName, lastName, email, userId);
+        this.userName = userName;
+    }
+
     public String getUserName() {
         return userName;
     }
