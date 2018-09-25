@@ -8,8 +8,8 @@
 
 var placeSearch, autocomplete;
 var componentForm = {
-    street_number: 'short_name',
-    route: 'long_name',
+    street_number: 'long_name',
+    route: 'short_name',
     locality: 'long_name',
     administrative_area_level_1: 'short_name',
     country: 'long_name'
@@ -30,6 +30,7 @@ function initAutocomplete() {
 function fillInAddress() {
     // Get the place details from the autocomplete object.
     var place = autocomplete.getPlace();
+    console.log(place);
 
     for (var component in componentForm) {
         document.getElementById(component).value = '';
@@ -43,6 +44,15 @@ function fillInAddress() {
         if (componentForm[addressType]) {
             var val = place.address_components[i][componentForm[addressType]];
             document.getElementById(addressType).value = val;
+        }
+    }
+
+    // Custom by skore: try to set sublocality if do not have administrative_area_level_1
+    if(document.getElementById('locality').value.toString() == '') {
+        for(var i = 0; i < place.address_components.length; i++) {
+            if(place.address_components[i].types.length > 1 && place.address_components[i].types[1].toString() == 'sublocality') {
+                document.getElementById('locality').value = place.address_components[i]['long_name'];
+            }
         }
     }
 }

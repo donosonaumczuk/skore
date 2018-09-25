@@ -41,7 +41,7 @@ body {
 }
 
 .btn-green:hover {
-    background-color: #a2dfa2;
+    background-color: #abdf91;
 }
 
 .btn-white-succ {
@@ -104,6 +104,10 @@ body {
     font-weight: 800;
     font-size: 2rem;
     color: #ffffff;
+}
+
+.nav-brand-font .fas {
+    font-size: 1.42rem;
 }
 
 .nav-brand-font:hover {

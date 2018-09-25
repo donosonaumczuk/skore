@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav class="navbar fixed-top primary-nav">
-    <a class="navbar-brand nav-brand-font" href="<c:url value="/test"/>">skore</a>
+    <a class="navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <form class="form-inline">
         <input class="form-control" type="search" placeholder=<spring:message code="searchMessage"/> aria-label="Search">
     </form>
