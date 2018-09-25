@@ -76,7 +76,25 @@ public class TeamJdbcDao implements TeamDao {
     }
 
     public boolean remove(final String teamName) {
-        return false;
+        final String sqlQuery = "DELETE FROM teams where teamName = ?";
+        int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName);
+        return rowsDeleted > 0;
+    }
+
+    public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
+                                         final String newLeaderName, final String newSportName,
+                                         final String oldTeamName) {
+
+        int rowsModified;
+        final String sqlQuery = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
+                    "sportName = ? WHERE teamName = ?";
+        rowsModified = jdbcTemplate.update(sqlQuery, newTeamName, newAcronym, newLeaderName, newSportName,
+                    oldTeamName);
+        if(rowsModified != 0) {
+            return findByTeamName(newTeamName);
+        }
+
+        return  Optional.empty();
     }
 
     public Optional<Team> addPlayer(final String teamName, final long userId) {
@@ -87,9 +105,6 @@ public class TeamJdbcDao implements TeamDao {
         return null;
     }
 
-    public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
-                                         final String newLeaderName, final String newSportName) {
-        return null;
-    }
+
 }
 

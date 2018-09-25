@@ -12,5 +12,6 @@
 </head>
 <body>
     <h1>This is the test page</h1>
+    <h2>Test</h2>
 </body>
 </html>

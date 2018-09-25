@@ -19,6 +19,7 @@ public interface TeamDao {
     public Optional<Team> removePlayer(final String teamName, final long userId);
 
     public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
-                                         final String newLeaderName, final String newSportName);
+                                         final String newLeaderName, final String newSportName,
+                                         final String oldTeamName);
 
 }
