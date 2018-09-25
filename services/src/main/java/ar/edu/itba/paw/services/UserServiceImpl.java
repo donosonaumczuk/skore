@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,16 +14,24 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public UserServiceImpl() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    }
 
     @Autowired
     private UserDao userDao;
 
+    public UserServiceImpl() {
+
+    }
+
     @Override
     public User findById(final long id) {
+        if(id < 0 ) {
+            LOGGER.error("Attempted to find a user with negative id.");
+            throw new IllegalArgumentException("id must be positive");
+        }
 
+        LOGGER.trace("Looking up user with id {}", id);
         Optional<User> user = userDao.findById(id);
         if(user.isPresent()) {
             return user.get();
