@@ -76,13 +76,13 @@ public class Filters {
         boolean isFirst = true;
         for (String key: same.keySet()) {
             Iterator iterator = same.get(key).iterator();
-            list.add(iterator.next());
+            list.add("%"+iterator.next()+"%");
             query = (isFirst)? query: query + " AND";
-            query = query + " (" + key + " = ?";
+            query = query + " (" + key + " LIKE ?";
 
             while(iterator.hasNext()) {
-                list.add(iterator.next());
-                query = query + " OR " + key + " = ?";
+                list.add("%"+iterator.next()+"%");
+                query = query + " OR " + key + " LIKE ?";
             }
             query = query + ")";
             isFirst = false;
