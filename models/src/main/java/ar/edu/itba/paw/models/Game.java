@@ -11,10 +11,11 @@ public class Game {
     private String result;
     private String type;
     private int quantityOccupiedPlaces;
+    private String description;
 
     public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
                 LocalDateTime finishTime, String type, int quantityOccupiedPlaces,
-                String result) {
+                String result, String description) {
         this.team1                  = team1;
         this.team2                  = team2;
         this.place                  = place;
@@ -23,6 +24,7 @@ public class Game {
         this.type                   = type;
         this.result                 = result;
         this.quantityOccupiedPlaces = quantityOccupiedPlaces;
+        this.description            = description;
     }
 
     public Team getTeam1() {
@@ -84,5 +86,9 @@ public class Game {
 
     public int getQuantityOccupiedPlaces() {
         return quantityOccupiedPlaces;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

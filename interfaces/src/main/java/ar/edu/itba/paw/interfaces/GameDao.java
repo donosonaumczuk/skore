@@ -2,13 +2,17 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface GameDao {
+    Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
+                          final String finishTime, final String type, final String result,
+                          final String country, final String state, final String city,
+                          final String street, final String tornamentName, final String description);
+
     Optional<Game> findByKey(final String teamName1, final String teamName2,
-                            final String StartTime, final String EndTime);
+                             final String StartTime, final String EndTime);
 
     List<Game> findGames(final String minStartTime, final String maxStartTime,
                          final String minFinishTime, final String maxFinishTime,
@@ -17,4 +21,11 @@ public interface GameDao {
                          final List<String> countries, final List<String> states,
                          final List<String> cities, final Integer minFreePlaces,
                          final Integer maxFreePlaces);
+
+    Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
+                          final String finishTime, final String type, final String result,
+                          final String country, final String state, final String city,
+                          final String street, final String tornamentName, final String description,
+                          final String teamName1Old, final String teamName2Old,
+                          final String startTimeOld, final String finishTimeOld);
 }

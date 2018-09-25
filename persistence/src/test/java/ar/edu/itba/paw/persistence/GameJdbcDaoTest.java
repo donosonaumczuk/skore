@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.PremiumUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +53,10 @@ public class GameJdbcDaoTest {
     private static final String STREET                  = "street";
     private static final int    QUERY_SIZE_1            = 2;
     private static final int    QUERY_SIZE_2            = 3;
+    private static final String PASSWORD                = "password";
+    private static final String CELLPHONE               = "cellphone";
+    private static final String BIRTHDAY                = "1994-12-26";
+    private static final int    REPUTATION              = 10;
 
 
     @Autowired
@@ -69,14 +70,22 @@ public class GameJdbcDaoTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "games", "isPartOf", "teams", "users",
-                "sports");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "games", "isPartOf", "teams",
+                "accounts", "users", "sports");
     }
 
-    private void insertUser(final String firstName, final String lastName, final String email,
-                            final long userId) {
+    private void insertAccount(final String firstName, final String lastName, final String email,
+                               final long userId, final String userName, final String password,
+                               final String country, final String state, final String city,
+                               final String street, final int reputation, final String cellphone,
+                               final String birthday) {
         jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                 " VALUES ('" + firstName + "' , '" + lastName + "', '" + email + "', " + userId + ");");
+        jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
+                " country, state, city, street, reputation, password, userId)" +
+                " VALUES ('" + userName + "' , '" + cellphone + "', '" + birthday + "', '" +
+                country + "', '" + state + "', '" + city + "', '" + street + "', " + reputation +
+                ", '" + password +"', " + userId +");");
     }
 
     private void insertSport(final String sportName, final long quantity) {
@@ -84,19 +93,19 @@ public class GameJdbcDaoTest {
                 " VALUES ('" + sportName + "', " + quantity + ");");
     }
 
-    private void insertTeam(final String teamName, final String acronym, final long leaderId,
-                            final long isTemp, final String sportName) {
-        jdbcTemplate.execute("INSERT INTO teams (teamName, acronym, leaderId, isTemp, sportName)" +
-                " VALUES ('" + teamName + "' , '" + acronym + "', " + leaderId + ", " + isTemp +
+    private void insertTeam(final String teamName, final String acronym, final String leaderName,
+                            final long isTemp, final String sportName, final long leaderId) {
+        jdbcTemplate.execute("INSERT INTO teams (teamName, acronym, leaderName, isTemp, sportName)" +
+                " VALUES ('" + teamName + "' , '" + acronym + "', '" + leaderName + "', " + isTemp +
                 ",'" + sportName + "');");
         jdbcTemplate.execute("INSERT INTO isPartOf (userId, teamName) VALUES ('" + teamName +
                 "'," + leaderId + ");");
     }
 
     private void insertGame(final String teamName1, final String teamName2, final String startTime,
-                             final String finishTime, final String type, final String result,
-                             final String country, final String state, final String city,
-                             final String street) {
+                            final String finishTime, final String type, final String result,
+                            final String country, final String state, final String city,
+                            final String street) {
         jdbcTemplate.execute("INSERT INTO games (teamName1, teamName2, startTime, finishTime," +
                 " type, result, country, state, city, street)" +
                 " VALUES('" + teamName1 + "','" + teamName2 + "','" + startTime + "','" +
@@ -106,16 +115,20 @@ public class GameJdbcDaoTest {
 
     @Test
     public void createTest() {
-        insertUser(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
-                USER_1_ID);
-        insertUser(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
-                USER_2_ID);
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
         insertSport(SPORTNAME,QUANTITY);
-        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,USER_1_ID,ISTEMP,SPORTNAME);
-        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,USER_2_ID,ISTEMP,SPORTNAME);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
 
         final Game game = gameJdbcDao.create(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
-                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null).get();
+                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null).get();
 
         Assert.assertNotNull(game);
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
@@ -134,13 +147,17 @@ public class GameJdbcDaoTest {
 
     @Test
     public void findGamesTestFilterMultipleCountries() {
-        insertUser(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
-                USER_1_ID);
-        insertUser(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
-                USER_2_ID);
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
         insertSport(SPORTNAME,QUANTITY);
-        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,USER_1_ID,ISTEMP,SPORTNAME);
-        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,USER_2_ID,ISTEMP,SPORTNAME);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
         insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,TYPE,RESULT, COUNTRY_1,STATE,CITY,
                 STREET);
         insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_2,STATE,CITY,
@@ -178,13 +195,17 @@ public class GameJdbcDaoTest {
 
     @Test
     public void findGamesTestNoFilter() {
-        insertUser(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
-                USER_1_ID);
-        insertUser(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
-                USER_2_ID);
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
         insertSport(SPORTNAME,QUANTITY);
-        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,USER_1_ID,ISTEMP,SPORTNAME);
-        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,USER_2_ID,ISTEMP,SPORTNAME);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
         insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,TYPE,RESULT, COUNTRY_1,STATE,CITY,
                 STREET);
         insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_2,STATE,CITY,
@@ -210,5 +231,30 @@ public class GameJdbcDaoTest {
         Assert.assertEquals(TEAMNAME_2,games.get(2).getTeam2().getName());
         Assert.assertEquals(STARTIME_LOCALTIME_3,games.get(2).getStartTime().toString());
         Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(2).getFinishTime().toString());
+    }
+
+    public void modifyTest() {
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertSport(SPORTNAME,QUANTITY);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
+        insertGame(TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_1,STATE,CITY,
+                STREET);
+
+        final Game game = gameJdbcDao.modify(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
+                TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, null,
+                TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2).get();
+
+        Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_1, game.getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_1, game.getFinishTime().toString());
     }
 }

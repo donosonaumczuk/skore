@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -28,7 +27,8 @@ public class GameJdbcDao implements GameDao {
                     resultSet.getTimestamp("finishTime").toLocalDateTime(),
                     resultSet.getString("type"),
                     resultSet.getInt("OccupiedQuantity"),
-                    resultSet.getString("result"));
+                    resultSet.getString("result"),
+                    resultSet.getString("description"));
 
     @Autowired
     public GameJdbcDao(final DataSource dataSource) {
@@ -37,9 +37,12 @@ public class GameJdbcDao implements GameDao {
                 .withTableName("games");
     }
 
-    public Optional<Game> create(String teamName1, String teamName2, String startTime,
-                                 String finishTime, String type, String result, String country,
-                                 String state, String city, String street, String tornamentName) {
+
+    @Override
+    public Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
+                                 final String finishTime, final String type, final String result,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description) {
         final Map<String, Object> args =  new HashMap<>();
 
         args.put("teamName1", teamName1);
@@ -53,7 +56,7 @@ public class GameJdbcDao implements GameDao {
         args.put("city", city);
         args.put("street", street);
         args.put("tornamentName", tornamentName);
-
+        args.put("description", description);
 
         jdbcInsert.execute(args);
         return findByKey(teamName1, teamName2, startTime, finishTime);
@@ -64,7 +67,7 @@ public class GameJdbcDao implements GameDao {
                                    String startTime, String finishTime) {
         final String getAGame =
                 "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
-                    "playerQuantity, country, state, city, street, type, result, " +
+                    "playerQuantity, country, state, city, street, type, result, description, " +
                     "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
                 "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
                     "(teams NATURAL JOIN isPartOf) as team2, sports " +
@@ -78,6 +81,7 @@ public class GameJdbcDao implements GameDao {
         return list.stream().findFirst();
     }
 
+    @Override
     public List<Game> findGames(final String minStartTime, final String maxStartTime,
                                 final String minFinishTime, final String maxFinishTime,
                                 final List<String> types, final List<String> sportNames,
@@ -87,7 +91,7 @@ public class GameJdbcDao implements GameDao {
                                 final Integer maxFreePlaces) {
         String getGamesQuery =
                 "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
-                        "playerQuantity, country, state, city, street, type, result, " +
+                        "playerQuantity, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
                 "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
                         "(teams NATURAL JOIN isPartOf) as team2, sports" +
@@ -124,5 +128,22 @@ public class GameJdbcDao implements GameDao {
                 gameFilters.generateQueryHaving(filters) + ";";
 
         return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
+                                 final String finishTime, final String type, final String result,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description,
+                                 final String teamName1Old, final String teamName2Old,
+                                 final String startTimeOld, final String finishTimeOld) {
+        String updateSentence = "UPDATE users SET teamName1 = ?, teamName2 = ?, startTime = ?," +
+                "finishTime = ?, type = ?, result = ?, country = ?, state = ?, city = ?, street = ?," +
+                "tornamentName = ?, descrption = ? WHERE teamName1 = ? AND teamName2 = ? AND " +
+                "startTime = ? AND finishTime = ?;";
+        jdbcTemplate.update(updateSentence, teamName1, teamName2, startTime, finishTime, type, result,
+                country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
+                startTimeOld, finishTimeOld);
+        return findByKey(teamName1, teamName2, startTime, finishTime);
     }
 }
