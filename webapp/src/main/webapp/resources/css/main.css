@@ -44,6 +44,10 @@ body {
     background-color: #abdf91;
 }
 
+.btn.active {
+    background: #abdf91;
+}
+
 .btn-white-succ {
     color: #ffffff;
     border-color: #ffffff;
