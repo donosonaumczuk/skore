@@ -31,6 +31,7 @@ public class NotificationJdbcDao implements NotificationDao {
                 .withTableName("notification");
     }
 
+    @Override
     public Optional<Notification> create(final String startTime, final String content,
                                          final String userName) {
         final Map<String, Object> args =  new HashMap<>();
@@ -44,6 +45,7 @@ public class NotificationJdbcDao implements NotificationDao {
         return findByKey(startTime, content);
     }
 
+    @Override
     public Optional<Notification> findByKey(final String startTime, final String content) {
         final String getANotification = "SELECT * FROM notification WHERE startTime = ? AND " +
                 "content = ?;";
@@ -52,6 +54,7 @@ public class NotificationJdbcDao implements NotificationDao {
         return list.stream().findFirst();
     }
 
+    @Override
     public List<Notification> getNotificationsByUserName(final String userName) {
         final String getANotifications = "SELECT * FROM notification WHERE userName = ?;";
         final List<Notification> list = jdbcTemplate.query(getANotifications, ROW_MAPPER,

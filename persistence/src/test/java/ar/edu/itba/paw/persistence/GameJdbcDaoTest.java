@@ -128,7 +128,7 @@ public class GameJdbcDaoTest {
                 SPORTNAME,USER_2_ID);
 
         final Game game = gameJdbcDao.create(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
-                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null).get();
+                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null).get();
 
         Assert.assertNotNull(game);
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
@@ -249,8 +249,8 @@ public class GameJdbcDaoTest {
                 STREET);
 
         final Game game = gameJdbcDao.modify(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
-                TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, TEAMNAME_2,TEAMNAME_1,STARTIME_2,
-                FINISHTIME_2).get();
+                TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, null,
+                TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2).get();
 
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
         Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());

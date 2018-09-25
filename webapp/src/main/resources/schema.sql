@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   reputation  INTEGER,
   cellphone   VARCHAR(100),
   birthday    DATE,
+  image       BYTEA,
   UNIQUE(userId)
 );
 
@@ -57,6 +58,7 @@ CREATE TABLE IF NOT EXISTS teams(
   leaderName  VARCHAR(100) REFERENCES accounts(userName) NOT NULL,
   isTemp      INTEGER NOT NULL,
   sportName   VARCHAR (100) NOT NULL,
+  image       BYTEA,
   FOREIGN KEY (sportName) REFERENCES sports(sportName)
   --Filters--
 );
@@ -71,7 +73,8 @@ CREATE TABLE IF NOT EXISTS isPartOf (
 
 CREATE TABLE IF NOT EXISTS tornaments(
   tornamentName VARCHAR(100) PRIMARY KEY,
-  type          VARCHAR(100)
+  type          VARCHAR(100),
+  image         BYTEA
 );
 
 CREATE TABLE IF NOT EXISTS games (
@@ -86,6 +89,7 @@ CREATE TABLE IF NOT EXISTS games (
   city          VARCHAR(100) NOT NULL,
   street        VARCHAR(100) NOT NULL,
   tornamentName VARCHAR(100),
+  description   VARCHAR(140),
   FOREIGN KEY (teamName1) REFERENCES teams(teamName),
   FOREIGN KEY (teamName2) REFERENCES teams(teamName),
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName),
