@@ -25,11 +25,12 @@ CREATE TABLE IF NOT EXISTS accounts(
 );
 
 CREATE TABLE IF NOT EXISTS teams(
-  teamName    VARCHAR(100) PRIMARY KEY,
-  acronym     VARCHAR(100),
+  teamName    VARCHAR(100) NOT NULL,
+  acronym     VARCHAR(100) NOT NULL,
   leaderId    INTEGER REFERENCES users(userId),
   isTemp      INTEGER NOT NULL,
   sportName   VARCHAR (100) NOT NULL,
+  PRIMARY KEY (teamName, sportName),
   FOREIGN KEY (sportName) REFERENCES sports(sportName)
   --Filters--
 );
@@ -37,19 +38,21 @@ CREATE TABLE IF NOT EXISTS teams(
 CREATE TABLE IF NOT EXISTS isPartOf (
   userId    INTEGER NOT NULL,
   teamName  VARCHAR(100) NOT NULL,
-  PRIMARY KEY (userid, teamName),
+  sportName VARCHAR(100) NOT NULL,
+  PRIMARY KEY (userid, teamName, sportName),
   FOREIGN KEY (userId) REFERENCES users(userId),
-  FOREIGN KEY (teamName) REFERENCES teams(teamName)
+  FOREIGN KEY (teamName, sportName) REFERENCES teams(teamName, sportName)
 );
 
-CREATE TABLE IF NOT EXISTS tornaments(
-  tornamentName VARCHAR(100) PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tournaments(
+  tournamentName VARCHAR(100) PRIMARY KEY,
   type          VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS games (
   teamName1     VARCHAR(100) NOT NULL,
   teamName2     VARCHAR(100) NOT NULL,
+  sportName     VARCHAR(100) NOT NULL,
   startTime     TIMESTAMP NOT NULL,
   finishTime    TIMESTAMP NOT NULL,
   type          VARCHAR(100) NOT NULL,
@@ -58,9 +61,10 @@ CREATE TABLE IF NOT EXISTS games (
   state         VARCHAR(100) NOT NULL,
   city          VARCHAR(100) NOT NULL,
   street        VARCHAR(100) NOT NULL,
-  tornamentName VARCHAR(100),
-  FOREIGN KEY (teamName1) REFERENCES teams(teamName),
-  FOREIGN KEY (teamName2) REFERENCES teams(teamName),
-  FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName),
-  PRIMARY KEY (teamName1, teamName2, startTime, finishTime)
+  tournamentName VARCHAR(100),
+  FOREIGN KEY (teamName1, sportName) REFERENCES teams(teamName, sportName),
+  FOREIGN KEY (teamName2, sportName) REFERENCES teams(teamName, sportName),
+  FOREIGN KEY (tournamentName) REFERENCES tournaments(tournamentName),
+  PRIMARY KEY (teamName1, teamName2, sportName, startTime, finishTime)
 );
+
