@@ -51,4 +51,11 @@ public class NotificationJdbcDao implements NotificationDao {
                 startTime, content);
         return list.stream().findFirst();
     }
+
+    public List<Notification> getNotificationsByUserName(final String userName) {
+        final String getANotifications = "SELECT * FROM notification WHERE userName = ?;";
+        final List<Notification> list = jdbcTemplate.query(getANotifications, ROW_MAPPER,
+                userName);
+        return list;
+    }
 }

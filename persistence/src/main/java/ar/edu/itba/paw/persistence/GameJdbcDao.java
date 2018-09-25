@@ -36,7 +36,7 @@ public class GameJdbcDao implements GameDao {
                 .withTableName("games");
     }
 
-    @Override
+
     public Optional<Game> create(String teamName1, String teamName2, String startTime,
                                  String finishTime, String type, String result, String country,
                                  String state, String city, String street, String tornamentName) {
@@ -59,7 +59,6 @@ public class GameJdbcDao implements GameDao {
         return findByKey(teamName1, teamName2, startTime, finishTime);
     }
 
-    @Override
     public Optional<Game> findByKey(String teamName1, String teamName2,
                                    String startTime, String finishTime) {
         final String getAGame =
@@ -126,7 +125,6 @@ public class GameJdbcDao implements GameDao {
         return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
     }
 
-    @Override
     public Optional<Game> modify(String teamName1, String teamName2, String startTime,
                                  String finishTime, String type, String result, String country,
                                  String state, String city, String street, String tornamentName,
