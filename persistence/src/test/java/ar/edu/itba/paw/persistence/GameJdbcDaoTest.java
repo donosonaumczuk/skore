@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.PremiumUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,5 +207,26 @@ public class GameJdbcDaoTest {
         Assert.assertEquals(TEAMNAME_2,games.get(2).getTeam2().getName());
         Assert.assertEquals(STARTIME_LOCALTIME_3,games.get(2).getStartTime().toString());
         Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(2).getFinishTime().toString());
+    }
+
+    public void modifyTest() {
+        insertUser(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID);
+        insertUser(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID);
+        insertSport(SPORTNAME,QUANTITY);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,USER_1_ID,ISTEMP,SPORTNAME);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,USER_2_ID,ISTEMP,SPORTNAME);
+        insertGame(TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_1,STATE,CITY,
+                STREET);
+
+        final Game game = gameJdbcDao.modify(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
+                TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, TEAMNAME_2,TEAMNAME_1,STARTIME_2,
+                FINISHTIME_2).get();
+
+        Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_1, game.getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_1, game.getFinishTime().toString());
     }
 }

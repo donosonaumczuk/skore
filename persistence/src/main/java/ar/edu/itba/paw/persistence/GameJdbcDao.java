@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -37,6 +36,7 @@ public class GameJdbcDao implements GameDao {
                 .withTableName("games");
     }
 
+    @Override
     public Optional<Game> create(String teamName1, String teamName2, String startTime,
                                  String finishTime, String type, String result, String country,
                                  String state, String city, String street, String tornamentName) {
@@ -124,5 +124,21 @@ public class GameJdbcDao implements GameDao {
                 gameFilters.generateQueryHaving(filters) + ";";
 
         return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Game> modify(String teamName1, String teamName2, String startTime,
+                                 String finishTime, String type, String result, String country,
+                                 String state, String city, String street, String tornamentName,
+                                 String teamName1Old, String teamName2Old, String startTimeOld,
+                                 String finishTimeOld) {
+        String updateSentence = "UPDATE users SET teamName1 = ?, teamName2 = ?, startTime = ?," +
+                "finishTime = ?, type = ?, result = ?, country = ?, state = ?, city = ?, street = ?," +
+                "tornamentName = ? WHERE teamName1 = ? AND teamName2 = ? AND startTime = ? AND " +
+                "finishTime = ?;";
+        jdbcTemplate.update(updateSentence, teamName1, teamName2, startTime, finishTime, type, result,
+                country, state, city, street, tornamentName, teamName1Old, teamName2Old, startTimeOld,
+                finishTimeOld);
+        return findByKey(teamName1, teamName2, startTime, finishTime);
     }
 }
