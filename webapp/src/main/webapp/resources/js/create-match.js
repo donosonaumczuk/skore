@@ -9,24 +9,28 @@ $( "#competitive" ).click(function() {
 });
 
 $( "#individual" ).click(function() {
+    // $("#team").attr('disabled', 'true');
     $("#individual i").removeClass("d-none");
     $("#team i").addClass("d-none");
+
+    $('#collapseTeam').collapse('hide');
 });
 
 $( "#team" ).click(function() {
+    // $("#individual").attr('disabled', 'true');
     $("#team i").removeClass("d-none");
     $("#individual i").addClass("d-none");
+
+    $('#collapseTeam').collapse('show');
 });
 
-$('#collapseTeam').on('hide.bs.collapse', function () {
-    $("#team").attr("data-toggle", "collapse");
-    $("#individual").removeAttr("data-toggle");
-})
-
-$('#collapseTeam').on('show.bs.collapse', function () {
-    $("#individual").attr("data-toggle", "collapse");
-    $("#team").removeAttr("data-toggle");
-})
+// $('#collapseTeam').on('hidden.bs.collapse', function () {
+//     $("#team").removeAttr('disabled');
+// });
+//
+// $('#collapseTeam').on('shown.bs.collapse', function () {
+//     $("#individual").removeAttr('disabled');
+// });
 
 $(function () {
     $('#datepicker').datetimepicker({
