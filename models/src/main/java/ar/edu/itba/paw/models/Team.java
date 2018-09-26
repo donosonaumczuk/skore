@@ -65,6 +65,10 @@ public class Team {
         this.players = players;
     }
 
+    public void addPlayer(final User player) {
+        players.add(player);
+    }
+
     @Override
     public boolean equals(Object object) {
         if(object == null || !object.getClass().equals(getClass())) {

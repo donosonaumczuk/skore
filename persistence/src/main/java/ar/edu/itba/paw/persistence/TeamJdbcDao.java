@@ -3,75 +3,88 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Repository
 public class TeamJdbcDao implements TeamDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertTeam;
+    private final SimpleJdbcInsert jdbcInsertIsPartOf;
 
-    private final static RowMapper<Team> ROW_MAPPER = (resultSet, rowNum) ->
-            new Team(new PremiumUser(resultSet.getString("firstName"),
-                        resultSet.getString("lastName"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("userId"),
-                        resultSet.getString("userName")),
-                    resultSet.getString("acronym"),
-                    resultSet.getString("teamName"),
-                    resultSet.getInt("isTemp") == 1,
-                    new Sport(resultSet.getString("sportName"),
-                            resultSet.getInt("playerQuantity")));
+    private final static ResultSetExtractor<List<Team>> MAPPER = (resultSet) -> {
+        List<Team> teams = new ArrayList<>();
+        Team currentTeam = null;
+        String currentTeamName;
+        while(resultSet.next()) {
+            currentTeamName = resultSet.getString("teamName");
+            if (currentTeam == null) {
+                currentTeam = mapATeam(resultSet);
+            }
+            else if (!currentTeam.getName().equals(currentTeamName)) {
+                teams.add(currentTeam);
+                currentTeam = mapATeam(resultSet);
+            }
+            currentTeam.addPlayer(mapAPlayer(resultSet));
+        }
+        if (currentTeam != null) {
+            teams.add(currentTeam);
+        }
+        return teams;
+    };
 
     @Autowired
     public TeamJdbcDao(final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("teams");
+        jdbcInsertTeam = new SimpleJdbcInsert(jdbcTemplate).withTableName("teams");
+        jdbcInsertIsPartOf = new SimpleJdbcInsert(jdbcTemplate).withTableName("isPartOf");
     }
 
     public Optional<Team> findByTeamName(final String teamName) {
-        final List<Team> list = jdbcTemplate.query("SELECT * FROM accounts natural join users " +
-                "natural join teams natural join sports  WHERE teamName = ?", ROW_MAPPER, teamName);
+        String query =
+                "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
+                    "leader.email as leaderEmail, leader.userId as leaderUserId, leader.userName " +
+                    "as leaderUserName, acronym, teamName, isTemp, team.sportName as sportName, " +
+                    "team.playerQuantity as playerQuantity, " +
+                    "users.firstName as usersFirstName, users.lastName as usersLastName, " +
+                    "users.email as usersEmail, users.userId as usersUserId " +
+                "FROM (accounts NATURAL JOIN users) AS leader, (teams NATURAL JOIN sports) AS team, " +
+                    "(isPartOf NATURAL JOIN users) AS users " +
+                "WHERE team.leaderName = leader.userName AND users.teamName = team.teamName " +
+                    "AND team.teamName = ? " +
+                "ORDER BY teamName;";
+        final List<Team> list = jdbcTemplate.query(query, MAPPER, teamName);
         Optional<Team> team = list.stream().findFirst();
-        if(team.isPresent()) {
-            //loadPlayers(team);
-        }
         return team;
     }
 
-    public Optional<Team> create(final String leaderName, final String acronym,
-                                 final String teamName,final boolean isTemp,
-                                 final String sportName) {
+    public Optional<Team> create(final String leaderName, final long leaderId,
+                                 final String acronym, final String teamName,
+                                 final boolean isTemp, final String sportName) {
 
-        final Map<String, Object> args =  new HashMap<>();
+        final Map<String, Object> argsTeam =  new HashMap<>();
+        final Map<String, Object> argsIsPartOF =  new HashMap<>();
 
-        args.put("leaderName", leaderName);
-        args.put("acronym", acronym);
-        args.put("teamName", teamName);
-        args.put("isTemp", isTemp? 1 : 0);
-        args.put("sportName", sportName);
+        argsTeam.put("leaderName", leaderName);
+        argsTeam.put("acronym", acronym);
+        argsTeam.put("teamName", teamName);
+        argsTeam.put("isTemp", isTemp? 1 : 0);
+        argsTeam.put("sportName", sportName);
 
+        argsIsPartOF.put("teamName", teamName);
+        argsIsPartOF.put("userId", leaderId);
 
-//        CREATE TABLE IF NOT EXISTS teams(
-//                teamName    VARCHAR(100) PRIMARY KEY,
-//        acronym     VARCHAR(100),
-//                leaderName  VARCHAR(100) REFERENCES accounts(userName) NOT NULL,
-//                isTemp      INTEGER NOT NULL,
-//                sportName   VARCHAR (100) NOT NULL,
-//        FOREIGN KEY (sportName) REFERENCES sports(sportName)
-//                --Filters--
-//);
-//
-        jdbcInsert.execute(args);
+        jdbcInsertTeam.execute(argsTeam);
+        jdbcInsertIsPartOf.execute(argsIsPartOF);
         return findByTeamName(teamName);
     }
 
@@ -85,26 +98,36 @@ public class TeamJdbcDao implements TeamDao {
                                          final String newLeaderName, final String newSportName,
                                          final String oldTeamName) {
 
-        int rowsModified;
-        final String sqlQuery = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
-                    "sportName = ? WHERE teamName = ?";
-        rowsModified = jdbcTemplate.update(sqlQuery, newTeamName, newAcronym, newLeaderName, newSportName,
-                    oldTeamName);
-        if(rowsModified != 0) {
+        int rowsModifiedTeam;
+        final String sqlQueryTeam = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
+                "sportName = ? WHERE teamName = ?";
+        rowsModifiedTeam = jdbcTemplate.update(sqlQueryTeam, newTeamName, newAcronym, newLeaderName,
+                newSportName, oldTeamName);
+        if(rowsModifiedTeam != 0) {
             return findByTeamName(newTeamName);
         }
 
         return  Optional.empty();
     }
 
-    public Optional<Team> addPlayer(final String teamName, final long userId) {
-        return null;
+    private static Team mapATeam(ResultSet resultSet) throws SQLException, DataAccessException {
+        return new Team(new PremiumUser(resultSet.getString("leaderFirstName"),
+                            resultSet.getString("leaderLastName"),
+                            resultSet.getString("leaderEmail"),
+                            resultSet.getInt("leaderUserId"),
+                            resultSet.getString("leaderUserName")),
+                        resultSet.getString("acronym"),
+                        resultSet.getString("teamName"),
+                        resultSet.getInt("isTemp") == 1,
+                        new Sport(resultSet.getString("sportName"),
+                            resultSet.getInt("playerQuantity")));
     }
 
-    public Optional<Team> removePlayer(final String teamName, final long userId) {
-        return null;
+    private static User mapAPlayer(ResultSet resultSet) throws SQLException, DataAccessException {
+        return new User(resultSet.getString("usersFirstName"),
+                resultSet.getString("usersLastName"),
+                resultSet.getString("usersEmail"),
+                resultSet.getInt("usersUserId"));
     }
-
-
 }
 

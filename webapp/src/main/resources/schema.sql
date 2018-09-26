@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
-  userId      INTEGER REFERENCES users(userId) NOT NULL,
+  userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
   password    VARCHAR(100),
   country     VARCHAR(100),
   state       VARCHAR(100),
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS notification(
   content   VARCHAR(100),
   seen      INTEGER,
   userName  VARCHAR(100),
-  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  FOREIGN KEY (userName) REFERENCES accounts(userName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (startTime, content)
 );
 
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS isPartOf (
   userId    INTEGER NOT NULL,
   teamName  VARCHAR(100) NOT NULL,
   PRIMARY KEY (userid, teamName),
-  FOREIGN KEY (userId) REFERENCES users(userId),
-  FOREIGN KEY (teamName) REFERENCES teams(teamName)
+  FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (teamName) REFERENCES teams(teamName) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS tornaments(
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS games (
   description   VARCHAR(140),
   FOREIGN KEY (teamName1) REFERENCES teams(teamName),
   FOREIGN KEY (teamName2) REFERENCES teams(teamName),
-  FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName),
+  FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (teamName1, teamName2, startTime, finishTime)
 );
 
