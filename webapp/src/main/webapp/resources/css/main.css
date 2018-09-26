@@ -44,6 +44,22 @@ body {
     background-color: #abdf91;
 }
 
+.sign-in-container {
+    margin-top: 9rem;
+}
+
+.sign-in-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 5rem;
+    color: var(--dark-secondary-color);
+}
+
+.sign-in-brand:hover {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
 .btn.active {
     background: #abdf91;
 }
