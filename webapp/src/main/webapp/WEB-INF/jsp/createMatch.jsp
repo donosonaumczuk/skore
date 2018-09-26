@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -15,14 +16,16 @@
 
 <%-- Include Navigation Bars --%>
 <jsp:include page="navbar.jsp"></jsp:include>
+<c:url value="/createMatch" var="createMatchUrl" />
 
 <div class="container-fluid">
     <div class="row">
         <div class="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container --><div class="container">
-            <form>
+            <form:form modelAttribute="registerForm" action="${createMatchUrl}" method="post">
                 <div class="form-group">
                     <label for="match-name-input"><spring:message code="matchNameLabel"/>*</label>
-                    <input type="text" class="form-control" id="match-name-input" placeholder="<spring:message code="matchNameLabel"/>">
+                    <input type="text" class="form-control" id="match-name-input" path="matchName" placeholder="<spring:message code="matchNameLabel"/>">
+                    <form:errors path="matchName" element="p" cssClass=""/>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
@@ -54,14 +57,15 @@
                 </div>
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/>*</label>
-                    <select id="inputSport" class="form-control">
+                    <select id="inputSport" path="sportName" class="form-control">
                         <option selected><spring:message code="chooseSportLabel"/></option>
-                        <option>Football 5</option>
-                        <option>Football 7</option>
-                        <option>Football 11</option>
-                        <option>Paddle Singles</option>
-                        <option>Paddle Doubles</option>
+                        <option value="Football 5">Football 5</option>
+                        <option value="Football 7">Football 7</option>
+                        <option value="Football 11">Football 11</option>
+                        <option value="Padel Singles">Padel Singles</option>
+                        <option value="Padel Doubles">Padel Doubles</option>
                     </select>
+                    <form:errors path="sportName" element="p" cssClass=""/>
                 </div>
                 <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/>*</label>
@@ -103,7 +107,9 @@
                 </div>
                 <div class="form-group">
                     <label for="description"><spring:message code="descriptionLabel"/></label>
-                    <textarea class="form-control" id="description" rows="3" maxlength="140"></textarea>
+                    <textarea class="form-control" id="description" path="description" rows="3" maxlength="140"></textarea>
+                    <form:errors path="description" element="p" cssClass=""/>
+
                 </div>
                 <div class="form-group" id="locationField">
                     <label for="autocomplete"><spring:message code="addressLabel"/>*</label>
@@ -135,7 +141,7 @@
                 </div>
                 <small id="requiredHelp" class="form-text text-muted mb-2"><spring:message code="requiredHelpLabel"/></small>
                 <button type="submit" class="offset-4 btn btn-green mb-2"><spring:message code="createMatchFormSubmit"/></button>
-            </form>
+            </form:form>
 
         </div> <!-- END Form container -->
 

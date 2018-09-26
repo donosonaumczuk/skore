@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,12 +39,12 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value ="/create", method = {RequestMethod.GET })
+    @RequestMapping(value = "/create", method = {RequestMethod.GET })
     public ModelAndView createForm(@ModelAttribute("registerForm") UserForm userForm){
         return new ModelAndView("createUser");
     }
 
-    @RequestMapping(value ="/create", method = {RequestMethod.POST })
+    @RequestMapping(value = "/create", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
                                final BindingResult errors){
         if(errors.hasErrors()) {
@@ -53,9 +54,19 @@ public class FrontController {
         return new ModelAndView("redirect:/userId=" + u.getUserId());
     }
 
-    @RequestMapping("/createMatch")
-    public ModelAndView createMatch(){
+    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
+    public ModelAndView createMatchForm(@ModelAttribute("registerForm") MatchForm matchForm){
         return new ModelAndView("createMatch");
+    }
+
+    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
+    public ModelAndView createMatch(@Valid @ModelAttribute("registerForm") final MatchForm matchForm,
+                                    final BindingResult errors){
+        if(errors.hasErrors()) {
+            return createMatchForm(matchForm);
+        }
+       // final User u = us.create(userForm.getUsername(), "a", "b" );
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping("/login")
