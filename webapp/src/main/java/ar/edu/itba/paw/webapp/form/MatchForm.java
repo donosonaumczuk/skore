@@ -14,6 +14,9 @@ public class MatchForm {
     @Size(min = 0, max = 10)
     private String description;
 
+    @Pattern(regexp = "[0-9][0-9]/0-9][0-9]/0-9][0-9]0-9][0-9]")
+    private String date;
+
     //private String country;
 //    private String state;
 //    private String city;
@@ -43,5 +46,12 @@ public class MatchForm {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(final String date) {
+        this.date = date;
     }
 }

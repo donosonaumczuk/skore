@@ -16,15 +16,16 @@
 
 <%-- Include Navigation Bars --%>
 <jsp:include page="navbar.jsp"></jsp:include>
-<c:url value="/createMatch" var="createMatchUrl" />
 
 <div class="container-fluid">
     <div class="row">
         <div class="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container --><div class="container">
-            <form:form modelAttribute="registerForm" action="${createMatchUrl}" method="post">
+            <c:url value="/createMatch" var="createMatchUrl" />
+            <form:form modelAttribute="createMatchForm" action="${createMatchUrl}" method="post">
                 <div class="form-group">
                     <label for="match-name-input"><spring:message code="matchNameLabel"/>*</label>
-                    <input type="text" class="form-control" id="match-name-input" path="matchName" placeholder="<spring:message code="matchNameLabel"/>">
+                    <spring:message code="matchNameLabel" var="matchLabelHolder" />
+                    <form:input type="text" class="form-control" id="match-name-input" path="matchName" placeholder='${matchLabelHolder}'/>
                     <form:errors path="matchName" element="p" cssClass=""/>
                 </div>
                 <div class="form-row">
@@ -57,14 +58,14 @@
                 </div>
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/>*</label>
-                    <select id="inputSport" path="sportName" class="form-control">
+                    <form:select id="inputSport" path="sportName" class="form-control">
                         <option selected><spring:message code="chooseSportLabel"/></option>
                         <option value="Football 5">Football 5</option>
                         <option value="Football 7">Football 7</option>
                         <option value="Football 11">Football 11</option>
                         <option value="Padel Singles">Padel Singles</option>
                         <option value="Padel Doubles">Padel Doubles</option>
-                    </select>
+                    </form:select>
                     <form:errors path="sportName" element="p" cssClass=""/>
                 </div>
                 <div class="form-group collapse" id="collapseTeam">
@@ -78,7 +79,7 @@
                 <div class="form-group">
                     <label for="datepicker"><spring:message code="dateLabel"/>*</label>
                     <div class="input-group date" id="datepicker" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datepicker"/>
+                        <form:input type="text" path="date" class="form-control datetimepicker-input" data-target="#datepicker"/>
                         <div class="input-group-append" data-target="#datepicker" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                         </div>
@@ -107,7 +108,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description"><spring:message code="descriptionLabel"/></label>
-                    <textarea class="form-control" id="description" path="description" rows="3" maxlength="140"></textarea>
+                    <form:textarea class="form-control" id="description" path="description" rows="3" maxlength="140"/>
                     <form:errors path="description" element="p" cssClass=""/>
 
                 </div>
