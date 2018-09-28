@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS tornaments(
 
 CREATE TABLE IF NOT EXISTS games (
   teamName1     VARCHAR(100) NOT NULL,
-  teamName2     VARCHAR(100) NOT NULL,
+  teamName2     VARCHAR(100),
   startTime     TIMESTAMP NOT NULL,
   finishTime    TIMESTAMP NOT NULL,
   type          VARCHAR(100) NOT NULL,
@@ -75,5 +75,5 @@ CREATE TABLE IF NOT EXISTS games (
   FOREIGN KEY (teamName1) REFERENCES teams(teamName),
   FOREIGN KEY (teamName2) REFERENCES teams(teamName),
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (teamName1, teamName2, startTime, finishTime)
+  PRIMARY KEY (teamName1, startTime, finishTime)
 );

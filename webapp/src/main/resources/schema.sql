@@ -3,14 +3,14 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS sports(
   sportName       VARCHAR(100) PRIMARY KEY,
   playerQuantity  INTEGER
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS users(
   userId    SERIAL PRIMARY KEY,
   email     VARCHAR(100) NOT NULL,
   firstName VARCHAR(100),
   lastName  VARCHAR(100)
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   birthday    DATE,
   image       BYTEA,
   UNIQUE(userId)
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS friendOf(
   userName        VARCHAR(100) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS friendOf(
   FOREIGN KEY (userName) REFERENCES accounts(userName),
   FOREIGN KEY (friendsUserName) REFERENCES accounts(userName),
   PRIMARY KEY (userName, friendsUserName)
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS notification(
   startTime TIMESTAMP,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS notification(
   userName  VARCHAR(100),
   FOREIGN KEY (userName) REFERENCES accounts(userName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (startTime, content)
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS likes(
   userName  VARCHAR(100),
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS likes(
   FOREIGN KEY (userName) REFERENCES accounts(userName),
   FOREIGN KEY (sportName) REFERENCES sports(sportName),
   PRIMARY Key (userName, sportName)
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS teams(
   teamName    VARCHAR(100) PRIMARY KEY,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS teams(
   image       BYTEA,
   FOREIGN KEY (sportName) REFERENCES sports(sportName)
   --Filters--
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS isPartOf (
   userId    INTEGER NOT NULL,
@@ -69,17 +69,17 @@ CREATE TABLE IF NOT EXISTS isPartOf (
   PRIMARY KEY (userid, teamName),
   FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (teamName) REFERENCES teams(teamName) ON DELETE CASCADE ON UPDATE CASCADE
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS tornaments(
   tornamentName VARCHAR(100) PRIMARY KEY,
   type          VARCHAR(100),
   image         BYTEA
-);
+)/;
 
 CREATE TABLE IF NOT EXISTS games (
   teamName1     VARCHAR(100) NOT NULL,
-  teamName2     VARCHAR(100) NOT NULL,
+  teamName2     VARCHAR(100),
   startTime     TIMESTAMP NOT NULL,
   finishTime    TIMESTAMP NOT NULL,
   type          VARCHAR(100) NOT NULL,
@@ -93,7 +93,54 @@ CREATE TABLE IF NOT EXISTS games (
   FOREIGN KEY (teamName1) REFERENCES teams(teamName),
   FOREIGN KEY (teamName2) REFERENCES teams(teamName),
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (teamName1, teamName2, startTime, finishTime)
-);
+  PRIMARY KEY (teamName1, startTime, finishTime)
+)/;
+
+DROP TRIGGER IF EXISTS checkTeamInterval ON teams/;
+DROP FUNCTION IF EXISTS checkTeam() CASCADE /;
+
+CREATE OR REPLACE FUNCTION checkTeam() RETURNS Trigger AS $$
+DECLARE
+startTimeAux    TIMESTAMP;
+finishTimeAux   TIMESTAMP;
+teamName1Aux    VARCHAR(100);
+teamName2Aux    VARCHAR(100);
+
+cursorTeam CURSOR FOR
+SELECT teamName1, teamName2, startTime, finishTime
+FROM games
+WHERE teamName1 = new.teamName1 OR teamName2 = new.teamName1;
+
+BEGIN
+OPEN cursorTeam;
+
+LOOP
+    FETCH cursorTeam INTO startTimeAux, finishTimeAux, teamName1Aux, teamName2Aux;
+    EXIT WHEN NOT FOUND;
+    IF (new.teamName1 = teamName1Aux OR new.teamName1 = teamName2Aux) THEN
+        IF (new.startTime <= startTimeAux AND startTimeAux <= new.finishTime) OR
+           (new.startTime <= finishTimeAux AND finishTimeAux <= new.finishTime) OR
+           (new.startTime >= startTimeAux AND finishTimeAux >= new.finishTime) THEN
+            Raise exception 'team 1 already play in at that time' USING ERRCODE = 'PP111';
+        END IF;
+    ELSIF (new.teamName1 IS NOT NULL AND
+           (new.teamName2 = teamName1Aux OR new.teamName2 = teamName2Aux)) THEN
+        IF (new.startTime <= startTimeAux AND startTimeAux <= new.finishTime) OR
+           (new.startTime <= finishTimeAux AND finishTimeAux <= new.finishTime) OR
+           (new.startTime >= startTimeAux AND finishTimeAux >= new.finishTime) THEN
+            Raise exception 'team 2 already play in at that time' USING ERRCODE = 'PP111';
+        END IF;
+    END IF;
+
+END LOOP;
+
+CLOSE cursorTeam;
+RETURN new;
+END;
+$$ LANGUAGE plpgsql/;
+
+CREATE TRIGGER checkTeamInterval BEFORE INSERT OR UPDATE OF teamName1, teamName2 ON games
+FOR EACH ROW
+EXECUTE PROCEDURE checkTeam()/;
 
 COMMIT;
