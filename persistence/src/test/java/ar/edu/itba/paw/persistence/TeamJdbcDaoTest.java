@@ -161,12 +161,31 @@ public class TeamJdbcDaoTest {
         insertUser(USERNAME, USERID_2, EMAIL_2);
         insertSport(SPORTNAME, PLAYERQUANTITY);
         insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
-        insertIsAPartOf(TEAMNAME, USERID_2);
+        insertIsAPartOf(TEAMNAME, USERID_1);
 
-        final Optional<Team> returnedTeam = teamDao.addPlayer(TEAMNAME, USERID_1);
+        final Optional<Team> returnedTeam = teamDao.addPlayer(TEAMNAME, USERID_2);
 
         Assert.assertTrue(returnedTeam.isPresent());
         Assert.assertEquals(TEAMNAME, returnedTeam.get().getName());
-        Assert.assertEquals(USERID_1, returnedTeam.get().getPlayers().get(0).getUserId());
+        Assert.assertEquals(2, returnedTeam.get().getPlayers().size());
+        Assert.assertEquals(USERID_2, returnedTeam.get().getPlayers().get(1).getUserId());
+        Assert.assertEquals(2, JdbcTestUtils.countRowsInTable(jdbcTemplate, "isPartOf"));
+    }
+
+    @Test
+    public void testReamovePlayer() {
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
+        insertUser(USERNAME, USERID_2, EMAIL_2);
+        insertSport(SPORTNAME, PLAYERQUANTITY);
+        insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
+        insertIsAPartOf(TEAMNAME, USERID_1);
+        insertIsAPartOf(TEAMNAME, USERID_2);
+
+        final Optional<Team> returnedTeam = teamDao.removePlayer(TEAMNAME, USERID_2);
+
+        Assert.assertTrue(returnedTeam.isPresent());
+        Assert.assertEquals(TEAMNAME, returnedTeam.get().getName());
+        Assert.assertEquals(1, returnedTeam.get().getPlayers().size());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "isPartOf"));
     }
 }
