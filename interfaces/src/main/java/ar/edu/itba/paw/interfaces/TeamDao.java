@@ -12,13 +12,14 @@ public interface TeamDao {
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName);
 
-    /*public boolean remove(final String teamName);
+    public boolean remove(final String teamName);
 
     public Optional<Team> addPlayer(final String teamName, final long userId);
 
     public Optional<Team> removePlayer(final String teamName, final long userId);
 
     public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
-                                         final String newLeaderName, final String newSportName);*/
+                                         final String newLeaderName, final String newSportName,
+                                         final String oldTeamName);
 
 }

@@ -20,27 +20,17 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:schema.sql")
 public class TeamJdbcDaoTest {
-    private static final String  LEADERNAME = "leader_name";
-    private static final String  ACRONYM = "acronym";
-    private static final String  TEAMNAME = "team_name";
-    private static final boolean ISTEMP = true;
-    private static final String  SPORTNAME = "football";
-    private static final long    USERID_1 = 14;
-    private static final long    USERID_2 = 15;
-    private static final String  EMAIL = "email";
+    private static final String  LEADERNAME     = "leader_name";
+    private static final String  USERNAME       = "userName";
+    private static final String  ACRONYM        = "acronym";
+    private static final String  TEAMNAME       = "team_name";
+    private static final boolean ISTEMP         = true;
+    private static final String  SPORTNAME      = "football";
+    private static final long    USERID_1       = 14;
+    private static final long    USERID_2       = 15;
+    private static final String  EMAIL_1        = "email1";
+    private static final String  EMAIL_2        = "email2";
     private static final int     PLAYERQUANTITY = 5;
-
-
-    private static final String  BIRTHDAY = "1994-12-26";
-    private static final String  COUNTRY = "country";
-    private static final String  STATE = "state";
-    private static final String  CITY = "city";
-    private static final String  STREET = "street";
-    private static final int     REPUTATION = 10;
-    private static final String  PASSWORD = "password";
-
-    private static final String  EXISTANT_USERNAME = "ExistantUsername";
-    private static final String  NONEXISTANT_USERNAME = "NonExistantUsername";
 
     @Autowired
     private DataSource dataSource;
@@ -57,9 +47,9 @@ public class TeamJdbcDaoTest {
                 "accounts", "users", "sports");
     }
 
-    private void insertLeader(final String leaderName, final long userId) {
+    private void insertUser(final String leaderName, final long userId, final  String email) {
         jdbcTemplate.execute("INSERT INTO users (userId, email)" +
-                " VALUES (" + userId + ", '" + EMAIL + "');");
+                " VALUES (" + userId + ", '" + email + "');");
         jdbcTemplate.execute("INSERT INTO accounts (userName, userId)" +
                 " VALUES ('" +  leaderName + "', " + userId + ");");
     }
@@ -87,21 +77,10 @@ public class TeamJdbcDaoTest {
         insertIsAPartOf(teamName, userId);
     }
 
-    private void removeLeader(final String leaderName, final long userId) {
-        jdbcTemplate.execute("DELETE FROM accounts CASCADE WHERE userName = '" + leaderName + "';");
-        jdbcTemplate.execute("DELETE FROM users CASCADE WHERE userId = " + userId +";");
-
-    }
-
-    private void removeSport(final String sportName) {
-        jdbcTemplate.execute("DELETE FROM sports CASCADE WHERE sportName = '" + sportName + "';");
-    }
-
-
     @Test
     public void testCreate() {
         //set up
-        insertLeader(LEADERNAME, USERID_1);
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
         insertSport(SPORTNAME, PLAYERQUANTITY);
 
         //exercise class
@@ -120,11 +99,11 @@ public class TeamJdbcDaoTest {
     @Test
     public void testFindByTeamName() {
         //set up
-        insertLeader(LEADERNAME, USERID_1);
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
         insertSport(SPORTNAME, PLAYERQUANTITY);
         insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
         insertIsAPartOf(TEAMNAME, USERID_1);
-        insertAPlayer(EMAIL, USERID_2, TEAMNAME);
+        insertAPlayer(EMAIL_1, USERID_2, TEAMNAME);
 
         //exercise class
         final Optional<Team> returnedTeam = teamDao.findByTeamName(TEAMNAME);
@@ -140,7 +119,7 @@ public class TeamJdbcDaoTest {
     @Test
     public void testRemoveTeam(){
         //set up
-        insertLeader(LEADERNAME, USERID_1);
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
         insertSport(SPORTNAME, PLAYERQUANTITY);
         insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
 
@@ -153,16 +132,16 @@ public class TeamJdbcDaoTest {
     }
 
     @Test
-    public void testUpdateTeamInfoSuccess() {
+    public void testUpdateTeamInfo() {
         //set up
-        insertLeader(LEADERNAME, USERID_1);
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
         insertSport(SPORTNAME, PLAYERQUANTITY);
         insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
         insertIsAPartOf(TEAMNAME, USERID_1);
         final String newTeamName = "newTeamName";
         final String newLeaderName = "newLeaderName";
         final long newLeaderId = 1000;
-        insertLeader(newLeaderName, newLeaderId);
+        insertUser(newLeaderName, newLeaderId, EMAIL_2);
         insertIsAPartOf(TEAMNAME, newLeaderId);
 
         //exercise class
@@ -174,5 +153,20 @@ public class TeamJdbcDaoTest {
         Assert.assertEquals(newTeamName, returnedTeam.get().getName());
         Assert.assertEquals(newLeaderName, returnedTeam.get().getLeader().getUserName());
         Assert.assertEquals(SPORTNAME, returnedTeam.get().getSport().getName());
+    }
+
+    @Test
+    public void testAddPlayer() {
+        insertUser(LEADERNAME, USERID_1, EMAIL_1);
+        insertUser(USERNAME, USERID_2, EMAIL_2);
+        insertSport(SPORTNAME, PLAYERQUANTITY);
+        insertTeam(LEADERNAME, ACRONYM, TEAMNAME, ISTEMP, SPORTNAME);
+        insertIsAPartOf(TEAMNAME, USERID_2);
+
+        final Optional<Team> returnedTeam = teamDao.addPlayer(TEAMNAME, USERID_1);
+
+        Assert.assertTrue(returnedTeam.isPresent());
+        Assert.assertEquals(TEAMNAME, returnedTeam.get().getName());
+        Assert.assertEquals(USERID_1, returnedTeam.get().getPlayers().get(0).getUserId());
     }
 }

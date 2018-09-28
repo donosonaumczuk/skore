@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

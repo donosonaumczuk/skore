@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.Exceptions.TeamFullException;
+import ar.edu.itba.paw.Exceptions.TeamNotFoundException;
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,7 @@ public class TeamJdbcDao implements TeamDao {
         jdbcInsertIsPartOf = new SimpleJdbcInsert(jdbcTemplate).withTableName("isPartOf");
     }
 
+    @Override
     public Optional<Team> findByTeamName(final String teamName) {
         String query =
                 "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
@@ -67,6 +71,7 @@ public class TeamJdbcDao implements TeamDao {
         return team;
     }
 
+    @Override
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName) {
@@ -88,16 +93,17 @@ public class TeamJdbcDao implements TeamDao {
         return findByTeamName(teamName);
     }
 
+    @Override
     public boolean remove(final String teamName) {
-        final String sqlQuery = "DELETE FROM teams where teamName = ?";
+        final String sqlQuery = "DELETE FROM teams where teamName = ?;";
         int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName);
         return rowsDeleted > 0;
     }
 
+    @Override
     public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
                                          final String newLeaderName, final String newSportName,
                                          final String oldTeamName) {
-
         int rowsModifiedTeam;
         final String sqlQueryTeam = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
                 "sportName = ? WHERE teamName = ?";
@@ -108,6 +114,41 @@ public class TeamJdbcDao implements TeamDao {
         }
 
         return  Optional.empty();
+    }
+
+    public Optional<Team> addPlayer(final String teamName, final long userId) {
+        Optional<Team> team = findByTeamName(teamName);
+        if(!team.isPresent()) {
+            throw new TeamNotFoundException("There is not a team with the name " + teamName);
+        }
+        if(team.get().getPlayers().size() > team.get().getSport().getQuantity()) {
+            throw new TeamFullException("The team " + teamName + "is full");
+        }
+
+        final Map<String, Object> argsIsPartOF =  new HashMap<>();
+
+        argsIsPartOF.put("teamName", teamName);
+        argsIsPartOF.put("userId", userId);
+
+        jdbcInsertIsPartOf.execute(argsIsPartOF);
+
+        return findByTeamName(teamName);
+    }
+
+    public Optional<Team> removePlayer(final String teamName, final long userId) {
+        Optional<Team> team = findByTeamName(teamName);
+        if(!team.isPresent()) {
+            throw new TeamNotFoundException("There is not a team with the name: " + teamName);
+        }
+
+        final String sqlQuery = "DELETE FROM isPartOf where teamName = ? AND userId = ?;";
+        int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName, userId);
+
+        if(rowsDeleted == 0) {
+            throw new UserNotFoundException("There is not a user with th id: " + userId);
+        }
+
+        return findByTeamName(teamName);
     }
 
     private static Team mapATeam(ResultSet resultSet) throws SQLException, DataAccessException {

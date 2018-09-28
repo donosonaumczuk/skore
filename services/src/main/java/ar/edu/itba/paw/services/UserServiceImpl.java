@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
