@@ -43,11 +43,11 @@ public class Game {
         this.team2 = team2;
     }
 
-    public String getTeam1Name() {
+    public String team1Name() {
         return team1.getName();
     }
 
-    public String getTeam2Name() {
+    public String team2Name() {
         return team2.getName();
     }
 

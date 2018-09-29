@@ -30,6 +30,7 @@
         <logback.version>1.1.2</logback.version>
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
+        <jackson-mapper-asl>1.7.1</jackson-mapper-asl>
     </properties>
 
 
@@ -133,6 +134,11 @@
                 <artifactId>logback-ext-spring</artifactId>
                 <version>${logback-ext-spring.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson-mapper-asl}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

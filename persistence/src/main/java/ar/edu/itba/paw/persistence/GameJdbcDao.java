@@ -86,9 +86,9 @@ public class GameJdbcDao implements GameDao {
         final Optional<Game> gameOpt = list.stream().findFirst();
         if(gameOpt.isPresent()) {
             final Game game = gameOpt.get();
-            Team team = teamDao.findByTeamName(game.getTeam1Name()).get();
+            Team team = teamDao.findByTeamName(game.team1Name()).get();
             game.setTeam1(team);
-            team = (game.getTeam2() == null)?null:teamDao.findByTeamName(game.getTeam2Name()).get();
+            team = (game.getTeam2() == null)?null:teamDao.findByTeamName(game.team2Name()).get();
             game.setTeam2(team);
         }
 

@@ -102,6 +102,10 @@
       <artifactId>logback-ext-spring</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

@@ -52,8 +52,9 @@ public class GameServiceImpl implements GameService {
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces) {
-        return gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types, sportNames,
-                minQuantity,  maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces);
+        return gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types,
+                sportNames, minQuantity,  maxQuantity, countries, states, cities, minFreePlaces,
+                maxFreePlaces);
     }
 
     @Override
