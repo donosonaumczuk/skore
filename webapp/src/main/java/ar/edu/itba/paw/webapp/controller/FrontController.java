@@ -32,9 +32,8 @@ public class FrontController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-        System.out.println("A ver si sale en pantalla\n\n\n\n\n\n");
-        //mav.addObject("user", us.updateEmail(10000, "Agustinizag1@gmail.com"));
-        //mav.addObject("user", us.findById(1));
+//        mav.addObject("user", us.updateEmail(10000, "Agustinizag1@gmail.com"));
+//        mav.addObject("user", us.findById(1));
 
         return mav;
     }

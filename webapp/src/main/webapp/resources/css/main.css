@@ -4,6 +4,7 @@
     --secondary-color: #dec58e;
     --dark-secondary-color: #b49f71;
     --light-gray: #f0f0f0;
+    --light-hover-gray: #f8f8f8;
     --light-green: #a7d1b4;
     --dark-green: #7db88f;
 }
@@ -19,6 +20,8 @@ body {
 .filters {
     background-color: white;
     border-radius: 0.5rem;
+    overflow-y: scroll;
+    height: 42.5rem;
 }
 
 .sidepanel {
@@ -46,6 +49,16 @@ body {
 
 .sign-in-container {
     margin-top: 9rem;
+}
+
+.left-panel-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.filter-badge {
+    background-color: var(--light-gray);
+    font-size: 0.9rem;
 }
 
 .sign-in-brand {
