@@ -23,41 +23,39 @@
             <c:url value="/createMatch" var="createMatchUrl" />
             <form:form modelAttribute="createMatchForm" action="${createMatchUrl}" method="post">
                 <div class="form-group">
-                    <label for="match-name-input"><spring:message code="matchNameLabel"/>*</label>
+                    <label for="match-name-input"><spring:message code="matchNameLabel"/><span class="text-muted">*</span></label>
                     <spring:message code="matchNameLabel" var="matchLabelHolder" />
                     <form:input type="text" class="form-control" id="match-name-input" path="matchName" placeholder='${matchLabelHolder}'/>
                     <form:errors path="matchName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-6">
-                        <label for="competitiveness"><spring:message code="matchCompetitivenessLabel"/>*</label>
-                        <div class="input-group">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
-                                <label class="btn btn-green active" id="friendly">
-                                    <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
-                                </label>
-                                <label class="btn btn-green" id="competitive">
-                                    <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-6">
-                        <label for="inscription"><spring:message code="inscriptionModeLabel"/>*</label>
-                        <div class="input-group">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">
-                                <label class="btn btn-green active" id="individual">
-                                    <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="individualLabel"/>
-                                </label>
-                                <label class="btn btn-green" id="team">
-                                    <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
-                                </label>
-                            </div>
+                <div class="form-group">
+                    <label for="competitiveness"><spring:message code="matchCompetitivenessLabel"/><span class="text-muted">*</span></label>
+                    <div class="input-group">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
+                            <label class="btn btn-green active" id="friendly">
+                                <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
+                            </label>
+                            <label class="btn btn-green" id="competitive">
+                                <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
+                            </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputSport"><spring:message code="sportLabel"/>*</label>
+                    <label for="inscription"><spring:message code="inscriptionModeLabel"/><span class="text-muted">*</span></label>
+                    <div class="input-group">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">
+                            <label class="btn btn-green active" id="individual">
+                                <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="individualLabel"/>
+                            </label>
+                            <label class="btn btn-green" id="team">
+                                <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
                         <option selected><spring:message code="chooseSportLabel"/></option>
                         <option value="Football 5">Football 5</option>
@@ -69,7 +67,7 @@
                     <form:errors path="sportName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group collapse" id="collapseTeam">
-                    <label for="inputTeam"><spring:message code="teamLabel"/>*</label>
+                    <label for="inputTeam"><spring:message code="teamLabel"/><span class="text-muted">*</span></label>
                     <select id="inputTeam" class="form-control">
                         <option selected><spring:message code="chooseTeamLabel"/></option>
                         <option>Team1</option>
@@ -77,7 +75,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="datepicker"><spring:message code="dateLabel"/>*</label>
+                    <label for="datepicker"><spring:message code="dateLabel"/><span class="text-muted">*</span></label>
                     <small id="dateFormatHelp" class="form-text text-muted"><spring:message code="dateFormatLabel"/></small>
                     <div class="input-group date" id="datepicker" data-target-input="nearest">
                         <form:input type="text" path="date" class="form-control datetimepicker-input" data-target="#datepicker"/>
@@ -90,7 +88,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-6">
-                        <label for="timepicker-from"><spring:message code="fromLabel"/>*</label>
+                        <label for="timepicker-from"><spring:message code="fromLabel"/><span class="text-muted">*</span></label>
                         <div class="input-group date" id="timepicker-from" data-target-input="nearest">
                             <form:input type="text" path="startTime" class="form-control datetimepicker-input" data-target="#timepicker-from"/>
                             <div class="input-group-append" data-target="#timepicker-from" data-toggle="datetimepicker">
@@ -100,7 +98,7 @@
                         </div>
                     </div>
                     <div class="form-group col-6">
-                        <label for="timepicker-to"><spring:message code="toLabel"/>*</label>
+                        <label for="timepicker-to"><spring:message code="toLabel"/><span class="text-muted">*</span></label>
                         <div class="input-group date" id="timepicker-to" data-target-input="nearest">
                             <form:input type="text" path="endTime" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
                             <div class="input-group-append" data-target="#timepicker-to" data-toggle="datetimepicker">
@@ -117,11 +115,11 @@
 
                 </div>
                 <div class="form-group" id="locationField">
-                    <label for="autocomplete"><spring:message code="addressLabel"/>*</label>
+                    <label for="autocomplete"><spring:message code="addressLabel"/><span class="text-muted">*</span></label>
                     <input type="text" class="form-control" id="autocomplete" placeholder="<spring:message code="enterAddressLabel"/>" onFocus="geolocate()" >
                 </div>
                 <div class="form-group">
-                    <label for="country"><spring:message code="countryLabel"/>*</label>
+                    <label for="country"><spring:message code="countryLabel"/><span class="text-muted">*</span></label>
                     <form:input type="text" path="country" class="form-control" id="country" readonly="true"/>
                     <form:errors path="country" element="div" cssClass="invalid-feedback d-block"/>
 
@@ -145,7 +143,7 @@
                         <form:errors path="city" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                     <div class="form-group col-6">
-                        <label for="administrative_area_level_1"><spring:message code="stateLabel"/>*</label>
+                        <label for="administrative_area_level_1"><spring:message code="stateLabel"/><span class="text-muted">*</span></label>
                         <form:input type="text" path="state" class="form-control" id="administrative_area_level_1" readonly="true"/>
                         <form:errors path="state" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
