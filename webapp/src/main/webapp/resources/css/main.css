@@ -20,16 +20,13 @@ body {
 .filters {
     background-color: white;
     border-radius: 0.5rem;
-    overflow-y: scroll;
-    height: 42.5rem;
 }
 
 .sidepanel {
-    margin-top: 8.5rem;
-}
-
-.sidepanel-container {
-
+    /* THIS VALUE IS
+    FOR THE DOUBLE NAVBAR
+    margin-top: 8.5rem;*/
+    margin-top: 5rem;
 }
 
 .create-match {
@@ -92,11 +89,17 @@ body {
 }
 
 .match-container {
-    margin-top: 8.5rem;
+    /* THIS VALUE IS
+    FOR DOUBLE NAVBAR
+    margin-top: 8.5rem; */
+    margin-top: 5rem;
 }
 
 .create-match-container {
-    margin-top: 12rem;
+    /* THIS VALUE IS
+    FOR DOUBLE NAVBAR
+    margin-top: 12rem;*/
+    margin-top: 9rem;
 }
 
 .match-card {
@@ -179,30 +182,30 @@ html {
     color: grey;
 }
 
-.sport-label {
-    /* font-size:  */
+.username-label:hover {
+    color: var(--dark-secondary-color);
 }
 
 /* sm - Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-    .primary-nav {
-        background-color: blueviolet;
-    }
+    /*.primary-nav {*/
+        /*background-color: blueviolet;*/
+    /*}*/
 
 }
 
 /* md - Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .primary-nav {
-        background-color: lightseagreen;
-    }
+    /*.primary-nav {*/
+        /*background-color: lightseagreen;*/
+    /*}*/
 }
 
 /* lg - Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    .primary-nav {
-        background-color: indianred;
-    }
+    /*.primary-nav {*/
+        /*background-color: indianred;*/
+    /*}*/
 
     html {
         font-size: 1rem;
@@ -211,7 +214,7 @@ html {
 
 /* xl - Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    .primary-nav {
-        background-color: black;
-    }
+    /*.primary-nav {*/
+        /*background-color: black;*/
+    /*}*/
 }

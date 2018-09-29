@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@PasswordMatches
 public class UserForm {
     @Size(min = 0, max = 100)
     @Pattern(regexp ="[a-zA-Z]+")

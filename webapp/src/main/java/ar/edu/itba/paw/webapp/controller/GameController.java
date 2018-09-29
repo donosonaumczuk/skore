@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/game")
 @Controller
 public class GameController {
 
@@ -26,7 +25,7 @@ public class GameController {
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
-    @RequestMapping(value="/filter", method= RequestMethod.POST)
+    @RequestMapping(value="/match/filter", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGames(
             @RequestParam final String minStartTime, @RequestParam final String maxStartTime,

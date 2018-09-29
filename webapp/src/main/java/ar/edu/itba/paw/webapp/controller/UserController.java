@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-@RequestMapping("/user")
 @Controller
 public class UserController {
 
@@ -34,28 +33,13 @@ public class UserController {
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
-                               final BindingResult errors){
+                               final BindingResult errors) {
         if(errors.hasErrors()) {
             return createForm(userForm);
         }
         //final User u = us.create(userForm.getUsername(), "a", "b" );
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
-    }
-
-    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
-    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm){
-        return new ModelAndView("createMatch");
-    }
-
-    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
-    public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
-                                    final BindingResult errors){
-        if(errors.hasErrors()) {
-            LOGGER.debug("date received: " + matchForm.getDate());
-            return createMatchForm(matchForm);
-        }
-        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping("/login")

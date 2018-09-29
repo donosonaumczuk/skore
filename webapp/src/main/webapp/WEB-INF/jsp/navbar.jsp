@@ -4,14 +4,11 @@
 
 <nav class="navbar fixed-top primary-nav">
     <a class="navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
-    <form class="form-inline">
-        <input class="form-control" type="search" placeholder=<spring:message code="searchMessage"/> aria-label="Search">
-    </form>
     <a class="d-none d-sm-block login-link" href=""><spring:message code="logInMessage"/></a>
 </nav>
 
 
-<nav class="navbar d-none d-sm-block fixed-top second-nav">
-    <button class="btn offset-4 btn-second-nav" type="submit"><spring:message code="rankingsMessage"/></button>
-    <button class="btn offset-3 btn-second-nav" type="submit"><spring:message code="tournamentsMessage"/></button>
-</nav>
+<%--<nav class="navbar d-none d-sm-block fixed-top second-nav">--%>
+    <%--<button class="btn offset-4 btn-second-nav" type="submit"><spring:message code="rankingsMessage"/></button>--%>
+    <%--<button class="btn offset-3 btn-second-nav" type="submit"><spring:message code="tournamentsMessage"/></button>--%>
+<%--</nav>--%>
