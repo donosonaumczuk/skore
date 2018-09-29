@@ -26,7 +26,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .invalidSessionUrl("/login")
                 .and().authorizeRequests()
                     .antMatchers("/login").anonymous()
-                    .antMatchers("/admins/**").hasRole("ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("user_username")
@@ -38,6 +38,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .userDetailsService(userDetailService)
                     .key("secretKey")
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+                .and().logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login")
                 .and().exceptionHandling()
                     .accessDeniedPage("/403")
                 .and().csrf().disable();
