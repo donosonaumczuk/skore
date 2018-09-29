@@ -5,11 +5,12 @@ import ar.edu.itba.paw.Exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,10 @@ import java.util.*;
 
 @Repository
 public class TeamJdbcDao implements TeamDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamJdbcDao.class);
+
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsertTeam;
     private final SimpleJdbcInsert jdbcInsertIsPartOf;
@@ -54,6 +59,7 @@ public class TeamJdbcDao implements TeamDao {
 
     @Override
     public Optional<Team> findByTeamName(final String teamName) {
+        LOGGER.trace("Try to find team: " + teamName);
         String query =
                 "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
                     "leader.email as leaderEmail, leader.userId as leaderUserId, leader.userName " +
@@ -68,6 +74,7 @@ public class TeamJdbcDao implements TeamDao {
                 "ORDER BY teamName;";
         final List<Team> list = jdbcTemplate.query(query, MAPPER, teamName);
         Optional<Team> team = list.stream().findFirst();
+        LOGGER.trace("Returning what was found");
         return team;
     }
 
@@ -75,7 +82,6 @@ public class TeamJdbcDao implements TeamDao {
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName) {
-
         final Map<String, Object> argsTeam =  new HashMap<>();
         final Map<String, Object> argsIsPartOF =  new HashMap<>();
 
@@ -88,13 +94,18 @@ public class TeamJdbcDao implements TeamDao {
         argsIsPartOF.put("teamName", teamName);
         argsIsPartOF.put("userId", leaderId);
 
+        LOGGER.trace("Try to create team: " + teamName);
         jdbcInsertTeam.execute(argsTeam);
+        LOGGER.trace("Successfully create team: " + teamName);
+        LOGGER.trace("Try to add player: " + leaderId + " to team: " + teamName);
         jdbcInsertIsPartOf.execute(argsIsPartOF);
+        LOGGER.trace("Successfully add player: " + leaderId + " to team: " + teamName);
         return findByTeamName(teamName);
     }
 
     @Override
     public boolean remove(final String teamName) {
+        LOGGER.trace("Try to delete team: " + teamName);
         final String sqlQuery = "DELETE FROM teams where teamName = ?;";
         int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName);
         return rowsDeleted > 0;
@@ -104,6 +115,7 @@ public class TeamJdbcDao implements TeamDao {
     public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
                                          final String newLeaderName, final String newSportName,
                                          final String oldTeamName) {
+        LOGGER.trace("Try to modify: " + oldTeamName);
         int rowsModifiedTeam;
         final String sqlQueryTeam = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
                 "sportName = ? WHERE teamName = ?";
@@ -117,11 +129,14 @@ public class TeamJdbcDao implements TeamDao {
     }
 
     public Optional<Team> addPlayer(final String teamName, final long userId) {
+        LOGGER.trace("Try to add player: " + userId + " to team: " + teamName);
         Optional<Team> team = findByTeamName(teamName);
         if(!team.isPresent()) {
+            LOGGER.error("There is not a team: " + teamName);
             throw new TeamNotFoundException("There is not a team with the name " + teamName);
         }
         if(team.get().getPlayers().size() > team.get().getSport().getQuantity()) {
+            LOGGER.error("The team: " + teamName + " is full");
             throw new TeamFullException("The team " + teamName + "is full");
         }
 
@@ -132,12 +147,15 @@ public class TeamJdbcDao implements TeamDao {
 
         jdbcInsertIsPartOf.execute(argsIsPartOF);
 
+        LOGGER.trace("Successfully add player: " + userId + " to team: " + teamName);
         return findByTeamName(teamName);
     }
 
     public Optional<Team> removePlayer(final String teamName, final long userId) {
+        LOGGER.trace("Try to add player: " + userId + " to team: " + teamName);
         Optional<Team> team = findByTeamName(teamName);
         if(!team.isPresent()) {
+            LOGGER.error("There is not a team: " + teamName);
             throw new TeamNotFoundException("There is not a team with the name: " + teamName);
         }
 
@@ -148,6 +166,7 @@ public class TeamJdbcDao implements TeamDao {
             throw new UserNotFoundException("There is not a user with th id: " + userId);
         }
 
+        LOGGER.trace("Successfully add player: " + userId + " from team: " + teamName);
         return findByTeamName(teamName);
     }
 
