@@ -27,8 +27,6 @@ public class FutureTimeValidator
         } catch (Exception e) {
             return false;
         }
-        System.out.println("dateTime: " + dateTime + "\n\n\n\n\n");
-        System.out.println("givenDateTime.compareTo(LocalDateTime.now()) = " + givenDateTime.compareTo(LocalDateTime.now().plusMinutes(30)) + "\n\n\n\n" );
         return givenDateTime.compareTo(LocalDateTime.now().plusMinutes(30))>= 0;
     }
 }

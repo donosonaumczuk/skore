@@ -14,7 +14,6 @@ public class FutureDateValidator
 
     @Override
     public boolean isValid(String date, ConstraintValidatorContext context){
-        System.out.println("date: " + date + "\n\n\n\n\n");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate givenDate;
         try {
@@ -22,7 +21,6 @@ public class FutureDateValidator
         } catch (Exception e) {
             return false;
         }
-        //System.out.println("givenDate.compareTo(LocalDate.now()) = " + givenDate.compareTo(LocalDate.now()) + "\n\n\n\n" );
         return givenDate.compareTo(LocalDate.now())>= 0;
     }
 }

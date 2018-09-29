@@ -49,9 +49,9 @@
         <form:errors path="cellphone" element="div" cssClass="invalid-feedback d-block"/>
     </div>
     <div>
-        <form:label path="cellphone"><spring:message code="birthdayLabel"/>: </form:label>
+        <form:label path="birthday"><spring:message code="birthdayLabel"/>: </form:label>
             <div class="input-group dater" id="timepicker-from" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker-from"/>
+                <form:input type="text" path="birthday" class="form-control datetimepicker-input" data-target="#timepicker-from"/>
                 <div class="input-group-append" data-target="#timepicker-from" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fas fa-clock"></i></div>
                 </div>
@@ -64,7 +64,7 @@
         <form:errors path="country" element="div" cssClass="invalid-feedback d-block"/>
     </div>
     <div>
-        <form:label path="state"><sping:message code="stateLabel"/>: </form:label>
+        <form:label path="state"><spring:message code="stateLabel"/>: </form:label>
         <form:input id="input9" path="state" type="text"/>
         <form:errors path="state" element="div" cssClass="invalid-feedback d-block"/>
     </div>

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
+import ar.edu.itba.paw.webapp.form.Validators.PastDate;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Pattern;
@@ -40,6 +41,7 @@ public class UserForm {
     private String street;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
+    @PastDate(message = "{PastDate.createMatchForm.date}")
     private String birthday;
 
     @Size(min = 4, max = 100)
