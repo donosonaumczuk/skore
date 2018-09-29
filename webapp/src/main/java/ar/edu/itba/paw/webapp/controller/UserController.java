@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
+
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
@@ -13,37 +13,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import ar.edu.itba.paw.interfaces.UserService;
 
 import javax.validation.Valid;
 
+@RequestMapping("/user")
 @Controller
-public class FrontController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
+public class UserController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService us;
-
-    @RequestMapping("/")
-    public ModelAndView helloWorld() {
-        final ModelAndView mav = new ModelAndView("index");
-        //mav.addObject("user", us.updateEmail(10000, "Agustinizag1@gmail.com"));
-        //mav.addObject("user", us.findById(1));
-
-        return mav;
-    }
-
-    @RequestMapping("/test")
-    public ModelAndView test() {
-        final ModelAndView mav = new ModelAndView("test");
-        mav.addObject("greeting", "Agustin");
-        return mav;
-    }
 
     @RequestMapping(value = "/create", method = {RequestMethod.GET })
     public ModelAndView createForm(@ModelAttribute("registerForm") UserForm userForm){
