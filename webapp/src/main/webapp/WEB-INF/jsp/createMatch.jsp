@@ -26,7 +26,7 @@
                     <label for="match-name-input"><spring:message code="matchNameLabel"/>*</label>
                     <spring:message code="matchNameLabel" var="matchLabelHolder" />
                     <form:input type="text" class="form-control" id="match-name-input" path="matchName" placeholder='${matchLabelHolder}'/>
-                    <form:errors path="matchName" element="p" cssClass=""/>
+                    <form:errors path="matchName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
@@ -66,7 +66,7 @@
                         <option value="Padel Singles">Padel Singles</option>
                         <option value="Padel Doubles">Padel Doubles</option>
                     </form:select>
-                    <form:errors path="sportName" element="p" cssClass=""/>
+                    <form:errors path="sportName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/>*</label>
@@ -78,38 +78,42 @@
                 </div>
                 <div class="form-group">
                     <label for="datepicker"><spring:message code="dateLabel"/>*</label>
+                    <small id="dateFormatHelp" class="form-text text-muted"><spring:message code="dateFormatLabel"/></small>
                     <div class="input-group date" id="datepicker" data-target-input="nearest">
                         <form:input type="text" path="date" class="form-control datetimepicker-input" data-target="#datepicker"/>
                         <div class="input-group-append" data-target="#datepicker" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                         </div>
+                        <form:errors path="date" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
-                    <small id="dateFormatHelp" class="form-text text-muted"><spring:message code="dateFormatLabel"/></small>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="timepicker-from"><spring:message code="fromLabel"/>*</label>
                         <div class="input-group date" id="timepicker-from" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker-from"/>
+                            <form:input type="text" path="startTime" class="form-control datetimepicker-input" data-target="#timepicker-from"/>
                             <div class="input-group-append" data-target="#timepicker-from" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fas fa-clock"></i></div>
                             </div>
+                            <form:errors path="startTime" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
                     </div>
                     <div class="form-group col-6">
                         <label for="timepicker-to"><spring:message code="toLabel"/>*</label>
                         <div class="input-group date" id="timepicker-to" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
+                            <form:input type="text" path="endTime" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
                             <div class="input-group-append" data-target="#timepicker-to" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fas fa-clock"></i></div>
                             </div>
+                            <form:errors path="endTime" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="description"><spring:message code="descriptionLabel"/></label>
                     <form:textarea class="form-control" id="description" path="description" rows="3" maxlength="140"/>
-                    <form:errors path="description" element="p" cssClass=""/>
+                    <form:errors path="description" element="div" cssClass="invalid-feedback d-block"/>
 
                 </div>
                 <div class="form-group" id="locationField">
@@ -118,26 +122,32 @@
                 </div>
                 <div class="form-group">
                     <label for="country"><spring:message code="countryLabel"/>*</label>
-                    <input type="text" class="form-control" id="country" readonly>
+                    <form:input type="text" path="country" class="form-control" id="country" readonly="true"/>
+                    <form:errors path="country" element="div" cssClass="invalid-feedback d-block"/>
+
                 </div>
                 <div class="form-row">
                     <div class="form-group col-9">
                         <label for="route"><spring:message code="streetLabel"/></label>
-                        <input type="text" class="form-control" id="route" readonly>
+                        <form:input type="text" path="street" class="form-control" id="route" readonly="true"/>
+                        <form:errors path="street" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                     <div class="form-group col-3">
                         <label for="street_number"><spring:message code="numberLabel"/></label>
-                        <input type="text" class="form-control" id="street_number" readonly>
+                        <form:input type="text" path="streetNumber" class="form-control" id="street_number" readonly="true"/>
+                        <form:errors path="streetNumber" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="locality"><spring:message code="cityLabel"/></label>
-                        <input type="text" class="form-control" id="locality" readonly>
+                        <form:input type="text" path="city" class="form-control" id="locality" readonly="true"/>
+                        <form:errors path="city" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                     <div class="form-group col-6">
                         <label for="administrative_area_level_1"><spring:message code="stateLabel"/>*</label>
-                        <input type="text" class="form-control" id="administrative_area_level_1" readonly>
+                        <form:input type="text" path="state" class="form-control" id="administrative_area_level_1" readonly="true"/>
+                        <form:errors path="state" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
                 <small id="requiredHelp" class="form-text text-muted mb-2"><spring:message code="requiredHelpLabel"/></small>

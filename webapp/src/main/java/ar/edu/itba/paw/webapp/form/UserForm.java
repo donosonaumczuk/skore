@@ -11,6 +11,7 @@ public class UserForm {
     private String firstName;
 
     @Size(min = 0, max = 100)
+    @Pattern(regexp ="[a-zA-Z]+")
     private String lastName;
 
     @Email
@@ -39,14 +40,16 @@ public class UserForm {
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
     private String birthday;
 
-    @Size(min = 6, max = 10)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
+    @Size(min = 4, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9_]+")
     private String username;
 
-    @Size(min = 6, max = 10)
+    @Size(min = 5, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9]+")
     private String password;
 
-    @Size(min = 6, max = 10)
+    @Size(min = 5, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9]+")
     private String repeatPassword;
 
     public String getFirstName() {

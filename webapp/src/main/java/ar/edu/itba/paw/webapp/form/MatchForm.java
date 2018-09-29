@@ -10,18 +10,33 @@ public class MatchForm {
 
     private String sportName;
 
-    //@Size(min = 0, max = 140)
-    @Size(min = 0, max = 10)
+    @Size(min = 0, max = 140)
     private String description;
 
-    @Pattern(regexp = "[0-9][0-9]/0-9][0-9]/0-9][0-9]0-9][0-9]")
+    @Pattern(regexp = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
     private String date;
 
-    //private String country;
-//    private String state;
-//    private String city;
-//    private String street;
-//    private String tornamentName;
+    @Pattern(regexp = "[0-9][0-9]:[0-9][0-9]")
+    private String startTime;
+
+    @Pattern(regexp = "[0-9][0-9]:[0-9][0-9]")
+    private String endTime;
+
+    private String country;
+
+    private String state;
+
+    private String city;
+
+    private String street;
+
+    private String streetNumber;
+
+    @Size(min = 1, max = 100)
+    private String teamName1;
+
+    private String teamName2;
+    //    private String tornamentName;
 
 
     public String getMatchName() {
@@ -47,11 +62,72 @@ public class MatchForm {
     public void setDescription(final String description) {
         this.description = description;
     }
-    public String getDate() {
-        return date;
-    }
 
     public void setDate(final String date) {
         this.date = date;
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setStartTime(final String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setEndTime(final String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+
+
+
+    public void setCountry(final String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setState(final String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setCity(final String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setStreet(final String street) {
+        this.street = street;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreetNumber(final String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
 }
