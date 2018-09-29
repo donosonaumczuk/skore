@@ -35,6 +35,22 @@ public class Game {
         return team2;
     }
 
+    public void setTeam1(Team team1) {
+        this.team1 = team1;
+    }
+
+    public void setTeam2(Team team2) {
+        this.team2 = team2;
+    }
+
+    public String getTeam1Name() {
+        return team1.getName();
+    }
+
+    public String getTeam2Name() {
+        return team2.getName();
+    }
+
     public Place getPlace() {
         return place;
     }

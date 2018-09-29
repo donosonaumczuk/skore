@@ -11,8 +11,7 @@ public interface GameDao {
                           final String country, final String state, final String city,
                           final String street, final String tornamentName, final String description);
 
-    Optional<Game> findByKey(final String teamName1, final String teamName2,
-                             final String StartTime, final String EndTime);
+    Optional<Game> findByKey(String teamName1, String startTime, String finishTime);
 
     List<Game> findGames(final String minStartTime, final String maxStartTime,
                          final String minFinishTime, final String maxFinishTime,

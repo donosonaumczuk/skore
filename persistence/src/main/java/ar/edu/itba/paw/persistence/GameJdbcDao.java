@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.GameDao;
+import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,11 +17,14 @@ public class GameJdbcDao implements GameDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private final TeamDao teamDao;
+
     private final static RowMapper<Game> ROW_MAPPER = (resultSet, rowNum) ->
             new Game(new Team(resultSet.getString("teamName1"), new Sport(
                         resultSet.getString("sportName"), resultSet.getInt("playerQuantity"))),
-                    new Team(resultSet.getString("teamName2"), new Sport(
-                            resultSet.getString("sportName"), resultSet.getInt("playerQuantity"))),
+                    (resultSet.getString("teamName2") == null)?null:
+                            new Team(resultSet.getString("teamName2"), new Sport(
+                                resultSet.getString("sportName"), resultSet.getInt("playerQuantity"))),
                     new Place(resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getTimestamp("startTime").toLocalDateTime(),
@@ -31,10 +35,11 @@ public class GameJdbcDao implements GameDao {
                     resultSet.getString("description"));
 
     @Autowired
-    public GameJdbcDao(final DataSource dataSource) {
+    public GameJdbcDao(final DataSource dataSource, final TeamDao teamDao) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("games");
+        this.teamDao = teamDao;
     }
 
 
@@ -59,26 +64,35 @@ public class GameJdbcDao implements GameDao {
         args.put("description", description);
 
         jdbcInsert.execute(args);
-        return findByKey(teamName1, teamName2, startTime, finishTime);
+        return findByKey(teamName1, startTime, finishTime);
     }
 
     @Override
-    public Optional<Game> findByKey(String teamName1, String teamName2,
-                                   String startTime, String finishTime) {
+    public Optional<Game> findByKey(String teamName1, String startTime, String finishTime) {
         final String getAGame =
                 "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
                     "playerQuantity, country, state, city, street, type, result, description, " +
                     "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
-                "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
-                    "(teams NATURAL JOIN isPartOf) as team2, sports " +
-                "WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
-                    "teamName1 = ? AND teamName2 = ? AND startTime = ? AND finishTime = ?" +
-                    " AND team1.sportName = sports.sportName" +
+                "FROM " +
+                    "games LEFT OUTER JOIN (teams NATURAL JOIN isPartOf) as team2 " +
+                    "ON teamName2 = team2.teamName," +
+                    "(teams NATURAL JOIN isPartOf) as team1, sports " +
+                "WHERE teamName1 = team1.teamName AND teamName1 = ? AND startTime = ? AND " +
+                    "finishTime = ? AND team1.sportName = sports.sportName" +
                 " GROUP BY startTime, finishTime, teamName1, teamName2, sportName, playerQuantity;";
-        final List<Game> list = jdbcTemplate.query(getAGame, ROW_MAPPER, teamName1,
-                teamName2, startTime, finishTime);
+        final List<Game> list = jdbcTemplate.query(getAGame, ROW_MAPPER, teamName1, startTime,
+                finishTime);
 
-        return list.stream().findFirst();
+        final Optional<Game> gameOpt = list.stream().findFirst();
+        if(gameOpt.isPresent()) {
+            final Game game = gameOpt.get();
+            Team team = teamDao.findByTeamName(game.getTeam1Name()).get();
+            game.setTeam1(team);
+            team = (game.getTeam2() == null)?null:teamDao.findByTeamName(game.getTeam2Name()).get();
+            game.setTeam2(team);
+        }
+
+        return gameOpt;
     }
 
     @Override
@@ -144,6 +158,6 @@ public class GameJdbcDao implements GameDao {
         jdbcTemplate.update(updateSentence, teamName1, teamName2, startTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
                 startTimeOld, finishTimeOld);
-        return findByKey(teamName1, teamName2, startTime, finishTime);
+        return findByKey(teamName1, startTime, finishTime);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -127,10 +128,11 @@ public class GameJdbcDaoTest {
         insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
                 SPORTNAME,USER_2_ID);
 
-        final Game game = gameJdbcDao.create(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
-                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null).get();
+        final Optional<Game> gameOpt = gameJdbcDao.create(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
+                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null);
 
-        Assert.assertNotNull(game);
+        Assert.assertEquals(true, gameOpt.isPresent());
+        Game game = gameOpt.get();
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
         Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());
         Assert.assertEquals(STARTIME_LOCALTIME_1, game.getStartTime().toString());
