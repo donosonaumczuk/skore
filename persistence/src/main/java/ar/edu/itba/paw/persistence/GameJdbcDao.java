@@ -53,8 +53,8 @@ public class GameJdbcDao implements GameDao {
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description) {
-        LOGGER.trace("Try to create game: " + teamName1 + " vs " + teamName2
-                + "|starting at " + startTime + "|finishing at " +finishTime);
+        LOGGER.trace("Try to create game: {} vs {} |starting at {} |finishing at {}",
+                teamName1, teamName2, startTime,finishTime);
         final Map<String, Object> args =  new HashMap<>();
 
         args.put("teamName1", teamName1);
@@ -71,15 +71,14 @@ public class GameJdbcDao implements GameDao {
         args.put("description", description);
 
         jdbcInsert.execute(args);
-        LOGGER.trace("Successfully create game: " + teamName1 + " vs " + teamName2
-                + "|starting at " + startTime + "|finishing at " +finishTime);
+        LOGGER.trace("Successfully create game: {} vs {} |starting at {} |finishing at {}",
+                teamName1, teamName2, startTime,finishTime);
         return findByKey(teamName1, startTime, finishTime);
     }
 
     @Override
     public Optional<Game> findByKey(String teamName1, String startTime, String finishTime) {
-        LOGGER.trace("Try to find game: " + teamName1 + "|starting at " + startTime +
-                "|finishing at " +finishTime);
+        LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime, finishTime);
         final String getAGame =
                 "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
                     "playerQuantity, country, state, city, street, type, result, description, " +
@@ -153,7 +152,7 @@ public class GameJdbcDao implements GameDao {
         getGamesQuery = getGamesQuery + whereQuery + groupBy +
                 gameFilters.generateQueryHaving(filters) + ";";
 
-        LOGGER.trace("Try to find a game with this criteria: " + getGamesQuery);
+        LOGGER.trace("Try to find a game with this criteria: {}", getGamesQuery);
         return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
     }
 
@@ -168,13 +167,13 @@ public class GameJdbcDao implements GameDao {
                 "finishTime = ?, type = ?, result = ?, country = ?, state = ?, city = ?, street = ?," +
                 "tornamentName = ?, descrption = ? WHERE teamName1 = ? AND teamName2 = ? AND " +
                 "startTime = ? AND finishTime = ?;";
-        LOGGER.trace("Try to modify game: " + teamName1Old + "|starting at " + startTimeOld +
-                "|finishing at " + finishTimeOld);
+        LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
+                startTimeOld, finishTimeOld);
         jdbcTemplate.update(updateSentence, teamName1, teamName2, startTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
                 startTimeOld, finishTimeOld);
-        LOGGER.trace("Successfully modify game: " + teamName1Old + "|starting at " + startTimeOld +
-                "|finishing at " + finishTimeOld);
+        LOGGER.trace("Successfully modify game: {} |starting at {} |finishing at {}", teamName1Old,
+                startTimeOld, finishTimeOld);
         return findByKey(teamName1, startTime, finishTime);
     }
 }

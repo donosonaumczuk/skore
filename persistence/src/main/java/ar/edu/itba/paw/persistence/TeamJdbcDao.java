@@ -59,7 +59,7 @@ public class TeamJdbcDao implements TeamDao {
 
     @Override
     public Optional<Team> findByTeamName(final String teamName) {
-        LOGGER.trace("Try to find team: " + teamName);
+        LOGGER.trace("Try to find team: {}", teamName);
         String query =
                 "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
                     "leader.email as leaderEmail, leader.userId as leaderUserId, leader.userName " +
@@ -94,18 +94,18 @@ public class TeamJdbcDao implements TeamDao {
         argsIsPartOF.put("teamName", teamName);
         argsIsPartOF.put("userId", leaderId);
 
-        LOGGER.trace("Try to create team: " + teamName);
+        LOGGER.trace("Try to create team: {}", teamName);
         jdbcInsertTeam.execute(argsTeam);
-        LOGGER.trace("Successfully create team: " + teamName);
-        LOGGER.trace("Try to add player: " + leaderId + " to team: " + teamName);
+        LOGGER.trace("Successfully create team: {}", teamName);
+        LOGGER.trace("Try to add player: {} to team: {}", leaderId, teamName);
         jdbcInsertIsPartOf.execute(argsIsPartOF);
-        LOGGER.trace("Successfully add player: " + leaderId + " to team: " + teamName);
+        LOGGER.trace("Successfully add player: {} to team: {}", leaderId, teamName);
         return findByTeamName(teamName);
     }
 
     @Override
     public boolean remove(final String teamName) {
-        LOGGER.trace("Try to delete team: " + teamName);
+        LOGGER.trace("Try to delete team: {}", teamName);
         final String sqlQuery = "DELETE FROM teams where teamName = ?;";
         int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName);
         return rowsDeleted > 0;
@@ -115,7 +115,7 @@ public class TeamJdbcDao implements TeamDao {
     public Optional<Team> updateTeamInfo(final String newTeamName, final String newAcronym,
                                          final String newLeaderName, final String newSportName,
                                          final String oldTeamName) {
-        LOGGER.trace("Try to modify: " + oldTeamName);
+        LOGGER.trace("Try to modify: {}", oldTeamName);
         int rowsModifiedTeam;
         final String sqlQueryTeam = "UPDATE teams SET teamName = ?, acronym = ?, leaderName = ?, " +
                 "sportName = ? WHERE teamName = ?";
@@ -129,14 +129,14 @@ public class TeamJdbcDao implements TeamDao {
     }
 
     public Optional<Team> addPlayer(final String teamName, final long userId) {
-        LOGGER.trace("Try to add player: " + userId + " to team: " + teamName);
+        LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Optional<Team> team = findByTeamName(teamName);
         if(!team.isPresent()) {
-            LOGGER.error("There is not a team: " + teamName);
+            LOGGER.error("There is not a team: {}", teamName);
             throw new TeamNotFoundException("There is not a team with the name " + teamName);
         }
         if(team.get().getPlayers().size() > team.get().getSport().getQuantity()) {
-            LOGGER.error("The team: " + teamName + " is full");
+            LOGGER.error("The team: {} is full", teamName);
             throw new TeamFullException("The team " + teamName + "is full");
         }
 
@@ -147,15 +147,15 @@ public class TeamJdbcDao implements TeamDao {
 
         jdbcInsertIsPartOf.execute(argsIsPartOF);
 
-        LOGGER.trace("Successfully add player: " + userId + " to team: " + teamName);
+        LOGGER.trace("Successfully add player: {} to team: {}", userId, teamName);
         return findByTeamName(teamName);
     }
 
     public Optional<Team> removePlayer(final String teamName, final long userId) {
-        LOGGER.trace("Try to add player: " + userId + " to team: " + teamName);
+        LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Optional<Team> team = findByTeamName(teamName);
         if(!team.isPresent()) {
-            LOGGER.error("There is not a team: " + teamName);
+            LOGGER.error("There is not a team: {}", teamName);
             throw new TeamNotFoundException("There is not a team with the name: " + teamName);
         }
 
@@ -166,7 +166,7 @@ public class TeamJdbcDao implements TeamDao {
             throw new UserNotFoundException("There is not a user with th id: " + userId);
         }
 
-        LOGGER.trace("Successfully add player: " + userId + " from team: " + teamName);
+        LOGGER.trace("Successfully add player: {} from team: {}", userId, teamName);
         return findByTeamName(teamName);
     }
 

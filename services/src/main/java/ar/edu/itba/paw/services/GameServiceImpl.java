@@ -33,8 +33,8 @@ public class GameServiceImpl implements GameService {
         Optional<Game> game = gameDao.create(teamName1, teamName2, startTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description);
         if(!game.isPresent()) {
-            LOGGER.error("Could not create this game: " + teamName1 + " vs " + teamName2
-                    + "|starting at " + startTime + "|finishing at " +finishTime);
+            LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
+                    teamName1, teamName2, startTime, finishTime);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
                     + " starting at " + startTime + "and finishing at " +finishTime);
         }
@@ -45,8 +45,8 @@ public class GameServiceImpl implements GameService {
     public Game findByKey(String teamName1, String startTime, String finishTime) {
         Optional<Game> game = gameDao.findByKey(teamName1, startTime, finishTime);
         if(!game.isPresent()) {
-            LOGGER.error("Could not find a game: " + teamName1
-                    + "|starting at " + startTime + "|finishing at " + finishTime);
+            LOGGER.error("Could not find a game: {} |starting at {} |finishing at {}",
+                    teamName1, startTime, finishTime);
             throw new GameNotFoundException("There is not a game of " + teamName1
                     + " starting at " + startTime + "and finishing at " + finishTime);
         }
@@ -77,8 +77,8 @@ public class GameServiceImpl implements GameService {
                 country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
                 startTimeOld, finishTimeOld);
         if(!game.isPresent()) {
-            LOGGER.error("Could not modify this game: " + teamName1Old + " vs " + teamName2Old
-                    + "|starting at " + startTimeOld + "|finishing at " + finishTimeOld);
+            LOGGER.error("Could not modify this game:: {} vs {} |starting at {} |finishing at {}",
+                    teamName1Old, teamName2Old, startTimeOld, finishTimeOld);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
                     + " starting at " + startTime + "and finishing at " + finishTime);
         }
