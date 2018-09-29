@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.Validators.FutureDate;
+import ar.edu.itba.paw.webapp.form.Validators.FutureEndTime;
 import ar.edu.itba.paw.webapp.form.Validators.FutureTime;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@FutureTime()
+@FutureTime
+@FutureEndTime
 public class MatchForm {
     @Size(min = 4, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
@@ -37,9 +39,12 @@ public class MatchForm {
 
     private String streetNumber;
 
+    @Pattern(regexp = "[a-zA-Z0-9_ .]+")
     @Size(min = 1, max = 100)
     private String teamName1;
 
+    @Size(min = 1, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9_ .]+")
     private String teamName2;
     //   private String tornamentName;
 
