@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotificationDao {
-    Optional<Notification> create(final String startTime, final String content,
-                                  final String userName);
-    Optional<Notification> findByKey(final String startTime, final String content);
+    public Optional<Notification> create(final String startTime, final String content,
+                                         final String userName);
+
+    public Optional<Notification> findByKey(final String startTime, final String content);
+
     public List<Notification> getNotificationsByUserName(final String userName);
 }
