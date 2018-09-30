@@ -48,16 +48,16 @@
                 </div> <!-- END Leftside panel container -->
             </div>
 
-            <div class="col-md-8 col-lg-8 col-xl-5">
+            <div class="col-md-8 col-lg-8 col-xl-6">
                 <div class="match-container container-fluid"> <!-- Match cards container -->
 
                     <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
                         <div class="col">
                             <div class="row mb-4">
-                                <div class="col-1 pl-0">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
+                                <div class="col-2 col-sm-1 pl-0">
+                                    <img src="img/user-default.svg" class="user-avatar" alt="user-pic">
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3 col-sm-4">
                                     <div class="row">
                                         <p class="name-label">Alan Donoso Naumczuk</p>
                                     </div>
@@ -65,17 +65,19 @@
                                         <a class="username-label" href="/profile/donosonaumczuk">@donosonaumczuk</a>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="row text-center">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
+                                <div class="col-2 col-sm-3">
+                                    <div class="container-fluid pt-2">
+                                        <div class="row">
+                                            <div class="col col-xl-4 mr-0 mt-1">
+                                                <img src="img/football.svg" class="sport-img" alt="sport-pic">
+                                            </div>
+                                            <div class="col-6 col-xl d-none d-sm-block pl-0">
+                                                <p class="sport-label">Futbol</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="offset-1 col-3">
+                                <div class="offset-1 col-4 col-sm-3">
                                     <div class="row text-center">
                                         <div class="col">
                                             <i class="name-label fas fa-users mr-2"></i>7 / 10
@@ -89,27 +91,18 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <i class="name-label fas fa-calendar-alt"></i>
-                                </div>
                                 <div class="col">
-                                    <p class=""> Domingo 11 de Agosto de 2018</p>
+                                    <p><span class="calendar-icon mr-2 fas fa-calendar-alt"></span>Domingo 11 de Agosto de 2018</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <i class="name-label fas fa-clock"></i>
-                                </div>
                                 <div class="col">
-                                    <p class="">19:00 - 20:00</p>
+                                    <p><span class="name-label mr-2 fas fa-clock"></span>19:00 - 20:00</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <i class="name-label fas fa-map-marker-alt"></i>
-                                </div>
                                 <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
+                                    <p><span class="location-icon mr-2 fas fa-map-marker-alt"></span>Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
                                 </div>
                             </div>
                         </div>

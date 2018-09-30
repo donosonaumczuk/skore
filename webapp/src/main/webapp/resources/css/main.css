@@ -29,6 +29,20 @@ body {
     margin-top: 5rem;
 }
 
+.user-avatar {
+    width: 37px;
+    height: 37px;
+}
+
+.sport-img {
+    width: 23px;
+    height: 23px;
+}
+
+.fa-bars {
+    color: white;
+}
+
 .create-match {
     border-radius: 0.5rem;
     background-color: var(--light-green);
@@ -38,6 +52,10 @@ body {
     color: #1c7931;
     border-color: #28a745;
     background-color: transparent;
+}
+
+.sport-label {
+    font-size: 1.3rem;
 }
 
 .btn-green:hover {
@@ -132,6 +150,21 @@ body {
     color: var(--secondary-color);
 }
 
+.location-icon {
+    color: #e74c31;
+    font-size: 1.4rem;
+}
+
+.calendar-icon {
+    color: black;
+    font-size: 1.1rem;
+}
+
+.clock-icon {
+    color: black;
+    font-size: 1rem;
+}
+
 .link {
     color: black;
     font-weight: bold;
@@ -202,24 +235,28 @@ html {
 
 /* sm - Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-    /*.primary-nav {*/
-        /*background-color: blueviolet;*/
-    /*}*/
+    .primary-nav {
+        background-color: blueviolet;
+    }
 
+    .user-avatar {
+        width: 47px;
+        height: 47px;
+    }
 }
 
 /* md - Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    /*.primary-nav {*/
-        /*background-color: lightseagreen;*/
-    /*}*/
+    .primary-nav {
+        background-color: lightseagreen;
+    }
 }
 
 /* lg - Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    /*.primary-nav {*/
-        /*background-color: indianred;*/
-    /*}*/
+    .primary-nav {
+        background-color: indianred;
+    }
 
     html {
         font-size: 1rem;
@@ -228,7 +265,7 @@ html {
 
 /* xl - Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    /*.primary-nav {*/
-        /*background-color: black;*/
-    /*}*/
+    .primary-nav {
+        background-color: black;
+    }
 }

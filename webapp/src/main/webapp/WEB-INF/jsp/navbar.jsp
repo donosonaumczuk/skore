@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav class="navbar fixed-top primary-nav">
-    <%--<button class="d-sm-none" type="button"><i class="fas fa-bars"></i></button>--%>
+    <button class="navbar-toggler d-md-none" type="button"><span class="fas fa-bars"></span></button>
     <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
     <a class="d-sm-none login-link" href="/login"><i class="fas fa-user"></i></a>
