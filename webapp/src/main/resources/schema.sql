@@ -79,6 +79,18 @@ CREATE TABLE IF NOT EXISTS tornaments(
   image         BYTEA
 )/;
 
+CREATE TABLE IF NOT EXISTS roles(
+  roleId         INTEGER PRIMARY KEY,
+  roleName      VARCHAR(100) NOT NULL
+)/;
+
+CREATE TABLE IF NOT EXISTS userRoles(
+  role          INTEGER NOT NULL,
+  username      VARCHAR(100),
+  FOREIGN KEY (role) REFERENCES roles(roleId) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (username) REFERENCES accounts(username) ON DELETE CASCADE ON UPDATE CASCADE
+)/;
+
 CREATE TABLE IF NOT EXISTS games (
   teamName1     VARCHAR(100) NOT NULL,
   teamName2     VARCHAR(100),
