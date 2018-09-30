@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Repository
@@ -115,7 +117,7 @@ public class GameJdbcDao implements GameDao {
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces) {
         String getGamesQuery =
-                "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
+                "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
                         "playerQuantity, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
                 "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
@@ -123,18 +125,18 @@ public class GameJdbcDao implements GameDao {
                 " WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
                         "team1.sportName = sports.sportName";
         String groupBy = " GROUP BY startTime, finishTime, teamName1, " +
-                "teamName2, sportName, playerQuantity";
+                "teamName2, sports.sportName, playerQuantity";
 
         final List<Object> filters = new ArrayList<>();
         final Filters gameFilters = new Filters();
 
         gameFilters.addMinFilter("games.startTime", minStartTime);
         gameFilters.addMinFilter("games.finishTime", minFinishTime);
-        gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
+        //gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
 
         gameFilters.addMaxFilter("games.startTime", maxStartTime);
         gameFilters.addMaxFilter("games.finishTime", maxFinishTime);
-        gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
+        //gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
 
         gameFilters.addSameFilter("games.type", types);
         gameFilters.addSameFilter("sports.sportName", sportNames);
@@ -142,9 +144,9 @@ public class GameJdbcDao implements GameDao {
         gameFilters.addSameFilter("games.state", states);
         gameFilters.addSameFilter("games.city", cities);
 
-        gameFilters.addMinHavingFilter("2*sports.playerQuantity-count(userId)",
+        gameFilters.addMinHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
                 minFreePlaces);
-        gameFilters.addMaxHavingFilter("2*sports.playerQuantity-count(userId)",
+        gameFilters.addMaxHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
                 maxFreePlaces);
 
         String whereQuery = gameFilters.generateQueryWhere(filters);

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
+import org.json.JSONArray;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,13 +17,13 @@ public interface GameService {
     public Game findByKey(String teamName1, String startTime, String finishTime);
 
     @Transactional
-    public List<Game> findGames(final String minStartTime, final String maxStartTime,
-                                final String minFinishTime, final String maxFinishTime,
-                                final List<String> types, final List<String> sportNames,
-                                final Integer minQuantity, final Integer maxQuantity,
-                                final List<String> countries, final List<String> states,
-                                final List<String> cities, final Integer minFreePlaces,
-                                final Integer maxFreePlaces);
+    public List<Game> findGamesPage(final String minStartTime, final String maxStartTime,
+                                    final String minFinishTime, final String maxFinishTime,
+                                    final JSONArray types, final JSONArray sportNames,
+                                    final Integer minQuantity, final Integer maxQuantity,
+                                    final JSONArray countries, final JSONArray states,
+                                    final JSONArray cities, final Integer minFreePlaces,
+                                    final Integer maxFreePlaces, final int pageNumber);
 
     @Transactional
     public Game modify(final String teamName1, final String teamName2, final String startTime,

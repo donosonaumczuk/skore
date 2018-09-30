@@ -4,11 +4,13 @@ import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.models.Game;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,16 +56,22 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findGames(final String minStartTime, final String maxStartTime,
-                                final String minFinishTime, final String maxFinishTime,
-                                final List<String> types, final List<String> sportNames,
-                                final Integer minQuantity, final Integer maxQuantity,
-                                final List<String> countries, final List<String> states,
-                                final List<String> cities, final Integer minFreePlaces,
-                                final Integer maxFreePlaces) {
-        return gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types,
-                sportNames, minQuantity,  maxQuantity, countries, states, cities, minFreePlaces,
-                maxFreePlaces);
+    public List<Game> findGamesPage(final String minStartTime, final String maxStartTime,
+                                    final String minFinishTime, final String maxFinishTime,
+                                    final JSONArray types, final JSONArray sportNames,
+                                    final Integer minQuantity, final Integer maxQuantity,
+                                    final JSONArray countries, final JSONArray states,
+                                    final JSONArray cities, final Integer minFreePlaces,
+                                    final Integer maxFreePlaces, final int pageNumber) {
+        List<Game> games =
+                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+                    jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
+                    jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
+                    minFreePlaces, maxFreePlaces);
+
+        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
+        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
+        return games.subList(start, end);
     }
 
     @Override
@@ -83,5 +91,13 @@ public class GameServiceImpl implements GameService {
                     + " starting at " + startTime + "and finishing at " + finishTime);
         }
         return game.get();
+    }
+
+    private List<String> jsonArrayToList(JSONArray jsonArray) {
+        List<String> list = new ArrayList<String>();
+        for (int i=0; i<jsonArray.length(); i++) {
+            list.add( jsonArray.getString(i) );
+        }
+        return list;
     }
 }

@@ -32,6 +32,7 @@
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
         <jackson-mapper-asl>1.7.1</jackson-mapper-asl>
         <javax.mail>1.4.7</javax.mail>
+        <org.json>20171018</org.json>
     </properties>
 
 
@@ -155,6 +156,11 @@
                 <groupId>javax.mail</groupId>
                 <artifactId>mail</artifactId>
                 <version>${javax.mail}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${org.json}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

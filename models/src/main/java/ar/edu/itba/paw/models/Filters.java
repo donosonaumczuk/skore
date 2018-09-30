@@ -18,13 +18,15 @@ public class Filters {
     }
 
     public void addMinFilter(String column, Object value) {
-        if(value != null && column != null) {
+        if(value != null && column != null &&
+            (value.getClass() != String.class || ((String)value).compareTo("")!=0)) {
             min.put(column, value);
         }
     }
 
     public void addMaxFilter(String column, Object value) {
-        if(value != null && column != null) {
+        if(value != null && column != null &&
+            (value.getClass() != String.class || ((String)value).compareTo("")!=0)) {
             max.put(column, value);
         }
     }
