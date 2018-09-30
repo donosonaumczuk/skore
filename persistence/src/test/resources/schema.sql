@@ -13,16 +13,17 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-  password    VARCHAR(100),
+  password    VARCHAR(100) NOT NULL,
   country     VARCHAR(100),
   state       VARCHAR(100),
   city        VARCHAR(100),
   street      VARCHAR(100),
   reputation  INTEGER,
   cellphone   VARCHAR(100),
-  birthday    DATE,
+  birthday    DATE         NOT NULL,
+  email       VARCHAR(100) NOT NULL,
   image       BLOB,
-  UNIQUE(userId)
+  UNIQUE(email)
 );
 
 CREATE TABLE IF NOT EXISTS notification(

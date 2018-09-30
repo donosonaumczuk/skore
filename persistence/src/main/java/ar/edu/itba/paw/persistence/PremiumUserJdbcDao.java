@@ -68,6 +68,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("city", city);
         args.put("street", street);
         args.put("reputation", reputation);
+        args.put("email", email);
         args.put("password", password);
 
         jdbcInsert.execute(args);
@@ -104,4 +105,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         }
     }
 
+    @Override
+    public Optional<PremiumUser> findByEmail(final String email) {
+        final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts natural join users WHERE " +
+                "email = ?", ROW_MAPPER, email);
+
+        return list.stream().findFirst();
+    }
 }

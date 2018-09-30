@@ -27,4 +27,7 @@ public interface PremiumUserDao {
                                                 final int newReputation, final String newPassword,
                                                 final String oldUserName);
 
+
+    public Optional<PremiumUser> findByEmail(final String email);
 }
+

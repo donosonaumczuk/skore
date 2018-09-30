@@ -64,9 +64,9 @@ public class PremiumUserJdbcDaoTest {
             jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                     " VALUES ('" + FIRSTNAME + "' , '" + LASTNAME + "', '" + EMAIL + "', " + USERID + ");");
 
-            jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
+            jdbcTemplate.execute("INSERT INTO accounts (username, email, cellphone, birthday," +
                     " country, state, city, street, reputation, password, userId)" +
-                        " VALUES ('" + userName + "' , '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
+                        " VALUES ('" + userName + "' , '" + EMAIL + "', '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
                     COUNTRY + "', '" + STATE + "', '" + CITY + "', '" + STREET + "', " + REPUTATION +
                     ", '" + PASSWORD +"', " + USERID +");");
         }

@@ -12,6 +12,7 @@ public class PremiumUser extends User{
     private LocalDate birthday;
     private Place home;
     private int reputation;
+    private String email;
     private String password;
     private List<PremiumUser> friends;
     private List<Notification> notifications;
@@ -28,6 +29,7 @@ public class PremiumUser extends User{
         this.home           = home;
         this.reputation     = reputation;
         this.password       = password;
+        this.email           = email;
         this.friends        = new LinkedList<>();
         this.notifications  = new ArrayList<>();
         this.likes          = new ArrayList<>();

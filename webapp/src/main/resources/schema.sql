@@ -23,8 +23,10 @@ CREATE TABLE IF NOT EXISTS accounts(
   reputation  INTEGER,
   cellphone   VARCHAR(100),
   birthday    DATE,
+  email       VARCHAR (100) NOT NULL,
+  role        VARCHAR (100),
   image       BYTEA,
-  UNIQUE(userId)
+  UNIQUE(email)
 )/;
 
 CREATE TABLE IF NOT EXISTS friendOf(
