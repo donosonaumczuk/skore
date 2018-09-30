@@ -26,6 +26,12 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     @Override
+    public Optional<PremiumUser> findByEmail(final String email) {
+        Optional<PremiumUser> user = premiumUserDao.findByEmail(email);
+        return user;
+    }
+
+    @Override
     public PremiumUser create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,

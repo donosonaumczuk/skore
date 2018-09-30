@@ -12,6 +12,9 @@ public interface PremiumUserService {
     public  Optional<PremiumUser> findByUserName(final String userName);
 
     @Transactional
+    public  Optional<PremiumUser> findByEmail(final String email);
+
+    @Transactional
     public PremiumUser create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,

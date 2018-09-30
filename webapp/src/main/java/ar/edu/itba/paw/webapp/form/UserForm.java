@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.Validators.NonExistantEmail;
 import ar.edu.itba.paw.webapp.form.Validators.NonExistantUser;
 import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
 import ar.edu.itba.paw.webapp.form.Validators.PastDate;
@@ -21,6 +22,7 @@ public class UserForm {
 
     @NotEmpty
     @Email
+    @NonExistantEmail
     private String email;
 
     @Pattern(regexp ="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( *)")
