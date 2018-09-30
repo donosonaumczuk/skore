@@ -1,37 +1,47 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("ar.edu.itba.paw.webapp.auth")
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.config"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private PawUserDetailsService userDetailService;
+    private SkoreUserDetailsService userDetailService;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailService)
                 .sessionManagement()
-                    .invalidSessionUrl("/login")
+                    .invalidSessionUrl("/")
                 .and().authorizeRequests()
+                    .antMatchers("/").anonymous()
+                    .antMatchers("/create", "/match/filter").anonymous()
                     .antMatchers("/login").anonymous()
+                    .antMatchers("/joinMatch").anonymous()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("user_username")
                     .passwordParameter("user_password")
-                    .defaultSuccessUrl("/", false)
+                    .defaultSuccessUrl("/", true)
                     .loginPage("/login")
                 .and().rememberMe()
                     .rememberMeParameter("user_rememberme")
@@ -51,4 +61,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
     }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
+        //authManagerBuilder.userDetailsService(userDetailService).passwordEncoder(bCryptPasswordEncoder());
+        authManagerBuilder.userDetailsService(userDetailService)
+                .and().jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(bCryptPasswordEncoder())
+                .usersByUsernameQuery("SELECT username, password FROM accounts WHERE username = ?");
+    }
+
 }

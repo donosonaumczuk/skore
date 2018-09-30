@@ -19,7 +19,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container --><div class="container">
+        <div class="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
             <c:url value="/createMatch" var="createMatchUrl" />
             <form:form modelAttribute="createMatchForm" action="${createMatchUrl}" method="post">
                 <div class="form-group">

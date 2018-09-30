@@ -18,8 +18,8 @@
     <div class="container-fluid">
         <div class="row">
 
-            <div class="d-none d-md-block fixed-top sidepanel col-md-4 col-lg-4 offset-xl-1 col-xl-3">
-                <div class="container-fluid sidepanel-container"> <!-- Leftside panel container -->
+            <div class="d-none d-md-block sidepanel col-md-4 col-lg-4 offset-xl-1 col-xl-3">
+                <div class="container-fluid"> <!-- Leftside panel container -->
                     <div class="row">
                         <div class="col text-center create-match p-4">
                             <p><spring:message code="cantFindMatchMessage"/></p>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="row filters p-4 mt-2">
-                        <div class="col">
+                        <div class="container-fluid">
                             <div class="row">
                                 <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/></p>
                             </div>
@@ -48,888 +48,74 @@
                 </div> <!-- END Leftside panel container -->
             </div>
 
-            <div class="offset-md-4 col-md-8 offset-lg-4 col-lg-8 offset-xl-4 col-xl-5">
+            <div class="col-md-8 col-lg-8 col-xl-6">
                 <div class="match-container container-fluid"> <!-- Match cards container -->
 
                     <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
                         <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
+                            <div class="row mb-4">
+                                <div class="col-2 col-sm-1 pl-0">
+                                    <img src="img/user-default.svg" class="user-avatar" alt="user-pic">
                                 </div>
-                                <div class="col-3 col-xl-3">
+                                <div class="col-3 col-sm-4">
                                     <div class="row">
-                                        <p class="name-label">Alan</p>
+                                        <p class="name-label">Alan Donoso Naumczuk</p>
                                     </div>
                                     <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
+                                        <a class="username-label" href="/profile/donosonaumczuk">@donosonaumczuk</a>
                                     </div>
                                 </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
+                                <div class="col-2 col-sm-3">
+                                    <div class="container-fluid pt-2">
+                                        <div class="row">
+                                            <div class="col col-xl-4 mr-0 mt-1">
+                                                <img src="img/football.svg" class="sport-img" alt="sport-pic">
+                                            </div>
+                                            <div class="col-6 col-xl d-none d-sm-block pl-0">
+                                                <p class="sport-label">Futbol</p>
+                                            </div>
                                         </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-4 col-xl-5">
+                                <div class="offset-1 col-4 col-sm-3">
                                     <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
+                                        <div class="col">
+                                            <i class="name-label fas fa-users mr-2"></i>7 / 10
                                         </div>
                                     </div>
                                     <div class="row text-center">
                                         <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
+                                            <button class="btn btn-green"><i class="fas fa-plus"></i> UNIRSE</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
                                 <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
+                                    <p><span class="calendar-icon mr-2 fas fa-calendar-alt"></span>Domingo 11 de Agosto de 2018</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
                                 <div class="col">
-                                    <p class="">19:00 - 20:00</p>
+                                    <p><span class="name-label mr-2 fas fa-clock"></span>19:00 - 20:00</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
                                 <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
+                                    <p><span class="location-icon mr-2 fas fa-map-marker-alt"></span>Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
                                 </div>
                             </div>
                         </div>
                     </div> <!-- END match card -->
 
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
+                    <div class="row p-2 mt-2">
+                        <div class="offset-5 col-2">
+                            <img class="img-fluid" src="img/loader.gif">
                         </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
-                    <div class="row p-2 mt-2 match-card rounded-border"> <!-- match card -->
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-3 col-xl-1">
-                                    <img src="img/user-default.svg" class="img-fluid" alt="user-pic">
-                                </div>
-                                <div class="col-3 col-xl-3">
-                                    <div class="row">
-                                        <p class="name-label">Alan</p>
-                                    </div>
-                                    <div class="row">
-                                        <a class="username-label" href="">@donosonaumczuk</a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-xl-3 pt-2">
-                                    <div class="row">
-                                        <div class="col col-xl-3">
-                                            <img src="img/football.svg" class="img-fluid" alt="sport-pic">
-                                        </div>
-                                        <div class="col-6 col-xl-9 d-none d-sm-block">
-                                            <p class="sport-label">Futbol</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-xl-5">
-                                    <div class="row text-center">
-                                        <div class="col-3 p-0 offset-xl-3 col-xl-2">
-                                            <img src="img/people.svg" class="img-fluid" alt="people-pic">
-                                        </div>
-                                        <div class="col-8 col-xl-4">
-                                            7 / 10
-                                        </div>
-                                    </div>
-                                    <div class="row text-center">
-                                        <div class="col mt-xl-2 ml-xl-4">
-                                            <button class="btn btn-green">+ UNIRSE</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/calendar.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">Domingo 11 de Agosto de 2018</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/clock.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class="">19:00 - 20:00</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <img src="img/location.svg" class="img-fluid" alt="date-pic">
-                                </div>
-                                <div class="col">
-                                    <p class=""> Stadium Futbol 5, Ituzaingo Sur, Buenos Aires </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END match card -->
-
+                    </div>
 
                 </div> <!-- END Match cards container -->
             </div>
-
-            <!-- <div class="col-3">
-                <div class="container-fluid bg-white">
-
-                </div>
-            </div> -->
         </div>
     </div>
 
@@ -937,6 +123,7 @@
     <jsp:include page="js.jsp"></jsp:include>
     <script src="<c:url value="js/index.js"/>"></script>
     <script src="<c:url value="js/filters.js"/>" type="text/javascript"></script>
+    <script src="<c:url value="js/load-matches.js"/>" type="text/javascript"></script>
 
 </body>
 </html>

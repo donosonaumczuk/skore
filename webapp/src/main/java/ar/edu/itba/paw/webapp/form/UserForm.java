@@ -3,41 +3,43 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
 import ar.edu.itba.paw.webapp.form.Validators.PastDate;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
 public class UserForm {
-    @Size(min = 0, max = 100)
+    @Size(min = 2, max = 100)
     @Pattern(regexp ="[a-zA-Z]+")
     private String firstName;
 
-    @Size(min = 0, max = 100)
+    @Size(min = 2, max = 100)
     @Pattern(regexp ="[a-zA-Z]+")
     private String lastName;
 
+    @NotEmpty
     @Email
     private String email;
 
-    @Pattern(regexp ="[0-9][0-9][0-9][0-9]-?[0-9][0-9][0-9][0-9]")
+    @Pattern(regexp ="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( *)")
     private String cellphone;
 
     @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z ]+")
+    @Pattern(regexp ="[a-zA-Z ]*")
     private String country;
 
     @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ]+")
+    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String state;
 
     @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ]+")
+    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String city;
 
 
     @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ,]+ [0-9]*")
+    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String street;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
