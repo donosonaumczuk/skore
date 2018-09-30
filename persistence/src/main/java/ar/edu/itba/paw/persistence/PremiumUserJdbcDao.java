@@ -74,12 +74,14 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         return findByUserName(userName);
     }
 
+    @Override
     public boolean remove(final String userName) {
         final String sqlQuery = "DELETE FROM accounts where userName = ?";
         int rowsDeleted = jdbcTemplate.update(sqlQuery, userName);
         return rowsDeleted > 0;
     }
 
+    @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                                 final String newEmail,final String newUserName,
                                                 final String newCellphone, final String newBirthday,

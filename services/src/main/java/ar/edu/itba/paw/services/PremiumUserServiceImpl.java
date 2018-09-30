@@ -15,6 +15,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     @Autowired
     private PremiumUserDao premiumUserDao;
 
+    @Override
     public PremiumUser findByUserName(final String userName) {
         Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
         if(user.isPresent()) {
@@ -25,7 +26,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         }
     }
 
-
+    @Override
     public PremiumUser create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,
@@ -43,10 +44,12 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         }
     }
 
+    @Override
     public boolean remove(final String userName) {
         return premiumUserDao.remove(userName);
     }
 
+    @Override
     public PremiumUser updateUserInfo(final String newFirstName, final String newLastName,
                                       final String newEmail,final String newUserName,
                                       final String newCellphone, final String newBirthday,
