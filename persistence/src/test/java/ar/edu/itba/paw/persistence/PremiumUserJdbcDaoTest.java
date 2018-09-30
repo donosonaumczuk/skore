@@ -87,7 +87,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testFindByUserNameWithExistantId() {
+        public void testFindByUserNameWithExistentId() {
             //set up
             insertUser(EXISTANT_USERNAME);
 
@@ -101,7 +101,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testFindByUserNameWithNonExistantId() {
+        public void testFindByUserNameWithNonExistentId() {
             //exercise class
             final Optional<PremiumUser> returnedUser = premiumUserDao.findByUserName(NONEXISTANT_USERNAME);
 
@@ -110,7 +110,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testRemoveNonExistantUser(){
+        public void testRemoveNonExistentUser(){
             //exercise class
             boolean returnValue = premiumUserDao.remove(NONEXISTANT_USERNAME);
 
@@ -119,7 +119,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testRemoveExistantUser(){
+        public void testRemoveExistentUser(){
             //set up
             insertUser(EXISTANT_USERNAME);
 
@@ -152,6 +152,32 @@ public class PremiumUserJdbcDaoTest {
             Assert.assertEquals(newPassword, modifyUser.getPassword());
             Assert.assertEquals(CELLPHONE, modifyUser.getCellphone());
         }
+
+        @Test
+        public  void testFindByEmailExistentUser() {
+            //set up
+            insertUser(EXISTANT_USERNAME);
+
+            //exercise class
+            final Optional<PremiumUser> returnedUser = premiumUserDao.findByEmail(EMAIL);
+
+            //postconditions
+            Assert.assertTrue(returnedUser.isPresent());
+            final PremiumUser user = returnedUser.get();
+            Assert.assertEquals(EMAIL, user.getEmail());
+
+        }
+
+    @Test
+    public  void testFindByEmailNonExistentUser() {
+
+        //exercise class
+        final Optional<PremiumUser> returnedUser = premiumUserDao.findByEmail(EMAIL);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
+
+    }
 }
 
 

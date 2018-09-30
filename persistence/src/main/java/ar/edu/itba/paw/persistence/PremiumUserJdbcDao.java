@@ -93,10 +93,10 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
         if(currentUser.isPresent()) {
             userDao.updateBasicUserInfo(currentUser.get().getUserId(), newFirstName, newLastName, newEmail);
-            final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
+            final String sqlQuery = "UPDATE accounts SET userName = ?, email = ?, cellphone = ?, birthday = ?," +
                     " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
                     "WHERE userName = ?";
-            jdbcTemplate.update(sqlQuery, newUserName, newCellphone, newBirthday, newCountry, newState,
+            jdbcTemplate.update(sqlQuery, newUserName, newEmail, newCellphone, newBirthday, newCountry, newState,
                     newCity, newStreet, newReputation, newPassword, oldUserName);
             return findByUserName(newUserName);
         }
