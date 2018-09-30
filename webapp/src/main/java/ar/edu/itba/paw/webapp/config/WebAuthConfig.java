@@ -25,6 +25,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .invalidSessionUrl("/login")
                 .and().authorizeRequests()
+                    .antMatchers("/").anonymous()
+                    .antMatchers("/create").anonymous()
                     .antMatchers("/login").anonymous()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").authenticated()
