@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS sports(
 CREATE TABLE IF NOT EXISTS users(
   userId    SERIAL PRIMARY KEY,
   email     VARCHAR(100) NOT NULL,
-  firstName VARCHAR(100),
-  lastName  VARCHAR(100)
+  firstName VARCHAR(100) NOT NULL,
+  lastName  VARCHAR(100) NOT NULL
 )/;
 
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-  password    VARCHAR(100),
+  password    VARCHAR(100) NOT NULL,
   country     VARCHAR(100),
   state       VARCHAR(100),
   city        VARCHAR(100),
