@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.Validators.NonExistantUser;
 import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
 import ar.edu.itba.paw.webapp.form.Validators.PastDate;
 import org.hibernate.validator.constraints.Email;
@@ -43,11 +44,14 @@ public class UserForm {
     private String street;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
-    @PastDate(message = "{PastDate.createMatchForm.date}")
+    @PastDate
+    //(message = "{PastDate.registerForm.date}")
     private String birthday;
 
     @Size(min = 4, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9_]+")
+    @NonExistantUser
+    //(message = "{NonExistantUser.registerForm.username}")
     private String username;
 
     @Size(min = 5, max = 100)

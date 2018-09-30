@@ -33,8 +33,6 @@ public class FutureEndTimeValidator
         } catch (Exception e) {
             return false;
         }
-        System.out.println("Time: " + startTime + "-" + endTime + "\n\n\n\n\n");
-        System.out.println("givenEndTime.isAfter(givenStartTime.plusMinutes(20)) = " + givenEndTime.isAfter(givenStartTime.plusMinutes(20)) + "\n\n\n\n" );
 
         return givenEndTime.isAfter(givenStartTime.plusMinutes(20));
     }

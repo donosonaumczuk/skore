@@ -76,7 +76,7 @@ public class UserController {
         return new ModelAndView("index");
     }
 
-    //llevarlo a un base controller y podes tener el usuario loggeado
+    //llevarlo a un base controller y podes tener el usuario loggeado evans
 //    @ModelAttribute("loggedUser")
 //    public PremiumUser logggedUser() {
 //        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

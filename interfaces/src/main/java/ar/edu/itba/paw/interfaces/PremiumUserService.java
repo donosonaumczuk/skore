@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface PremiumUserService {
     @Transactional
-    public PremiumUser findByUserName(final String userName);
+    public  Optional<PremiumUser> findByUserName(final String userName);
 
     @Transactional
     public PremiumUser create(final String firstName, final String lastName,

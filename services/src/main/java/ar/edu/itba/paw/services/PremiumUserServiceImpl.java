@@ -20,15 +20,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     private PremiumUserDao premiumUserDao;
 
     @Override
-    public PremiumUser findByUserName(final String userName) {
+    public Optional<PremiumUser> findByUserName(final String userName) {
         Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
-        if(user.isPresent()) {
-            return user.get();
-        }
-        else {
-            throw new UserNotFoundException("User with userName: " + userName + "doesn't exist.");
-        }
-
+            return user;
     }
 
     @Override
