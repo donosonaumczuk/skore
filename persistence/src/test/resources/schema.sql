@@ -60,6 +60,11 @@ CREATE TABLE IF NOT EXISTS tornaments(
   image         BLOB
 );
 
+CREATE TABLE IF NOT EXISTS roles(
+  roleId         INTEGER PRIMARY KEY,
+  roleName      VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS games (
   teamName1     VARCHAR(100) NOT NULL,
   teamName2     VARCHAR(100),
