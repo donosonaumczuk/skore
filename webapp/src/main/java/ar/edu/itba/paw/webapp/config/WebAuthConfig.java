@@ -2,18 +2,18 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("ar.edu.itba.paw.webapp.auth")
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.config"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -23,7 +23,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailService)
                 .sessionManagement()
-                    .invalidSessionUrl("/login")
+                    .invalidSessionUrl("/")
                 .and().authorizeRequests()
                     .antMatchers("/").anonymous()
                     .antMatchers("/create").anonymous()
@@ -54,4 +54,5 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
     }
+
 }
