@@ -21,7 +21,7 @@
                 </div>
             </div>
             <c:url value="/create" var="signUpUrl" />
-            <form:form modelAttribute="registerForm" action="${loginUrl}" method="post">
+            <form:form modelAttribute="registerForm" action="${signUpUrl}" method="post">
                 <div class="form-group">
                     <form:label path="username"><spring:message code="usernameLabel"/><span class="text-muted">*</span></form:label>
                     <form:input class="form-control" path="username" type="text"/>

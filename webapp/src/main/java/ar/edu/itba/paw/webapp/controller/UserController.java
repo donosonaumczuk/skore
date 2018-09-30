@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.webapp.form.JoinMatchForm;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
@@ -49,6 +50,28 @@ public class UserController {
     public ModelAndView login() {
         return new ModelAndView("login");
 
+    }
+
+    @RequestMapping("/joinMatch")
+    public ModelAndView joinMatch() {
+        return new ModelAndView("joinMatch");
+
+    }
+
+    @RequestMapping(value = "/joinMatch", method = {RequestMethod.GET })
+    public ModelAndView createJoinMatchForm(@ModelAttribute("joinMatchForm") JoinMatchForm joinMatchForm){
+        return new ModelAndView("joinMatch");
+    }
+
+    @RequestMapping(value = "/joinMatch", method = {RequestMethod.POST })
+    public ModelAndView joinMatch(@Valid @ModelAttribute("joinMatchForm") final JoinMatchForm joinMatchForm,
+                               final BindingResult errors) {
+        if(errors.hasErrors()) {
+            return createJoinMatchForm(joinMatchForm);
+        }
+        //final User u = us.create(userForm.getUsername(), "a", "b" );
+        //return new ModelAndView("redirect:/userId=" + u.getUserId());
+        return new ModelAndView("index");
     }
 
     //llevarlo a un base controller y podes tener el usuario loggeado
