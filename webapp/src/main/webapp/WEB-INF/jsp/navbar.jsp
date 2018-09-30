@@ -3,8 +3,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav class="navbar fixed-top primary-nav">
-    <a class="navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
-    <a class="d-none d-sm-block login-link" href=""><spring:message code="logInMessage"/></a>
+    <%--<button class="d-sm-none" type="button"><i class="fas fa-bars"></i></button>--%>
+    <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
+    <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
+    <a class="d-sm-none login-link" href="/login"><i class="fas fa-user"></i></a>
+    <form class="d-none d-sm-block form-inline">
+        <a class="mr-1 login-link" href="/login"><spring:message code="signInMessage"/></a>
+        <span class="white-text mr-1"><spring:message code="orLabel"/></span>
+        <a class="login-link" href="/create"><spring:message code="signUpMessage"/></a>
+    </form>
 </nav>
 
 

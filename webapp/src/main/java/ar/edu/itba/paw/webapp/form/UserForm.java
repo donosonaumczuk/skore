@@ -40,7 +40,7 @@ public class UserForm {
 
 
     @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ,]+ [0-9]*")
+    @Pattern(regexp ="[a-zA-Z0 ]+")
     private String street;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")

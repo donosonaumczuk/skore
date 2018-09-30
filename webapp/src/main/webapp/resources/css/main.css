@@ -125,10 +125,24 @@ body {
 
 .login-link {
     color: #ffffff;
+    font-weight: bold;
 }
 
 .login-link:hover {
     color: var(--secondary-color);
+}
+
+.link {
+    color: black;
+    font-weight: bold;
+}
+
+.link:hover {
+    color: var(--dark-secondary-color);
+}
+
+.black-text {
+    color: black;
 }
 
 .rounded-border {

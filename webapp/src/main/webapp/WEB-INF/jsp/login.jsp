@@ -13,15 +13,12 @@
 </head>
 <body>
 
-<%-- Include Navigation Bars --%>
-<%--<jsp:include page="navbar.jsp"></jsp:include>--%>
-
 <div class="container-fluid">
     <div class="row">
-        <div class="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container --><div class="container">
-            <div class="row">
+        <div class="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
+            <div class="row text-center">
                 <div class="col">
-                    <a class="offset-3 sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
+                    <a class="sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
                 </div>
             </div>
             <c:url value="/login" var="loginUrl" />
@@ -38,21 +35,22 @@
                     <input type="checkbox" name="user_rememberme" class="form-check-input" id="rememberme">
                     <label class="form-check-label" for="rememberme"><spring:message code="rememberMeMessage"/></label>
                 </div>
-                <button type="submit" class="offset-4 btn btn-green mb-2"><spring:message code="signInLabel"/></button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-green mb-2"><spring:message code="signInLabel"/></button>
+                </div>
             </form>
-
+            <div class="row mt-4 text-center">
+                <div class="col">
+                    <span class="mr-1"><spring:message code="areYouNewLabel"/></span>
+                    <a class="link" href="/create"><spring:message code="signUpMessage"/></a>
+                </div>
+            </div>
         </div> <!-- END Form container -->
     </div>
 </div>
 
-
 <%-- Include JS Scripts --%>
 <jsp:include page="js.jsp"></jsp:include>
-<script src="<c:url value="js/maps-autocomplete.js"/>" type="text/javascript"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqSX1WHUw4OlgMDzYM40uSVPGkV06DR1I&libraries=places&callback=initAutocomplete" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
-<script  src="<c:url value="js/create-match.js"/>" type="text/javascript"></script>
 
 </body>
 </html>
