@@ -31,6 +31,7 @@
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
         <jackson-mapper-asl>1.7.1</jackson-mapper-asl>
+        <javax.mail>1.4.7</javax.mail>
     </properties>
 
 
@@ -144,6 +145,16 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>${javax.mail}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

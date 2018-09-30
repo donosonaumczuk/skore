@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
