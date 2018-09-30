@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
 import ar.edu.itba.paw.webapp.form.Validators.PastDate;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -17,10 +18,12 @@ public class UserForm {
     @Pattern(regexp ="[a-zA-Z]+")
     private String lastName;
 
+    @NotEmpty
     @Email
     private String email;
 
-    @Pattern(regexp ="[0-9][0-9][0-9][0-9]-?[0-9][0-9][0-9][0-9]")
+    @Size(min = 10, max = 10)
+    @Pattern(regexp ="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]")
     private String cellphone;
 
     @Size(min = 0, max = 100)
