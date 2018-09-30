@@ -4,6 +4,8 @@ import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.PremiumUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.Optional;
 
 @Service
 public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUserService{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserServiceImpl.class);
 
     @Autowired
     private PremiumUserDao premiumUserDao;
@@ -24,6 +28,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         else {
             throw new UserNotFoundException("User with userName: " + userName + "doesn't exist.");
         }
+
     }
 
     @Override
@@ -33,8 +38,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password) {
 
+        final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
-                                        cellphone, birthday, country, state, city, street, reputation,
+                                        cellphone, formattedBirthday, country, state, city, street, reputation,
                                         password);
         if(user.isPresent()) {
             return user.get();
@@ -67,6 +73,16 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         else {
             throw new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist.");
         }
+    }
+
+    private static String formatDate(String birthday) {
+        String month = "" + birthday.charAt(0) + birthday.charAt(1);
+        String day = "" + birthday.charAt(3) + birthday.charAt(4);
+        String year = "" + birthday.charAt(6) + birthday.charAt(7) + birthday.charAt(8) + birthday.charAt(9);
+        String formattedDate = year + "-" + month + "-" + day;
+        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
+        return formattedDate;
+
     }
 
 }

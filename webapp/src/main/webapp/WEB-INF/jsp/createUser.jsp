@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="datepicker"><spring:message code="dateLabel"/><span class="text-muted">*</span></label>
+                    <label for="datepicker"><spring:message code="birthdayLabel"/><span class="text-muted">*</span></label>
                     <small id="dateFormatHelp" class="form-text text-muted"><spring:message code="dateFormatLabel"/></small>
                     <div class="input-group date" id="datepicker" data-target-input="nearest">
                         <form:input type="text" path="birthday" class="form-control datetimepicker-input" data-target="#datepicker"/>
