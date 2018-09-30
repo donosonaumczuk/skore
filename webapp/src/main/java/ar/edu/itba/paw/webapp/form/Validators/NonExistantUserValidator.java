@@ -24,6 +24,6 @@ public class NonExistantUserValidator
             return false;
         }
 
-        return false;
+        return true;
     }
 }
