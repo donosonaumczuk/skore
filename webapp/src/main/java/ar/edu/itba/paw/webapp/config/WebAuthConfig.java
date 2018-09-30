@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private PawUserDetailsService userDetailService;
+    private SkoreUserDetailsService userDetailService;
 
     @Autowired
     private DataSource dataSource;
@@ -41,7 +41,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                     .usernameParameter("user_username")
                     .passwordParameter("user_password")
-                    .defaultSuccessUrl("/", false)
+                    .defaultSuccessUrl("/", true)
                     .loginPage("/login")
                 .and().rememberMe()
                     .rememberMeParameter("user_rememberme")
@@ -66,9 +66,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
-//        authManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder());
-//    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
+        //authManagerBuilder.userDetailsService(userDetailService).passwordEncoder(bCryptPasswordEncoder());
+        authManagerBuilder.userDetailsService(userDetailService)
+                .and().jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(bCryptPasswordEncoder())
+                .usersByUsernameQuery("SELECT username, password FROM accounts WHERE username = ?");
+    }
+
 }
