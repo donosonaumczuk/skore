@@ -41,7 +41,9 @@ public class UserController {
         if(errors.hasErrors()) {
             return createForm(userForm);
         }
-        //final User u = us.create(userForm.getUsername(), "a", "b" );
+        final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
+                userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
+                userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword());
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
     }
