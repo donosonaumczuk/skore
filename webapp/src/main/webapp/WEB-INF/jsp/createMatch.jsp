@@ -39,6 +39,7 @@
                             <label class="btn btn-green" id="competitive">
                                 <input:radiobutton path="competitivity" name="options" value="Competitive" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
                             </label>
+                            <form:errors path="competitivity" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
                     </div>
                 </div>
@@ -47,18 +48,19 @@
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">
                             <label class="btn btn-green active" id="individual">
-                                <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="individualLabel"/>
+                                <form:radiobutton path="mode" name="options" value="Individual" autocomplete="false"/><i class="fas fa-check"></i> <spring:message code="individualLabel"/>
                             </label>
                             <label class="btn btn-green" id="team">
-                                <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
+                                <form:radiobutton path="mode" name="options" value="Team" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
                             </label>
+                            <form:errors path="mode" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
-                        <option selected><spring:message code="chooseSportLabel"/></option>
+                        <option selected value=""><spring:message code="chooseSportLabel"/></option>
                         <option value="Football 5">Football 5</option>
                         <option value="Football 7">Football 7</option>
                         <option value="Football 11">Football 11</option>
@@ -69,11 +71,12 @@
                 </div>
                 <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/><span class="text-muted">*</span></label>
-                    <select id="inputTeam" class="form-control">
+                    <form:select  path="teamId" id="inputTeam" class="form-control">
                         <option selected><spring:message code="chooseTeamLabel"/></option>
                         <option>Team1</option>
                         <option>Team2</option>
-                    </select>
+                    </form:select>
+                    <form:errors path="teamId" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group">
                     <label for="datepicker"><spring:message code="dateLabel"/><span class="text-muted">*</span></label>

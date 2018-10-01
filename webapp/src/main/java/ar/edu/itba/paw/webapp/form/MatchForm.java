@@ -3,17 +3,21 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.Validators.FutureDate;
 import ar.edu.itba.paw.webapp.form.Validators.FutureEndTime;
 import ar.edu.itba.paw.webapp.form.Validators.FutureTime;
+import ar.edu.itba.paw.webapp.form.Validators.TeamIdIfNotIndividual;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @FutureTime
 @FutureEndTime
+@TeamIdIfNotIndividual
 public class MatchForm {
     @Size(min = 4, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String matchName;
 
+    @NotEmpty
     private String sportName;
 
     @Size(min = 0, max = 140)
@@ -38,17 +42,13 @@ public class MatchForm {
     private String street;
 
     private String streetNumber;
-
+    @NotEmpty
     private String competitivity;
 
-    @Pattern(regexp = "[a-zA-Z0-9_ .]+")
-    @Size(min = 1, max = 100)
-    private String teamName1;
+    @NotEmpty
+    private String mode;
 
-    @Size(min = 1, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9_ .]+")
-    private String teamName2;
-
+    private String teamId;
 
     public String getMatchName() {
         return matchName;
@@ -144,5 +144,21 @@ public class MatchForm {
 
     public void setCompetitivity(String competitivity) {
         this.competitivity = competitivity;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

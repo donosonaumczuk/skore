@@ -57,6 +57,9 @@ public class GameController {
                                     final BindingResult errors) {
         if(errors.hasErrors()) {
             LOGGER.debug("date received: " + matchForm.getDate());
+            System.out.println("competitivity: " + matchForm.getCompetitivity());
+            System.out.println("mode: " + matchForm.getMode());
+            System.out.println("sportName: " + matchForm.getSportName());
             return createMatchForm(matchForm);
         }
 
