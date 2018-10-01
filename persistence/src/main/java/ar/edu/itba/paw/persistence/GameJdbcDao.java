@@ -121,8 +121,8 @@ public class GameJdbcDao implements GameDao {
                         "playerQuantity, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
                 "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
-                        "(teams NATURAL JOIN isPartOf) as team2, sports" +
-                " WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
+                        "(teams NATURAL JOIN isPartOf) as team2, sports " +
+                "WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
                         "team1.sportName = sports.sportName";
         String groupBy = " GROUP BY startTime, finishTime, teamName1, " +
                 "teamName2, sports.sportName, playerQuantity";

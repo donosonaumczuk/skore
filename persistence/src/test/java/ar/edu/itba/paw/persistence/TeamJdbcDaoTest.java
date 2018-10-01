@@ -31,6 +31,9 @@ public class TeamJdbcDaoTest {
     private static final String  EMAIL_1        = "email1";
     private static final String  EMAIL_2        = "email2";
     private static final int     PLAYERQUANTITY = 5;
+    private static final String  PASSWORD       = "password";
+    private static final String  BIRTHDAY       = "1994-12-26";
+
 
     @Autowired
     private DataSource dataSource;
@@ -50,8 +53,8 @@ public class TeamJdbcDaoTest {
     private void insertUser(final String leaderName, final long userId, final  String email) {
         jdbcTemplate.execute("INSERT INTO users (userId, email)" +
                 " VALUES (" + userId + ", '" + email + "');");
-        jdbcTemplate.execute("INSERT INTO accounts (userName, userId)" +
-                " VALUES ('" +  leaderName + "', " + userId + ");");
+        jdbcTemplate.execute("INSERT INTO accounts (userName, userId, email, password, birthday)" +
+                " VALUES ('" +  leaderName + "', " + userId + ",'"+email+"','"+PASSWORD+"','"+BIRTHDAY+"');");
     }
 
     private void insertSport(final String sportName, final int playerQuantity) {
