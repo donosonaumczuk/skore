@@ -1,16 +1,12 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.Validators.FutureDate;
-import ar.edu.itba.paw.webapp.form.Validators.FutureEndTime;
-import ar.edu.itba.paw.webapp.form.Validators.FutureTime;
-import ar.edu.itba.paw.webapp.form.Validators.TeamIdIfNotIndividual;
+import ar.edu.itba.paw.webapp.form.Validators.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @FutureTime
-@FutureEndTime
 @TeamIdIfNotIndividual
 public class MatchForm {
     @Size(min = 4, max = 100)
@@ -31,7 +27,8 @@ public class MatchForm {
     private String startTime;
 
     @Pattern(regexp = "[0-9][0-9]:[0-9][0-9]")
-    private String endTime;
+    @ValidDuration
+    private String duration;
 
     private String country;
 
@@ -90,12 +87,12 @@ public class MatchForm {
         return startTime;
     }
 
-    public void setEndTime(final String endTime) {
-        this.endTime = endTime;
+    public void setDuration(final String duration) {
+        this.duration = duration;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getDuration() {
+        return duration;
     }
 
     public void setCountry(final String country) {

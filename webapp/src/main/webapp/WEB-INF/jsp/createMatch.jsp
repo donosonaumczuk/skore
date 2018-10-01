@@ -102,13 +102,13 @@
                         </div>
                     </div>
                     <div class="form-group col-6">
-                        <label for="timepicker-to"><spring:message code="toLabel"/><span class="text-muted">*</span></label>
+                        <label for="timepicker-to"><spring:message code="durationLevel"/><span class="text-muted">*</span></label>
                         <div class="input-group date" id="timepicker-to" data-target-input="nearest">
-                            <form:input type="text" path="endTime" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
+                            <form:input type="text" path="duration" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
                             <div class="input-group-append" data-target="#timepicker-to" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fas fa-clock"></i></div>
                             </div>
-                            <form:errors path="endTime" element="div" cssClass="invalid-feedback d-block"/>
+                            <form:errors path="duration" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
                     </div>
                 </div>

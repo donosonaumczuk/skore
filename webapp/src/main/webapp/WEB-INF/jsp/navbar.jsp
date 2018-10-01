@@ -10,7 +10,7 @@
     <c:choose>
         <c:when test="${loggedUser != null}">
             <form class="d-none d-sm-block form-inline">
-                <a class="mr-1 login-link" href="/login"><c:out value="${loggedUser.getUsername()}"/></a>
+                <a class="mr-1 login-link" href="/login"><c:out value="${loggedUser.getUserName()}"/></a>
             </form>
         </c:when>
         <c:otherwise>

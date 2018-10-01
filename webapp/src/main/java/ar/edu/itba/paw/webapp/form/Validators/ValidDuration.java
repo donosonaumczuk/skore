@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.Validators;
 
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
@@ -12,12 +11,13 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({TYPE, ANNOTATION_TYPE})
+@Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = FutureEndTimeValidator.class)
+@Constraint(validatedBy = ValidDurationValidator.class)
 @Documented
-public @interface FutureEndTime {
-    String message() default "{ar.edu.itba.paw.webapp.form.Validators.FutureEndTime.message}";
+public @interface ValidDuration {
+    String message() default "{ar.edu.itba.paw.webapp.form.MatchForm.duration.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
+
