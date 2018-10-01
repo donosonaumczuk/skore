@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -85,7 +86,8 @@ public class UserController {
         if(!authentication.isAuthenticated()) {
             return null;
         }
-        final PremiumUser user = us.findByUserName(authentication.getName()).get();
+        Optional<PremiumUser> userOpt = us.findByUserName(authentication.getName());
+        final PremiumUser user = (userOpt.isPresent())?userOpt.get():null;
         return user;
     }
 }
