@@ -21,7 +21,7 @@ public interface GameDao {
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces, final PremiumUser loggedUser,
-                                final boolean listOfGamesThatIsPartOf);
+                                final boolean listOfGamesThatIsPartOf, final boolean wantCreated);
 
     public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
                                  final String finishTime, final String type, final String result,

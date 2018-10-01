@@ -87,6 +87,24 @@ public class GameController extends BaseController{
         return objectMapper.writeValueAsString(games);
     }
 
+    @RequestMapping(value="/filterMatchLoggedCreateBy", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String filterGamesLoggedCreateBy(@RequestParam final String body) throws IOException {
+        JSONObject json = new JSONObject(body);
+        LOGGER.trace("Asking the service for the games by a criteria");
+        List<Game> games = gameService.findGamesPageCreateBy(json.getString("minStartTime"),
+                json.getString("maxStartTime"), json.getString("minFinishTime"),
+                json.getString("maxFinishTime"), json.getJSONArray("types"),
+                json.getJSONArray("sportNames"), json.getInt("minQuantity"),
+                json.getInt("maxQuantity"), json.getJSONArray("countries"),
+                json.getJSONArray("states"), json.getJSONArray("cities"),
+                json.getInt("minFreePlaces"), json.getInt("maxFreePlaces"),
+                json.getInt("pageNumber"), loggedUser());
+        LOGGER.trace("Returning {} games that match the criteria",games.size());
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(games);
+    }
+
     @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
     public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
         return new ModelAndView("createMatch");

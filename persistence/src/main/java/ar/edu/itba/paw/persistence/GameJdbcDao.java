@@ -118,7 +118,7 @@ public class GameJdbcDao implements GameDao {
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces, final PremiumUser loggedUser,
-                                final boolean listOfGamesThatIsPartOf) {
+                                final boolean listOfGamesThatIsPartOf, final boolean wantCreated) {
         String getGamesQuery =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
                         "playerQuantity, country, state, city, street, type, result, description, " +
@@ -157,31 +157,39 @@ public class GameJdbcDao implements GameDao {
         if(loggedUser != null) {
             String start;
             String logicalOperator;
-            if(listOfGamesThatIsPartOf) {
+            if (listOfGamesThatIsPartOf) {
                 start = "IN";
                 logicalOperator = "OR";
-            }
-            else {
+            } else {
                 start = "NOT IN";
                 logicalOperator = "AND";
             }
             String nestedQuery =
                     "SELECT teamAux.userId " +
-                    "FROM games as gameAux, (teams NATURAL JOIN isPartOf) AS teamAux " +
-                    "WHERE gameAux.startTime = gamesReal.startTime AND " +
-                          "gameAux.finishTime = gamesReal.finishTime AND " +
-                          "gameAux.teamName1 = gamesReal.teamName1";
+                            "FROM games as gameAux, (teams NATURAL JOIN isPartOf) AS teamAux " +
+                            "WHERE gameAux.startTime = gamesReal.startTime AND " +
+                            "gameAux.finishTime = gamesReal.finishTime AND " +
+                            "gameAux.teamName1 = gamesReal.teamName1";
             whereQuery =
-                    "(? "+start+" ("+nestedQuery+" AND gameAux.teamName1 = teamAux.teamName AND " +
-                                                      "teamAux.teamName = gamesReal.teamName1) "+
-                    logicalOperator+" ? "+start+" ("+nestedQuery+" AND gameAux.teamName2 = teamAux.teamName AND " +
-                                                      "teamAux.teamName = gamesReal.teamName2))";
+                    "(? " + start + " (" + nestedQuery + " AND gameAux.teamName1 = teamAux.teamName AND " +
+                            "teamAux.teamName = gamesReal.teamName1) " +
+                            logicalOperator + " ? " + start + " (" + nestedQuery + " AND gameAux.teamName2 = teamAux.teamName AND " +
+                            "teamAux.teamName = gamesReal.teamName2))";
 
             filters.add(loggedUser.getUserId());
             filters.add(loggedUser.getUserId());
+
+            whereQuery = (whereQuery.equals("")) ? whereQuery : " AND " + whereQuery;
+
+            if (wantCreated) {
+                whereQuery = whereQuery + " AND (team1.leaderName = ?)";
+            } else {
+                whereQuery = whereQuery + " AND (team1.leaderName != ?)";
+            }
+
+            filters.add(loggedUser.getUserName());
         }
 
-        whereQuery = (whereQuery.equals(""))? whereQuery : " AND " + whereQuery;
         String nextWhere = gameFilters.generateQueryWhere(filters);
         whereQuery = (nextWhere.equals(""))? whereQuery : whereQuery + " AND " + nextWhere;
 

@@ -185,7 +185,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, type, sportnames, QUANTITY-1,
                 QUANTITY+1, countries, states, cities, QUANTITY-2,
-                2*QUANTITY, null, false);
+                2*QUANTITY, null, false, false);
 
         Assert.assertEquals(QUERY_SIZE_1,games.size());
         Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
@@ -221,7 +221,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, null, false);
+                null, null, false, false);
 
         Assert.assertEquals(QUERY_SIZE_2,games.size());
         Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
@@ -271,7 +271,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, loggedUser, false);
+                null, loggedUser, false, false);
 
         Assert.assertEquals(QUERY_SIZE_2,games.size());
         Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
@@ -321,7 +321,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, loggedUser, true);
+                null, loggedUser, true, true);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(TEAMNAME_3,games.get(0).getTeam1().getName());
