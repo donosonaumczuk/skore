@@ -1,4 +1,36 @@
-$( "#friendly" ).click(function() {
+console.log("Starting to log...")
+console.log($("#competitivity1").attr("checked"));
+console.log($("#competitivity2").attr("checked"));
+console.log($("#mode1").attr("checked"));
+console.log($("#mode2").attr("checked"));
+console.log("Finish log!")
+console.log("\n\n\n\n");
+
+if($("#competitivity1").attr("checked") == "checked") {
+    $("#friendly").addClass("active");
+    $("#friendly i").removeClass("d-none");
+    $("#competitive i").addClass("d-none");
+}
+else if($("#competitivity2").attr("checked") == "checked") {
+    $("#competitive").addClass("active");
+    $("#competitive i").removeClass("d-none");
+    $("#friendly i").addClass("d-none");
+}
+
+if($("#mode1").attr("checked") == "checked") {
+    $("#individual").addClass("active");
+    $("#individual i").removeClass("d-none");
+    $("#team i").addClass("d-none");
+    $('#collapseTeam').collapse('hide');
+}
+else if($("#mode2").attr("checked") == "checked") {
+    $("#team").addClass("active");
+    $("#team i").removeClass("d-none");
+    $("#individual i").addClass("d-none");
+    $('#collapseTeam').collapse('show');
+}
+
+$("#friendly").click(function() {
     $("#friendly i").removeClass("d-none");
     $("#competitive i").addClass("d-none");
 });
@@ -9,7 +41,6 @@ $( "#competitive" ).click(function() {
 });
 
 $( "#individual" ).click(function() {
-    // $("#team").attr('disabled', 'true');
     $("#individual i").removeClass("d-none");
     $("#team i").addClass("d-none");
 
@@ -17,20 +48,11 @@ $( "#individual" ).click(function() {
 });
 
 $( "#team" ).click(function() {
-    // $("#individual").attr('disabled', 'true');
     $("#team i").removeClass("d-none");
     $("#individual i").addClass("d-none");
 
     $('#collapseTeam').collapse('show');
 });
-
-// $('#collapseTeam').on('hidden.bs.collapse', function () {
-//     $("#team").removeAttr('disabled');
-// });
-//
-// $('#collapseTeam').on('shown.bs.collapse', function () {
-//     $("#individual").removeAttr('disabled');
-// });
 
 $(function () {
     $('#datepicker').datetimepicker({
@@ -43,6 +65,7 @@ $(function () {
 $(function () {
     $('#timepicker-from').datetimepicker({
         format: 'HH:mm',
+        defaultDate: moment(getTimePlusHalfOur(), "HH:mm"),
         minDate: moment(getTimePlusHalfOur(), "HH:mm")
     });
 });
@@ -50,7 +73,8 @@ $(function () {
 $(function () {
     $('#timepicker-to').datetimepicker({
         format: 'HH:mm',
-        minDate: moment(getTimePlusAnOur(), "HH:mm")
+        defaultDate: moment("00:20", "HH:mm"),
+        minDate: moment("00:20", "HH:mm")
     });
 });
 

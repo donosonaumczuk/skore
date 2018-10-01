@@ -60,7 +60,6 @@ public class GameController extends BaseController{
     public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
                                     final BindingResult errors) {
         if(errors.hasErrors()) {
-            LOGGER.debug("date received: " + matchForm.getDate());
             return createMatchForm(matchForm);
         }
 
