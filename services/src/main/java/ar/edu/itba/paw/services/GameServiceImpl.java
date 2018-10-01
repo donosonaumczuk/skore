@@ -39,9 +39,10 @@ public class GameServiceImpl implements GameService {
     public Game create(final String teamName1, final String teamName2, final String startTime,
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description) {
+                       final String street, final String tornamentName, final String description,
+                       final String title) {
         Optional<Game> game = gameDao.create(teamName1, teamName2, startTime, finishTime, type, result,
-                country, state, city, street, tornamentName, description);
+                country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
                     teamName1, teamName2, startTime, finishTime);
@@ -57,10 +58,10 @@ public class GameServiceImpl implements GameService {
                                  final String state, final String city,
                                  final String street, final String tornamentName,
                                  final String description, final String creatorName,
-                                 final long creatorId, final String sportName) {
+                                 final long creatorId, final String sportName, final String title) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
         return create(team1.getName(), null, startTime, finishTime, type, null,
-                      country, state, city, street, tornamentName, description);
+                      country, state, city, street, tornamentName, description, title);
     }
 
     /*@Override

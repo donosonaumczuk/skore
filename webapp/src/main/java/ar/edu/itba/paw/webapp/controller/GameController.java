@@ -123,7 +123,7 @@ public class GameController extends BaseController{
         Game game = gameService.createNoTeamGame("2018-12-11 01:00:00", "2018-12-12 01:00:00",matchForm.getMode(),
                 matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
                 null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
-                "Futbol 5");
+                "Futbol 5", matchForm.getMatchName());
         LOGGER.debug("Match created {}\n\n", game.getTeam1().getSport().getName());
 
 

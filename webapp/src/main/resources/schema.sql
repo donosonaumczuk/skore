@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS games (
   street        VARCHAR(100),
   tornamentName VARCHAR(100),
   description   VARCHAR(140),
+  title         VARCHAR(100),
   FOREIGN KEY (teamName1) REFERENCES teams(teamName),
   FOREIGN KEY (teamName2) REFERENCES teams(teamName),
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,

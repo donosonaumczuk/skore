@@ -12,7 +12,8 @@ public interface GameService {
     public Game create(final String teamName1, final String teamName2, final String startTime,
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description);
+                       final String street, final String tornamentName, final String description,
+                       final String title);
 
     @Transactional
     public Game createNoTeamGame( final String startTime, final String finishTime,
@@ -20,7 +21,7 @@ public interface GameService {
                                   final String state, final String city,
                                   final String street, final String tornamentName,
                                   final String description, final String creatorName,
-                                  final long creatorId, final String sportName);
+                                  final long creatorId, final String sportName, final String title);
 
     @Transactional
     public Game findByKey(String teamName1, String startTime, String finishTime);

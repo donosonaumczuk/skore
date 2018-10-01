@@ -132,7 +132,7 @@ public class GameJdbcDaoTest {
                 SPORTNAME,USER_2_ID);
 
         final Optional<Game> gameOpt = gameJdbcDao.create(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
-                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null);
+                TYPE,RESULT,COUNTRY_1,STATE,CITY,STREET,null, null, null);
 
         Assert.assertEquals(true, gameOpt.isPresent());
         Game game = gameOpt.get();

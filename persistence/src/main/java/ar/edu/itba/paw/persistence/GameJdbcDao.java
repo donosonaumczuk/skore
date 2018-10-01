@@ -40,7 +40,8 @@ public class GameJdbcDao implements GameDao {
                     resultSet.getString("type"),
                     resultSet.getInt("OccupiedQuantity"),
                     resultSet.getString("result"),
-                    resultSet.getString("description"));
+                    resultSet.getString("description"),
+                    resultSet.getString("title"));
 
     @Autowired
     public GameJdbcDao(final DataSource dataSource, final TeamDao teamDao) {
@@ -55,7 +56,8 @@ public class GameJdbcDao implements GameDao {
     public Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
-                                 final String street, final String tornamentName, final String description) {
+                                 final String street, final String tornamentName, final String description,
+                                 final String title) {
         LOGGER.trace("Try to create game: {} vs {} |starting at {} |finishing at {}",
                 teamName1, teamName2, startTime,finishTime);
         final Map<String, Object> args =  new HashMap<>();
@@ -72,6 +74,7 @@ public class GameJdbcDao implements GameDao {
         args.put("street", street);
         args.put("tornamentName", tornamentName);
         args.put("description", description);
+        args.put("title", title);
 
         jdbcInsert.execute(args);
         LOGGER.trace("Successfully create game: {} vs {} |starting at {} |finishing at {}",
