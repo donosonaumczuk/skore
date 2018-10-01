@@ -28,21 +28,12 @@ public class UserForm {
     @Pattern(regexp ="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( *)")
     private String cellphone;
 
-    @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z ]*")
     private String country;
 
-    @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String state;
 
-    @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String city;
 
-
-    @Size(min = 0, max = 100)
-    @Pattern(regexp ="[a-zA-Z0 ]*")
     private String street;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")

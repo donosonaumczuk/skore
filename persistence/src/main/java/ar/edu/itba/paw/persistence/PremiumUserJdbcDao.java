@@ -26,6 +26,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     private final SimpleJdbcInsert jdbcInsertUserRoles;
     private final UserJdbcDao userDao;
 
+    private static final int USER_DISABLED = 0;
+    private static final int USER_ENABLED = 1;
+
+
+
     private final static RowMapper<PremiumUser> ROW_MAPPER = (resultSet, rowNum) ->
             new PremiumUser(resultSet.getString("firstName"), resultSet.getString("lastName"),
                     resultSet.getString("email"), resultSet.getInt("userid"),
@@ -73,6 +78,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("reputation", reputation);
         args.put("email", email);
         args.put("password", password);
+        args.put("enabled", USER_DISABLED);
 
         jdbcInsert.execute(args);
         return findByUserName(userName);
@@ -122,6 +128,20 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("username", username);
         args.put("role", roleId);
         return jdbcInsertUserRoles.execute(args) == 1;
+
+    }
+
+    @Override
+    public Optional<PremiumUser> enableUser(final String username) {
+        Optional<PremiumUser> currentUser = findByUserName(username);
+        if(currentUser.isPresent()) {
+            final String sqlQuery = "UPDATE accounts SET enabled = ? WHERE userName = ?";
+            jdbcTemplate.update(sqlQuery, USER_ENABLED, username);
+            return currentUser;
+        }
+        else {
+            return Optional.empty();
+        }
 
     }
 
