@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @Controller
-public class ResourceController {
+public class ResourceController extends BaseController{
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired

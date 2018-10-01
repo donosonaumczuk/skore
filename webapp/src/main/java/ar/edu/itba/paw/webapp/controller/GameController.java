@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-public class GameController {
+public class GameController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 

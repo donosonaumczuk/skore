@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ErrorController {
+public class ErrorController extends BaseController {
 
     @RequestMapping("/403")
     public ModelAndView forbidden() {

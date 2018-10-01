@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-public class UserController {
+public class UserController extends BaseController{
     private static final int USER_ROLE_ID = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -79,21 +79,4 @@ public class UserController {
         return new ModelAndView("index");
     }
 
-    //llevarlo a un base controller y podes tener el usuario loggeado evans
-    @ModelAttribute("loggedUser")
-    public PremiumUser logggedUser() {
-        if(SecurityContextHolder.getContext() == null) {
-            return null;
-        }
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.isAuthenticated()) {
-            return null;
-        }
-        final Optional<PremiumUser> user = us.findByUserName(authentication.getName());
-        if(!user.isPresent()) {
-            return null;
-        }
-        return user.get();
-
-    }
 }

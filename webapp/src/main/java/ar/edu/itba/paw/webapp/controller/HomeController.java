@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 @Controller
-public class HomeController {
+public class HomeController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
