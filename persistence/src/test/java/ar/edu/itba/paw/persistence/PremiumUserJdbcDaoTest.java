@@ -71,6 +71,10 @@ public class PremiumUserJdbcDaoTest {
                     ", '" + PASSWORD +"', " + USERID +");");
         }
 
+        private void insertRole(final int roleId, final String roleName) {
+            jdbcTemplate.execute("INSERT INTO roles (roleId, roleName) VALUES(" + roleId + ", '" + roleName + "')");
+        }
+
         @Test
         public void testCreate() {
             //exercise class
@@ -176,6 +180,20 @@ public class PremiumUserJdbcDaoTest {
 
         //postconditions
         Assert.assertTrue(!returnedUser.isPresent());
+
+    }
+
+    @Test
+    public void testaddRole() {
+        //set up
+        insertUser(EXISTANT_USERNAME);
+        insertRole(0,"ROLE_USER");
+
+        //exercise class
+        final boolean returnedValue = premiumUserDao.addRole(EXISTANT_USERNAME, 0);
+
+        //postconditions
+        Assert.assertTrue(returnedValue);
 
     }
 }
