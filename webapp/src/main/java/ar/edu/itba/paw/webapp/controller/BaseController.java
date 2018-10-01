@@ -18,7 +18,7 @@ public  abstract class BaseController {
     private PremiumUserService us;
 
     @ModelAttribute("loggedUser")
-    public PremiumUser logggedUser() {
+    public PremiumUser loggedUser() {
         if(SecurityContextHolder.getContext() == null) {
             return null;
         }

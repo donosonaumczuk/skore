@@ -7,11 +7,21 @@
     <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
     <a class="d-sm-none login-link" href="/login"><i class="fas fa-user"></i></a>
-    <form class="d-none d-sm-block form-inline">
-        <a class="mr-1 login-link" href="/login"><spring:message code="signInMessage"/></a>
-        <span class="white-text mr-1"><spring:message code="orLabel"/></span>
-        <a class="login-link" href="/create"><spring:message code="signUpMessage"/></a>
-    </form>
+    <c:choose>
+        <c:when test="${loggedUser != null}">
+            <form class="d-none d-sm-block form-inline">
+                <a class="mr-1 login-link" href="/login"><c:out value="${loggedUser.getUsername()}"/></a>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <form class="d-none d-sm-block form-inline">
+                <a class="mr-1 login-link" href="/login"><spring:message code="signInMessage"/></a>
+                <span class="white-text mr-1"><spring:message code="orLabel"/></span>
+                <a class="login-link" href="/create"><spring:message code="signUpMessage"/></a>
+            </form>
+        </c:otherwise>
+    </c:choose>
+
 </nav>
 
 <%--<nav class="navbar d-none d-sm-block fixed-top second-nav">--%>
