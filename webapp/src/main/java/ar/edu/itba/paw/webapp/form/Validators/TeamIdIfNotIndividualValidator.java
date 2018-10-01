@@ -23,7 +23,7 @@ public class TeamIdIfNotIndividualValidator
         MatchForm matchForm = (MatchForm) obj;
         String mode = matchForm.getMode();
         if(mode.equals("Team")) {
-            return matchForm.getTeamId() != null;
+            return matchForm.getTeamId().length() > 0;
         }
         return true;
     }

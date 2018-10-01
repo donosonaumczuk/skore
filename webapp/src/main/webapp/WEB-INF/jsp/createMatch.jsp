@@ -72,9 +72,9 @@
                 <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/><span class="text-muted">*</span></label>
                     <form:select  path="teamId" id="inputTeam" class="form-control">
-                        <option selected><spring:message code="chooseTeamLabel"/></option>
-                        <option>Team1</option>
-                        <option>Team2</option>
+                        <option value="" selected><spring:message code="chooseTeamLabel"/></option>
+                        <option value="Team1">Team1</option>
+                        <option value="Team2">Team2</option>
                     </form:select>
                     <form:errors path="teamId" element="div" cssClass="invalid-feedback d-block"/>
                 </div>

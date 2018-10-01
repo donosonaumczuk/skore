@@ -27,6 +27,6 @@ public class FutureTimeValidator
         } catch (Exception e) {
             return false;
         }
-        return givenDateTime.compareTo(LocalDateTime.now().plusMinutes(30))>= 0;
+        return givenDateTime.plusMinutes(1).compareTo(LocalDateTime.now().plusMinutes(30))> 0;
     }
 }
