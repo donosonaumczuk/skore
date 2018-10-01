@@ -4,9 +4,83 @@ var labelMap = {
         "es": "UNIRSE"
     },
     days: {
+        "MONDAY": {
+            "en": "Monday",
+            "es": "Lunes"
+        },
+        "TUESDAY": {
+            "en": "Tuesday",
+            "es": "Martes"
+        },
         "WEDNESDAY": {
             "en": "Wednesday",
             "es": "Miercoles"
+        },
+        "THURSDAY": {
+            "en": "Thursday",
+            "es": "Jueves"
+        },
+        "FRIDAY": {
+            "en": "Friday",
+            "es": "Viernes"
+        },
+        "SATURDAY": {
+            "en": "Saturday",
+            "es": "Sabado"
+        },
+        "SUNDAY": {
+            "en": "Sunday",
+            "es": "Domingo"
+        }
+    },
+    months: {
+        1: {
+            "en": "January",
+            "es": "Enero"
+        },
+        2: {
+            "en": "February",
+            "es": "Febrero"
+        },
+        3: {
+            "en": "March",
+            "es": "Marzo"
+        },
+        4: {
+            "en": "April",
+            "es": "Abril"
+        },
+        5: {
+            "en": "May",
+            "es": "Mayo"
+        },
+        6: {
+            "en": "June",
+            "es": "Junio"
+        },
+        7: {
+            "en": "July",
+            "es": "Julio"
+        },
+        8: {
+            "en": "August",
+            "es": "Agosto"
+        },
+        9: {
+            "en": "September",
+            "es": "Septiembre"
+        },
+        10: {
+            "en": "October",
+            "es": "Octubre"
+        },
+        11: {
+            "en": "November",
+            "es": "Noviembre"
+        },
+        12: {
+            "en": "December",
+            "es": "Diciembre"
         }
     }
 };
@@ -46,17 +120,47 @@ function loadMatches(pageNumber) {
     //     });
 
     matchArray = JSON.parse(matchJSON);
+    $('#loader').remove();
     for(var i = 0; i < matchArray.length; i++) {
         var matchCard = getMatchCard(matchArray[i]);
         $('.match-container').append(matchCard);
     }
 }
 
+function formatTime(hours, minutes) {
+    if(hours < 10)
+        hours = '0' + hours;
+
+    if(minutes < 10)
+        minutes = '0' + minutes;
+
+    return hours + ":" + minutes;
+}
+
+function formatDate(weekDay, month, day, year) {
+    if(lang == 'es') {
+        return labelMap.days[weekDay]['es'] + ', ' + day + ' de ' + labelMap.months[month]['es'] + ', ' + year;
+    }
+    else { /* Otherwise, default language: English (en) */
+        return labelMap.days[weekDay]['en'] + ', ' + labelMap.months[month]['en'] + ' ' + day + ', ' + year;
+    }
+
+}
+
+function getLoader() {
+    return '' +
+    '<div class="row p-2 mt-2" id="loader">' +
+        '<div class="offset-5 col-2">' +
+            '<img class="img-fluid" src="img/loader.gif">' +
+        '</div>' +
+    '</div>';
+}
+
 function getMatchCard(match) {
     var startTime = match.startTime;
-    var date = startTime.monthValue + '/' + startTime.dayOfMonth + '/' + startTime.year;
+    var date = formatDate(startTime.dayOfWeek, startTime.monthValue, startTime.dayOfMonth, startTime.year);
     var finishTime = match.finishTime;
-    var time =  startTime.hour + ':' + startTime.minute + ' - ' + finishTime.hour + ':' + finishTime.minute;
+    var time =  formatTime(startTime.hour, startTime.minute) + ' - ' + formatTime(finishTime.hour, finishTime.minute);
     var creator = match.team1.leader;
     var username = creator.userName;
     var sport = match.team1.sport.name;
@@ -65,13 +169,14 @@ function getMatchCard(match) {
     var place = match.place;
     var location = place.street + ', ' + place.city + ', ' + place.state + ', ' + place.country;
     var sportImg = 'football.svg';
+    var avatar = 'user-default.svg';
 
     var matchCard = '' +
         '<div class="row p-2 mt-2 match-card rounded-border">' +
             '<div class="col">' +
                 '<div class="row mb-4">' +
                     '<div class="col-2 col-sm-1 pl-0">' +
-                        '<img src="' + 'img/user-default.svg' + '" class="user-avatar" alt="user-pic">' +
+                        '<img src="img/' + avatar + '" class="user-avatar" alt="user-pic">' +
                     '</div>' +
                     '<div class="col-3 col-sm-4">' +
                         '<div class="row">' +
