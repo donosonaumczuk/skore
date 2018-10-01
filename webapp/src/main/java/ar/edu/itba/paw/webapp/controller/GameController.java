@@ -102,10 +102,10 @@ public class GameController extends BaseController{
         PremiumUser loggedUser = loggedUser();
 
         LOGGER.debug("Match form completed, creating match...");
-        Game game = gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00",matchForm.getMode(),
+        Game game = gameService.createNoTeamGame("2018-12-11 01:00:00", "2018-12-12 01:00:00",matchForm.getMode(),
                 matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
                 null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
-                matchForm.getSportName());
+                "Futbol 5");
         LOGGER.debug("Match created {}\n\n", game.getTeam1().getSport().getName());
 
 

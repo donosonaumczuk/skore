@@ -63,7 +63,7 @@ public class TeamJdbcDao implements TeamDao {
         String query =
                 "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
                     "leader.email as leaderEmail, leader.userId as leaderUserId, leader.userName " +
-                    "as leaderUserName, acronym, teamName, isTemp, team.sportName as sportName, " +
+                    "as leaderUserName, team.acronym, team.teamName, team.isTemp, team.sportName as sportName, " +
                     "team.playerQuantity as playerQuantity, " +
                     "users.firstName as usersFirstName, users.lastName as usersLastName, " +
                     "users.email as usersEmail, users.userId as usersUserId " +

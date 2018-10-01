@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +82,9 @@ public class GameJdbcDao implements GameDao {
     @Override
     public Optional<Game> findByKey(String teamName1, String startTime, String finishTime) {
         LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime, finishTime);
+
         final String getAGame =
-                "SELECT teamName1, teamName2, startTime, finishTime, sportName, " +
+                "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName as  sportName, " +
                     "playerQuantity, country, state, city, street, type, result, description, " +
                     "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
                 "FROM " +
@@ -91,7 +93,7 @@ public class GameJdbcDao implements GameDao {
                     "(teams NATURAL JOIN isPartOf) as team1, sports " +
                 "WHERE teamName1 = team1.teamName AND teamName1 = ? AND startTime = ? AND " +
                     "finishTime = ? AND team1.sportName = sports.sportName" +
-                " GROUP BY startTime, finishTime, teamName1, teamName2, sportName, playerQuantity;";
+                " GROUP BY startTime, finishTime, teamName1, teamName2, sports.sportName, sports.playerQuantity;";
         final List<Game> list = jdbcTemplate.query(getAGame, ROW_MAPPER, teamName1, startTime,
                 finishTime);
 

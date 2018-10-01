@@ -30,8 +30,10 @@ public class MatchForm {
     @ValidDuration
     private String duration;
 
+    @NotEmpty
     private String country;
 
+    @NotEmpty
     private String state;
 
     private String city;
