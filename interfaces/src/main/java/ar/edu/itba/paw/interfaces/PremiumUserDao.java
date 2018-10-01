@@ -27,4 +27,9 @@ public interface PremiumUserDao {
                                                 final int newReputation, final String newPassword,
                                                 final String oldUserName);
 
+
+    public Optional<PremiumUser> findByEmail(final String email);
+
+    public boolean addRole(final String username, final int roleId);
 }
+

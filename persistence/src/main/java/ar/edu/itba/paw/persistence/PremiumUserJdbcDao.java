@@ -23,6 +23,7 @@ import java.util.Optional;
 public class PremiumUserJdbcDao implements PremiumUserDao{
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertUserRoles;
     private final UserJdbcDao userDao;
 
     private final static RowMapper<PremiumUser> ROW_MAPPER = (resultSet, rowNum) ->
@@ -39,6 +40,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("accounts");
+        jdbcInsertUserRoles = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("userRoles");
         this.userDao = userDao;
     }
 
@@ -68,6 +71,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("city", city);
         args.put("street", street);
         args.put("reputation", reputation);
+        args.put("email", email);
         args.put("password", password);
 
         jdbcInsert.execute(args);
@@ -92,16 +96,33 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
         if(currentUser.isPresent()) {
             userDao.updateBasicUserInfo(currentUser.get().getUserId(), newFirstName, newLastName, newEmail);
-            final String sqlQuery = "UPDATE accounts SET userName = ?, cellphone = ?, birthday = ?," +
+            final String sqlQuery = "UPDATE accounts SET userName = ?, email = ?, cellphone = ?, birthday = ?," +
                     " country = ?, state = ?, city = ?, street = ?, reputation = ?, password = ? " +
                     "WHERE userName = ?";
-            jdbcTemplate.update(sqlQuery, newUserName, newCellphone, newBirthday, newCountry, newState,
+            jdbcTemplate.update(sqlQuery, newUserName, newEmail, newCellphone, newBirthday, newCountry, newState,
                     newCity, newStreet, newReputation, newPassword, oldUserName);
             return findByUserName(newUserName);
         }
         else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<PremiumUser> findByEmail(final String email) {
+        final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts natural join users WHERE " +
+                "email = ?", ROW_MAPPER, email);
+
+        return list.stream().findFirst();
+    }
+
+    @Override
+    public boolean addRole(final String username, final int roleId) {
+        final Map<String, Object> args =  new HashMap<>();
+        args.put("username", username);
+        args.put("role", roleId);
+        return jdbcInsertUserRoles.execute(args) == 1;
+
     }
 
 }

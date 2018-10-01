@@ -13,16 +13,17 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-  password    VARCHAR(100),
+  password    VARCHAR(100) NOT NULL,
   country     VARCHAR(100),
   state       VARCHAR(100),
   city        VARCHAR(100),
   street      VARCHAR(100),
   reputation  INTEGER,
   cellphone   VARCHAR(100),
-  birthday    DATE,
+  birthday    DATE         NOT NULL,
+  email       VARCHAR(100) NOT NULL,
   image       BLOB,
-  UNIQUE(userId)
+  UNIQUE(email)
 );
 
 CREATE TABLE IF NOT EXISTS notification(
@@ -57,6 +58,18 @@ CREATE TABLE IF NOT EXISTS tornaments(
   tornamentName VARCHAR(100) PRIMARY KEY,
   type          VARCHAR(100),
   image         BLOB
+);
+
+CREATE TABLE IF NOT EXISTS roles(
+  roleId         INTEGER PRIMARY KEY,
+  roleName      VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS userRoles(
+  role          INTEGER NOT NULL,
+  username      VARCHAR(100),
+  FOREIGN KEY (role) REFERENCES roles(roleId) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (username) REFERENCES accounts(username) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS games (

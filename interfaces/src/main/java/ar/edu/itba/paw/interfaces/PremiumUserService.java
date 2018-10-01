@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface PremiumUserService {
     @Transactional
-    public PremiumUser findByUserName(final String userName);
+    public  Optional<PremiumUser> findByUserName(final String userName);
+
+    @Transactional
+    public  Optional<PremiumUser> findByEmail(final String email);
 
     @Transactional
     public PremiumUser create(final String firstName, final String lastName,
@@ -29,5 +32,8 @@ public interface PremiumUserService {
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
                                       final String oldUserName);
+    @Transactional
+    public void addRole(final String username, final int roleId);
 
-}
+
+    }

@@ -23,8 +23,11 @@ CREATE TABLE IF NOT EXISTS accounts(
   reputation  INTEGER,
   cellphone   VARCHAR(100),
   birthday    DATE,
+  email       VARCHAR (100) NOT NULL,
+  role        VARCHAR (100),
+  enabled     INTEGER,
   image       BYTEA,
-  UNIQUE(userId)
+  UNIQUE(email)
 )/;
 
 CREATE TABLE IF NOT EXISTS friendOf(
@@ -75,6 +78,18 @@ CREATE TABLE IF NOT EXISTS tornaments(
   tornamentName VARCHAR(100) PRIMARY KEY,
   type          VARCHAR(100),
   image         BYTEA
+)/;
+
+CREATE TABLE IF NOT EXISTS roles(
+  roleId         INTEGER PRIMARY KEY,
+  roleName      VARCHAR(100) NOT NULL
+)/;
+
+CREATE TABLE IF NOT EXISTS userRoles(
+  role          INTEGER NOT NULL,
+  username      VARCHAR(100),
+  FOREIGN KEY (role) REFERENCES roles(roleId) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (username) REFERENCES accounts(username) ON DELETE CASCADE ON UPDATE CASCADE
 )/;
 
 CREATE TABLE IF NOT EXISTS games (

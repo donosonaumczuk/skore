@@ -64,11 +64,15 @@ public class PremiumUserJdbcDaoTest {
             jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                     " VALUES ('" + FIRSTNAME + "' , '" + LASTNAME + "', '" + EMAIL + "', " + USERID + ");");
 
-            jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
+            jdbcTemplate.execute("INSERT INTO accounts (username, email, cellphone, birthday," +
                     " country, state, city, street, reputation, password, userId)" +
-                        " VALUES ('" + userName + "' , '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
+                        " VALUES ('" + userName + "' , '" + EMAIL + "', '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
                     COUNTRY + "', '" + STATE + "', '" + CITY + "', '" + STREET + "', " + REPUTATION +
                     ", '" + PASSWORD +"', " + USERID +");");
+        }
+
+        private void insertRole(final int roleId, final String roleName) {
+            jdbcTemplate.execute("INSERT INTO roles (roleId, roleName) VALUES(" + roleId + ", '" + roleName + "')");
         }
 
         @Test
@@ -87,7 +91,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testFindByUserNameWithExistantId() {
+        public void testFindByUserNameWithExistentId() {
             //set up
             insertUser(EXISTANT_USERNAME);
 
@@ -101,7 +105,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testFindByUserNameWithNonExistantId() {
+        public void testFindByUserNameWithNonExistentId() {
             //exercise class
             final Optional<PremiumUser> returnedUser = premiumUserDao.findByUserName(NONEXISTANT_USERNAME);
 
@@ -110,7 +114,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testRemoveNonExistantUser(){
+        public void testRemoveNonExistentUser(){
             //exercise class
             boolean returnValue = premiumUserDao.remove(NONEXISTANT_USERNAME);
 
@@ -119,7 +123,7 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testRemoveExistantUser(){
+        public void testRemoveExistentUser(){
             //set up
             insertUser(EXISTANT_USERNAME);
 
@@ -152,6 +156,46 @@ public class PremiumUserJdbcDaoTest {
             Assert.assertEquals(newPassword, modifyUser.getPassword());
             Assert.assertEquals(CELLPHONE, modifyUser.getCellphone());
         }
+
+        @Test
+        public  void testFindByEmailExistentUser() {
+            //set up
+            insertUser(EXISTANT_USERNAME);
+
+            //exercise class
+            final Optional<PremiumUser> returnedUser = premiumUserDao.findByEmail(EMAIL);
+
+            //postconditions
+            Assert.assertTrue(returnedUser.isPresent());
+            final PremiumUser user = returnedUser.get();
+            Assert.assertEquals(EMAIL, user.getEmail());
+
+        }
+
+    @Test
+    public  void testFindByEmailNonExistentUser() {
+
+        //exercise class
+        final Optional<PremiumUser> returnedUser = premiumUserDao.findByEmail(EMAIL);
+
+        //postconditions
+        Assert.assertTrue(!returnedUser.isPresent());
+
+    }
+
+    @Test
+    public void testaddRole() {
+        //set up
+        insertUser(EXISTANT_USERNAME);
+        insertRole(0,"ROLE_USER");
+
+        //exercise class
+        final boolean returnedValue = premiumUserDao.addRole(EXISTANT_USERNAME, 0);
+
+        //postconditions
+        Assert.assertTrue(returnedValue);
+
+    }
 }
 
 

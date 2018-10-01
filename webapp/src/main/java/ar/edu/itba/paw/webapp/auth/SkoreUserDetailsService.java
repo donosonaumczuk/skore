@@ -30,7 +30,7 @@ public class SkoreUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final PremiumUser user = us.findByUserName(username);
+        final PremiumUser user = us.findByUserName(username).get();
         if(user == null) {
             throw new UsernameNotFoundException("No user by the name " + username);
         }
