@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -81,11 +82,17 @@ public class UserController {
     //llevarlo a un base controller y podes tener el usuario loggeado evans
     @ModelAttribute("loggedUser")
     public PremiumUser logggedUser() {
+        if(SecurityContextHolder.getContext() == null) {
+            return null;
+        }
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.isAuthenticated()) {
             return null;
         }
-        final PremiumUser user = us.findByUserName(authentication.getName()).get();
-        return user;
+        final Optional<PremiumUser> user = us.findByUserName(authentication.getName());
+        if(!user.isPresent()) {
+            return null;
+        }
+        return user.get();
     }
 }

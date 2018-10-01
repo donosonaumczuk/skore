@@ -37,8 +37,8 @@ public class SkoreUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("No user by the name " + username);
         }
         final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN"));
+                new SimpleGrantedAuthority("ROLE_USER"));
+              //  new SimpleGrantedAuthority("ROLE_ADMIN"));
         LOGGER.trace("username found: {} with password: {} and authorities: {}", user.getUserName(), user.getPassword(), authorities);
         System.out.println("\n\n\n\n" + "userFound = " + user.getUserName() + " " + user.getPassword() + "  " + authorities +"\n\n\n\n");
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
