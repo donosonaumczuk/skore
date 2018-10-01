@@ -120,6 +120,7 @@ function loadMatches(pageNumber) {
     //     });
 
     matchArray = JSON.parse(matchJSON);
+    $('#loader').remove();
     for(var i = 0; i < matchArray.length; i++) {
         var matchCard = getMatchCard(matchArray[i]);
         $('.match-container').append(matchCard);
@@ -144,6 +145,15 @@ function formatDate(weekDay, month, day, year) {
         return labelMap.days[weekDay]['en'] + ', ' + labelMap.months[month]['en'] + ' ' + day + ', ' + year;
     }
 
+}
+
+function getLoader() {
+    return '' +
+    '<div class="row p-2 mt-2" id="loader">' +
+        '<div class="offset-5 col-2">' +
+            '<img class="img-fluid" src="img/loader.gif">' +
+        '</div>' +
+    '</div>';
 }
 
 function getMatchCard(match) {
