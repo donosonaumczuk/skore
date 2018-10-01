@@ -2,9 +2,7 @@ package ar.edu.itba.paw.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class PremiumUser extends User{
     private String userName;
@@ -17,6 +15,7 @@ public class PremiumUser extends User{
     private List<PremiumUser> friends;
     private List<Notification> notifications;
     private List<Sport> likes;
+    private Set<Role> roles;
 
     public PremiumUser(String firstName, String lastName, String email, long userId,
                        String userName, String cellphone, LocalDate birthday,
@@ -29,10 +28,11 @@ public class PremiumUser extends User{
         this.home           = home;
         this.reputation     = reputation;
         this.password       = password;
-        this.email           = email;
+        this.email          = email;
         this.friends        = new LinkedList<>();
         this.notifications  = new ArrayList<>();
         this.likes          = new ArrayList<>();
+        this.roles          = new HashSet<>();
     }
 
     public PremiumUser(String firstName, String lastName, String email, long userId, String userName) {
@@ -110,6 +110,17 @@ public class PremiumUser extends User{
 
     public void setLikes(final List<Sport> likes) {
         this.likes = likes;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> newRoles) {
+        roles = newRoles;
+    }
+    public void addRole(final Role newRole) {
+        roles.add(newRole);
     }
 
     @Override

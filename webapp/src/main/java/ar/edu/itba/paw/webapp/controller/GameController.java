@@ -33,10 +33,6 @@ public class GameController extends BaseController{
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
-    @Autowired
-    @Qualifier("premiumUserServiceImpl")
-    private PremiumUserService us;
-
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGames(@RequestParam final String body) throws IOException {
@@ -70,21 +66,13 @@ public class GameController extends BaseController{
 
         PremiumUser loggedUser = loggedUser();
 
-        gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00","Friendly",
+
+        gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00",matchForm.getMode(),
                 matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
                 null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
                 matchForm.getSportName());
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("index");
     }
 
-    @ModelAttribute("loggedUser")
-    public PremiumUser loggedUser() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.isAuthenticated()) {
-            return null;
-        }
-        final PremiumUser user = us.findByUserName(authentication.getName()).get();
-        return user;
-    }
 }

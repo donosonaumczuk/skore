@@ -39,8 +39,8 @@
                             <label class="btn btn-green" id="competitive">
                                 <input:radiobutton path="competitivity" name="options" value="Competitive" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
                             </label>
-                            <form:errors path="competitivity" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
+                        <form:errors path="competitivity" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -53,8 +53,8 @@
                             <label class="btn btn-green" id="team">
                                 <form:radiobutton path="mode" name="options" value="Team" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
                             </label>
-                            <form:errors path="mode" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
+                        <form:errors path="mode" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
                 <div class="form-group">
