@@ -1,11 +1,3 @@
-console.log("Starting to log...")
-console.log($("#competitivity1").attr("checked"));
-console.log($("#competitivity2").attr("checked"));
-console.log($("#mode1").attr("checked"));
-console.log($("#mode2").attr("checked"));
-console.log("Finish log!")
-console.log("\n\n\n\n");
-
 if($("#competitivity1").attr("checked") == "checked") {
     $("#friendly").addClass("active");
     $("#friendly i").removeClass("d-none");
@@ -65,7 +57,7 @@ $(function () {
 $(function () {
     $('#timepicker-from').datetimepicker({
         format: 'HH:mm',
-        defaultDate: moment("18:00", "HH:mm"),
+        defaultDate: moment(getTimePlusHalfOur(), "HH:mm"),
     });
 });
 
