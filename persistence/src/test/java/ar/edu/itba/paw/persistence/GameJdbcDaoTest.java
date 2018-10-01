@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.PremiumUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +27,14 @@ public class GameJdbcDaoTest {
     private static final String EMAIL                   = "email";
     private static final long   USER_1_ID               = 1;
     private static final long   USER_2_ID               = 2;
+    private static final long   USER_3_ID               = 3;
     private static final String SPORTNAME               = "sportname";
     private static final int    QUANTITY                = 10;
     private static final String ACRONYM                 = "acronym";
     private static final long   ISTEMP                  = 0;
     private static final String TEAMNAME_1              = "1";
     private static final String TEAMNAME_2              = "2";
+    private static final String TEAMNAME_3              = "3";
     private static final String STARTIME_1              = "2018-12-12 0:00:00";
     private static final String FINISHTIME_1            = "2018-12-12 01:00:00";
     private static final String STARTIME_2              = "2018-12-13 0:00:00";
@@ -182,7 +185,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, type, sportnames, QUANTITY-1,
                 QUANTITY+1, countries, states, cities, QUANTITY-2,
-                2*QUANTITY);
+                2*QUANTITY, null, false);
 
         Assert.assertEquals(QUERY_SIZE_1,games.size());
         Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
@@ -218,7 +221,7 @@ public class GameJdbcDaoTest {
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null);
+                null, null, false);
 
         Assert.assertEquals(QUERY_SIZE_2,games.size());
         Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
@@ -233,6 +236,98 @@ public class GameJdbcDaoTest {
         Assert.assertEquals(TEAMNAME_2,games.get(2).getTeam2().getName());
         Assert.assertEquals(STARTIME_LOCALTIME_3,games.get(2).getStartTime().toString());
         Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(2).getFinishTime().toString());
+    }
+
+    @Test
+    public void findGamesTestGamesAUserIsNotPartOf() {
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_3_ID,LASTNAME+USER_3_ID, EMAIL+USER_3_ID,
+                USER_3_ID, FIRSTNAME+USER_3_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertSport(SPORTNAME,QUANTITY);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
+        insertTeam(TEAMNAME_3,ACRONYM+TEAMNAME_3,FIRSTNAME+USER_3_ID,ISTEMP,
+                SPORTNAME,USER_3_ID);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,TYPE,RESULT, COUNTRY_1,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_2,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_3,FINISHTIME_3,TYPE,RESULT, COUNTRY_3,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_3,TEAMNAME_2,STARTIME_3,FINISHTIME_3,TYPE,RESULT, COUNTRY_3,STATE,CITY,
+                STREET);
+        PremiumUser loggedUser = new PremiumUser(FIRSTNAME+USER_3_ID,
+                LASTNAME+USER_3_ID, EMAIL+USER_3_ID, USER_3_ID,
+                FIRSTNAME+USER_3_ID);
+
+        final List<Game> games = gameJdbcDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, loggedUser, false);
+
+        Assert.assertEquals(QUERY_SIZE_2,games.size());
+        Assert.assertEquals(TEAMNAME_1,games.get(0).getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2,games.get(0).getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_1,games.get(0).getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_1,games.get(0).getFinishTime().toString());
+        Assert.assertEquals(TEAMNAME_1,games.get(1).getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2,games.get(1).getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_2,games.get(1).getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_2,games.get(1).getFinishTime().toString());
+        Assert.assertEquals(TEAMNAME_1,games.get(2).getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2,games.get(2).getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_3,games.get(2).getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(2).getFinishTime().toString());
+    }
+
+    @Test
+    public void findGamesTestGamesAUserIsPartOf() {
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_3_ID,LASTNAME+USER_3_ID, EMAIL+USER_3_ID,
+                USER_3_ID, FIRSTNAME+USER_3_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertSport(SPORTNAME,QUANTITY);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
+        insertTeam(TEAMNAME_3,ACRONYM+TEAMNAME_3,FIRSTNAME+USER_3_ID,ISTEMP,
+                SPORTNAME,USER_3_ID);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,TYPE,RESULT, COUNTRY_1,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_2,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_1,TEAMNAME_2,STARTIME_3,FINISHTIME_3,TYPE,RESULT, COUNTRY_3,STATE,CITY,
+                STREET);
+        insertGame(TEAMNAME_3,TEAMNAME_2,STARTIME_3,FINISHTIME_3,TYPE,RESULT, COUNTRY_3,STATE,CITY,
+                STREET);
+        PremiumUser loggedUser = new PremiumUser(FIRSTNAME+USER_3_ID,
+                LASTNAME+USER_3_ID, EMAIL+USER_3_ID, USER_3_ID,
+                FIRSTNAME+USER_3_ID);
+
+        final List<Game> games = gameJdbcDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, loggedUser, true);
+
+        Assert.assertEquals(1,games.size());
+        Assert.assertEquals(TEAMNAME_3,games.get(0).getTeam1().getName());
+        Assert.assertEquals(TEAMNAME_2,games.get(0).getTeam2().getName());
+        Assert.assertEquals(STARTIME_LOCALTIME_3,games.get(0).getStartTime().toString());
+        Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(0).getFinishTime().toString());
     }
 
     public void modifyTest() {

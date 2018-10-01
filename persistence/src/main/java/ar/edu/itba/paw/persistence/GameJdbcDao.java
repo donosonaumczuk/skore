@@ -115,12 +115,13 @@ public class GameJdbcDao implements GameDao {
                                 final Integer minQuantity, final Integer maxQuantity,
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
-                                final Integer maxFreePlaces) {
+                                final Integer maxFreePlaces, final PremiumUser loggedUser,
+                                final boolean listOfGamesThatIsPartOf) {
         String getGamesQuery =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
                         "playerQuantity, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
-                "FROM games, (teams NATURAL JOIN isPartOf) as team1, " +
+                "FROM games as gamesReal, (teams NATURAL JOIN isPartOf) as team1, " +
                         "(teams NATURAL JOIN isPartOf) as team2, sports " +
                 "WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
                         "team1.sportName = sports.sportName";
@@ -130,27 +131,58 @@ public class GameJdbcDao implements GameDao {
         final List<Object> filters = new ArrayList<>();
         final Filters gameFilters = new Filters();
 
-        gameFilters.addMinFilter("games.startTime", minStartTime);
-        gameFilters.addMinFilter("games.finishTime", minFinishTime);
+        gameFilters.addMinFilter("gamesReal.startTime", minStartTime);
+        gameFilters.addMinFilter("gamesReal.finishTime", minFinishTime);
         gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
 
-        gameFilters.addMaxFilter("games.startTime", maxStartTime);
-        gameFilters.addMaxFilter("games.finishTime", maxFinishTime);
+        gameFilters.addMaxFilter("gamesReal.startTime", maxStartTime);
+        gameFilters.addMaxFilter("gamesReal.finishTime", maxFinishTime);
         gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
 
-        gameFilters.addSameFilter("games.type", types);
+        gameFilters.addSameFilter("gamesReal.type", types);
         gameFilters.addSameFilter("sports.sportName", sportNames);
-        gameFilters.addSameFilter("games.country", countries);
-        gameFilters.addSameFilter("games.state", states);
-        gameFilters.addSameFilter("games.city", cities);
+        gameFilters.addSameFilter("gamesReal.country", countries);
+        gameFilters.addSameFilter("gamesReal.state", states);
+        gameFilters.addSameFilter("gamesReal.city", cities);
 
         gameFilters.addMinHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
                 minFreePlaces);
         gameFilters.addMaxHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
                 maxFreePlaces);
 
-        String whereQuery = gameFilters.generateQueryWhere(filters);
+        String whereQuery = "";
+
+        if(loggedUser != null) {
+            String start;
+            String logicalOperator;
+            if(listOfGamesThatIsPartOf) {
+                start = "IN";
+                logicalOperator = "OR";
+            }
+            else {
+                start = "NOT IN";
+                logicalOperator = "AND";
+            }
+            String nestedQuery =
+                    "SELECT teamAux.userId " +
+                    "FROM games as gameAux, (teams NATURAL JOIN isPartOf) AS teamAux " +
+                    "WHERE gameAux.startTime = gamesReal.startTime AND " +
+                          "gameAux.finishTime = gamesReal.finishTime AND " +
+                          "gameAux.teamName1 = gamesReal.teamName1";
+            whereQuery =
+                    "(? "+start+" ("+nestedQuery+" AND gameAux.teamName1 = teamAux.teamName AND " +
+                                                      "teamAux.teamName = gamesReal.teamName1) "+
+                    logicalOperator+" ? "+start+" ("+nestedQuery+" AND gameAux.teamName2 = teamAux.teamName AND " +
+                                                      "teamAux.teamName = gamesReal.teamName2))";
+
+            filters.add(loggedUser.getUserId());
+            filters.add(loggedUser.getUserId());
+        }
+
         whereQuery = (whereQuery.equals(""))? whereQuery : " AND " + whereQuery;
+        String nextWhere = gameFilters.generateQueryWhere(filters);
+        whereQuery = (nextWhere.equals(""))? whereQuery : whereQuery + " AND " + nextWhere;
+
         getGamesQuery = getGamesQuery + whereQuery + groupBy +
                 gameFilters.generateQueryHaving(filters) + ";";
 

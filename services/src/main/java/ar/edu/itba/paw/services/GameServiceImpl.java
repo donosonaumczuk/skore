@@ -5,7 +5,9 @@ import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import org.joda.time.LocalDateTime;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -50,16 +52,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game createNoTeamGame( final String startTime, final String finishTime,
-                                  final String type, final String country,
-                                  final String state, final String city,
-                                  final String street, final String tornamentName,
-                                  final String description, final String creatorName,
-                                  final long creatorId, final String sportName) {
+    public Game createNoTeamGame(final String startTime, final String finishTime,
+                                 final String type, final String country,
+                                 final String state, final String city,
+                                 final String street, final String tornamentName,
+                                 final String description, final String creatorName,
+                                 final long creatorId, final String sportName) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
         return create(team1.getName(), null, startTime, finishTime, type, null,
                       country, state, city, street, tornamentName, description);
     }
+
+    /*@Override
+    public Game insertUserInGame(final Game game, final long userId, final boolean toTeam1) {
+        if(!toTeam1 && game.getTeam2() == null) {
+
+        }
+    }*/
 
     @Override
     public Game findByKey(String teamName1, String startTime, String finishTime) {
@@ -85,7 +94,47 @@ public class GameServiceImpl implements GameService {
                 gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                     jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
                     jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
-                    minFreePlaces, maxFreePlaces);
+                    minFreePlaces, maxFreePlaces, null, false);
+
+        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
+        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
+        return games.subList(start, end);
+    }
+
+    @Override
+    public List<Game> findGamesPageThatIsAPartOf(final String minStartTime, final String maxStartTime,
+                                                 final String minFinishTime, final String maxFinishTime,
+                                                 final JSONArray types, final JSONArray sportNames,
+                                                 final Integer minQuantity, final Integer maxQuantity,
+                                                 final JSONArray countries, final JSONArray states,
+                                                 final JSONArray cities, final Integer minFreePlaces,
+                                                 final Integer maxFreePlaces, final int pageNumber,
+                                                 final PremiumUser user) {
+        List<Game> games =
+                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+                        jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
+                        jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
+                        minFreePlaces, maxFreePlaces, user, true);
+
+        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
+        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
+        return games.subList(start, end);
+    }
+
+    @Override
+    public List<Game> findGamesPageThatIsNotAPartOf(final String minStartTime, final String maxStartTime,
+                                                    final String minFinishTime, final String maxFinishTime,
+                                                    final JSONArray types, final JSONArray sportNames,
+                                                    final Integer minQuantity, final Integer maxQuantity,
+                                                    final JSONArray countries, final JSONArray states,
+                                                    final JSONArray cities, final Integer minFreePlaces,
+                                                    final Integer maxFreePlaces, final int pageNumber,
+                                                    final PremiumUser user) {
+        List<Game> games =
+                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+                        jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
+                        jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
+                        minFreePlaces, maxFreePlaces, user, false);
 
         int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
         int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();

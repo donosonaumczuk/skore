@@ -46,7 +46,43 @@ public class GameController extends BaseController{
                 json.getJSONArray("states"), json.getJSONArray("cities"),
                 json.getInt("minFreePlaces"), json.getInt("maxFreePlaces"),
                 json.getInt("pageNumber"));
-        LOGGER.trace("Returning " + games.size() + " games that match the criteria");
+        LOGGER.trace("Returning {} games that match the criteria", games.size());
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(games);
+    }
+
+    @RequestMapping(value="/filterMatchLoggedIsPart", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String filterGamesLoggedIsPart(@RequestParam final String body) throws IOException {
+        JSONObject json = new JSONObject(body);
+        LOGGER.trace("Asking the service for the games by a criteria");
+        List<Game> games = gameService.findGamesPageThatIsAPartOf(json.getString("minStartTime"),
+                json.getString("maxStartTime"), json.getString("minFinishTime"),
+                json.getString("maxFinishTime"), json.getJSONArray("types"),
+                json.getJSONArray("sportNames"), json.getInt("minQuantity"),
+                json.getInt("maxQuantity"), json.getJSONArray("countries"),
+                json.getJSONArray("states"), json.getJSONArray("cities"),
+                json.getInt("minFreePlaces"), json.getInt("maxFreePlaces"),
+                json.getInt("pageNumber"), loggedUser());
+        LOGGER.trace("Returning {} games that match the criteria", games.size());
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(games);
+    }
+
+    @RequestMapping(value="/filterMatchLoggedIsNotPart", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String filterGamesLoggedIsNotPart(@RequestParam final String body) throws IOException {
+        JSONObject json = new JSONObject(body);
+        LOGGER.trace("Asking the service for the games by a criteria");
+        List<Game> games = gameService.findGamesPageThatIsNotAPartOf(json.getString("minStartTime"),
+                json.getString("maxStartTime"), json.getString("minFinishTime"),
+                json.getString("maxFinishTime"), json.getJSONArray("types"),
+                json.getJSONArray("sportNames"), json.getInt("minQuantity"),
+                json.getInt("maxQuantity"), json.getJSONArray("countries"),
+                json.getJSONArray("states"), json.getJSONArray("cities"),
+                json.getInt("minFreePlaces"), json.getInt("maxFreePlaces"),
+                json.getInt("pageNumber"), loggedUser());
+        LOGGER.trace("Returning {} games that match the criteria",games.size());
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(games);
     }
