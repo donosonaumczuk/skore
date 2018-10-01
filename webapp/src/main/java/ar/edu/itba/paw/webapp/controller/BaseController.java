@@ -17,30 +17,25 @@ public  abstract class BaseController {
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService us;
 
-    @ModelAttribute("isLogged")
-    public Boolean isLogged() {
+    @ModelAttribute("loggedUser")
+    public PremiumUser loggedUser() {
         if(SecurityContextHolder.getContext() == null) {
-            return false;
+            return null;
         }
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.isAuthenticated()) {
-            return false;
+            return null;
         }
         final Optional<PremiumUser> user = us.findByUserName(authentication.getName());
         if(!user.isPresent()) {
-            return false;
-        }
-        return true;
-    }
-
-    @ModelAttribute("loggedUser")
-    public PremiumUser loggedUser() {
-        if(!isLogged()) {
             return null;
         }
-        Optional<PremiumUser> user = us.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
+
         return user.get();
     }
 
-
+    @ModelAttribute("isLogged")
+    public boolean isLogged() {
+        return loggedUser() != null;
+    }
 }
