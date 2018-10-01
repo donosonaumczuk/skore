@@ -23,6 +23,7 @@ import java.util.Optional;
 public class PremiumUserJdbcDao implements PremiumUserDao{
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertUserRoles;
     private final UserJdbcDao userDao;
 
     private final static RowMapper<PremiumUser> ROW_MAPPER = (resultSet, rowNum) ->
@@ -39,6 +40,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("accounts");
+        jdbcInsertUserRoles = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("userRoles");
         this.userDao = userDao;
     }
 
@@ -112,4 +115,14 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
 
         return list.stream().findFirst();
     }
+
+    @Override
+    public boolean addRole(final String username, final int roleId) {
+        final Map<String, Object> args =  new HashMap<>();
+        args.put("username", username);
+        args.put("role", roleId);
+        return jdbcInsertUserRoles.execute(args) == 1;
+
+    }
+
 }

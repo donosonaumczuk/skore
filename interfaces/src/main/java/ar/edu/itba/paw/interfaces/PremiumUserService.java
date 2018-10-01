@@ -32,5 +32,8 @@ public interface PremiumUserService {
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
                                       final String oldUserName);
+    @Transactional
+    public void addRole(final String username, final int roleId);
 
-}
+
+    }

@@ -3,12 +3,15 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -18,6 +21,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
     @Autowired
     private PremiumUserDao premiumUserDao;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
@@ -83,6 +89,24 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
         return formattedDate;
 
+    }
+
+    @Override
+    public void addRole(final String username, final int roleId) {
+        Optional<Role> role = roleDao.findRoleById(roleId);
+        Optional<PremiumUser> user;
+        if(role.isPresent()) {
+            user = premiumUserDao.findByUserName(username);
+            if(user.isPresent()) {
+                premiumUserDao.addRole(username, roleId);
+            }
+            else {
+                throw new UserNotFoundException("Can't find user with username: " + username);
+            }
+        }
+        else {
+            throw new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId);
+        }
     }
 
 }
