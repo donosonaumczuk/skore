@@ -33,8 +33,8 @@
                     <label for="competitiveness"><spring:message code="matchCompetitivenessLabel"/><span class="text-muted">*</span></label>
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
-                            <label class="btn btn-green active" id="friendly">
-                                <input:radiobutton path="competitivity" name="options"  value="Friendly" autocomplete="false"/><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
+                            <label class="btn btn-green" id="friendly">
+                                <input:radiobutton path="competitivity" name="options"  value="Friendly" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="friendlyLabel"/>
                             </label>
                             <label class="btn btn-green" id="competitive">
                                 <input:radiobutton path="competitivity" name="options" value="Competitive" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
@@ -47,8 +47,8 @@
                     <label for="inscription"><spring:message code="inscriptionModeLabel"/><span class="text-muted">*</span></label>
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">
-                            <label class="btn btn-green active" id="individual">
-                                <form:radiobutton path="mode" name="options" value="Individual" autocomplete="false"/><i class="fas fa-check"></i> <spring:message code="individualLabel"/>
+                            <label class="btn btn-green" id="individual">
+                                <form:radiobutton path="mode" name="options" value="Individual" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="individualLabel"/>
                             </label>
                             <label class="btn btn-green" id="team">
                                 <form:radiobutton path="mode" name="options" value="Team" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
