@@ -60,16 +60,19 @@ public class GameController extends BaseController{
     public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
                                     final BindingResult errors) {
         if(errors.hasErrors()) {
+            System.out.println("sportName: " + matchForm.getSportName() + "\n\n\n\n");
             return createMatchForm(matchForm);
         }
 
         PremiumUser loggedUser = loggedUser();
 
-
-        gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00",matchForm.getMode(),
+        LOGGER.debug("Match form completed, creating match...");
+        Game game = gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00",matchForm.getMode(),
                 matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
                 null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
                 matchForm.getSportName());
+        LOGGER.debug("Match created {}\n\n", game.getTeam1().getSport().getName());
+
 
         return new ModelAndView("index");
     }

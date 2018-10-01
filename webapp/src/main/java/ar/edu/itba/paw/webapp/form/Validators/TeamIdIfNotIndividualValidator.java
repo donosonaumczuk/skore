@@ -21,6 +21,10 @@ public class TeamIdIfNotIndividualValidator
         context.buildConstraintViolationWithTemplate("{ar.edu.itba.paw.webapp.form.Validators.TeamIdIfNotIndividual.message}")
                 .addNode("teamId").addConstraintViolation();
         MatchForm matchForm = (MatchForm) obj;
-        return matchForm.getTeamId() == null;
+        String mode = matchForm.getMode();
+        if(mode.equals("Team")) {
+            return matchForm.getTeamId() != null;
+        }
+        return true;
     }
 }
