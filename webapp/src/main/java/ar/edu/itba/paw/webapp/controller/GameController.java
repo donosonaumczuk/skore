@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,10 @@ public class GameController {
     @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
+
+    @Autowired
+    @Qualifier("premiumUserServiceImpl")
+    private PremiumUserService us;
 
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -60,9 +68,23 @@ public class GameController {
             return createMatchForm(matchForm);
         }
 
-        //teamService.create1Y2
-        //gameService.create();
+        PremiumUser loggedUser = loggedUser();
+
+        gameService.createNoTeamGame(matchForm.getStartTime(), "2018-12-12 01:00:00","Friendly",
+                matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
+                null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
+                matchForm.getSportName());
 
         return new ModelAndView("redirect:/");
+    }
+
+    @ModelAttribute("loggedUser")
+    public PremiumUser loggedUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()) {
+            return null;
+        }
+        final PremiumUser user = us.findByUserName(authentication.getName()).get();
+        return user;
     }
 }

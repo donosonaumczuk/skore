@@ -14,7 +14,6 @@
     </form>
 </nav>
 
-
 <%--<nav class="navbar d-none d-sm-block fixed-top second-nav">--%>
     <%--<button class="btn offset-4 btn-second-nav" type="submit"><spring:message code="rankingsMessage"/></button>--%>
     <%--<button class="btn offset-3 btn-second-nav" type="submit"><spring:message code="tournamentsMessage"/></button>--%>
