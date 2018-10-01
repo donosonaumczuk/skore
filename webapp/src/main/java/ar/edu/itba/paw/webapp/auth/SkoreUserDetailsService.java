@@ -15,8 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @ComponentScan("ar.itba.edu.paw.webapp.auth")
 @Component
@@ -38,7 +40,7 @@ public class SkoreUserDetailsService implements UserDetailsService {
                 new SimpleGrantedAuthority("ROLE_USER"),
                 new SimpleGrantedAuthority("ROLE_ADMIN"));
         LOGGER.trace("username found: {} with password: {} and authorities: {}", user.getUserName(), user.getPassword(), authorities);
-        //System.out.println("\n\n\n\n" + "userFound = " + user.getUserName() + " " + user.getPassword() + "  " + authorities +"\n\n\n\n");
+        System.out.println("\n\n\n\n" + "userFound = " + user.getUserName() + " " + user.getPassword() + "  " + authorities +"\n\n\n\n");
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
                 authorities);
 

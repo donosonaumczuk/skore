@@ -23,6 +23,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SkoreUserDetailsService userDetailService;
 
+
     @Autowired
     private DataSource dataSource;
 
@@ -32,17 +33,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .invalidSessionUrl("/")
                 .and().authorizeRequests()
-                    .antMatchers("/").anonymous()
-                    .antMatchers("/create", "/filterMatch").anonymous()
-                    .antMatchers("/login").anonymous()
+                    .antMatchers("/", "/lang").permitAll()
+                    .antMatchers("/create", "/login").anonymous()
                     .antMatchers("/joinMatch").anonymous()
-                    .antMatchers("/lang").anonymous()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .usernameParameter("user_username")
                     .passwordParameter("user_password")
-                    .defaultSuccessUrl("/", true)
+                    .defaultSuccessUrl("/", false)
                     .loginPage("/login")
                 .and().rememberMe()
                     .rememberMeParameter("user_rememberme")
