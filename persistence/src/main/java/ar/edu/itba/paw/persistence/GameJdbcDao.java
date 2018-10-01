@@ -91,8 +91,8 @@ public class GameJdbcDao implements GameDao {
                     "games LEFT OUTER JOIN (teams NATURAL JOIN isPartOf) as team2 " +
                     "ON teamName2 = team2.teamName," +
                     "(teams NATURAL JOIN isPartOf) as team1, sports " +
-                "WHERE teamName1 = team1.teamName AND teamName1 = ? AND startTime = ? AND " +
-                    "finishTime = ? AND team1.sportName = sports.sportName" +
+                "WHERE teamName1 = team1.teamName AND teamName1 = ? AND startTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS') AND " +
+                    "finishTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS') AND team1.sportName = sports.sportName" +
                 " GROUP BY startTime, finishTime, teamName1, teamName2, sports.sportName, sports.playerQuantity;";
         final List<Game> list = jdbcTemplate.query(getAGame, ROW_MAPPER, teamName1, startTime,
                 finishTime);
