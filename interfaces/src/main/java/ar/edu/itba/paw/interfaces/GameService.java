@@ -14,6 +14,14 @@ public interface GameService {
                        final String street, final String tornamentName, final String description);
 
     @Transactional
+    public Game createNoTeamGame( final String startTime, final String finishTime,
+                                  final String type, final String country,
+                                  final String state, final String city,
+                                  final String street, final String tornamentName,
+                                  final String description, final String creatorName,
+                                  final long creatorId, final String sportName);
+
+    @Transactional
     public Game findByKey(String teamName1, String startTime, String finishTime);
 
     @Transactional

@@ -3,7 +3,9 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.Team;
 import org.joda.time.LocalDateTime;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -24,6 +26,9 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private GameDao gameDao;
 
+    @Autowired
+    private TeamService teamService;
+
     public GameServiceImpl() {
 
     }
@@ -42,6 +47,18 @@ public class GameServiceImpl implements GameService {
                     + " starting at " + startTime + "and finishing at " +finishTime);
         }
         return game.get();
+    }
+
+    @Override
+    public Game createNoTeamGame( final String startTime, final String finishTime,
+                                  final String type, final String country,
+                                  final String state, final String city,
+                                  final String street, final String tornamentName,
+                                  final String description, final String creatorName,
+                                  final long creatorId, final String sportName) {
+        Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
+        return create(team1.getName(), null, startTime, finishTime, type, null,
+                      country, state, city, street, tornamentName, description);
     }
 
     @Override

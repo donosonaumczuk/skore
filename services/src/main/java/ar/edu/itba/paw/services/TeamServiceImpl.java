@@ -49,8 +49,8 @@ public class TeamServiceImpl implements TeamService {
         return team.get();
     }
 
-    Team createTempTeam(final String start, final String leaderName, final long leaderId,
-                        final String sportName) {
+    private Team createTempTeam(final String start, final String leaderName, final long leaderId,
+                                final String sportName) {
         boolean aux = true;
         int i = 0;
         Team team = null;

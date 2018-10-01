@@ -29,10 +29,6 @@ public class GameController {
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
-    @Autowired
-    @Qualifier("teamServiceImpl")
-    private TeamService teamService;
-
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGames(@RequestParam final String body) throws IOException {
