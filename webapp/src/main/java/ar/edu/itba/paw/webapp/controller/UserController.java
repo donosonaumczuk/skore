@@ -79,13 +79,13 @@ public class UserController {
     }
 
     //llevarlo a un base controller y podes tener el usuario loggeado evans
-//    @ModelAttribute("loggedUser")
-//    public PremiumUser logggedUser() {
-//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(!authentication.isAuthenticated()) {
-//            return null;
-//        }
-//        final PremiumUser user = us.findByUserName(authentication.getName());
-//        return user;
-//    }
+    @ModelAttribute("loggedUser")
+    public PremiumUser logggedUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()) {
+            return null;
+        }
+        final PremiumUser user = us.findByUserName(authentication.getName()).get();
+        return user;
+    }
 }
