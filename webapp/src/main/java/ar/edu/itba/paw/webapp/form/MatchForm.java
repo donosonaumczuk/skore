@@ -39,6 +39,8 @@ public class MatchForm {
 
     private String streetNumber;
 
+    private String competitivity;
+
     @Pattern(regexp = "[a-zA-Z0-9_ .]+")
     @Size(min = 1, max = 100)
     private String teamName1;
@@ -96,9 +98,6 @@ public class MatchForm {
         return endTime;
     }
 
-
-
-
     public void setCountry(final String country) {
         this.country = country;
     }
@@ -139,4 +138,11 @@ public class MatchForm {
         return streetNumber;
     }
 
+    public String getCompetitivity() {
+        return competitivity;
+    }
+
+    public void setCompetitivity(String competitivity) {
+        this.competitivity = competitivity;
+    }
 }

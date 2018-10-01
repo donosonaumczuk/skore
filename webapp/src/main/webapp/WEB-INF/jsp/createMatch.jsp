@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -33,10 +34,10 @@
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
                             <label class="btn btn-green active" id="friendly">
-                                <input type="radio" value="Friendly" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
+                                <input:radiobutton path="competitivity" name="options"  value="Friendly" autocomplete="false"/><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
                             </label>
                             <label class="btn btn-green" id="competitive">
-                                <input type="radio" value="Competitive" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
+                                <input:radiobutton path="competitivity" name="options" value="Competitive" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
                             </label>
                         </div>
                     </div>
