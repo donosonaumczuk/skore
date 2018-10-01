@@ -83,10 +83,10 @@ public class GameJdbcDaoTest {
         jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                 " VALUES ('" + firstName + "' , '" + lastName + "', '" + email + "', " + userId + ");");
         jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
-                " country, state, city, street, reputation, password, userId)" +
+                " country, state, city, street, reputation, password, userId, email)" +
                 " VALUES ('" + userName + "' , '" + cellphone + "', '" + birthday + "', '" +
                 country + "', '" + state + "', '" + city + "', '" + street + "', " + reputation +
-                ", '" + password +"', " + userId +");");
+                ", '" + password +"', " + userId +",'"+email+"');");
     }
 
     private void insertSport(final String sportName, final long quantity) {
@@ -181,7 +181,7 @@ public class GameJdbcDaoTest {
 
         final List<Game> games = gameJdbcDao.findGames(null, null,
                 null, null, type, sportnames, QUANTITY-1,
-                QUANTITY+1, countries, states, cities, 2*QUANTITY-1,
+                QUANTITY+1, countries, states, cities, QUANTITY-2,
                 2*QUANTITY);
 
         Assert.assertEquals(QUERY_SIZE_1,games.size());

@@ -62,10 +62,10 @@ public class NotificationJdbcDaoTest {
         jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                 " VALUES ('" + firstName + "' , '" + lastName + "', '" + email + "', " + userId + ");");
         jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
-                " country, state, city, street, reputation, password, userId)" +
+                " country, state, city, street, reputation, password, userId, email)" +
                 " VALUES ('" + userName + "' , '" + cellphone + "', '" + birthday + "', '" +
                 country + "', '" + state + "', '" + city + "', '" + street + "', " + reputation +
-                ", '" + password +"', " + userId +");");
+                ", '" + password +"', " + userId +",'"+email+"');");
     }
 
     private void insertNotification(final String startTime, final String content,
