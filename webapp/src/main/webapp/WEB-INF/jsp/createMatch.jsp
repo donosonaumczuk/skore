@@ -106,7 +106,7 @@
                         <div class="input-group date" id="timepicker-to" data-target-input="nearest">
                             <form:input type="text" path="duration" class="form-control datetimepicker-input" data-target="#timepicker-to"/>
                             <div class="input-group-append" data-target="#timepicker-to" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fas fa-clock"></i></div>
+                                <div class="input-group-text"><i class="fas fa-stopwatch"></i></div>
                             </div>
                             <form:errors path="duration" element="div" cssClass="invalid-feedback d-block"/>
                         </div>
