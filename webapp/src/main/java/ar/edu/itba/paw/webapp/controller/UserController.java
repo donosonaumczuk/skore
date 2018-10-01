@@ -80,7 +80,7 @@ public class UserController {
 
     //llevarlo a un base controller y podes tener el usuario loggeado evans
     @ModelAttribute("loggedUser")
-    public PremiumUser logggedUser() {
+    public PremiumUser loggedUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.isAuthenticated()) {
             return null;
