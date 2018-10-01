@@ -132,11 +132,11 @@ public class GameJdbcDao implements GameDao {
 
         gameFilters.addMinFilter("games.startTime", minStartTime);
         gameFilters.addMinFilter("games.finishTime", minFinishTime);
-        //gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
+        gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
 
         gameFilters.addMaxFilter("games.startTime", maxStartTime);
         gameFilters.addMaxFilter("games.finishTime", maxFinishTime);
-        //gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
+        gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
 
         gameFilters.addSameFilter("games.type", types);
         gameFilters.addSameFilter("sports.sportName", sportNames);

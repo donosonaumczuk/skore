@@ -30,21 +30,4 @@ public class HomeController {
         final ModelAndView mav = new ModelAndView("index");
         return mav;
     }
-
-    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
-    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-        return new ModelAndView("createMatch");
-    }
-
-    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
-    public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
-                                    final BindingResult errors) {
-        if(errors.hasErrors()) {
-            LOGGER.debug("date received: " + matchForm.getDate());
-            return createMatchForm(matchForm);
-        }
-        return new ModelAndView("redirect:/");
-    }
-
-
 }

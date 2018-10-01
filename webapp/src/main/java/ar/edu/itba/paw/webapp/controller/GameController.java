@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.webapp.form.MatchForm;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -10,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,7 +29,11 @@ public class GameController {
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
-    @RequestMapping(value="/match/filter", method= RequestMethod.POST)
+    @Autowired
+    @Qualifier("teamServiceImpl")
+    private TeamService teamService;
+
+    @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGames(@RequestParam final String body) throws IOException {
         JSONObject json = new JSONObject(body);
@@ -40,5 +49,24 @@ public class GameController {
         LOGGER.trace("Returning " + games.size() + " games that match the criteria");
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(games);
+    }
+
+    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
+    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
+        return new ModelAndView("createMatch");
+    }
+
+    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
+    public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
+                                    final BindingResult errors) {
+        if(errors.hasErrors()) {
+            LOGGER.debug("date received: " + matchForm.getDate());
+            return createMatchForm(matchForm);
+        }
+
+        //teamService.create1Y2
+        //gameService.create();
+
+        return new ModelAndView("redirect:/");
     }
 }

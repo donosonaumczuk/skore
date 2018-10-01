@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.Exceptions.TeamNotCreated;
 import ar.edu.itba.paw.Exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TeamServiceImpl implements TeamService {
@@ -43,6 +45,38 @@ public class TeamServiceImpl implements TeamService {
             throw new TeamNotFoundException("Team " + teamName + " does not exists");
         }
         return team.get();
+    }
+
+    Team createTempTeam(final String start, final String leaderName, final long leaderId,
+                        final String sportName) {
+        boolean aux = true;
+        int i = 0;
+        Team team = null;
+        while(aux && i < 50) {
+            aux = false;
+            try {
+                 team = create(leaderName, leaderId, null,
+                        start + leaderId + LocalDateTime.now().hashCode() + i,
+                        true, sportName);
+            } catch (Exception e) {
+                aux = true;
+            }
+            i++;
+        }
+        if(aux) {
+            throw new TeamNotCreated("Could not generate team");
+        }
+        return team;
+    }
+
+    @Override
+    public Team createTempTeam1(final String leaderName, final long leaderId, final String sportName) {
+        return createTempTeam("$1|", leaderName, leaderId, sportName);
+    }
+
+    @Override
+    public Team createTempTeam2(final String leaderName, final long leaderId, final String sportName) {
+        return createTempTeam("$2|", leaderName, leaderId, sportName);
     }
 
     @Override

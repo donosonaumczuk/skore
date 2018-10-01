@@ -46,7 +46,6 @@ public class MatchForm {
     @Size(min = 1, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9_ .]+")
     private String teamName2;
-    //   private String tornamentName;
 
 
     public String getMatchName() {

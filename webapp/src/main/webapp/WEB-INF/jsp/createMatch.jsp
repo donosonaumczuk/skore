@@ -33,10 +33,10 @@
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
                             <label class="btn btn-green active" id="friendly">
-                                <input type="radio" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
+                                <input type="radio" value="Friendly" name="options" autocomplete="off"><i class="fas fa-check"></i> <spring:message code="friendlyLabel"/>
                             </label>
                             <label class="btn btn-green" id="competitive">
-                                <input type="radio" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
+                                <input type="radio" value="Competitive" name="options" autocomplete="off"><i class="d-none fas fa-check"></i> <spring:message code="competitiveLabel"/>
                             </label>
                         </div>
                     </div>
