@@ -23,6 +23,7 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
+    private static final int USER_ROLE_ID = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -44,6 +45,7 @@ public class UserController {
         final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
                 userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword());
+        //us.addRole(user.getUserName(), USER_ROLE_ID);
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
     }

@@ -31,5 +31,8 @@ public interface PremiumUserDao {
     public Optional<PremiumUser> findByEmail(final String email);
 
     public boolean addRole(final String username, final int roleId);
-}
+
+    public Optional<PremiumUser> enableUser(final String username);
+
+    }
 

@@ -35,5 +35,7 @@ public interface PremiumUserService {
     @Transactional
     public void addRole(final String username, final int roleId);
 
+    @Transactional
+    public void enableUser(final String username);
 
     }

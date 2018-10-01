@@ -108,11 +108,11 @@
                         <%--</div>--%>
                     <%--</div> <!-- END match card -->--%>
 
-                    <div class="row p-2 mt-2">
-                        <div class="offset-5 col-2">
-                            <img class="img-fluid" src="img/loader.gif">
-                        </div>
-                    </div>
+                    <%--<div class="row p-2 mt-2">--%>
+                        <%--<div class="offset-5 col-2">--%>
+                            <%--<img class="img-fluid" src="img/loader.gif">--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
 
                 </div> <!-- END Match cards container -->
             </div>

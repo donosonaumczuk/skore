@@ -184,7 +184,7 @@ public class PremiumUserJdbcDaoTest {
     }
 
     @Test
-    public void testaddRole() {
+    public void testAddRole() {
         //set up
         insertUser(EXISTANT_USERNAME);
         insertRole(0,"ROLE_USER");
@@ -196,6 +196,17 @@ public class PremiumUserJdbcDaoTest {
         Assert.assertTrue(returnedValue);
 
     }
+
+//    @Test
+//    public void testEnableUser() {
+//        //set up
+//        insertUser(EXISTANT_USERNAME);
+//
+//        //exercise class
+//        final Optional<PremiumUser> returneduser = premiumUserDao.enableUser(EXISTANT_USERNAME);
+//        //postconditions
+//        Assert.assertTrue(returneduser.isPresent());
+//    } evans
 }
 
 

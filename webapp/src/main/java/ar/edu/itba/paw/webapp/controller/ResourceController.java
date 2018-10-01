@@ -23,6 +23,6 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String handleLanguage() {
         LOGGER.trace("Handling language request for client i18n");
-        return "{ lang : " + messageSource.getMessage("joinLabel", null, LocaleContextHolder.getLocale()) + " }";
+        return "{ \"lang\" : \"" + messageSource.getMessage("lang", null, LocaleContextHolder.getLocale()) + "\" }";
     }
 }

@@ -109,4 +109,11 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         }
     }
 
+    @Override
+    public void enableUser(final String username) {
+        if(!premiumUserDao.enableUser(username).isPresent()) {
+            throw new UserNotFoundException("Can't find user with username: " + username);
+        }
+    }
+
 }

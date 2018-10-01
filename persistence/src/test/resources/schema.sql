@@ -20,8 +20,10 @@ CREATE TABLE IF NOT EXISTS accounts(
   street      VARCHAR(100),
   reputation  INTEGER,
   cellphone   VARCHAR(100),
-  birthday    DATE         NOT NULL,
-  email       VARCHAR(100) NOT NULL,
+  birthday    DATE,
+  email       VARCHAR (100) NOT NULL,
+  role        VARCHAR (100),
+  enabled     INTEGER,
   image       BLOB,
   UNIQUE(email)
 );
