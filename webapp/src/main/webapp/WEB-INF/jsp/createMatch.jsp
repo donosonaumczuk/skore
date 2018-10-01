@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
-                        <option selected value=""><spring:message code="chooseSportLabel"/></option>
+                        <option value=""><spring:message code="chooseSportLabel"/></option>
                         <option value="Football 5">Football 5</option>
                         <option value="Football 7">Football 7</option>
                         <option value="Football 11">Football 11</option>

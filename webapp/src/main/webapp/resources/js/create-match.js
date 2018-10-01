@@ -65,8 +65,7 @@ $(function () {
 $(function () {
     $('#timepicker-from').datetimepicker({
         format: 'HH:mm',
-        defaultDate: moment(getTimePlusHalfOur(), "HH:mm"),
-        minDate: moment(getTimePlusHalfOur(), "HH:mm")
+        defaultDate: moment("18:00", "HH:mm"),
     });
 });
 
@@ -81,12 +80,6 @@ $(function () {
 function getTimePlusHalfOur() {
     var dt = new Date();
     dt.setMinutes(dt.getMinutes() + 30);
-    return getTimeWithFormat(dt);
-}
-
-function getTimePlusAnOur() {
-    var dt = new Date();
-    dt.setHours(dt.getHours() + 1);
     return getTimeWithFormat(dt);
 }
 
