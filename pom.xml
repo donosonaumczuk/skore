@@ -35,6 +35,7 @@
         <org.json>20171018</org.json>
         <org.springframework.boot>1.3.1.RELEASE</org.springframework.boot>
         <org.mockito>2.21.0</org.mockito>
+        <commons-fileupload>1.3.1</commons-fileupload>
     </properties>
 
 
@@ -179,6 +180,11 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${org.mockito}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

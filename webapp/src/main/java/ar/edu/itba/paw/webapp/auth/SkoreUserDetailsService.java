@@ -31,18 +31,19 @@ public class SkoreUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final PremiumUser user = us.findByUserName(username).get();
-        if(user == null) {
+        final Optional<PremiumUser> user = us.findByUserName(username);
+        if(!user.isPresent()) {
             throw new UsernameNotFoundException("No user by the name " + username);
         }
+        final PremiumUser currentUser = user.get();
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        Set<Role> roles = user.getRoles();
+        Set<Role> roles = currentUser.getRoles();
         for(Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        LOGGER.trace("username found: {} with password: {} and authorities: {}", user.getUserName(), user.getPassword(), authorities);
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
+        LOGGER.trace("username found: {} with password: {} and authorities: {}", currentUser.getUserName(), currentUser.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(username, currentUser.getPassword(),
                 authorities);
 
     }
