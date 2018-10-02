@@ -83,7 +83,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-        messageSource.setCacheSeconds(5);//should be greater on production
+        messageSource.setCacheSeconds(5);//TODO EVANS: should be greater on production
         return messageSource;
     }
 

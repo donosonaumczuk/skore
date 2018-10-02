@@ -97,34 +97,36 @@ $.ajax({
     });
 
 function loadMatches(pageNumber) {
-    var matchJSON = '[{"team2":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"BFC","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"jgarcia","password":null,"notifications":null,"home":null,"userId":1,"lastName":"Garcia","email":"jgarcia@gmail.com","firstName":"Juan"},"name":"Barcelona FC"},"finishTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":1,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"team1":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"CABJ","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"donosonaumczuk","password":null,"notifications":null,"home":null,"userId":2,"lastName":"Donoso Naumczuk","email":"donosonaumczuk@gmail.com","firstName":"Alan"},"name":"Boca Juniors"},"place":{"city":"La Plata","street":"Azaleaz 234","state":"Buenos Aires","country":"Argentina"},"quantityOccupiedPlaces":15,"description":"","startTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":0,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"type":"Competitivo","result":"3-0"},{"team2":null,"finishTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":1,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"team1":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"ASDD","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"docker69","password":null,"notifications":null,"home":null,"userId":2,"lastName":"Docker","email":"docker@gmail.com","firstName":"Package"},"name":"Package Team"},"place":{"city":"La Plata","street":"Azaleaz 234","state":"Buenos Aires","country":"Argentina"},"quantityOccupiedPlaces":15,"description":"xD","startTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":0,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"type":"Competitivo","result":"3-0"}]';
+    // var matchJSON = '[{"team2":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"BFC","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"jgarcia","password":null,"notifications":null,"home":null,"userId":1,"lastName":"Garcia","email":"jgarcia@gmail.com","firstName":"Juan"},"name":"Barcelona FC"},"finishTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":1,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"team1":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"CABJ","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"donosonaumczuk","password":null,"notifications":null,"home":null,"userId":2,"lastName":"Donoso Naumczuk","email":"donosonaumczuk@gmail.com","firstName":"Alan"},"name":"Boca Juniors"},"place":{"city":"La Plata","street":"Azaleaz 234","state":"Buenos Aires","country":"Argentina"},"quantityOccupiedPlaces":15,"description":"","startTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":0,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"type":"Competitivo","result":"3-0"},{"team2":null,"finishTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":1,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"team1":{"players":[],"sport":{"quantity":12,"name":"Football"},"temporal":false,"acronym":"ASDD","leader":{"cellphone":null,"birthday":null,"reputation":0,"friends":null,"likes":null,"userName":"docker69","password":null,"notifications":null,"home":null,"userId":2,"lastName":"Docker","email":"docker@gmail.com","firstName":"Package"},"name":"Package Team"},"place":{"city":"La Plata","street":"Azaleaz 234","state":"Buenos Aires","country":"Argentina"},"quantityOccupiedPlaces":15,"description":"xD","startTime":{"dayOfWeek":"WEDNESDAY","dayOfYear":346,"monthValue":12,"dayOfMonth":12,"hour":0,"minute":0,"second":0,"nano":0,"year":2018,"month":"DECEMBER","chronology":{"calendarType":"iso8601","id":"ISO"}},"type":"Competitivo","result":"3-0"}]';
 
-    // $.ajax({
-    //     type:   'POST',
-    //     url:    '/filterMatch',
-    //     data: {body: '{minStartTime: "", maxStartTime: "",'+
-    //         'minFinishTime: "", maxFinishTime: "",'+
-    //         'types: ["Argentina", "CABA"], sportNames: ["Pcia de Buenos Aires"],'+
-    //         'minQuantity: "1", maxQuantity: "1",'+
-    //         'countries: ["Argentina"], states: ["CABA"],'+
-    //         'cities: ["Ituzaingo"],'+
-    //         'minFreePlaces: "1",'+
-    //         'maxFreePlaces: "1",'+
-    //         'pageNumber: "1"}'}
-    // }).done(function(matchJSON) {
-    //         matchArray = JSON.parse(matchJSON);
-    //         for(var i = 0; i < matchArray.length; i++) {
-    //             var matchCard = getMatchCard(matchArray[i]);
-    //             $('.match-container').append(matchCard);
-    //         }
-    //     });
+    $.ajax({
+        type:   'POST',
+        url:    '/filterMatch',
+        data: { body: '{minStartTime: "", maxStartTime: "",' +
+            'minFinishTime: "", maxFinishTime: "",' +
+            'types: ["Argentina"], sportNames: ["Pcia de Buenos Aires"],' +
+            'minQuantity: "1", maxQuantity: "1",' +
+            'countries: ["Argentina"], states: [],' +
+            'cities: ["Ituzaingo"],' +
+            'minFreePlaces: "1",' +
+            'maxFreePlaces: "1",' +
+            'pageNumber: "1"}' }
+    }).done(function(matchJSON) {
+            console.log(matchJSON);
+            // matchArray = JSON.parse(matchJSON);
+            // $('#loader').remove();
+            // for(var i = 0; i < matchArray.length; i++) {
+            //         var matchCard = getMatchCard(matchArray[i]);
+            //         $('.match-container').append(matchCard);
+            // }
+        });
 
-    matchArray = JSON.parse(matchJSON);
-    $('#loader').remove();
-    for(var i = 0; i < matchArray.length; i++) {
-        var matchCard = getMatchCard(matchArray[i]);
-        $('.match-container').append(matchCard);
-    }
+    // matchArray = JSON.parse(matchJSON);
+    // $('#loader').remove();
+    // for(var i = 0; i < matchArray.length; i++) {
+    //     var matchCard = getMatchCard(matchArray[i]);
+    //     $('.match-container').append(matchCard);
+    // }
 }
 
 function formatTime(hours, minutes) {
@@ -144,7 +146,6 @@ function formatDate(weekDay, month, day, year) {
     else { /* Otherwise, default language: English (en) */
         return labelMap.days[weekDay]['en'] + ', ' + labelMap.months[month]['en'] + ' ' + day + ', ' + year;
     }
-
 }
 
 function getLoader() {

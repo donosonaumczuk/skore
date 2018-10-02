@@ -35,6 +35,16 @@ body {
     border-radius: 50%;
 }
 
+.profile-name {
+    color: red;
+}
+
+.profile-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
 .sport-img {
     width: 23px;
     height: 23px;

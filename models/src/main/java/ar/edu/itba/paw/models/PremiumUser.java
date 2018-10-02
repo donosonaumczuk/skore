@@ -48,6 +48,10 @@ public class PremiumUser extends User{
         this.userName = userName;
     }
 
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
     public String getCellphone() {
         return cellphone;
     }

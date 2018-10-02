@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.JoinMatchForm;
 import ar.edu.itba.paw.webapp.form.MatchForm;
@@ -14,9 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -79,4 +78,12 @@ public class UserController extends BaseController{
         return new ModelAndView("index");
     }
 
+    @RequestMapping(value = "/profile/{username}", method = {RequestMethod.GET})
+    public ModelAndView userProfile(@PathVariable("username") String username) {
+        Optional<PremiumUser> u = us.findByUserName(username);
+        if(!u.isPresent())
+            return new ModelAndView("404UserNotFound").addObject("username", username);
+
+        return new ModelAndView("userProfile").addObject("user", u.get());
+    }
 }
