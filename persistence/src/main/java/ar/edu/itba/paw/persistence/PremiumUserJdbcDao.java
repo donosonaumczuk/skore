@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +26,9 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertUserRoles;
     private final UserJdbcDao userDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserJdbcDao.class);
+
 
     private static final int USER_ROLE_ID = 0;
     private static final int ADMIN_ROLE_ID = 1;
@@ -66,6 +71,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         if(user.isPresent()) {
             user.get().setRoles(getRoles(userName));
         }
+        LOGGER.trace("user with username:{} found", userName);
         return user;
     }
 
@@ -92,10 +98,17 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("enabled", USER_DISABLED);
         args.put("code", code);
 
-        jdbcInsert.execute(args);
+        if(jdbcInsert.execute(args) == 1) {
+            LOGGER.trace("user with username: {} created", userName);
+        }
+        else {
+            return Optional.empty();
+        }
         if(!addRole(userName, USER_ROLE_ID)) {
             return Optional.empty();
         }
+        LOGGER.trace("ROLE_USER set to user with username: {}", userName);
+
         return findByUserName(userName);
     }
 
@@ -133,8 +146,12 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     public Optional<PremiumUser> findByEmail(final String email) {
         final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts natural join users WHERE " +
                 "email = ?", ROW_MAPPER, email);
-
-        return list.stream().findFirst();
+        Optional<PremiumUser> user = list.stream().findFirst();
+        if(user.isPresent()) {
+            user.get().setRoles(getRoles(user.get().getUserName()));
+        }
+        LOGGER.trace("user with email:{} found", email);
+        return user;
     }
 
     @Override

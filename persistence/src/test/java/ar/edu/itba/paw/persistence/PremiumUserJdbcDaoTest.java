@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
@@ -50,6 +51,8 @@ public class PremiumUserJdbcDaoTest {
         private static final String NONEXISTANT_USERNAME = "NonExistantUsername";
         private static final int USER_ROLE_ID = 0;
         private static final int ADMIN_ROLE_ID = 1;
+        private static final String CODE = "code";
+
         @Autowired
         private DataSource dataSource;
 
@@ -101,6 +104,16 @@ public class PremiumUserJdbcDaoTest {
             Assert.assertEquals(USERNAME, user.getUserName());
             Assert.assertEquals(LocalDate.parse(BIRTHDAY, formatter), user.getBirthday());
             Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "accounts"));
+        }
+
+        @Test(expected = DuplicateKeyException.class)
+        public void testCreateWithExistentUsername() {
+            //set up
+            insertUser(USERNAME, CODE);
+
+            //exercise class
+            final Optional<PremiumUser> user = premiumUserDao.create(FIRSTNAME, LASTNAME, EMAIL, USERNAME,
+                    CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD);
         }
 
         @Test
