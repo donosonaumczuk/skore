@@ -45,13 +45,12 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password) {
-       // final String encodedPassword = new BCryptPasswordEncoder().encode(password);
+       final String encodedPassword = new BCryptPasswordEncoder().encode(password);
 
         final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
-                                        password);
-                //encodedPassword);
+                                        encodedPassword);
         if(user.isPresent()) {
             return user.get();
         }
@@ -76,7 +75,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, oldUserName);
+                newCity, newStreet, newReputation, new BCryptPasswordEncoder().encode(newPassword), oldUserName);
         if(user.isPresent()) {
             return user.get();
         }
