@@ -161,6 +161,7 @@ function getMatchCard(match) {
     var location = place.street + ', ' + place.city + ', ' + place.state + ', ' + place.country;
     var sportImg = 'football.svg';
     var avatar = 'user-default.svg';
+    console.log(match.team1.name);
 
     var matchCard = '' +
         '<div class="row p-2 mt-2 match-card rounded-border">' +

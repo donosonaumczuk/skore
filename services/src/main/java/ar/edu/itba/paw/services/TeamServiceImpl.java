@@ -73,12 +73,12 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team createTempTeam1(final String leaderName, final long leaderId, final String sportName) {
-        return createTempTeam("$1|", leaderName, leaderId, sportName);
+        return createTempTeam("1.", leaderName, leaderId, sportName);
     }
 
     @Override
     public Team createTempTeam2(final String leaderName, final long leaderId, final String sportName) {
-        return createTempTeam("$2|", leaderName, leaderId, sportName);
+        return createTempTeam("2.", leaderName, leaderId, sportName);
     }
 
     @Override

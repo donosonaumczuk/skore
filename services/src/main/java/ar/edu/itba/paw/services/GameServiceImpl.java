@@ -280,4 +280,34 @@ public class GameServiceImpl implements GameService {
         }
         return list;
     }
+
+    @Override
+    public Game findByKeyFromURL(String matchURLKey) {
+        final int URL_DATE_LENGTH = 12;
+        final int MIN_TEAMNAME1_LENGTH = 1;
+        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + MIN_TEAMNAME1_LENGTH;
+
+        int length = matchURLKey.length();
+
+        if(length < MIN_LENGTH)
+            throw new GameNotFoundException("matchURLKey '" + matchURLKey + "' is too short to be formatted to a key");
+
+        String startTime = urlDateToKeyDate(matchURLKey.substring(0, URL_DATE_LENGTH));
+        String teamName1 = matchURLKey.substring(URL_DATE_LENGTH, length - URL_DATE_LENGTH);
+        String finishTime = urlDateToKeyDate(matchURLKey.substring(length - URL_DATE_LENGTH));
+
+        return findByKey(teamName1, startTime, finishTime);
+    }
+
+    private String urlDateToKeyDate(String date) {
+        StringBuilder formattedDate = new StringBuilder(date);
+
+        formattedDate = formattedDate.insert(4, "-");
+        formattedDate = formattedDate.insert(7, "-");
+        formattedDate = formattedDate.insert(10, " ");
+        formattedDate = formattedDate.insert(13, ":");
+        formattedDate = formattedDate.insert(16, ":00");
+
+        return formattedDate.toString();
+    }
 }

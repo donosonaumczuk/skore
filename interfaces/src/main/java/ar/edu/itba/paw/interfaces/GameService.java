@@ -84,4 +84,7 @@ public interface GameService {
     public boolean remove(final String teamName1, final String startTime, final String finishtime,
                           final long userId);
 
+    @Transactional
+    public Game findByKeyFromURL(final String matchURLKey);
+
 }

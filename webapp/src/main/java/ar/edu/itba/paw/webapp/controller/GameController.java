@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -188,13 +190,19 @@ public class GameController extends BaseController{
         return new ModelAndView("index");
     }
 
-//    @RequestMapping(value = "/match/{startTime:[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]}" +
-//                            "{team1}" +
-//                            "{finishTime:[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]}", method = {RequestMethod.GET})
-//    public ModelAndView matchDetails(@PathVariable String startTime, @PathVariable String team1,
-//                                     @PathVariable String finishTime) {
-//        //change String to StringBuilder or StringBuffered
-//
-//        Game game = gameService.findByKey();
-//    }
+    @RequestMapping(value = "/match/*", method = {RequestMethod.GET})
+    public ModelAndView matchDetails(HttpServletRequest request) {
+        String matchURLKey = request.getServletPath().substring(7); /* /match/ .length */
+        
+        Game game;
+        try {
+            game = gameService.findByKeyFromURL(matchURLKey);
+        }
+        catch (GameNotFoundException e) {
+            return new ModelAndView("404");
+        }
+
+        return new ModelAndView("match").addObject("match", game);
+    }
+
 }

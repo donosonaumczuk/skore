@@ -22,7 +22,7 @@
 
             <div class="row text-center">
                 <div class="col">
-                    match
+                    <p>Team 1: <c:out value="${match.team1Name()}"/></p>
                 </div>
             </div>
             

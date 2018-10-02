@@ -14,7 +14,7 @@ var filters = {
         state: {},
         city: {}
     }
-}
+};
 
 $('.filter-badge').hover(function() {
         $(this).find('.fas').css("color", "grey");
@@ -24,11 +24,11 @@ $('.filter-badge').hover(function() {
         $(this).find('.fas').css("color", "black");
         $(this).css("cursor", "auto");
     }
-)
+);
 
 $('.filter-badge').click(function () {
     $(this).remove();
-})
+});
 
 $(".filter-input").keyup(function (e) {
     if (e.keyCode == 13) {
