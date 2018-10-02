@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Tornament {
     private String name;
@@ -46,5 +47,9 @@ public class Tornament {
 
         Tornament aTornament = ((Tornament) object);
         return getName().equals(aTornament.getName());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

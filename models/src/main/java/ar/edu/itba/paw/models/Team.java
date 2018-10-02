@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Team {
     private List<User> players;
@@ -77,5 +78,10 @@ public class Team {
 
         Team aTeam = ((Team) object);
         return getName().equals(aTeam.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
