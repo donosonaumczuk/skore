@@ -74,14 +74,14 @@ public interface GameService {
 
     @Transactional
     public Game insertUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId,
-                                 final boolean toTeam1);
+                                 final String finishTime, final long userId);
 
     @Transactional
     public Game deleteUserInGame(final String teamName1, final String startTime,
                                  final String finishTime, final long userId);
 
     @Transactional
-    public boolean remove(final String teamName1, final String startTime, final String finishtime);
+    public boolean remove(final String teamName1, final String startTime, final String finishtime,
+                          final long userId);
 
 }

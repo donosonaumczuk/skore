@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
+import ar.edu.itba.paw.Exceptions.TeamFullException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -67,23 +68,41 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game insertUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId,
-                                 final boolean toTeam1) {
+                                 final String finishTime, final long userId) {
+        Game game;
+        try {
+            game = insertUserInGameTeam(teamName1, startTime, finishTime, userId, true);
+        }
+        catch (TeamFullException e) {
+            game = insertUserInGameTeam(teamName1, startTime, finishTime, userId, false);
+        }
+        return game;
+    }
+
+    private Game insertUserInGameTeam(final String teamName1, final String startTime,
+                                      final String finishTime, final long userId,
+                                      final boolean toTeam1) {
         Game game = findByKey(teamName1, startTime, finishTime);
         Game gameAns;
-        if(!toTeam1 && game.getTeam2() == null) {
-            Team team2 = teamService.createTempTeam2(null, userId,
-                                        game.getTeam1().getSport().getName());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            gameAns = modify(game.team1Name(), team2.getName(), formatter.format(game.getStartTime()),
-                    formatter.format(game.getFinishTime()), game.getType(), game.getResult(),
-                    game.getPlace().getCountry(), game.getPlace().getState(), game.getPlace().getCity(),
-                    game.getPlace().getStreet(), game.getTornament(),game.getDescription(), game.team1Name(),
-                    formatter.format(game.getStartTime()), formatter.format(game.getFinishTime()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        if(!toTeam1) {
+            if(game.getTeam2() == null) {
+                Team team2 = teamService.createTempTeam2(null, userId,
+                        game.getTeam1().getSport().getName());
+                gameAns = modify(game.team1Name(), team2.getName(), formatter.format(game.getStartTime()),
+                        formatter.format(game.getFinishTime()), game.getType(), game.getResult(),
+                        game.getPlace().getCountry(), game.getPlace().getState(), game.getPlace().getCity(),
+                        game.getPlace().getStreet(), game.getTornament(), game.getDescription(), game.team1Name(),
+                        formatter.format(game.getStartTime()), formatter.format(game.getFinishTime()));
+            }
+            else {
+                teamService.addPlayer(game.team2Name(), userId);
+                gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
+                            formatter.format(game.getFinishTime()));
+            }
         }
         else {
             teamService.addPlayer(game.team1Name(), userId);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
                         formatter.format(game.getFinishTime()));
         }
@@ -223,8 +242,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public boolean remove(final String teamName1, final String startTime, final String finishtime) {
-        return gameDao.remove(teamName1, startTime, finishtime);
+    public boolean remove(final String teamName1, final String startTime, final String finishTime,
+                          final long userId) {
+        Game game = findByKey(teamName1, startTime, finishTime);
+        if(game.getTeam1().getLeader().getUserId() != userId) {
+            return false;
+        }
+        return gameDao.remove(teamName1, startTime, finishTime);
     }
 
     private List<String> jsonArrayToList(JSONArray jsonArray) {

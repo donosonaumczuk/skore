@@ -87,6 +87,58 @@ public class GameController extends BaseController{
         return objectMapper.writeValueAsString(games);
     }
 
+    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String addPlayerToMatch(@RequestParam final String teamName1,
+                                                 @RequestParam final String startTime,
+                                                 @RequestParam final String finishTime) throws IOException {
+        LOGGER.trace("Asking to add logged player from {}|{}|{}", teamName1,startTime,finishTime);
+        boolean ans;
+        try {
+            gameService.insertUserInGame(teamName1, startTime, finishTime, loggedUser().getUserId());
+            LOGGER.trace("insert user: {} success", loggedUser().getUserId());
+            ans = true;
+        }
+        catch (Exception e) {
+            LOGGER.trace("insert user: {} fail", loggedUser().getUserId());
+            ans = false;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(ans);
+    }
+
+    @RequestMapping(value="/removePlayerFromMatch", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String removePlayerFromMatch(@RequestParam final String teamName1,
+                                                      @RequestParam final String startTime,
+                                                      @RequestParam final String finishTime) throws IOException {
+        LOGGER.trace("Asking to remove logged player from {}|{}|{}", teamName1,startTime,finishTime);
+        boolean ans;
+        try {
+            gameService.deleteUserInGame(teamName1, startTime, finishTime, loggedUser().getUserId());
+            LOGGER.trace("delete user: {} success", loggedUser().getUserId());
+            ans = true;
+        }
+        catch (Exception e) {
+            LOGGER.trace("insert user: {} fail", loggedUser().getUserId());
+            ans = false;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(ans);
+    }
+
+    @RequestMapping(value="/deleteMatch", method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody String deleteMatch(@RequestParam final String teamName1,
+                                            @RequestParam final String startTime,
+                                            @RequestParam final String finishTime) throws IOException {
+        LOGGER.trace("Asking to delete a match");
+        boolean ans = gameService.remove(teamName1, startTime, finishTime, loggedUser().getUserId());
+        ObjectMapper objectMapper = new ObjectMapper();
+        LOGGER.trace("The result for delete a match is {}", ans);
+        return objectMapper.writeValueAsString(ans);
+    }
+
     @RequestMapping(value="/filterMatchLoggedCreateBy", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGamesLoggedCreateBy(@RequestParam final String body) throws IOException {
