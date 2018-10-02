@@ -44,4 +44,8 @@ public interface PremiumUserService {
     @Transactional
     public void enableUser(final String username, final String code);
 
+    @Transactional
+    public void confirmationPath(String path);
+
+
     }

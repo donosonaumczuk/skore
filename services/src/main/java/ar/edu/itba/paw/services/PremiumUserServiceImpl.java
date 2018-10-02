@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.Exceptions.CannotCreateUserException;
 import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.RoleDao;
@@ -11,6 +12,7 @@ import ar.edu.itba.paw.models.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     private PremiumUserDao premiumUserDao;
 
     @Autowired
+    public EmailService emailSender;
+
+    @Autowired
     private RoleDao roleDao;
 
     @Override
@@ -36,10 +41,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         LOGGER.trace("Looking for user with username: {}",userName);
 
         Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
-        if(!user.isPresent()) {
-            LOGGER.error("Can't find user with username: {}", userName);
-        }
-            return user;
+        return user;
     }
 
     @Override
@@ -68,6 +70,8 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
                                         encodedPassword, file);
         if(user.isPresent()) {
+            LOGGER.trace("Sending confirmation email to {}", email);
+            emailSender.sendConfirmAccount(user.get(), generatePath(user.get()));
             return user.get();
         }
         else {
@@ -178,4 +182,16 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
     }
 
+    @Override
+    public void confirmationPath(String path) {
+        String dataPath = path.replace("/confirm/","");
+        int splitIndex = dataPath.indexOf('&');
+        String username = dataPath.substring(0, splitIndex);
+        String code = dataPath.substring(splitIndex + 1, dataPath.length()-1 );
+        enableUser(username, code);
+    }
+
+    private String generatePath(PremiumUser user) {
+        return "confirm/" + user.getUserName() + "&" + user.getCode();
+    }
 }

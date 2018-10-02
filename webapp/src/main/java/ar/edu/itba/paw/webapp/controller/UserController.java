@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,8 +84,6 @@ public class UserController extends BaseController{
     }
 
 
-
-
     @RequestMapping("/joinMatch")
     public ModelAndView joinMatch() {
         return new ModelAndView("joinMatch");
@@ -114,5 +113,12 @@ public class UserController extends BaseController{
             return new ModelAndView("404UserNotFound").addObject("username", username);
 
         return new ModelAndView("userProfile").addObject("user", u.get());
+    }
+
+    @RequestMapping(value="/confirm/*", name = "url")
+    public ModelAndView confirmAccount(HttpServletRequest request) {
+        String path = request.getServletPath();
+        us.confirmationPath(path);
+        return new ModelAndView("index");
     }
 }

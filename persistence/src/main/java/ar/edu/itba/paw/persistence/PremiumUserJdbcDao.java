@@ -171,9 +171,13 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("username", username);
         args.put("role", roleId);
         final boolean returnedValue = jdbcInsertUserRoles.execute(args) == 1;
-//        if(returnedValue) {
-//            LO
-//        }
+        if(returnedValue) {
+            LOGGER.trace("role added to {}", username);
+        }
+        else {
+            LOGGER.error("couldn't add role to {}", username);
+
+        }
         return returnedValue;
 
     }
