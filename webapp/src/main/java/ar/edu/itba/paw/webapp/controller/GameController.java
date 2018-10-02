@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.GameService;
-import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.MatchForm;
@@ -32,6 +30,10 @@ public class GameController extends BaseController{
     @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
+
+    @Autowired
+    @Qualifier("sportServiceImpl")
+    private SportService sportService;
 
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -160,7 +162,7 @@ public class GameController extends BaseController{
 
     @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
     public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-        return new ModelAndView("createMatch");
+        return new ModelAndView("createMatch").addObject("sports", sportService.getAllSports());
     }
 
     @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
@@ -180,8 +182,6 @@ public class GameController extends BaseController{
                 matchForm.getMatchName());
         LOGGER.debug("Match created \n\n");
 
-
         return new ModelAndView("index");
     }
-
 }

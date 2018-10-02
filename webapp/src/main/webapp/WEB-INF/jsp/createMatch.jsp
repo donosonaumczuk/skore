@@ -61,11 +61,9 @@
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
                         <option value=""><spring:message code="chooseSportLabel"/></option>
-                        <option value="Football 5">Football 5</option>
-                        <option value="Football 7">Football 7</option>
-                        <option value="Football 11">Football 11</option>
-                        <option value="Padel Singles">Padel Singles</option>
-                        <option value="Padel Doubles">Padel Doubles</option>
+                        <c:forEach var="sport" items="${sports}">
+                            <option value="<c:out value="${sport.getName()}"/>"><c:out value="${sport.getDisplayName()}"/></option>
+                        </c:forEach>
                     </form:select>
                     <form:errors path="sportName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>

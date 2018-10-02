@@ -25,14 +25,7 @@
                     match
                 </div>
             </div>
-
-            <div class="row mt-4 text-center">
-                <div class="col">
-                    <span class="mr-1"><spring:message code="areYouNewLabel"/></span>
-                    <a class="link" href="/create"><spring:message code="signUpMessage"/></a>
-                </div>
-            </div>
-
+            
         </div> <!-- END Form container -->
     </div>
 </div>

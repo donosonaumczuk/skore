@@ -26,7 +26,6 @@ public class GameServiceImpl implements GameService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServiceImpl.class);
 
-
     @Autowired
     private GameDao gameDao;
 
@@ -54,7 +53,6 @@ public class GameServiceImpl implements GameService {
         String min ="" + date.charAt(14) + date.charAt(15);
         String sec ="" + date.charAt(17) + date.charAt(18);
         String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
-        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
         return formattedDate;
 
     }
@@ -65,14 +63,14 @@ public class GameServiceImpl implements GameService {
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title) {
-        String finishTime = getFinishTime(startTime, duration);
         final String newStartTime = formatDate(startTime);
+        String finishTime = getFinishTime(startTime, duration);
 
         Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
-                    teamName1, teamName2, startTime, finishTime);
+                    teamName1, teamName2, newStartTime, finishTime);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
                     + " starting at " + startTime + "and finishing at " +finishTime);
         }
