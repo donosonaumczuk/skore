@@ -144,5 +144,4 @@ public class Filters {
         return query;
     }
 
-
 }

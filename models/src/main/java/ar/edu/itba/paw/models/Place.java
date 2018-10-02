@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class Place {
     private String country;
     private String state;
@@ -56,5 +58,10 @@ public class Place {
                 && getCity().equals(aPlace.getCity())
                 && getState().equals(aPlace.getState())
                 && getStreet().equals(aPlace.getStreet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, state, city, street);
     }
 }

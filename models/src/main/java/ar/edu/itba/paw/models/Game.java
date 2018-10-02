@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Game {
     private Team team1;
@@ -104,6 +105,10 @@ public class Game {
                 && getFinishTime().equals(aGame.getFinishTime());
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(team1, team2, startTime, finishTime);
+    }
     public int getQuantityOccupiedPlaces() {
         return quantityOccupiedPlaces;
     }
