@@ -73,7 +73,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder())
-                .usersByUsernameQuery("SELECT username, password FROM accounts WHERE username = ?");
+                .usersByUsernameQuery("select username as principal, password as credentials, true from accounts where username = ?")
+                .authoritiesByUsernameQuery("select username as principal, role from userroles where username = ?");
     }
 
 }
