@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
 
+import java.util.Objects;
+
 public class Sport {
     private String name;
     private int quantity;
@@ -42,5 +44,10 @@ public class Sport {
 
         Sport aSport = ((Sport) object);
         return getName().equals(aSport.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

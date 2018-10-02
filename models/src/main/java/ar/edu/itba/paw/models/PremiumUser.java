@@ -148,4 +148,9 @@ public class PremiumUser extends User{
         PremiumUser aPremiumUser = ((PremiumUser) object);
         return getUserName().equals(aPremiumUser.getUserName());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
+    }
 }
