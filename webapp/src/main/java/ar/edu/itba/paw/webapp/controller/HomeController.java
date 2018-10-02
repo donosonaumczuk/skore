@@ -31,5 +31,6 @@ public class HomeController extends BaseController{
     public ModelAndView index() {
         final ModelAndView mav = new ModelAndView("index");
         return mav;
+
     }
 }
