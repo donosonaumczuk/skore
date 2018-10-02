@@ -39,7 +39,7 @@ public class GameServiceImpl implements GameService {
     private static String getFinishTime(final String startTime, String duration) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         java.time.LocalTime durationTime = java.time.LocalTime.parse(duration, timeFormatter);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         java.time.LocalDateTime startDateTime = java.time.LocalDateTime.parse(startTime, dateTimeFormatter);
         String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
                 .format(dateTimeFormatter);
@@ -51,8 +51,7 @@ public class GameServiceImpl implements GameService {
         String year = "" + date.charAt(6) + date.charAt(7) + date.charAt(8) + date.charAt(9);
         String hour ="" + date.charAt(11) + date.charAt(12);
         String min ="" + date.charAt(14) + date.charAt(15);
-        String sec ="" + date.charAt(17) + date.charAt(18);
-        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min;
         return formattedDate;
 
     }
@@ -64,15 +63,15 @@ public class GameServiceImpl implements GameService {
                        final String street, final String tornamentName, final String description,
                        final String title) {
         final String newStartTime = formatDate(startTime);
-        String finishTime = getFinishTime(startTime, duration);
+        String finishTime = getFinishTime(newStartTime, duration);
 
-        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime, finishTime, type, result,
+        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime + ":00", finishTime + ":00", type, result,
                 country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
                     teamName1, teamName2, newStartTime, finishTime);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
-                    + " starting at " + startTime + "and finishing at " +finishTime);
+                    + " starting at " + newStartTime + "and finishing at " + finishTime);
         }
         return game.get();
     }
