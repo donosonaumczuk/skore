@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -23,13 +24,20 @@
             </div>
             <c:url value="/login" var="loginUrl" />
             <form action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded" >
+                <c:if test="${not empty error}">
+                    <div  class="invalid-feedback d-block"><spring:message code="invalidUserOrPasswordMessage"/></div>
+                </c:if>
                 <div class="form-group">
                     <label for="username"><spring:message code="username"/></label>
-                    <input type="text" class="form-control" id="username" name="user_username" placeholder="<spring:message code="username"/>">
+                    <spring:message code="username" var="usernameMessage" />
+                    <input type="text" class="form-control" id="username" name="user_username" placeholder='${usernameMessage}'>
                 </div>
                 <div class="form-group">
                     <label for="password"><spring:message code="password"/></label>
-                    <input type="password" class="form-control" id="password" name="user_password" placeholder="<spring:message code="password"/>">
+                    <spring:message code="password" var="passwordMessage" />
+
+                    <input type="password" class="form-control" id="password" name="user_password" placeholder='${passwordMessage}'/>
+
                 </div>
                 <div class="form-check">
                     <input type="checkbox" name="user_rememberme" class="form-check-input" id="rememberme">

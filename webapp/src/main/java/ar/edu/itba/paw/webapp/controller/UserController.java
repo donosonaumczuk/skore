@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.JoinMatchForm;
+import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
@@ -53,11 +54,18 @@ public class UserController extends BaseController{
         return new ModelAndView("index");
     }
 
-    @RequestMapping("/login")
-    public ModelAndView login() {
-        return new ModelAndView("login");
 
+    @RequestMapping(value = "/login", method = { RequestMethod.GET })
+    public ModelAndView loginForm(@RequestParam(value = "error", required = false) String error) {
+        ModelAndView mav = new ModelAndView("login");
+        if(error != null) {
+            mav.addObject("error", "errorTest");
+        }
+        return mav;
     }
+
+
+
 
     @RequestMapping("/joinMatch")
     public ModelAndView joinMatch() {
