@@ -28,7 +28,7 @@ public class ResourceController extends BaseController{
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
-    private PremiumUserService premiunUserService;
+    private PremiumUserService premiumUserService;
 
     @Autowired
     @Qualifier("sportServiceImpl")
@@ -45,11 +45,14 @@ public class ResourceController extends BaseController{
     public ResponseEntity<byte[]> getImageSport(@PathVariable final String type,
                                                 @PathVariable final String id) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type","image/*");
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         byte[] media;
         if(type.compareTo("profile")==0) {
-            media = premiunUserService.readImage(id);
+            try {
+                media = premiumUserService.readImage(id);
+            } catch (Exception e) {
+                headers.add("Location", "/img/user-default.svg");
+                return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            }
         }
         else if(type.compareTo("sport")==0)  {
             media = sportService.readImage(id);
@@ -57,6 +60,8 @@ public class ResourceController extends BaseController{
         else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        headers.add("Content-Type","image/*");
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
         ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
         return responseEntity;

@@ -282,7 +282,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game findByKeyFromURL(String matchURLKey) {
+    public Game findByKeyFromURL(final String matchURLKey) {
         final int URL_DATE_LENGTH = 12;
         final int MIN_TEAMNAME1_LENGTH = 1;
         final int MIN_LENGTH = URL_DATE_LENGTH * 2 + MIN_TEAMNAME1_LENGTH;
@@ -299,7 +299,7 @@ public class GameServiceImpl implements GameService {
         return findByKey(teamName1, startTime, finishTime);
     }
 
-    private String urlDateToKeyDate(String date) {
+    private String urlDateToKeyDate(final String date) {
         StringBuilder formattedDate = new StringBuilder(date);
 
         formattedDate = formattedDate.insert(4, "-");
