@@ -48,15 +48,16 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
-                               final BindingResult errors, @RequestParam("file") MultipartFile file) throws IOException {
+                               final BindingResult errors, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         //evans
         if(errors.hasErrors()) {
+            System.out.println("imageFile: " + userForm.getImage().getContentType() + "\n\n\n\n");
             return createForm(userForm);
         }
         final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
                 userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword(),
-                file);
+                userForm.getImage());
         //us.addRole(user.getUserName(), USER_ROLE_ID); evans
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
@@ -115,7 +116,7 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", u.get());
     }
 
-    @RequestMapping(value="/confirm/**", name = "url")
+    @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
         us.confirmationPath(path);
