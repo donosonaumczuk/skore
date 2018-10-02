@@ -347,7 +347,7 @@ public class GameJdbcDaoTest {
 
         final Game game = gameJdbcDao.modify(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
                 TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, null,
-                TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2).get();
+                TEAMNAME_2,TEAMNAME_1,FINISHTIME_2).get();
 
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
         Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());

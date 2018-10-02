@@ -70,7 +70,15 @@ public interface GameService {
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
-                       final String teamName1Old, final String teamName2Old,
-                       final String startTimeOld, final String finishTimeOld);
+                       final String teamName1Old, final String startTimeOld, final String finishTimeOld);
+
+    @Transactional
+    public Game insertUserInGame(final String teamName1, final String startTime,
+                                 final String finishTime, final long userId,
+                                 final boolean toTeam1);
+
+    @Transactional
+    public Game deleteUserInGame(final String teamName1, final String startTime,
+                                 final String finishTime, final long userId);
 
 }

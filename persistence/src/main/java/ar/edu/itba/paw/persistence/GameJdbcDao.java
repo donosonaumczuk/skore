@@ -41,7 +41,8 @@ public class GameJdbcDao implements GameDao {
                     resultSet.getInt("OccupiedQuantity"),
                     resultSet.getString("result"),
                     resultSet.getString("description"),
-                    resultSet.getString("title"));
+                    resultSet.getString("title"),
+                    resultSet.getString("tornamentName"));
 
     @Autowired
     public GameJdbcDao(final DataSource dataSource, final TeamDao teamDao) {
@@ -89,7 +90,8 @@ public class GameJdbcDao implements GameDao {
         final String getAGame =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName as  sportName, " +
                     "playerQuantity, country, state, city, street, type, result, description, " +
-                    "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
+                    "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
+                    "tornamentName " +
                 "FROM " +
                     "games LEFT OUTER JOIN (teams NATURAL JOIN isPartOf) as team2 " +
                     "ON teamName2 = team2.teamName," +
@@ -125,7 +127,8 @@ public class GameJdbcDao implements GameDao {
         String getGamesQuery =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
                         "playerQuantity, country, state, city, street, type, result, description, " +
-                        "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity " +
+                        "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
+                        "tornamentName " +
                 "FROM games as gamesReal, (teams NATURAL JOIN isPartOf) as team1, " +
                         "(teams NATURAL JOIN isPartOf) as team2, sports " +
                 "WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
@@ -208,17 +211,16 @@ public class GameJdbcDao implements GameDao {
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
-                                 final String teamName1Old, final String teamName2Old,
-                                 final String startTimeOld, final String finishTimeOld) {
+                                 final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
         String updateSentence = "UPDATE users SET teamName1 = ?, teamName2 = ?, startTime = ?," +
                 "finishTime = ?, type = ?, result = ?, country = ?, state = ?, city = ?, street = ?," +
-                "tornamentName = ?, descrption = ? WHERE teamName1 = ? AND teamName2 = ? AND " +
-                "startTime = ? AND finishTime = ?;";
+                "tornamentName = ?, descrption = ? WHERE teamName1 = ? AND startTime = ? " +
+                "AND finishTime = ?;";
         LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
         jdbcTemplate.update(updateSentence, teamName1, teamName2, startTime, finishTime, type, result,
-                country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
-                startTimeOld, finishTimeOld);
+                country, state, city, street, tornamentName, description, teamName1Old, startTimeOld,
+                finishTimeOld);
         LOGGER.trace("Successfully modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
         return findByKey(teamName1, startTime, finishTime);

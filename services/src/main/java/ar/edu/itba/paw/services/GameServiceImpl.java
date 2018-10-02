@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,12 +65,52 @@ public class GameServiceImpl implements GameService {
                       country, state, city, street, tornamentName, description, title);
     }
 
-    /*@Override
-    public Game insertUserInGame(final Game game, final long userId, final boolean toTeam1) {
+    @Override
+    public Game insertUserInGame(final String teamName1, final String startTime,
+                                 final String finishTime, final long userId,
+                                 final boolean toTeam1) {
+        Game game = findByKey(teamName1, startTime, finishTime);
+        Game gameAns;
         if(!toTeam1 && game.getTeam2() == null) {
-
+            Team team2 = teamService.createTempTeam2(null, userId,
+                                        game.getTeam1().getSport().getName());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            gameAns = modify(game.team1Name(), team2.getName(), formatter.format(game.getStartTime()),
+                    formatter.format(game.getFinishTime()), game.getType(), game.getResult(),
+                    game.getPlace().getCountry(), game.getPlace().getState(), game.getPlace().getCity(),
+                    game.getPlace().getStreet(), game.getTornament(),game.getDescription(), game.team1Name(),
+                    formatter.format(game.getStartTime()), formatter.format(game.getFinishTime()));
         }
-    }*/
+        else {
+            teamService.addPlayer(game.team1Name(), userId);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
+                        formatter.format(game.getFinishTime()));
+        }
+        return gameAns;
+    }
+
+    @Override
+    public Game deleteUserInGame(final String teamName1, final String startTime,
+                                 final String finishTime, final long userId) {
+        Game game = findByKey(teamName1, startTime, finishTime);
+        for (User user:game.getTeam1().getPlayers()) {
+            if(user.getUserId() == userId) {
+                LOGGER.trace("Found user: {} in team1",userId);
+                teamService.removePlayer(game.team1Name(), userId);
+                return findByKey(teamName1, startTime, finishTime);
+            }
+        }
+        for (User user:game.getTeam2().getPlayers()) {
+            if(user.getUserId() == userId) {
+                LOGGER.trace("Found user: {} in team2",userId);
+                teamService.removePlayer(game.team1Name(), userId);
+                return findByKey(teamName1, startTime, finishTime);
+            }
+        }
+        LOGGER.trace("Not found user: {} in game",userId);
+        return game;
+    }
 
     @Override
     public Game findByKey(String teamName1, String startTime, String finishTime) {
@@ -168,14 +209,13 @@ public class GameServiceImpl implements GameService {
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
-                       final String teamName1Old, final String teamName2Old,
-                       final String startTimeOld, final String finishTimeOld) {
+                       final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
         Optional<Game> game = gameDao.modify(teamName1, teamName2, startTime, finishTime, type, result,
-                country, state, city, street, tornamentName, description, teamName1Old, teamName2Old,
-                startTimeOld, finishTimeOld);
+                country, state, city, street, tornamentName, description, teamName1Old, startTimeOld,
+                finishTimeOld);
         if(!game.isPresent()) {
-            LOGGER.error("Could not modify this game:: {} vs {} |starting at {} |finishing at {}",
-                    teamName1Old, teamName2Old, startTimeOld, finishTimeOld);
+            LOGGER.error("Could not modify this game:: {} |starting at {} |finishing at {}",
+                    teamName1Old, startTimeOld, finishTimeOld);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
                     + " starting at " + startTime + "and finishing at " + finishTime);
         }

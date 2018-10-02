@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS likes(
 CREATE TABLE IF NOT EXISTS teams(
   teamName    VARCHAR(100) PRIMARY KEY,
   acronym     VARCHAR(100),
-  leaderName  VARCHAR(100) REFERENCES accounts(userName) NOT NULL,
+  leaderName  VARCHAR(100) REFERENCES accounts(userName),
   isTemp      INTEGER NOT NULL,
   sportName   VARCHAR (100) NOT NULL,
   image       BYTEA,

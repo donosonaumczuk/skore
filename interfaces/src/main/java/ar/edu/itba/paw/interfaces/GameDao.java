@@ -28,6 +28,5 @@ public interface GameDao {
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
-                                 final String teamName1Old, final String teamName2Old,
-                                 final String startTimeOld, final String finishTimeOld);
+                                 final String teamName1Old, final String startTimeOld, final String finishTimeOld);
 }
