@@ -197,7 +197,6 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         return "confirm/" + user.getUserName() + "&" + user.getCode();
     }
 
-    @Async
     public void sendConfirmationMail(PremiumUser user) {
         emailSender.sendConfirmAccount(user, generatePath(user));
     }
