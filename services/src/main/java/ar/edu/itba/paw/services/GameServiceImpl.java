@@ -66,9 +66,9 @@ public class GameServiceImpl implements GameService {
                        final String street, final String tornamentName, final String description,
                        final String title) {
         String finishTime = getFinishTime(startTime, duration);
+        final String newStartTime = formatDate(startTime);
 
-
-        Optional<Game> game = gameDao.create(teamName1, teamName2, startTime, finishTime, type, result,
+        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
