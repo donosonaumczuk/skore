@@ -120,8 +120,10 @@ public class PremiumUser extends User{
         return roles;
     }
 
-    public void setRoles(Set<Role> newRoles) {
-        roles = newRoles;
+    public void setRoles(Collection<Role> newRoles) {
+
+        this.roles.clear();
+        this.roles.addAll(newRoles);
     }
     public void addRole(final Role newRole) {
         roles.add(newRole);

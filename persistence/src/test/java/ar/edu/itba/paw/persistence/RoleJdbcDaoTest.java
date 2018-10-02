@@ -20,10 +20,10 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:schema.sql")
 public class RoleJdbcDaoTest {
-    private static final String USERROLENAME = "ROLE_USER";
-    private static final String ADMINROLENAME = "ROLE_ADMIN";
-    private static final int USERROLEID = 0;
-    private static final int ADMINROLEID = 1;
+    private static final String USER_ROLE_NAME = "ROLE_USER";
+    private static final String ADMIN_ROLE_NAME = "ROLE_ADMIN";
+    private static final int USER_ROLE_ID = 0;
+    private static final int ADMIN_ROLE_ID = 1;
 
     @Autowired
     private DataSource dataSource;
@@ -42,38 +42,38 @@ public class RoleJdbcDaoTest {
     @Test
     public void testCreate() {
         //exercise class
-        final Role role = roleDao.create(USERROLENAME, USERROLEID).get();
+        final Role role = roleDao.create(USER_ROLE_NAME, USER_ROLE_ID).get();
 
         //postconditions
         Assert.assertNotNull(role);
-        Assert.assertEquals(USERROLEID, role.getRoleId());
-        Assert.assertEquals(USERROLENAME, role.getName());
+        Assert.assertEquals(USER_ROLE_ID, role.getRoleId());
+        Assert.assertEquals(USER_ROLE_NAME, role.getName());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "roles"));
     }
 
     private void insertUser(final int roleId) {
         jdbcTemplate.execute("INSERT INTO roles (roleName, roleId)" +
-                " VALUES ('" + USERROLENAME + "' , '" + USERROLEID + "');");
+                " VALUES ('" + USER_ROLE_NAME + "' , '" + USER_ROLE_ID + "');");
     }
 
     @Test
     public void testFindRoleByIdWithExistantId() {
         //set up
-        insertUser(USERROLEID);
+        insertUser(USER_ROLE_ID);
 
         //exercise class
-        final Optional<Role> returnedRole = roleDao.findRoleById(USERROLEID);
+        final Optional<Role> returnedRole = roleDao.findRoleById(USER_ROLE_ID);
 
         //postconditions
         Assert.assertTrue(returnedRole.isPresent());
         final Role user = returnedRole.get();
-        Assert.assertEquals(USERROLEID, user.getRoleId());
+        Assert.assertEquals(USER_ROLE_ID, user.getRoleId());
     }
 
     @Test
     public void testFindIdWithNonExistantId() {
         //exercise class
-        final Optional<Role> returnedRole = roleDao.findRoleById(ADMINROLEID);
+        final Optional<Role> returnedRole = roleDao.findRoleById(ADMIN_ROLE_ID);
 
         //postconditions
         Assert.assertTrue(!returnedRole.isPresent());
@@ -82,7 +82,7 @@ public class RoleJdbcDaoTest {
     @Test
     public void testRemoveNonExistantRole(){
         //exercise class
-        boolean returnValue = roleDao.remove(ADMINROLEID);
+        boolean returnValue = roleDao.remove(ADMIN_ROLE_ID);
 
         //postconditions
         Assert.assertEquals(false, returnValue);
@@ -91,10 +91,10 @@ public class RoleJdbcDaoTest {
     @Test
     public void testRemoveExistantUser(){
         //set up
-        insertUser(USERROLEID);
+        insertUser(USER_ROLE_ID);
 
         //exercise class
-        boolean returnValue = roleDao.remove(USERROLEID);
+        boolean returnValue = roleDao.remove(USER_ROLE_ID);
 
         //postconditions
         Assert.assertEquals(true, returnValue);

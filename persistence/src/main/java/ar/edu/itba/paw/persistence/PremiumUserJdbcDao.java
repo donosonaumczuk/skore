@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,10 +15,7 @@ import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class PremiumUserJdbcDao implements PremiumUserDao{
@@ -25,6 +23,9 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertUserRoles;
     private final UserJdbcDao userDao;
+
+    private static final int USER_ROLE_ID = 0;
+    private static final int ADMIN_ROLE_ID = 1;
 
     private static final int USER_DISABLED = 0;
     private static final int USER_ENABLED = 1;
@@ -39,6 +40,10 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                             resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getInt("reputation"), resultSet.getString("password"));
+
+    private final static RowMapper<Role> ROLE_ROW_MAPPER = (resultSet, rowNum) ->
+            new Role(resultSet.getString("roleName"), resultSet.getInt("roleId"));
+
 
     @Autowired
     public PremiumUserJdbcDao(final DataSource dataSource, UserJdbcDao userDao) {
@@ -55,7 +60,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         final List<PremiumUser> list = jdbcTemplate.query("SELECT * FROM accounts natural join users WHERE " +
                 "userName = ?", ROW_MAPPER, userName);
 
-        return list.stream().findFirst();
+        Optional<PremiumUser> user = list.stream().findFirst();
+        if(user.isPresent()) {
+            user.get().setRoles(getRoles(userName));
+        }
+        return user;
     }
 
     @Override
@@ -81,6 +90,9 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("enabled", USER_DISABLED);
 
         jdbcInsert.execute(args);
+        if(!addRole(userName, USER_ROLE_ID)) {
+            return Optional.empty();
+        }
         return findByUserName(userName);
     }
 
@@ -129,6 +141,13 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("role", roleId);
         return jdbcInsertUserRoles.execute(args) == 1;
 
+    }
+
+    @Override
+    public List<Role> getRoles(final String username) {
+        final List<Role> roles = jdbcTemplate.query("SELECT roleName, roleId FROM userRoles, roles " +
+                "WHERE userRoles.username = ? and userRoles.role = roles.roleId", ROLE_ROW_MAPPER, username);
+        return roles;
     }
 
     @Override

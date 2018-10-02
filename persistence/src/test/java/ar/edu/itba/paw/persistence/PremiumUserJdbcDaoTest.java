@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.joda.time.format.DateTimeFormat;
 import org.junit.Assert;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,12 +22,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:schema.sql")
+@Rollback
 public class PremiumUserJdbcDaoTest {
 
         private static final String FIRSTNAME = "first_name";
@@ -43,7 +47,8 @@ public class PremiumUserJdbcDaoTest {
         private static final long   USERID = 14;
         private static final String EXISTANT_USERNAME = "ExistantUsername";
         private static final String NONEXISTANT_USERNAME = "NonExistantUsername";
-
+        private static final int USER_ROLE_ID = 0;
+        private static final int ADMIN_ROLE_ID = 1;
         @Autowired
         private DataSource dataSource;
 
@@ -56,7 +61,10 @@ public class PremiumUserJdbcDaoTest {
         @Before
         public void setUp() {
             jdbcTemplate = new JdbcTemplate(dataSource);
-            JdbcTestUtils.deleteFromTables(jdbcTemplate, "accounts");
+            JdbcTestUtils.deleteFromTables(jdbcTemplate, "accounts", "roles", "userRoles");
+            insertRole(USER_ROLE_ID, "ROLE_USER");
+            insertRole(ADMIN_ROLE_ID, "ROLE_ADMIN");
+
         }
 
         private void insertUser(String userName) {
@@ -73,6 +81,10 @@ public class PremiumUserJdbcDaoTest {
 
         private void insertRole(final int roleId, final String roleName) {
             jdbcTemplate.execute("INSERT INTO roles (roleId, roleName) VALUES(" + roleId + ", '" + roleName + "')");
+        }
+
+        private void addUserRole(final String username, final int roleId) {
+            jdbcTemplate.execute("INSERT INTO userRoles (username, role) VALUES('" + username + "', " + roleId + ")");
         }
 
         @Test
@@ -187,13 +199,43 @@ public class PremiumUserJdbcDaoTest {
     public void testAddRole() {
         //set up
         insertUser(EXISTANT_USERNAME);
-        insertRole(0,"ROLE_USER");
 
         //exercise class
         final boolean returnedValue = premiumUserDao.addRole(EXISTANT_USERNAME, 0);
 
         //postconditions
         Assert.assertTrue(returnedValue);
+
+    }
+
+    @Test
+    public void testGetRoles() {
+        //set up
+        insertUser(EXISTANT_USERNAME);
+        addUserRole(EXISTANT_USERNAME, USER_ROLE_ID);
+
+        //exercise class
+        List<Role> roles = premiumUserDao.getRoles(EXISTANT_USERNAME);
+
+        //postconditions
+        Assert.assertEquals(roles.size(), 1);
+        Assert.assertEquals("ROLE_USER", roles.get(0).getName());
+    }
+
+    @Test
+    public void testGetTwoRoles() {
+        //set up
+        insertUser(EXISTANT_USERNAME);
+        addUserRole(EXISTANT_USERNAME, USER_ROLE_ID);
+        addUserRole(EXISTANT_USERNAME, ADMIN_ROLE_ID);
+
+        //exercise class
+        List<Role> roles = premiumUserDao.getRoles(EXISTANT_USERNAME);
+
+        //postconditions
+        Assert.assertEquals(roles.size(), 2);
+        Assert.assertTrue("ROLE_USER".equals(roles.get(0).getName()) || "ROLE_USER".equals(roles.get(1).getName()));
+        Assert.assertTrue("ROLE_ADMIN".equals(roles.get(0).getName()) || "ROLE_ADMIN".equals(roles.get(1).getName()));
 
     }
 

@@ -2,9 +2,11 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface PremiumUserDao {
@@ -33,6 +35,8 @@ public interface PremiumUserDao {
     public boolean addRole(final String username, final int roleId);
 
     public Optional<PremiumUser> enableUser(final String username);
+
+    public List<Role> getRoles(final String username);
 
     }
 
