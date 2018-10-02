@@ -103,12 +103,12 @@ function loadMatches(pageNumber) {
         data: { body: '{ minStartTime: "", maxStartTime: "",' +
             'minFinishTime: "", maxFinishTime: "",' +
             'types: [], sportNames: [],' +
-            'minQuantity: "", maxQuantity: "",' +
+            'minQuantity: "0", maxQuantity: "0",' +
             'countries: [], states: [],' +
             'cities: [],' +
-            'minFreePlaces: "",' +
-            'maxFreePlaces: "",' +
-            'pageNumber: "" }' }
+            'minFreePlaces: "0",' +
+            'maxFreePlaces: "0",' +
+            'pageNumber: "' + pageNumber + '" }' }
     }).done(function(matchJSON) {
             console.log(matchJSON);
             matchArray = JSON.parse(matchJSON);
