@@ -34,7 +34,7 @@ public interface PremiumUserDao {
 
     public boolean addRole(final String username, final int roleId);
 
-    public Optional<PremiumUser> enableUser(final String username);
+    public boolean enableUser(final String username, final String code);
 
     public List<Role> getRoles(final String username);
 

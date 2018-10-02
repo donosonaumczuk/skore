@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -39,7 +40,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                     resultSet.getDate("birthday").toLocalDate(), new Place(
                             resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
-                    resultSet.getInt("reputation"), resultSet.getString("password"));
+                    resultSet.getInt("reputation"), resultSet.getString("password"),
+                    resultSet.getString("code"));
 
     private final static RowMapper<Role> ROLE_ROW_MAPPER = (resultSet, rowNum) ->
             new Role(resultSet.getString("roleName"), resultSet.getInt("roleId"));
@@ -75,7 +77,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                                         final String street, final int reputation, final String password) {
         User user = userDao.create(firstName, lastName, email).get();
         final Map<String, Object> args =  new HashMap<>();
-
+        final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
         args.put("userId", user.getUserId());
         args.put("userName", userName);
         args.put("cellphone", cellphone);
@@ -88,6 +90,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("email", email);
         args.put("password", password);
         args.put("enabled", USER_DISABLED);
+        args.put("code", code);
 
         jdbcInsert.execute(args);
         if(!addRole(userName, USER_ROLE_ID)) {
@@ -151,15 +154,14 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     }
 
     @Override
-    public Optional<PremiumUser> enableUser(final String username) {
+    public boolean enableUser(final String username, final String code) {
         Optional<PremiumUser> currentUser = findByUserName(username);
-        if(currentUser.isPresent()) {
+        if(currentUser.isPresent() && currentUser.get().getCode().equals(code)) {
             final String sqlQuery = "UPDATE accounts SET enabled = ? WHERE userName = ?";
-            jdbcTemplate.update(sqlQuery, USER_ENABLED, username);
-            return currentUser;
+            return jdbcTemplate.update(sqlQuery, USER_ENABLED, username) == 1;
         }
         else {
-            return Optional.empty();
+            return false;
         }
 
     }

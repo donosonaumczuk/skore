@@ -42,7 +42,6 @@ public class SkoreUserDetailsService implements UserDetailsService {
         }
 
         LOGGER.trace("username found: {} with password: {} and authorities: {}", user.getUserName(), user.getPassword(), authorities);
-        System.out.println("\n\n\n\n" + "userFound = " + user.getUserName() + " " + user.getPassword() + "  " + authorities +"\n\n\n\n");
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
                 authorities);
 

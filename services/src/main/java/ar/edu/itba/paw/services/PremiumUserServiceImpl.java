@@ -113,9 +113,14 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     @Override
-    public void enableUser(final String username) {
-        if(!premiumUserDao.enableUser(username).isPresent()) {
-            throw new UserNotFoundException("Can't find user with username: " + username);
+    public void enableUser(final String username, final String code) {
+        Optional<PremiumUser> user = findByUserName(username);
+        if(!user.isPresent()) {
+            throw new UserNotFoundException("Can't find user with username " + username + " to validate account");
+        }
+        PremiumUser currentUser = user.get();
+        if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
+            throw new UserNotFoundException("Can't validate account with username : " + currentUser.getUserName());
         }
     }
 

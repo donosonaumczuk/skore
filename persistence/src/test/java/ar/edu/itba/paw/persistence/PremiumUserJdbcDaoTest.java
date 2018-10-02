@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -67,16 +68,16 @@ public class PremiumUserJdbcDaoTest {
 
         }
 
-        private void insertUser(String userName) {
+        private void insertUser(String userName, String code) {
             jdbcTemplate.execute(("DELETE FROM users WHERE userId = " + USERID));
             jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                     " VALUES ('" + FIRSTNAME + "' , '" + LASTNAME + "', '" + EMAIL + "', " + USERID + ");");
 
             jdbcTemplate.execute("INSERT INTO accounts (username, email, cellphone, birthday," +
-                    " country, state, city, street, reputation, password, userId)" +
+                    " country, state, city, street, reputation, password, userId, code)" +
                         " VALUES ('" + userName + "' , '" + EMAIL + "', '" + CELLPHONE + "', '" + BIRTHDAY + "', '" +
                     COUNTRY + "', '" + STATE + "', '" + CITY + "', '" + STREET + "', " + REPUTATION +
-                    ", '" + PASSWORD +"', " + USERID +");");
+                    ", '" + PASSWORD +"', " + USERID + ", '" + code + "');");
         }
 
         private void insertRole(final int roleId, final String roleName) {
@@ -105,7 +106,7 @@ public class PremiumUserJdbcDaoTest {
         @Test
         public void testFindByUserNameWithExistentId() {
             //set up
-            insertUser(EXISTANT_USERNAME);
+            insertUser(EXISTANT_USERNAME, "");
 
             //exercise class
             final Optional<PremiumUser> returnedUser = premiumUserDao.findByUserName(EXISTANT_USERNAME);
@@ -137,7 +138,7 @@ public class PremiumUserJdbcDaoTest {
         @Test
         public void testRemoveExistentUser(){
             //set up
-            insertUser(EXISTANT_USERNAME);
+            insertUser(EXISTANT_USERNAME, "code");
 
             //exercise class
             boolean returnValue = premiumUserDao.remove(EXISTANT_USERNAME);
@@ -151,7 +152,7 @@ public class PremiumUserJdbcDaoTest {
         @Test
         public void testUpdateUserInfo(){
             //set up
-            insertUser(EXISTANT_USERNAME);
+            insertUser(EXISTANT_USERNAME, "code");
             final String newUserName = "newUserName";
             final String newPassword = "newPassword";
             final String newBirthday = "2000-05-05";
@@ -172,7 +173,7 @@ public class PremiumUserJdbcDaoTest {
         @Test
         public  void testFindByEmailExistentUser() {
             //set up
-            insertUser(EXISTANT_USERNAME);
+            insertUser(EXISTANT_USERNAME, "code");
 
             //exercise class
             final Optional<PremiumUser> returnedUser = premiumUserDao.findByEmail(EMAIL);
@@ -198,7 +199,7 @@ public class PremiumUserJdbcDaoTest {
     @Test
     public void testAddRole() {
         //set up
-        insertUser(EXISTANT_USERNAME);
+        insertUser(EXISTANT_USERNAME, "code");
 
         //exercise class
         final boolean returnedValue = premiumUserDao.addRole(EXISTANT_USERNAME, 0);
@@ -211,7 +212,7 @@ public class PremiumUserJdbcDaoTest {
     @Test
     public void testGetRoles() {
         //set up
-        insertUser(EXISTANT_USERNAME);
+        insertUser(EXISTANT_USERNAME, "code");
         addUserRole(EXISTANT_USERNAME, USER_ROLE_ID);
 
         //exercise class
@@ -225,7 +226,7 @@ public class PremiumUserJdbcDaoTest {
     @Test
     public void testGetTwoRoles() {
         //set up
-        insertUser(EXISTANT_USERNAME);
+        insertUser(EXISTANT_USERNAME, "code");
         addUserRole(EXISTANT_USERNAME, USER_ROLE_ID);
         addUserRole(EXISTANT_USERNAME, ADMIN_ROLE_ID);
 
@@ -239,16 +240,16 @@ public class PremiumUserJdbcDaoTest {
 
     }
 
-//    @Test
-//    public void testEnableUser() {
-//        //set up
-//        insertUser(EXISTANT_USERNAME);
-//
-//        //exercise class
-//        final Optional<PremiumUser> returneduser = premiumUserDao.enableUser(EXISTANT_USERNAME);
-//        //postconditions
-//        Assert.assertTrue(returneduser.isPresent());
-//    } evans
+    @Test
+    public void testEnableUser() {
+        //set up
+        insertUser(EXISTANT_USERNAME, "code");
+        final String code = "code";
+
+        //exercise class
+        final boolean returnedValue = premiumUserDao.enableUser(EXISTANT_USERNAME, code);
+
+        //postconditions
+        Assert.assertTrue(returnedValue);
+    }
 }
-
-

@@ -12,6 +12,7 @@ public class PremiumUser extends User{
     private int reputation;
     private String email;
     private String password;
+    private String code;
     private List<PremiumUser> friends;
     private List<Notification> notifications;
     private List<Sport> likes;
@@ -19,7 +20,7 @@ public class PremiumUser extends User{
 
     public PremiumUser(String firstName, String lastName, String email, long userId,
                        String userName, String cellphone, LocalDate birthday,
-                       Place home, int reputation, String password) {
+                       Place home, int reputation, String password, String code) {
         super(firstName, lastName, email, userId);
 
         this.userName       = userName;
@@ -29,6 +30,7 @@ public class PremiumUser extends User{
         this.reputation     = reputation;
         this.password       = password;
         this.email          = email;
+        this.code           = code;
         this.friends        = new LinkedList<>();
         this.notifications  = new ArrayList<>();
         this.likes          = new ArrayList<>();
@@ -90,6 +92,14 @@ public class PremiumUser extends User{
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public List<PremiumUser> getFriends() {
