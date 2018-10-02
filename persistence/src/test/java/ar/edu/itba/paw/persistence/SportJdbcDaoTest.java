@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,9 @@ public class SportJdbcDaoTest {
     }
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws IOException {
         //exercise class
-        final Sport sport = sportDao.create(SPORT_NAME, PLAYER_QUANTITY, DISPLAY_NAME).get();
+        final Sport sport = sportDao.create(SPORT_NAME, PLAYER_QUANTITY, DISPLAY_NAME, null).get();
 
         //postconditions
         Assert.assertNotNull(sport);

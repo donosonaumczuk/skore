@@ -1,21 +1,29 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.Exceptions.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Sport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SportServiceImpl implements SportService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SportServiceImpl.class);
+
     @Autowired
     private SportDao sportDao;
 
+    @Override
     public Sport findByName(final String sportName) {
         Optional<Sport> sport = sportDao.findByName(sportName);
         if(sport.isPresent()) {
@@ -25,21 +33,35 @@ public class SportServiceImpl implements SportService {
     }
 
 
-    public Sport create(final String sportName, final int playerQuantity, final String displayName) {
-        Optional<Sport> sport = sportDao.create(sportName, playerQuantity, displayName);
+    @Override
+    public Sport create(final String sportName, final int playerQuantity, final String displayName,
+                        final MultipartFile file) throws IOException {
+        Optional<Sport> sport = sportDao.create(sportName, playerQuantity, displayName, file);
         if(sport.isPresent()) {
             return sport.get();
         }
         throw new SportNotFoundException("Can't find sport with name: " + sportName);
 
     }
+
+    @Override
     public boolean remove(final String sportName) {
         return sportDao.remove(sportName);
     }
 
 
+    @Override
     public List<Sport> getAllSports() {
         return sportDao.getAllSports();
     }
 
+    @Override
+    public byte[] readImage(final String sportName) {
+        Optional<byte[]> imagesOpt = sportDao.readImage(sportName);
+        if(!imagesOpt.isPresent()) {
+            LOGGER.error("Fail to read image from {}", sportName);
+            throw new ImageNotFoundException("Fail to read image from " + sportName);
+        }
+        return imagesOpt.get();
+    }
 }

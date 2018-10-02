@@ -3,7 +3,8 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS sports(
   sportName       VARCHAR(100) PRIMARY KEY,
   playerQuantity  INTEGER,
-  displayName     VARCHAR(100)
+  displayName     VARCHAR(100),
+  imageSport      BYTEA
 )/;
 
 CREATE TABLE IF NOT EXISTS users(

@@ -62,18 +62,6 @@ public class UserController extends BaseController{
         return new ModelAndView("index");
     }
 
-    @RequestMapping(value = "/profile/image/{username}", method = {RequestMethod.GET})
-    public ResponseEntity<byte[]> getImage(@PathVariable final String username) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type","image/*");
-        byte[] media = us.readImage(username);
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;
-    }
-
-
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
     public ModelAndView loginForm(@RequestParam(value = "error", required = false) String error) {
         ModelAndView mav = new ModelAndView("login");
