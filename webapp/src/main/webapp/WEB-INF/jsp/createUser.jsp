@@ -54,9 +54,11 @@
                 </div>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" name="file" class="custom-file-input" id="avatarInput">
-                        <label class="custom-file-label" for="avatarInput" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                        <input type="file"  name="image" class="custom-file-input" id="avatarInput">
+                        <label class="custom-file-label" for="avatarInput" aria-describedby="inputGroupFileAddon02"><spring:message code="chooseFileLabel"/></label>
                     </div>
+                    <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
+
                 </div>
                 <div class="form-group">
                     <form:label path="cellphone"><spring:message code="cellphoneLabel"/></form:label>

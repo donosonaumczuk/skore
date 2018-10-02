@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.Validators.NonExistantEmail;
-import ar.edu.itba.paw.webapp.form.Validators.NonExistantUser;
-import ar.edu.itba.paw.webapp.form.Validators.PasswordMatches;
-import ar.edu.itba.paw.webapp.form.Validators.PastDate;
+import ar.edu.itba.paw.webapp.form.Validators.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,6 +33,10 @@ public class UserForm {
     private String city;
 
     private String street;
+
+    @ValidImageSize
+    @ValidImageType
+    private MultipartFile image;
 
     @Pattern(regexp ="[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")
     @PastDate
@@ -149,5 +151,13 @@ public class UserForm {
 
     public void setRepeatPassword(final String repeatPassword) {
         this.repeatPassword = repeatPassword;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 }

@@ -197,6 +197,10 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
             return jdbcTemplate.update(sqlQuery, USER_ENABLED, username) == 1;
         }
         else {
+            System.out.println("codeReceived = " + code);
+            System.out.println("currentCode = " + currentUser.get().getCode());
+            System.out.println("equals = " + equals(currentUser.get().getCode().equals(code)) + "\n\n\n\n");
+
             return false;
         }
 
