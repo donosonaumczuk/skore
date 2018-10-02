@@ -11,6 +11,6 @@
     <title>404 - skore</title>
 </head>
 <body>
-    USER NOT FOUDN
+    ERROR 404: USER NOT FOUND
 </body>
 </html>

@@ -8,9 +8,11 @@
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
     <a class="d-sm-none login-link" href="/login"><i class="fas fa-user"></i></a>
     <c:choose>
-        <c:when test="${loggedUser != null}">
+        <c:when test="${isLogged}">
             <form class="d-none d-sm-block form-inline">
-                <a class="mr-1 login-link" href="/login"><c:out value="${loggedUser.getUserName()}"/></a>
+                <a class="mr-1 login-link" href="/profile/<c:out value="${loggedUser.getUserName()}"/>"><c:out value="${loggedUser.getUserName()}"/></a>
+                <span class="white-text mr-1"> | </span>
+                <a class="login-link" href="/logout"><spring:message code="logoutLabel"/></a>
             </form>
         </c:when>
         <c:otherwise>

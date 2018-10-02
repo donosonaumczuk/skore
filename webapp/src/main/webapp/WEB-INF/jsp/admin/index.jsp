@@ -5,6 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-`<h2>This is the admin Dashboard</h2>
+    <h2>This is the admin Dashboard</h2>
 </body>
 </html>

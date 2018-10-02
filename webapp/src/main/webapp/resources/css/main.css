@@ -36,12 +36,20 @@ body {
 }
 
 .profile-name {
-    color: red;
+    color: black;
+    font-weight: bold;
+    font-size: 4rem;
+}
+
+.profile-username {
+    color: darkgrey;
+    font-style: italic;
+    font-size: 2rem;
 }
 
 .profile-pic {
-    width: 60px;
-    height: 60px;
+    width: 12rem;
+    height: 12rem;
     border-radius: 50%;
 }
 

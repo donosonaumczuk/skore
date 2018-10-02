@@ -152,7 +152,7 @@ function getLoader() {
     return '' +
     '<div class="row p-2 mt-2" id="loader">' +
         '<div class="offset-5 col-2">' +
-            '<img class="img-fluid" src="img/loader.gif">' +
+            '<img class="img-fluid" src="/img/loader.gif">' +
         '</div>' +
     '</div>';
 }
@@ -177,7 +177,7 @@ function getMatchCard(match) {
             '<div class="col">' +
                 '<div class="row mb-4">' +
                     '<div class="col-2 col-sm-1 pl-0">' +
-                        '<img src="img/' + avatar + '" class="user-avatar" alt="user-pic">' +
+                        '<img src="/img/' + avatar + '" class="user-avatar" alt="user-pic">' +
                     '</div>' +
                     '<div class="col-3 col-sm-4">' +
                         '<div class="row">' +
@@ -191,7 +191,7 @@ function getMatchCard(match) {
                         '<div class="container-fluid pt-2">' +
                             '<div class="row">' +
                                 '<div class="col col-xl-4 mr-0 mt-1">' +
-                                    '<img src="img/' + sportImg + '" class="sport-img" alt="sport-pic">' +
+                                    '<img src="/img/' + sportImg + '" class="sport-img" alt="sport-pic">' +
                                 '</div>' +
                                 '<div class="col-6 col-xl d-none d-sm-block pl-0">' +
                                     '<p class="sport-label">' + sport + '</p>' +

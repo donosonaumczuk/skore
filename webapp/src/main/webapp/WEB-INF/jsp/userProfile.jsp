@@ -7,7 +7,7 @@
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
-    <link rel="icon" href="img/bullseye-solid.ico"/>
+    <link rel="icon" href="/img/bullseye-solid.ico"/>
     <title>skore</title>
 </head>
 <body>
@@ -21,20 +21,14 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <img class="profile-pic" src="img/user-default.svg"/>
+                    <img class="profile-pic" src="/img/user-default.svg"/>
                 </div>
             </div>
 
             <div class="row text-center">
                 <div class="col">
                     <p class="profile-name"><c:out value="${user.getFullName()}"/></p>
-                </div>
-            </div>
-
-            <div class="row mt-4 text-center">
-                <div class="col">
-                    <span class="mr-1"><spring:message code="areYouNewLabel"/></span>
-                    <a class="link" href="/create"><spring:message code="signUpMessage"/></a>
+                    <p class="profile-username">@<c:out value="${user.getUserName()}"/></p>
                 </div>
             </div>
 
