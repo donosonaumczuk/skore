@@ -81,4 +81,7 @@ public interface GameService {
     public Game deleteUserInGame(final String teamName1, final String startTime,
                                  final String finishTime, final long userId);
 
+    @Transactional
+    public boolean remove(final String teamName1, final String startTime, final String finishtime);
+
 }

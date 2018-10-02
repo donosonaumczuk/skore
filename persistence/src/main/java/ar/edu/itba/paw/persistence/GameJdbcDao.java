@@ -29,10 +29,12 @@ public class GameJdbcDao implements GameDao {
 
     private final static RowMapper<Game> ROW_MAPPER = (resultSet, rowNum) ->
             new Game(new Team(resultSet.getString("teamName1"), new Sport(
-                        resultSet.getString("sportName"), resultSet.getInt("playerQuantity"))),
+                        resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
+                        resultSet.getString("displayName"))),
                     (resultSet.getString("teamName2") == null)?null:
-                            new Team(resultSet.getString("teamName2"), new Sport(
-                                resultSet.getString("sportName"), resultSet.getInt("playerQuantity"))),
+                    new Team(resultSet.getString("teamName2"), new Sport(
+                        resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
+                        resultSet.getString("displayName"))),
                     new Place(resultSet.getString("country"),resultSet.getString("state"),
                             resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getTimestamp("startTime").toLocalDateTime(),
@@ -89,7 +91,7 @@ public class GameJdbcDao implements GameDao {
 
         final String getAGame =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName as  sportName, " +
-                    "playerQuantity, country, state, city, street, type, result, description, " +
+                    "playerQuantity, displayName, country, state, city, street, type, result, description, " +
                     "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
                     "tornamentName " +
                 "FROM " +
@@ -126,7 +128,7 @@ public class GameJdbcDao implements GameDao {
                                 final boolean listOfGamesThatIsPartOf, final boolean wantCreated) {
         String getGamesQuery =
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
-                        "playerQuantity, country, state, city, street, type, result, description, " +
+                        "playerQuantity, displayName, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
                         "tornamentName " +
                 "FROM games as gamesReal, (teams NATURAL JOIN isPartOf) as team1, " +
@@ -212,9 +214,9 @@ public class GameJdbcDao implements GameDao {
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
                                  final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
-        String updateSentence = "UPDATE users SET teamName1 = ?, teamName2 = ?, startTime = ?," +
+        String updateSentence = "UPDATE games SET teamName1 = ?, teamName2 = ?, startTime = ?," +
                 "finishTime = ?, type = ?, result = ?, country = ?, state = ?, city = ?, street = ?," +
-                "tornamentName = ?, descrption = ? WHERE teamName1 = ? AND startTime = ? " +
+                "tornamentName = ?, description = ? WHERE teamName1 = ? AND startTime = ? " +
                 "AND finishTime = ?;";
         LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
@@ -224,5 +226,14 @@ public class GameJdbcDao implements GameDao {
         LOGGER.trace("Successfully modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
         return findByKey(teamName1, startTime, finishTime);
+    }
+
+    @Override
+    public boolean remove(final String teamName1, final String startTime, final String finishTime) {
+        LOGGER.trace("Try to delete game: {}|{}|{}", teamName1, startTime, finishTime);
+        final String sqlQuery = "DELETE FROM games WHERE teamName1 = ? AND startTime = ? AND " +
+                "finishTime = ?;";
+        int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName1, startTime, finishTime);
+        return rowsDeleted > 0;
     }
 }

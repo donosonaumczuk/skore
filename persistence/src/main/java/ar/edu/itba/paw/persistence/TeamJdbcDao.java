@@ -64,7 +64,7 @@ public class TeamJdbcDao implements TeamDao {
                 "SELECT leader.firstName as leaderFirstName, leader.lastName as leaderLastName, " +
                     "leader.email as leaderEmail, leader.userId as leaderUserId, leader.userName " +
                     "as leaderUserName, team.acronym, team.teamName, team.isTemp, team.sportName as sportName, " +
-                    "team.playerQuantity as playerQuantity, " +
+                    "team.playerQuantity as playerQuantity, team.displayName as displayName, " +
                     "users.firstName as usersFirstName, users.lastName as usersLastName, " +
                     "users.email as usersEmail, users.userId as usersUserId " +
                 "FROM (accounts NATURAL JOIN users) AS leader, (teams NATURAL JOIN sports) AS team, " +
@@ -180,7 +180,8 @@ public class TeamJdbcDao implements TeamDao {
                         resultSet.getString("teamName"),
                         resultSet.getInt("isTemp") == 1,
                         new Sport(resultSet.getString("sportName"),
-                            resultSet.getInt("playerQuantity")));
+                            resultSet.getInt("playerQuantity"),
+                            resultSet.getString("displayName")));
     }
 
     private static User mapAPlayer(ResultSet resultSet) throws SQLException, DataAccessException {

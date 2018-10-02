@@ -222,6 +222,11 @@ public class GameServiceImpl implements GameService {
         return game.get();
     }
 
+    @Override
+    public boolean remove(final String teamName1, final String startTime, final String finishtime) {
+        return gameDao.remove(teamName1, startTime, finishtime);
+    }
+
     private List<String> jsonArrayToList(JSONArray jsonArray) {
         List<String> list = new ArrayList<String>();
         for (int i=0; i<jsonArray.length(); i++) {

@@ -2,7 +2,8 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS sports(
   sportName       VARCHAR(100) PRIMARY KEY,
-  playerQuantity  INTEGER
+  playerQuantity  INTEGER,
+  displayName     VARCHAR(100)
 )/;
 
 CREATE TABLE IF NOT EXISTS users(

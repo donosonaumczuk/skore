@@ -330,6 +330,7 @@ public class GameJdbcDaoTest {
         Assert.assertEquals(FINISHTIME_LOCALTIME_3,games.get(0).getFinishTime().toString());
     }
 
+    @Test
     public void modifyTest() {
         insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
                 USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
@@ -347,11 +348,34 @@ public class GameJdbcDaoTest {
 
         final Game game = gameJdbcDao.modify(TEAMNAME_1,TEAMNAME_2,STARTIME_1,FINISHTIME_1,
                 TYPE,RESULT, COUNTRY_1,STATE,CITY, STREET, null, null,
-                TEAMNAME_2,TEAMNAME_1,FINISHTIME_2).get();
+                TEAMNAME_2,STARTIME_2,FINISHTIME_2).get();
 
         Assert.assertEquals(TEAMNAME_1, game.getTeam1().getName());
         Assert.assertEquals(TEAMNAME_2, game.getTeam2().getName());
         Assert.assertEquals(STARTIME_LOCALTIME_1, game.getStartTime().toString());
         Assert.assertEquals(FINISHTIME_LOCALTIME_1, game.getFinishTime().toString());
     }
+
+    @Test
+    public void deleteTest() {
+        insertAccount(FIRSTNAME+USER_1_ID,LASTNAME+USER_1_ID, EMAIL+USER_1_ID,
+                USER_1_ID, FIRSTNAME+USER_1_ID, PASSWORD, COUNTRY_1, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertAccount(FIRSTNAME+USER_2_ID,LASTNAME+USER_2_ID, EMAIL+USER_2_ID,
+                USER_2_ID, FIRSTNAME+USER_2_ID, PASSWORD, COUNTRY_2, STATE, CITY, STREET,
+                REPUTATION, CELLPHONE, BIRTHDAY);
+        insertSport(SPORTNAME,QUANTITY);
+        insertTeam(TEAMNAME_1,ACRONYM+TEAMNAME_1,FIRSTNAME+USER_1_ID,ISTEMP,
+                SPORTNAME,USER_1_ID);
+        insertTeam(TEAMNAME_2,ACRONYM+TEAMNAME_2,FIRSTNAME+USER_2_ID,ISTEMP,
+                SPORTNAME,USER_2_ID);
+        insertGame(TEAMNAME_2,TEAMNAME_1,STARTIME_2,FINISHTIME_2,TYPE,RESULT, COUNTRY_1,STATE,CITY,
+                STREET);
+
+        boolean ans = gameJdbcDao.remove(TEAMNAME_2, STARTIME_2, FINISHTIME_2);
+
+        Assert.assertEquals(true, ans);
+        Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "games"));
+    }
+
 }
