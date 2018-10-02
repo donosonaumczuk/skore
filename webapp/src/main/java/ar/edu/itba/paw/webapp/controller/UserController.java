@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class UserController extends BaseController{
         }
         final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
-                userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword());
+                userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, new BCryptPasswordEncoder().encode(userForm.getPassword()));
         //us.addRole(user.getUserName(), USER_ROLE_ID);
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");

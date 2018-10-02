@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
@@ -43,11 +45,13 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password) {
+       // final String encodedPassword = new BCryptPasswordEncoder().encode(password);
 
         final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
                                         password);
+                //encodedPassword);
         if(user.isPresent()) {
             return user.get();
         }
