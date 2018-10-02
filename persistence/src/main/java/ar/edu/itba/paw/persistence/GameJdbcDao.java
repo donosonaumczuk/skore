@@ -181,14 +181,14 @@ public class GameJdbcDao implements GameDao {
             String nestedQuery =
                     "SELECT teamAux.userId " +
                             "FROM games as gameAux, (teams NATURAL JOIN isPartOf) AS teamAux " +
-                            "WHERE gameAux.startTime = gamesReal.startTime AND " +
-                            "gameAux.finishTime = gamesReal.finishTime AND " +
-                            "gameAux.teamName1 = gamesReal.teamName1";
+                            "WHERE gameAux.startTime = games.startTime AND " +
+                            "gameAux.finishTime = games.finishTime AND " +
+                            "gameAux.teamName1 = games.teamName1";
             whereQuery =
                     "(? " + start + " (" + nestedQuery + " AND gameAux.teamName1 = teamAux.teamName AND " +
-                            "teamAux.teamName = gamesReal.teamName1) " +
+                            "teamAux.teamName = games.teamName1) " +
                             logicalOperator + " ? " + start + " (" + nestedQuery + " AND gameAux.teamName2 = teamAux.teamName AND " +
-                            "teamAux.teamName = gamesReal.teamName2))";
+                            "teamAux.teamName = games.teamName2))";
 
             filters.add(loggedUser.getUserId());
             filters.add(loggedUser.getUserId());

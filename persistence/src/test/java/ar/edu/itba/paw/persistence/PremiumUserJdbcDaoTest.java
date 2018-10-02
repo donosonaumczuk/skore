@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -92,10 +93,10 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test
-        public void testCreate() {
+        public void testCreate() throws IOException {
             //exercise class
             final PremiumUser user = premiumUserDao.create(FIRSTNAME, LASTNAME, EMAIL, USERNAME,
-            CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD).get();
+            CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD, null).get();
 
             //postconditions
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -107,13 +108,13 @@ public class PremiumUserJdbcDaoTest {
         }
 
         @Test(expected = DuplicateKeyException.class)
-        public void testCreateWithExistentUsername() {
+        public void testCreateWithExistentUsername() throws IOException {
             //set up
             insertUser(USERNAME, CODE);
 
             //exercise class
             final Optional<PremiumUser> user = premiumUserDao.create(FIRSTNAME, LASTNAME, EMAIL, USERNAME,
-                    CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD);
+                    CELLPHONE, BIRTHDAY, COUNTRY, STATE, CITY, STREET, REPUTATION, PASSWORD, null);
         }
 
         @Test

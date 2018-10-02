@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.CannotCreateUserException;
+import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -55,14 +58,15 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String email, final String userName,
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
-                              final String street, final int reputation, final String password) {
+                              final String street, final int reputation, final String password,
+                              final MultipartFile file) throws IOException {
        final String encodedPassword = new BCryptPasswordEncoder().encode(password);
         LOGGER.trace("Creating user");
 
         final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
-                                        encodedPassword);
+                                        encodedPassword, file);
         if(user.isPresent()) {
             return user.get();
         }
@@ -84,6 +88,16 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
             LOGGER.trace("{} wasn't removed", userName);
         }
         return returnedValue;
+    }
+
+    @Override
+    public byte[] readImage(final String userName) {
+        Optional<byte[]> imagesOpt = premiumUserDao.readImage(userName);
+        if(!imagesOpt.isPresent()) {
+            LOGGER.error("Fail to read image from {}", userName);
+            throw new ImageNotFoundException("Fail to read image from " + userName);
+        }
+        return imagesOpt.get();
     }
 
     @Override

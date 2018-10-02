@@ -12,6 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Controller
@@ -41,17 +47,29 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
-                               final BindingResult errors, @RequestParam("file") MultipartFile file) {
+                               final BindingResult errors, @RequestParam("file") MultipartFile file) throws IOException {
         //evans
         if(errors.hasErrors()) {
             return createForm(userForm);
         }
         final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
-                userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword());
+                userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword(),
+                file);
         //us.addRole(user.getUserName(), USER_ROLE_ID); evans
         //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
+    }
+
+    @RequestMapping(value = "/profile/image/{username}", method = {RequestMethod.GET})
+    public ResponseEntity<byte[]> getImage(@PathVariable final String username) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type","image/*");
+        byte[] media = us.readImage(username);
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+        return responseEntity;
     }
 
 

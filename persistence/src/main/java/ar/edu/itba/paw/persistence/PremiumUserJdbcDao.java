@@ -13,8 +13,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +53,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     private final static RowMapper<Role> ROLE_ROW_MAPPER = (resultSet, rowNum) ->
             new Role(resultSet.getString("roleName"), resultSet.getInt("roleId"));
 
+    private final static RowMapper<byte[]> IMAGE_MAPPER = (resultSet, rowNum) ->
+            resultSet.getBytes("image");
 
     @Autowired
     public PremiumUserJdbcDao(final DataSource dataSource, UserJdbcDao userDao) {
@@ -80,7 +84,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
                                         final String email, final String userName,
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
-                                        final String street, final int reputation, final String password) {
+                                        final String street, final int reputation, final String password,
+                                        final MultipartFile file) throws IOException{
         User user = userDao.create(firstName, lastName, email).get();
         final Map<String, Object> args =  new HashMap<>();
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
@@ -97,6 +102,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("password", password);
         args.put("enabled", USER_DISABLED);
         args.put("code", code);
+        args.put("image", file.getBytes());
 
         if(jdbcInsert.execute(args) == 1) {
             LOGGER.trace("user with username: {} created", userName);
@@ -140,6 +146,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<byte[]> readImage(final String userName) {
+         return jdbcTemplate.query("SELECT * FROM accounts WHERE userName = ?;", IMAGE_MAPPER,userName).stream().findFirst();
     }
 
     @Override
