@@ -37,12 +37,25 @@ public class GameServiceImpl implements GameService {
 
     }
 
+    private static String getFinishTime(final String startTime, String duration) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        java.time.LocalTime durationTime = java.time.LocalTime.parse(duration,timeFormatter);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        java.time.LocalDateTime startDateTime = java.time.LocalDateTime.parse(startTime, dateTimeFormatter);
+        String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
+                .format(dateTimeFormatter);
+        return finishTime;
+    }
+
     @Override
     public Game create(final String teamName1, final String teamName2, final String startTime,
-                       final String finishTime, final String type, final String result,
+                       final String duration, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title) {
+        String finishTime = getFinishTime(startTime, duration);
+
+
         Optional<Game> game = gameDao.create(teamName1, teamName2, startTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
