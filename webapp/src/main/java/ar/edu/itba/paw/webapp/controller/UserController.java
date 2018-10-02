@@ -1,13 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.Exceptions.GameNotFoundException;
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.JoinMatchForm;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.form.Validators.ValidImageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +45,11 @@ public class UserController extends BaseController{
     @Autowired
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService us;
+
+    @Autowired
+    @Qualifier("gameServiceImpl")
+    private GameService gameService;
+
 
     @RequestMapping(value = "/create", method = {RequestMethod.GET })
     public ModelAndView createForm(@ModelAttribute("registerForm") UserForm userForm){
@@ -109,5 +119,33 @@ public class UserController extends BaseController{
         String path = request.getServletPath();
         us.confirmationPath(path);
         return new ModelAndView("index");
+    }
+
+    ///joinCompetitiveMatch/201810021226$1|1-6967621630201810021246
+    @RequestMapping(value = "/joinCompetitiveMatch/*")
+    public ModelAndView joinCompetitiveMatch(HttpServletRequest request) {
+        PremiumUser user = loggedUser();
+        if(user == null) {
+            throw new UserNotFoundException("error in login");
+        }
+        String path = request.getServletPath().replace("/joinCompetitiveMatch/", "");
+        //path = startTimenombreTeamfinishTime;
+        final int URL_DATE_LENGTH =12;
+        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
+        if(path.length() < MIN_LENGTH) {
+            throw new GameNotFoundException("path '" + path + "' is too short to be formatted to a key");
+        }
+
+        String startTime = gameService.urlDateToKeyDate(path.substring(0, URL_DATE_LENGTH));
+        String teamName1 = path.substring(URL_DATE_LENGTH, path.length() - URL_DATE_LENGTH);
+        String finishTime = gameService.urlDateToKeyDate(path.substring(path.length() - URL_DATE_LENGTH));
+        System.out.println(startTime + "\n\n");
+        System.out.println(teamName1 + "\n\n");
+        System.out.println(finishTime + "\n\n");
+
+        Game game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+
+
+        return new ModelAndView("redirect:/match/" + path);
     }
 }

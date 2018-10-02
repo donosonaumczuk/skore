@@ -87,4 +87,6 @@ public interface GameService {
     @Transactional
     public Game findByKeyFromURL(final String matchURLKey);
 
+    public String urlDateToKeyDate(String date);
+
 }
