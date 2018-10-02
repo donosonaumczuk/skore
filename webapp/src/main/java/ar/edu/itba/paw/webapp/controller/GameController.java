@@ -51,6 +51,7 @@ public class GameController extends BaseController{
         return objectMapper.writeValueAsString(games);
     }
 
+
     @RequestMapping(value="/filterMatchLoggedIsPart", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGamesLoggedIsPart(@RequestParam final String body) throws IOException {

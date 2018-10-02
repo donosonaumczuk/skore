@@ -39,12 +39,24 @@ public class GameServiceImpl implements GameService {
 
     private static String getFinishTime(final String startTime, String duration) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        java.time.LocalTime durationTime = java.time.LocalTime.parse(duration,timeFormatter);
+        java.time.LocalTime durationTime = java.time.LocalTime.parse(duration, timeFormatter);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         java.time.LocalDateTime startDateTime = java.time.LocalDateTime.parse(startTime, dateTimeFormatter);
         String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
                 .format(dateTimeFormatter);
         return finishTime;
+    }
+    private static String formatDate(String date) {
+        String month = "" + date.charAt(0) + date.charAt(1);
+        String day = "" + date.charAt(3) + date.charAt(4);
+        String year = "" + date.charAt(6) + date.charAt(7) + date.charAt(8) + date.charAt(9);
+        String hour ="" + date.charAt(11) + date.charAt(12);
+        String min ="" + date.charAt(14) + date.charAt(15);
+        String sec ="" + date.charAt(17) + date.charAt(18);
+        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
+        return formattedDate;
+
     }
 
     @Override
