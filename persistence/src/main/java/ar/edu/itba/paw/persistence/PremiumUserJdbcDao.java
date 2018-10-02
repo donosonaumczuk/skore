@@ -102,7 +102,7 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         args.put("password", password);
         args.put("enabled", USER_DISABLED);
         args.put("code", code);
-        args.put("image", file.getBytes());
+        args.put("image", ((file==null)?null:file.getBytes()));
 
         if(jdbcInsert.execute(args) == 1) {
             LOGGER.trace("user with username: {} created", userName);

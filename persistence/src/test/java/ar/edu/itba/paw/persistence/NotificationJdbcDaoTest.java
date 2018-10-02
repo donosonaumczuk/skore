@@ -39,6 +39,7 @@ public class NotificationJdbcDaoTest {
     private static final int    REPUTATION              = 10;
     private static final String PASSWORD                = "password";
     private static final long   USERID                  = 14;
+    private static final String CODE                    = "code";
 
     @Autowired
     private DataSource dataSource;
@@ -62,10 +63,10 @@ public class NotificationJdbcDaoTest {
         jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                 " VALUES ('" + firstName + "' , '" + lastName + "', '" + email + "', " + userId + ");");
         jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
-                " country, state, city, street, reputation, password, userId, email)" +
+                " country, state, city, street, reputation, password, userId, email, code)" +
                 " VALUES ('" + userName + "' , '" + cellphone + "', '" + birthday + "', '" +
                 country + "', '" + state + "', '" + city + "', '" + street + "', " + reputation +
-                ", '" + password +"', " + userId +",'"+email+"');");
+                ", '" + password +"', " + userId +",'"+email+"', '" + CODE + "');");
     }
 
     private void insertNotification(final String startTime, final String content,

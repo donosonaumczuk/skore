@@ -51,7 +51,7 @@ public class SportJdbcDao implements SportDao {
         args.put("sportName", sportName);
         args.put("playerQuantity", playerQuantity);
         args.put("displayName", displayName);
-        args.put("imageSport", file.getBytes());
+        args.put("imageSport", ((file==null)?null:file.getBytes()));
         jdbcInsert.execute(args);
 
         List<Sport> sportsList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, sportName);

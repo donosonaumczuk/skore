@@ -33,8 +33,7 @@
         <jackson-mapper-asl>1.7.1</jackson-mapper-asl>
         <javax.mail>1.4.7</javax.mail>
         <org.json>20171018</org.json>
-        <org.springframework.boot>1.3.1.RELEASE</org.springframework.boot>
-        <org.mockito>2.21.0</org.mockito>
+        <org.mockito>1.9.5</org.mockito>
         <commons-fileupload>1.3.1</commons-fileupload>
     </properties>
 
@@ -166,19 +165,8 @@
                 <version>${org.json}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${org.springframework.boot}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${org.springframework.boot}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
+                <artifactId>mockito-all</artifactId>
                 <version>${org.mockito}</version>
             </dependency>
             <dependency>
