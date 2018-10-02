@@ -110,12 +110,12 @@ function loadMatches(pageNumber) {
             'maxFreePlaces: "0",' +
             'pageNumber: "' + pageNumber + '" }' }
     }).done(function(matchJSON) {
-            console.log(matchJSON);
             matchArray = JSON.parse(matchJSON);
+            console.log(matchArray);
             $('#loader').remove();
             for(var i = 0; i < matchArray.length; i++) {
-                    var matchCard = getMatchCard(matchArray[i]);
-                    $('.match-container').append(matchCard);
+                var matchCard = getMatchCard(matchArray[i]);
+                $('.match-container').append(matchCard);
             }
         });
 }
@@ -153,11 +153,10 @@ function getMatchCard(match) {
     var date = formatDate(startTime.dayOfWeek, startTime.monthValue, startTime.dayOfMonth, startTime.year);
     var finishTime = match.finishTime;
     var time =  formatTime(startTime.hour, startTime.minute) + ' - ' + formatTime(finishTime.hour, finishTime.minute);
-    var creator = match.team1.leader;
-    var username = creator.userName;
-    var sport = match.team1.sport.name;
-    var name = creator.firstName + ' ' + creator.lastName;
-    var availability = match.quantityOccupiedPlaces + ' / ' + match.team1.sport.quantity;
+    var username = match.team1.leaderUserName;
+    var sport = match.team1.sport.displayName;
+    var title = match.title;
+    var availability = match.quantityOccupiedPlaces + ' / ' + (match.team1.sport.quantity * 2);
     var place = match.place;
     var location = place.street + ', ' + place.city + ', ' + place.state + ', ' + place.country;
     var sportImg = 'football.svg';
@@ -172,7 +171,7 @@ function getMatchCard(match) {
                     '</div>' +
                     '<div class="col-3 col-sm-4">' +
                         '<div class="row">' +
-                            '<p class="name-label">' + name + '</p>' +
+                            '<p class="name-label">' + title + '</p>' +
                         '</div>' +
                         '<div class="row">' +
                             '<a class="username-label" href="/profile/' + username + '">@' + username + '</a>' +

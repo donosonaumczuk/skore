@@ -187,4 +187,14 @@ public class GameController extends BaseController{
 
         return new ModelAndView("index");
     }
+
+//    @RequestMapping(value = "/match/{startTime:[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]}" +
+//                            "{team1}" +
+//                            "{finishTime:[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]}", method = {RequestMethod.GET})
+//    public ModelAndView matchDetails(@PathVariable String startTime, @PathVariable String team1,
+//                                     @PathVariable String finishTime) {
+//        //change String to StringBuilder or StringBuffered
+//
+//        Game game = gameService.findByKey();
+//    }
 }

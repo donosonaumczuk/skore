@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
@@ -76,5 +77,4 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery("select username as principal, password as credentials, true from accounts where username = ?")
                 .authoritiesByUsernameQuery("select username as principal, role from userroles where username = ?");
     }
-
 }
