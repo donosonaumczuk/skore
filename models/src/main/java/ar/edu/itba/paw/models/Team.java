@@ -11,6 +11,7 @@ public class Team {
     private String name;
     private boolean isTemp;
     private Sport sport;
+    private String leaderUserName;
 
     public Team(PremiumUser leader, String acronym, String name, boolean isTemp, Sport sport) {
         this.leader     = leader;
@@ -21,9 +22,10 @@ public class Team {
         this.players    = new LinkedList<>();
     }
 
-    public Team(String name, Sport sport) {
+    public Team(String name, Sport sport, String leaderUserName) {
         this.name = name;
         this.sport = sport;
+        this.leaderUserName = leaderUserName;
     }
 
     public Sport getSport() {
@@ -68,6 +70,10 @@ public class Team {
 
     public void addPlayer(final User player) {
         players.add(player);
+    }
+
+    public String getLeaderUserName() {
+        return leaderUserName;
     }
 
     @Override

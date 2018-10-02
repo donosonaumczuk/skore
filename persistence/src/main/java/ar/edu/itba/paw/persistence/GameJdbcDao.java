@@ -29,14 +29,14 @@ public class GameJdbcDao implements GameDao {
 
     private final static RowMapper<Game> ROW_MAPPER = (resultSet, rowNum) ->
             new Game(new Team(resultSet.getString("teamName1"), new Sport(
-                        resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
-                        resultSet.getString("displayName"))),
+                            resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
+                            resultSet.getString("displayName")), resultSet.getString("leaderUserName1")),
                     (resultSet.getString("teamName2") == null)?null:
                     new Team(resultSet.getString("teamName2"), new Sport(
-                        resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
-                        resultSet.getString("displayName"))),
+                            resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
+                            resultSet.getString("displayName")), resultSet.getString("leaderUserName2")),
                     new Place(resultSet.getString("country"),resultSet.getString("state"),
-                            resultSet.getString("city"), resultSet.getString("street")),
+                        resultSet.getString("city"), resultSet.getString("street")),
                     resultSet.getTimestamp("startTime").toLocalDateTime(),
                     resultSet.getTimestamp("finishTime").toLocalDateTime(),
                     resultSet.getString("type"),
@@ -93,14 +93,16 @@ public class GameJdbcDao implements GameDao {
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName as  sportName, " +
                     "playerQuantity, displayName, country, state, city, street, type, result, description, " +
                     "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
-                    "tornamentName " +
+                    "tornamentName, team1.leaderName as leaderUserName1, team2.leaderName as leaderUserName2 " +
                 "FROM " +
                     "games LEFT OUTER JOIN (teams NATURAL JOIN isPartOf) as team2 " +
                     "ON teamName2 = team2.teamName," +
                     "(teams NATURAL JOIN isPartOf) as team1, sports " +
                 "WHERE teamName1 = team1.teamName AND teamName1 = ? AND startTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS') AND " +
                     "finishTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS') AND team1.sportName = sports.sportName" +
-                " GROUP BY startTime, finishTime, teamName1, teamName2, sports.sportName, sports.playerQuantity;";
+                " GROUP BY startTime, finishTime, teamName1, teamName2, sports.sportName, sports.playerQuantity, " +
+                        "sports.displayName, country, state, city, street, type, result, description, title, tornamentName, " +
+                        "team1.leaderName, team2.leaderName;";
         final List<Game> list = jdbcTemplate.query(getAGame, ROW_MAPPER, teamName1, startTime,
                 finishTime);
 
@@ -130,13 +132,14 @@ public class GameJdbcDao implements GameDao {
                 "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
                         "playerQuantity, displayName, country, state, city, street, type, result, description, " +
                         "(count(team1.userId)+count(team2.userId)) as OccupiedQuantity, title, " +
-                        "tornamentName " +
+                        "tornamentName, team1.leaderName as leaderUserName1, team2.leaderName as leaderUserName2 " +
                 "FROM games as gamesReal, (teams NATURAL JOIN isPartOf) as team1, " +
                         "(teams NATURAL JOIN isPartOf) as team2, sports " +
-                "WHERE teamName1 = team1.teamName AND teamName2 = team2.teamName AND " +
+                "WHERE teamName1 = team1.teamName AND (teamName2 = team2.teamName OR teamName2 IS NULL) AND " +
                         "team1.sportName = sports.sportName";
-        String groupBy = " GROUP BY startTime, finishTime, teamName1, " +
-                "teamName2, sports.sportName, playerQuantity";
+        String groupBy = " GROUP BY startTime, finishTime, teamName1, teamName2, sports.sportName, playerQuantity, " +
+                "sports.displayName,  country, state, city, street, type, result, description, title, tornamentName, " +
+                "team1.leaderName, team2.leaderName";
 
         final List<Object> filters = new ArrayList<>();
         final Filters gameFilters = new Filters();

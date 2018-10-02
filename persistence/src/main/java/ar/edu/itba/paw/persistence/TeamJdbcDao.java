@@ -178,7 +178,7 @@ public class TeamJdbcDao implements TeamDao {
                             resultSet.getString("leaderUserName")),
                         resultSet.getString("acronym"),
                         resultSet.getString("teamName"),
-                        resultSet.getInt("isTemp") == 1,
+                        resultSet.getInt("isTemp") != 1,
                         new Sport(resultSet.getString("sportName"),
                             resultSet.getInt("playerQuantity"),
                             resultSet.getString("displayName")));
