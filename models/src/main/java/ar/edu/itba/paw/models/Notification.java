@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Notification {
     private LocalDateTime time;
@@ -38,5 +39,10 @@ public class Notification {
         Notification aNotification = ((Notification) object);
         return getTime().equals(aNotification.getTime())
                 && getContent().equals(aNotification.getContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(time, content);
     }
 }

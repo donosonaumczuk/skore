@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
 
+import java.util.Objects;
+
 public class User {
 
     private long userId;
@@ -61,5 +63,10 @@ public class User {
         }
 
         return getUserId() == ((User) aUser).getUserId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, email);
     }
 }

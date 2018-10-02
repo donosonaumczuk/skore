@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class Role {
     private String name;
     private int roleId;
@@ -33,6 +35,11 @@ public class Role {
 
         Role aRole = ((Role) object);
         return getRoleId() == aRole.getRoleId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roleId);
     }
 }
 
