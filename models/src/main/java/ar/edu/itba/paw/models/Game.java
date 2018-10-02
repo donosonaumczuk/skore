@@ -92,6 +92,10 @@ public class Game {
         return type;
     }
 
+    public String getTornament() {
+        return tornament;
+    }
+
     @Override
     public boolean equals(Object object) {
         if(object == null || !object.getClass().equals(getClass())) {
@@ -121,7 +125,7 @@ public class Game {
         return title;
     }
 
-    public String getTornament() {
-        return tornament;
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

@@ -26,7 +26,6 @@ public class GameServiceImpl implements GameService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServiceImpl.class);
 
-
     @Autowired
     private GameDao gameDao;
 
@@ -37,17 +36,41 @@ public class GameServiceImpl implements GameService {
 
     }
 
+    private static String getFinishTime(final String startTime, String duration) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        java.time.LocalTime durationTime = java.time.LocalTime.parse(duration, timeFormatter);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        java.time.LocalDateTime startDateTime = java.time.LocalDateTime.parse(startTime, dateTimeFormatter);
+        String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
+                .format(dateTimeFormatter);
+        return finishTime;
+    }
+    private static String formatDate(String date) {
+        String month = "" + date.charAt(0) + date.charAt(1);
+        String day = "" + date.charAt(3) + date.charAt(4);
+        String year = "" + date.charAt(6) + date.charAt(7) + date.charAt(8) + date.charAt(9);
+        String hour ="" + date.charAt(11) + date.charAt(12);
+        String min ="" + date.charAt(14) + date.charAt(15);
+        String sec ="" + date.charAt(17) + date.charAt(18);
+        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+        return formattedDate;
+
+    }
+
     @Override
     public Game create(final String teamName1, final String teamName2, final String startTime,
-                       final String finishTime, final String type, final String result,
+                       final String duration, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title) {
-        Optional<Game> game = gameDao.create(teamName1, teamName2, startTime, finishTime, type, result,
+        final String newStartTime = formatDate(startTime);
+        String finishTime = getFinishTime(startTime, duration);
+
+        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
-                    teamName1, teamName2, startTime, finishTime);
+                    teamName1, teamName2, newStartTime, finishTime);
             throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
                     + " starting at " + startTime + "and finishing at " +finishTime);
         }

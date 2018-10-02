@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.GameService;
-import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.form.MatchForm;
@@ -34,6 +32,10 @@ public class GameController extends BaseController{
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
+    @Autowired
+    @Qualifier("sportServiceImpl")
+    private SportService sportService;
+
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGames(@RequestParam final String body) throws IOException {
@@ -51,6 +53,7 @@ public class GameController extends BaseController{
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(games);
     }
+
 
     @RequestMapping(value="/filterMatchLoggedIsPart", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -160,7 +163,7 @@ public class GameController extends BaseController{
 
     @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
     public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-        return new ModelAndView("createMatch");
+        return new ModelAndView("createMatch").addObject("sports", sportService.getAllSports());
     }
 
     @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
@@ -173,12 +176,12 @@ public class GameController extends BaseController{
         PremiumUser loggedUser = loggedUser();
 
         LOGGER.debug("Match form completed, creating match...");
-        Game game = gameService.createNoTeamGame("2018-12-11 01:00:00", "2018-12-12 01:00:00",matchForm.getMode(),
-                matchForm.getCountry(), matchForm.getState(), matchForm.getCity(), matchForm.getStreet(),
-                null, matchForm.getDescription(),loggedUser.getUserName(),loggedUser.getUserId(),
-                "Futbol 5", matchForm.getMatchName());
-        LOGGER.debug("Match created {}\n\n", game.getTeam1().getSport().getName());
-
+        Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
+                matchForm.getDuration(), matchForm.getMode(), matchForm.getCountry(), matchForm.getState(),
+                matchForm.getCity(), matchForm.getStreet(), null, matchForm.getDescription(),
+                loggedUser.getUserName(),loggedUser.getUserId(), matchForm.getSportName(),
+                matchForm.getMatchName());
+        LOGGER.debug("Match created \n\n");
 
         return new ModelAndView("index");
     }

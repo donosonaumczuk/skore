@@ -1,3 +1,21 @@
+var filters = {
+    toJoin: {
+        country: {},
+        state: {},
+        city: {}
+    },
+    joined: {
+        country: {},
+        state: {},
+        city: {}
+    },
+    created: {
+        country: {},
+        state: {},
+        city: {}
+    }
+}
+
 $('.filter-badge').hover(function() {
         $(this).find('.fas').css("color", "grey");
         $(this).css("cursor", "pointer");
@@ -40,7 +58,7 @@ $(".filter-input").keyup(function (e) {
 });
 
 function getBadge(value) {
-    var MAX_LENGTH = 22;
+    var MAX_LENGTH = 14;
     var isLong = false;
     if(value.length > MAX_LENGTH)
         isLong = true;

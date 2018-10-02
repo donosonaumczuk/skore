@@ -52,6 +52,12 @@
                     <form:input class="form-control" path="email" type="text"/>
                     <form:errors path="email" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="avatarInput">
+                        <label class="custom-file-label" for="avatarInput" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <form:label path="cellphone"><spring:message code="cellphoneLabel"/></form:label>
                     <form:input class="form-control" path="cellphone" type="text"/>

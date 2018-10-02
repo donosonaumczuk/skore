@@ -22,9 +22,14 @@ public class TeamIdIfNotIndividualValidator
                 .addNode("teamId").addConstraintViolation();
         MatchForm matchForm = (MatchForm) obj;
         String mode = matchForm.getMode();
-        if(mode.equals("Team")) {
-            return matchForm.getTeamId().length() > 0;
+        if(mode != null) {
+            if (mode.equals("Team")) {
+                return matchForm.getTeamId().length() > 0;
+            }
+            return true;
         }
-        return true;
+        else {
+            return false;
+        }
     }
 }
