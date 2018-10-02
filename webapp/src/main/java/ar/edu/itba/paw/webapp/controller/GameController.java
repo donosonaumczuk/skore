@@ -180,9 +180,9 @@ public class GameController extends BaseController{
         LOGGER.debug("Match form completed, creating match...");
         Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
                 matchForm.getDuration(), matchForm.getMode(), matchForm.getCountry(), matchForm.getState(),
-                matchForm.getCity(), matchForm.getStreet(), null, matchForm.getDescription(),
-                loggedUser.getUserName(),loggedUser.getUserId(), matchForm.getSportName(),
-                matchForm.getMatchName());
+                matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
+                null, matchForm.getDescription(), loggedUser.getUserName(),loggedUser.getUserId(),
+                matchForm.getSportName(), matchForm.getMatchName());
         LOGGER.debug("Match created \n\n");
 
         return new ModelAndView("index");
