@@ -159,7 +159,11 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
         final Map<String, Object> args =  new HashMap<>();
         args.put("username", username);
         args.put("role", roleId);
-        return jdbcInsertUserRoles.execute(args) == 1;
+        final boolean returnedValue = jdbcInsertUserRoles.execute(args) == 1;
+//        if(returnedValue) {
+//            LO
+//        }
+        return returnedValue;
 
     }
 

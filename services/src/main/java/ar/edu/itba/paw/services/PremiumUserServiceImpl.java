@@ -125,30 +125,43 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     public void addRole(final String username, final int roleId) {
         Optional<Role> role = roleDao.findRoleById(roleId);
         Optional<PremiumUser> user;
+        LOGGER.trace("Looking for role with id: {}", roleId);
+
         if(role.isPresent()) {
+            LOGGER.trace("Looking for user with username: {}", username);
             user = premiumUserDao.findByUserName(username);
             if(user.isPresent()) {
+                LOGGER.trace("Adding role {} to user with username: {}", role.get().getName(), username);
+
                 premiumUserDao.addRole(username, roleId);
             }
             else {
+                LOGGER.error("Can't find user with username {}", username);
                 throw new UserNotFoundException("Can't find user with username: " + username);
             }
         }
         else {
+            LOGGER.error("Can't find role with id {}", roleId);
             throw new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId);
         }
     }
 
     @Override
     public void enableUser(final String username, final String code) {
+        LOGGER.trace("Looking for user with username {} to enable", username);
+
         Optional<PremiumUser> user = findByUserName(username);
         if(!user.isPresent()) {
+            LOGGER.error("Can't find user with username {}", username);
             throw new UserNotFoundException("Can't find user with username " + username + " to validate account");
         }
         PremiumUser currentUser = user.get();
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
+            LOGGER.error("Can't find user with username {}", username);
             throw new UserNotFoundException("Can't validate account with username : " + currentUser.getUserName());
         }
+        LOGGER.trace("{} is now enabled", username);
+
     }
 
 }
