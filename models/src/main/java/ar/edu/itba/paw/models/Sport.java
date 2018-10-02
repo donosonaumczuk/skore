@@ -11,13 +11,27 @@ public class Sport {
         this.quantity       = quantity;
         this.displayName    = displayName;
     }
-
+    public void setName(String name) {
+        this.name = name;
+    }
     public String getName() {
         return name;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     @Override
