@@ -31,9 +31,9 @@
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <p class="profile-name">404 Error</p>
-                    <p class="profile-username">User not found</p>
-                    <p>Sorry, but we don't have any @<c:out value="${username}"/> user :(</p>
+                    <p class="profile-name"><spring:message code="404error"/></p>
+                    <p class="profile-username"><spring:message code="userNotFoundLabel"/></p>
+                    <p><spring:message code="weDontHaveLabel"/><c:out value="${username}"/><spring:message code="userFaceLabel"/></p>
                 </div>
             </div>
 
