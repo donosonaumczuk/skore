@@ -29,8 +29,20 @@ public class HomeController extends BaseController{
 
     @RequestMapping("/")
     public ModelAndView index() {
+       System.out.println( formatDate("12/11/2018 01:00:00") + "\n\n\n\n");
         final ModelAndView mav = new ModelAndView("index");
         return mav;
     }
+    private static String formatDate(String date) {
+        String month = "" + date.charAt(0) + date.charAt(1);
+        String day = "" + date.charAt(3) + date.charAt(4);
+        String year = "" + date.charAt(6) + date.charAt(7) + date.charAt(8) + date.charAt(9);
+        String hour ="" + date.charAt(11) + date.charAt(12);
+        String min ="" + date.charAt(14) + date.charAt(15);
+        String sec ="" + date.charAt(17) + date.charAt(18);
+        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
+        return formattedDate;
 
+    }
 }
