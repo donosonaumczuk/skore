@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.CannotCreateUserException;
+import ar.edu.itba.paw.Exceptions.CannotValidateUserException;
 import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,7 +73,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                                         encodedPassword, file);
         if(user.isPresent()) {
             LOGGER.trace("Sending confirmation email to {}", email);
-            emailSender.sendConfirmAccount(user.get(), generatePath(user.get()));
+            sendConfirmationMail(user.get());
             return user.get();
         }
         else {
@@ -176,7 +178,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         PremiumUser currentUser = user.get();
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
             LOGGER.error("Can't find user with username {}", username);
-            throw new UserNotFoundException("Can't validate account with username : " + currentUser.getUserName());
+            throw new CannotValidateUserException("Can't validate account with username : " + currentUser.getUserName());
         }
         LOGGER.trace("{} is now enabled", username);
 
@@ -187,11 +189,17 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         String dataPath = path.replace("/confirm/","");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
-        String code = dataPath.substring(splitIndex + 1, dataPath.length()-1 );
+        String code = dataPath.substring(splitIndex + 1, dataPath.length());
         enableUser(username, code);
     }
 
     private String generatePath(PremiumUser user) {
         return "confirm/" + user.getUserName() + "&" + user.getCode();
     }
+
+    @Async
+    public void sendConfirmationMail(PremiumUser user) {
+        emailSender.sendConfirmAccount(user, generatePath(user));
+    }
+
 }

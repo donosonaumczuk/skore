@@ -115,7 +115,7 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", u.get());
     }
 
-    @RequestMapping(value="/confirm/*", name = "url")
+    @RequestMapping(value="/confirm/**", name = "url")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
         us.confirmationPath(path);
