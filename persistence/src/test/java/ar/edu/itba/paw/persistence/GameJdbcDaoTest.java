@@ -61,6 +61,7 @@ public class GameJdbcDaoTest {
     private static final String CELLPHONE               = "cellphone";
     private static final String BIRTHDAY                = "1994-12-26";
     private static final int    REPUTATION              = 10;
+    private static final String CODE                    = "code";
 
 
     @Autowired
@@ -86,10 +87,10 @@ public class GameJdbcDaoTest {
         jdbcTemplate.execute("INSERT INTO users (firstname, lastname, email, userid)" +
                 " VALUES ('" + firstName + "' , '" + lastName + "', '" + email + "', " + userId + ");");
         jdbcTemplate.execute("INSERT INTO accounts (username, cellphone, birthday," +
-                " country, state, city, street, reputation, password, userId, email)" +
+                " country, state, city, street, reputation, password, userId, email, code)" +
                 " VALUES ('" + userName + "' , '" + cellphone + "', '" + birthday + "', '" +
                 country + "', '" + state + "', '" + city + "', '" + street + "', " + reputation +
-                ", '" + password +"', " + userId +",'"+email+"');");
+                ", '" + password +"', " + userId +",'"+email+"', '" + CODE + "');");
     }
 
     private void insertSport(final String sportName, final long quantity) {
