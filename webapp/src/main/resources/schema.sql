@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   birthday    DATE,
   email       VARCHAR (100) NOT NULL,
   role        VARCHAR (100),
-  enabled     INTEGER,
+  enabled     BOOLEAN,
   code        VARCHAR(100) NOT NULL,
   image       BYTEA,
   UNIQUE(email)

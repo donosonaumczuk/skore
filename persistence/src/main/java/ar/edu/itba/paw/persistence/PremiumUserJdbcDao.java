@@ -28,8 +28,8 @@ public class PremiumUserJdbcDao implements PremiumUserDao{
     private static final int USER_ROLE_ID = 0;
     private static final int ADMIN_ROLE_ID = 1;
 
-    private static final int USER_DISABLED = 0;
-    private static final int USER_ENABLED = 1;
+    private static final boolean USER_DISABLED = false;
+    private static final boolean USER_ENABLED = true;
 
 
 
