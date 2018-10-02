@@ -36,6 +36,6 @@ public interface PremiumUserService {
     public void addRole(final String username, final int roleId);
 
     @Transactional
-    public void enableUser(final String username);
+    public void enableUser(final String username, final String code);
 
     }

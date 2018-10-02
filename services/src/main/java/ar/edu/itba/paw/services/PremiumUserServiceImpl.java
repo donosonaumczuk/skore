@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
@@ -43,11 +45,12 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password) {
+       final String encodedPassword = new BCryptPasswordEncoder().encode(password);
 
         final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
-                                        password);
+                                        encodedPassword);
         if(user.isPresent()) {
             return user.get();
         }
@@ -72,7 +75,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, oldUserName);
+                newCity, newStreet, newReputation, new BCryptPasswordEncoder().encode(newPassword), oldUserName);
         if(user.isPresent()) {
             return user.get();
         }
@@ -110,9 +113,14 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     @Override
-    public void enableUser(final String username) {
-        if(!premiumUserDao.enableUser(username).isPresent()) {
-            throw new UserNotFoundException("Can't find user with username: " + username);
+    public void enableUser(final String username, final String code) {
+        Optional<PremiumUser> user = findByUserName(username);
+        if(!user.isPresent()) {
+            throw new UserNotFoundException("Can't find user with username " + username + " to validate account");
+        }
+        PremiumUser currentUser = user.get();
+        if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
+            throw new UserNotFoundException("Can't validate account with username : " + currentUser.getUserName());
         }
     }
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @ComponentScan("ar.itba.edu.paw.webapp.auth")
 @Component
@@ -36,11 +35,13 @@ public class SkoreUserDetailsService implements UserDetailsService {
         if(user == null) {
             throw new UsernameNotFoundException("No user by the name " + username);
         }
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"));
-              //  new SimpleGrantedAuthority("ROLE_ADMIN"));
+        final Collection<GrantedAuthority> authorities = new ArrayList<>();
+        Set<Role> roles = user.getRoles();
+        for(Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+
         LOGGER.trace("username found: {} with password: {} and authorities: {}", user.getUserName(), user.getPassword(), authorities);
-        System.out.println("\n\n\n\n" + "userFound = " + user.getUserName() + " " + user.getPassword() + "  " + authorities +"\n\n\n\n");
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
                 authorities);
 

@@ -7,7 +7,7 @@
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
-    <link rel="icon" href="img/bullseye-solid.ico" />
+    <link rel="icon" href="/img/bullseye-solid.ico" />
     <title>skore</title>
 </head>
 <body>
@@ -53,7 +53,7 @@
 
                     <div class="row p-2 mt-2" id="loader">
                         <div class="offset-5 col-2">
-                            <img class="img-fluid" src="img/loader.gif">
+                            <img class="img-fluid" src="/img/loader.gif">
                         </div>
                     </div>
 
@@ -64,9 +64,9 @@
 
     <%-- Include JS Scripts --%>
     <jsp:include page="js.jsp"></jsp:include>
-    <script src="<c:url value="js/index.js"/>"></script>
-    <script src="<c:url value="js/filters.js"/>" type="text/javascript"></script>
-    <script src="<c:url value="js/load-matches.js"/>" type="text/javascript"></script>
+    <script src="<c:url value="/js/index.js"/>"></script>
+    <script src="<c:url value="/js/filters.js"/>" type="text/javascript"></script>
+    <script src="<c:url value="/js/load-matches.js"/>" type="text/javascript"></script>
 
 </body>
 </html>

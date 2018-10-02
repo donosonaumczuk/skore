@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   email       VARCHAR (100) NOT NULL,
   role        VARCHAR (100),
   enabled     INTEGER,
+  code        VARCHAR(100) NOT NULL,
   image       BYTEA,
   UNIQUE(email)
 )/;
