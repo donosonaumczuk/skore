@@ -45,9 +45,11 @@ public class GameController extends BaseController{
                 json.getString("maxStartTime"), json.getString("minFinishTime"),
                 json.getString("maxFinishTime"), json.getJSONArray("types"),
                 json.getJSONArray("sportNames"), json.getInt("minQuantity"),
-                json.getInt("maxQuantity"), json.getJSONArray("countries"),
+                (json.getInt("maxQuantity")==0)?null:json.getInt("maxQuantity"),
+                json.getJSONArray("countries"),
                 json.getJSONArray("states"), json.getJSONArray("cities"),
-                json.getInt("minFreePlaces"), json.getInt("maxFreePlaces"),
+                json.getInt("minFreePlaces"),
+                (json.getInt("maxFreePlaces")==0)?null:json.getInt("maxFreePlaces"),
                 json.getInt("pageNumber"));
         LOGGER.trace("Returning {} games that match the criteria", games.size());
         ObjectMapper objectMapper = new ObjectMapper();
