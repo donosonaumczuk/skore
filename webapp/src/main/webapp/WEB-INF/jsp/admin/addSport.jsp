@@ -39,7 +39,7 @@
                 </div>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file"  name="image" class="custom-file-input" id="avatarInput">
+                        <input type="file"  name="image" class="custom-file-input" id="avatarInput" value="avatarInput">
                         <label class="custom-file-label" for="avatarInput" aria-describedby="inputGroupFileAddon02"><spring:message code="chooseFileLabel"/></label>
                     </div>
                     <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
