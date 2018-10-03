@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
+import ar.edu.itba.paw.Exceptions.TeamFullException;
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
@@ -37,6 +40,10 @@ public class GameController extends BaseController{
     @Autowired
     @Qualifier("sportServiceImpl")
     private SportService sportService;
+
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -209,6 +216,36 @@ public class GameController extends BaseController{
         }
 
         return new ModelAndView("match").addObject("match", game);
+    }
+
+    @RequestMapping(value = "/confirmMatch/*")
+    public ModelAndView confirmMatch(HttpServletRequest request) {
+        LOGGER.trace("Match assistance confirmed");
+        String path = request.getServletPath().replace("/confirmMatch/", "");
+        String userData = path.substring(0, path.indexOf("$"));
+        String gameData = path.substring(path.indexOf("$") + 1, path.length());
+        //System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
+        long userId = userService.getUserIdFromData(userData);
+        User user = userService.findById(userId);
+        if(user == null) {
+            throw new UserNotFoundException("Can't find user");
+        }
+        final int URL_DATE_LENGTH =12;
+        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
+        if(gameData.length() < MIN_LENGTH) {
+            throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
+        }
+
+        String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
+        String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
+        String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
+        try {
+            Game game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+        }catch(TeamFullException e) {
+            new ModelAndView("TeamFull");
+        }
+        LOGGER.trace("added to Match");
+        return new ModelAndView("redirect:/match/" + gameData);
     }
 
 }

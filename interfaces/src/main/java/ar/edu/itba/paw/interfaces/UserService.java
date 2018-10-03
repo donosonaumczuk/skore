@@ -26,4 +26,6 @@ public interface UserService {
 
     public void sendConfirmMatchAssistance(User user, Game game, String data);
 
+    public long getUserIdFromData (String data);
+
 }
