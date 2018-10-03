@@ -27,10 +27,8 @@ public class GameJdbcDao implements GameDao {
 
     private final TeamDao teamDao;
 
-    private final static RowMapper<Game> ROW_MAPPER = (resultSet, rowNum) -> {
-        LOGGER.debug("{}",resultSet.getInt("OccupiedQuantity1"));
-        LOGGER.debug("{}",((resultSet.getString("teamName2") == null)?0:resultSet.getInt("OccupiedQuantity2")));
-        return new Game(new Team(resultSet.getString("teamName1"), new Sport(
+    private final static RowMapper<Game> ROW_MAPPER = (resultSet, rowNum) ->
+        new Game(new Team(resultSet.getString("teamName1"), new Sport(
                 resultSet.getString("sportName"), resultSet.getInt("playerQuantity"),
                 resultSet.getString("displayName")), resultSet.getString("leaderUserName1")),
                 (resultSet.getString("teamName2") == null) ? null :
@@ -47,7 +45,6 @@ public class GameJdbcDao implements GameDao {
                 resultSet.getString("description"),
                 resultSet.getString("title"),
                 resultSet.getString("tornamentName"));
-    };
 
     @Autowired
     public GameJdbcDao(final DataSource dataSource, final TeamDao teamDao) {

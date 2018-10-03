@@ -22,10 +22,34 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <p>Team 1: <c:out value="${match.team1Name()}"/></p>
+                    <h1><c:out value="${match.getTitle()}"/></h1>
                 </div>
             </div>
-            
+            <div class="row text-center">
+                <div class="col">
+                    <label>Start Time: <c:out value="${match.getStartTime()}"/></label>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <label>Finish Time: <c:out value="${match.getFinishTime()}"/></label>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <label>Sport: <c:out value="${match.getTeam1().getSport().getDisplayName()}"/></label>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <label>Type: <c:out value="${match.getType()}"/></label>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <label>Description: <c:out value="${match.getDescription()}"/></label>
+                </div>
+            </div>
         </div> <!-- END Form container -->
     </div>
 </div>
