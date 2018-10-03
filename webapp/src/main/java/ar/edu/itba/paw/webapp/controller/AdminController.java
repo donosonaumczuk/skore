@@ -45,7 +45,11 @@ public class AdminController extends BaseController{
             System.out.println("imageFile: " + sportForm.getImage().getContentType() + "\n\n\n\n");
             return createSportForm(sportForm);
         }
-        final Sport sport = sportService.create(sportForm.getSportName(), sportForm.getPlayerQuantity(),
+        int playerQuantity= 0;
+        for(int i = 0; i< sportForm.getPlayerQuantity().length(); i++) {
+            playerQuantity = playerQuantity*10 + sportForm.getPlayerQuantity().charAt(i);
+        }
+        final Sport sport = sportService.create(sportForm.getSportName(), playerQuantity,
                 sportForm.getDisplayName(), sportForm.getImage());
         if(sport == null) {
             throw new CannotCreateSportException("Can't create sport " + sportForm.getSportName());

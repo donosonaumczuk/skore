@@ -36,7 +36,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                     .antMatchers("/", "/lang", "/profile/**", "/404UserNotFound", "/filterMatch",
                                 "/404", "/match/*", "/confirm/**", "/joinMatch/*", "/joinMatchForm/*",
-                            "/confirmMatch/*", "/cancelMatch").permitAll()
+                            "/confirmMatch/*", "/cancelMatch","sport/**" ).permitAll()
                     .antMatchers("/create", "/login", "/joinMatchForm").anonymous()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").authenticated()
@@ -76,8 +76,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder())
-                //.usersByUsernameQuery("select username as principal, password as credentials, true from accounts where username = ?")
+                //.usersByUsernameQuery("select username as principal, password as credentials, true from accounts where username = ?");
                 .usersByUsernameQuery("select username as principal, password as credentials, enabled from accounts where username = ?")
-                .authoritiesByUsernameQuery("select username as principal, role from userroles where username = ?");
+                .authoritiesByUsernameQuery("select username as principal, roles.roleName from userroles, roles where roles.roleId = userRoles.role AND username = ?");
     }
 }

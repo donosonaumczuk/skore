@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +31,7 @@ public class SkoreUserDetailsService implements UserDetailsService {
     @Autowired
     private PremiumUserService us;
 
-    @Override
+        @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final Optional<PremiumUser> user = us.findByUserName(username);
         if(!user.isPresent()) {
@@ -39,6 +41,7 @@ public class SkoreUserDetailsService implements UserDetailsService {
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         Set<Role> roles = currentUser.getRoles();
         for(Role role : roles) {
+            System.out.println("role: " + role.getName() + "\n\n\n\n");
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
@@ -47,4 +50,5 @@ public class SkoreUserDetailsService implements UserDetailsService {
                 authorities);
 
     }
+
 }

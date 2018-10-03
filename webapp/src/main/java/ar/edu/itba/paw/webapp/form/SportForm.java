@@ -18,7 +18,7 @@ public class SportForm {
 
     @Size(min = 1)
     @Pattern(regexp ="([0-9 ]|[1-9]+)")
-    private int playerQuantity;
+    private String playerQuantity;
 
     @ValidSportImageSize
     @ValidSportImageType
@@ -41,11 +41,11 @@ public class SportForm {
         this.displayName = displayName;
     }
 
-    public int getPlayerQuantity() {
+    public String getPlayerQuantity() {
         return playerQuantity;
     }
 
-    public void setPlayerQuantity(int playerQuantity) {
+    public void setPlayerQuantity(String playerQuantity) {
         this.playerQuantity = playerQuantity;
     }
 
