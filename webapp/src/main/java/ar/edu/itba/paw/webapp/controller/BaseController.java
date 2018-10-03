@@ -23,6 +23,9 @@ public  abstract class BaseController {
             return null;
         }
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) {
+            return null;
+        }
         if(!authentication.isAuthenticated()) {
             return null;
         }
