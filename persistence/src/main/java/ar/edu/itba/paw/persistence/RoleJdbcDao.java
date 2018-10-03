@@ -46,10 +46,7 @@ public class RoleJdbcDao implements RoleDao {
         args.put("roleName", roleName);
         args.put("roleId", roleId);
         jdbcInsert.execute(args);
-
-        //Should be with these three statements evans
-        //Number userId = jdbcInsert.executeAndReturnKey(args); should be with this statement
-        //return new User(firstName, lastName, email, userId.longValue());
+        
         return findRoleById(roleId);
 
     }
