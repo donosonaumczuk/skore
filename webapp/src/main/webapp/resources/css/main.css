@@ -132,6 +132,7 @@ body {
 
 .btn-white-succ:hover {
     background-color: var(--dark-green);
+    color: white;
 }
 
 .primary-nav {

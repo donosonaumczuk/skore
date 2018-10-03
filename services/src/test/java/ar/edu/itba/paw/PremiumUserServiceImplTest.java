@@ -45,7 +45,7 @@ public class PremiumUserServiceImplTest {
         inOrder(premiumUserDaoMock).verify(premiumUserDaoMock).enableUser(USERNAME, CODE);
     }
 
-    @Test(expected = CannotValidateUserException.class)
+    @Test
     public void confirmationPathExceptionTest() {
         when(premiumUserDaoMock.enableUser(USERNAME, CODE)).thenReturn(false);
         when(premiumUserDaoMock.findByUserName(USERNAME))

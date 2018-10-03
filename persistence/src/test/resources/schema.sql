@@ -42,11 +42,11 @@ CREATE TABLE IF NOT EXISTS notification(
 CREATE TABLE IF NOT EXISTS teams(
   teamName    VARCHAR(100) PRIMARY KEY,
   acronym     VARCHAR(100),
-  leaderName  VARCHAR(100) REFERENCES accounts(userName),
+  leaderName  VARCHAR(100) REFERENCES accounts(userName) ON DELETE CASCADE ON UPDATE CASCADE,
   isTemp      INTEGER NOT NULL,
   sportName   VARCHAR (100) NOT NULL,
   image       BLOB,
-  FOREIGN KEY (sportName) REFERENCES sports(sportName)
+  FOREIGN KEY (sportName) REFERENCES sports(sportName) ON DELETE CASCADE ON UPDATE CASCADE
   --Filters--
 );
 
@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS games (
   tornamentName VARCHAR(100),
   description   VARCHAR(140),
   title         VARCHAR(100),
-  FOREIGN KEY (teamName1) REFERENCES teams(teamName),
-  FOREIGN KEY (teamName2) REFERENCES teams(teamName),
+  FOREIGN KEY (teamName1) REFERENCES teams(teamName) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (teamName2) REFERENCES teams(teamName) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (teamName1, startTime, finishTime)
 );

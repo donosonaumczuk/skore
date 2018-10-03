@@ -105,7 +105,7 @@ var labelMap = {
 
 var lang = 'en';
 var pageNumber = 1;
-var areMoreMatchesToGet = true;
+var reachEndOfPagination = false;
 var getButton = getJoinButton;
 var postAppendMatch = joinButtonPostAppendMatch;
 
@@ -117,6 +117,26 @@ $.ajax({
     loadMatches();
 });
 
+$(document).ready(function(){
+    $(".filter-input").keypress(function(e){
+        var keyCode = e.which;
+
+        /* 48-57 - (0-9)Numbers
+            65-90 - (A-Z)
+            97-122 - (a-z)
+            8 - (backspace)
+            32 - (space) */
+
+        /* To avoid injection */
+        if ( !( (keyCode >= 48 && keyCode <= 57)
+                ||(keyCode >= 65 && keyCode <= 90)
+                || (keyCode >= 97 && keyCode <= 122) )
+            && keyCode != 8 && keyCode != 32) {
+            e.preventDefault();
+        }
+    });
+});
+
 $(".filter-input").keyup(function (e) {
     if (e.keyCode == 13) {
         var value = $(this).val();
@@ -125,24 +145,43 @@ $(".filter-input").keyup(function (e) {
             return;
 
         var context = $(this).parent().attr('id');
+        var values = value.split(' ');
+        var needToLoad = false;
 
-        if(currentFilters[context][value] == undefined) {
-            pageNumber = 1;
-            clearMatchs();
-            putLoader();
-            addBadge(value, context);
-            currentFilters[context][value] = true;
-            loadMatches();
+        for(var i = 0; i < values.length; i++) {
+            if(currentFilters[context][values[i]] == undefined) {
+                if(!needToLoad) {
+                    pageNumber = 1;
+                    reachEndOfPagination = false;
+                    clearMatchs();
+                    putLoader();
+                    needToLoad = true;
+                }
+
+                addBadge(values[i], context);
+                currentFilters[context][values[i]] = true;
+            }
+            else {
+                var badge = $('#' + getBadgeId(htmlspecialchars(values[i]), context));
+                badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
+                    function () {
+                        badge.removeClass('animated bounceIn');
+                    })
+            }
         }
-        else {
-            var badge = $('#' + getBadgeId(htmlspecialchars(value), context));
-            badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
-                function () {
-                    badge.removeClass('animated bounceIn');
-                })
+
+        if(needToLoad) {
+            loadMatches();
         }
 
         $(this).val('');
+    }
+});
+
+$(window).scroll(function() {
+    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        if(!reachEndOfPagination)
+            loadMatches();
     }
 });
 
@@ -164,6 +203,7 @@ function addBadge(value, context) {
     badge.click(function () {
         clearMatchs();
         pageNumber = 1;
+        reachEndOfPagination = false;
         putLoader();
         $(this).remove();
         delete currentFilters[context][value];
@@ -181,9 +221,12 @@ function loadMatches() {
         url:    endPointURL,
         data: { body: getMatchRequestBody() }
     }).done(function(matchJSON) {
-        pageNumber++;
-
         matchArray = JSON.parse(matchJSON);
+
+        if(matchArray.length == 0)
+            reachEndOfPagination = true;
+
+        pageNumber++;
 
         removeLoader();
 

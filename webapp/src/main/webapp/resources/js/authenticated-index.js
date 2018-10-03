@@ -66,6 +66,7 @@ $("#created").click(function() {
 
 function loadCurrentFilters() {
     pageNumber = 1;
+    reachEndOfPagination = false;
 
     $('.badge').remove();
 
@@ -102,7 +103,7 @@ function deleteButtonPostAppendMatch(match) {
                 finishTime: timeStampFormat(match.finishTime)
             }
         }).done(function(data) {
-            console.log(data);
+            //TODO
         });
     });
 }
@@ -120,7 +121,7 @@ function cancelButtonPostAppendMatch(match) {
                 finishTime: timeStampFormat(match.finishTime)
             }
         }).done(function(data) {
-            console.log(data);
+            //TODO
         });
     });
 }

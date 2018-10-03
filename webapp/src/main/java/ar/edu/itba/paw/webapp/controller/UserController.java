@@ -64,13 +64,19 @@ public class UserController extends BaseController{
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
                                final BindingResult errors, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         if(errors.hasErrors()) {
-            System.out.println("imageFile: " + userForm.getImage().getContentType() + "\n\n\n\n");
             return createForm(userForm);
+        }
+        MultipartFile image;
+        if(userForm.getImage().getSize() == 0) {
+            image = null;
+        }
+        else {
+            image = userForm.getImage();
         }
         final PremiumUser user = premiumUserService.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
                 userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword(),
-                userForm.getImage());
+                image);
         if(user == null) {
             throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
         }

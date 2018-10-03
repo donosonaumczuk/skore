@@ -53,6 +53,11 @@ public class ResourceController extends BaseController{
                 headers.add("Location", "/img/user-default.svg");
                 return new ResponseEntity<>(headers, HttpStatus.FOUND);
             }
+
+            if(media == null) {
+                headers.add("Location", "/img/user-default.svg");
+                return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            }
         }
         else if(type.compareTo("sport")==0)  {
             media = sportService.readImage(id);
