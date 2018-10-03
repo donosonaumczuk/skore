@@ -7,7 +7,7 @@
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
-    <link rel="icon" href="/img/bullseye-solid.ico" />
+    <link rel="icon" href="<c:url value="/img/bullseye-solid.ico"/>" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
           integrity="sha384-OHBBOqpYHNsIqQy8hL1U+8OXf9hH6QRxi0+EODezv82DfnZoV7qoHAZDwMwEJvSw"
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col text-center create-match p-4">
                             <p><spring:message code="cantFindMatchMessage"/></p>
-                            <a id="create-match-btn" class="btn btn-white-succ" href="/createMatch" role="button">
+                            <a id="create-match-btn" class="btn btn-white-succ" href="<c:url value="/createMatch"/>" role="button">
                                 <spring:message code="createAMatchMessage"/>
                             </a>
                         </div>

@@ -6,20 +6,21 @@
     <button class="navbar-toggler d-md-none" type="button"><span class="fas fa-bars"></span></button>
     <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
-    <a class="d-sm-none login-link" href="/login"><i class="fas fa-user"></i></a>
+    <a class="d-sm-none login-link" href="<c:url value="/login"/>"><i class="fas fa-user"></i></a>
     <c:choose>
         <c:when test="${isLogged}">
             <form class="d-none d-sm-block form-inline">
-                <a class="mr-1 login-link" href="/profile/<c:out value="${loggedUser.getUserName()}"/>"><c:out value="${loggedUser.getUserName()}"/></a>
+                <c:set value="${loggedUser.getUserName()}" var="username"/>
+                <a class="mr-1 login-link" href="<c:url value="/profile/${username}"/>"><c:out value="${loggedUser.getUserName()}"/></a>
                 <span class="white-text mr-1"> | </span>
-                <a class="login-link" href="/logout"><spring:message code="logoutLabel"/></a>
+                <a class="login-link" href="<c:url value="/logout"/>"><spring:message code="logoutLabel"/></a>
             </form>
         </c:when>
         <c:otherwise>
             <form class="d-none d-sm-block form-inline">
-                <a class="mr-1 login-link" href="/login"><spring:message code="signInMessage"/></a>
+                <a class="mr-1 login-link" href="<c:url value="/login"/>"><spring:message code="signInMessage"/></a>
                 <span class="white-text mr-1"><spring:message code="orLabel"/></span>
-                <a class="login-link" href="/create"><spring:message code="signUpMessage"/></a>
+                <a class="login-link" href="<c:url value="/create"/>"><spring:message code="signUpMessage"/></a>
             </form>
         </c:otherwise>
     </c:choose>

@@ -9,7 +9,7 @@
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
-    <link rel="icon" href="/img/bullseye-solid.ico"/>
+    <link rel="icon" href="<c:url value="/img/bullseye-solid.ico"/>"/>
     <title>skore</title>
 </head>
 <body>
@@ -50,7 +50,7 @@
             <div class="row mt-4 text-center">
                 <div class="col">
                     <span class="mr-1"><spring:message code="areYouNewLabel"/></span>
-                    <a class="link" href="/create"><spring:message code="signUpMessage"/></a>
+                    <a class="link" href="<c:url value="/create"/>"><spring:message code="signUpMessage"/></a>
                 </div>
             </div>
         </div> <!-- END Form container -->

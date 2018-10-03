@@ -7,7 +7,7 @@
 <head>
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
-    <link rel="icon" href="/img/bullseye-solid.ico"/>
+    <link rel="icon" href="<c:url value="/img/bullseye-solid.ico"/>"/>
     <title>skore</title>
 </head>
 <body>
