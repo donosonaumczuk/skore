@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject("Confirm Account");
         message.setText("Dear "+user.getFirstName()+" "+user.getLastName()+": \n" +
                         "\t Plese click in the following url to confirm your account: \n" +
-                        "\t <a href=\""+URL_PREFIX+url+"\">");
+                        "\t "+URL_PREFIX+url);
         emailSender.send(message);
     }
 
