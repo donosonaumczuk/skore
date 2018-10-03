@@ -5,11 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidImageTypeValidator
-        implements ConstraintValidator<ValidImageType, MultipartFile> {
+public class ValidSportImageTypeValidator
+        implements ConstraintValidator<ValidSportImageType, MultipartFile> {
 
     @Override
-    public void initialize(ValidImageType constraintAnnotation) {
+    public void initialize(ValidSportImageType constraintAnnotation) {
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ValidImageTypeValidator
         //System.out.println("image : |" + image + "|" + "\n\n\n\n" );
 
         //System.out.println("type : |" + type + "|" + "\n\n\n\n" );
-        return type.equals("png") || type.equals("jpeg");
+        return type.equals("png") || type.equals("jpeg") || type.equals("svg+xml");
     }
 
 }
