@@ -39,8 +39,8 @@
                 </div>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file"  name="image" class="custom-file-input" id="avatarInput" value="avatarInput">
-                        <label class="custom-file-label" for="avatarInput" aria-describedby="inputGroupFileAddon02"><spring:message code="chooseFileLabel"/></label>
+                        <input type="file"  name="image" class="custom-file-input" id="image" value="" multiple onchange="showname()"/>
+                        <label class="custom-file-label" id="fileLabel" for="image" aria-describedby="inputGroupFileAddon02"></label>
                     </div>
                     <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
@@ -60,6 +60,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqSX1WHUw4OlgMDzYM40uSVPGkV06DR1I&libraries=places&callback=initAutocomplete" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
-<script  src="<c:url value="/js/sign-up.js"/>" type="text/javascript"></script>
+<script  src="<c:url value="./../js/sign-up.js"/>" type="text/javascript"></script>
 </body>
 </html>

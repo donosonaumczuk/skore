@@ -94,3 +94,9 @@ function getDateWithFormat() {
 
     return mm + '/' + dd + '/' + yyyy;
 }
+
+function showname () {
+    var name = document.getElementById('image');
+    $('#fileLabel').append(name.files.item(0).name);
+
+};
