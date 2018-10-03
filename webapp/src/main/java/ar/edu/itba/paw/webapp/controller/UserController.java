@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.Exceptions.CannotValidateUserException;
 import ar.edu.itba.paw.Exceptions.CantJoinCompetitiveMatchException;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
@@ -97,8 +98,10 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
-        premiumUserService.confirmationPath(path);
-        return new ModelAndView("index");
+        if(premiumUserService.confirmationPath(path)) {
+            return new ModelAndView("accountConfirmed");
+        }
+        throw new CannotValidateUserException("Can't validate user");
     }
 
     @RequestMapping(value = "/joinMatch/*", method = {RequestMethod.GET })

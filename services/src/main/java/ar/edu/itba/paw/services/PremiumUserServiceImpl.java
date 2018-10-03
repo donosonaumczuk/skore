@@ -167,30 +167,34 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     @Override
-    public void enableUser(final String username, final String code) {
+    public boolean enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
         Optional<PremiumUser> user = findByUserName(username);
         if(!user.isPresent()) {
             LOGGER.error("Can't find user with username {}", username);
-            throw new UserNotFoundException("Can't find user with username " + username + " to validate account");
+            return false;
         }
         PremiumUser currentUser = user.get();
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
             LOGGER.error("Can't find user with username {}", username);
-            throw new CannotValidateUserException("Can't validate account with username : " + currentUser.getUserName());
+            return false;
         }
         LOGGER.trace("{} is now enabled", username);
-
+        return true;
     }
 
     @Override
-    public void confirmationPath(String path) {
+    public boolean confirmationPath(String path) {
         String dataPath = path.replace("/confirm/","");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        if(!premiumUser.isPresent()) {
+            return false;
+        }
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        enableUser(username, code);
+        return enableUser(username, code);
     }
 
     private String generatePath(PremiumUser user) {
