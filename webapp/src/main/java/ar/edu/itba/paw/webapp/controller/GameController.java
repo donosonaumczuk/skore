@@ -254,7 +254,39 @@ public class GameController extends BaseController{
                 }
             }
         }
-        return new ModelAndView("redirect:/match/" + gameData);
+        userService.sendCancelOptionMatch(user, game, gameData);
+        return new ModelAndView("confirmedMatchAssistance");
+    }
+
+    @RequestMapping(value = "/cancelMatch/*")
+    public ModelAndView cancelMatch(HttpServletRequest request) {
+        LOGGER.trace("Match assistance cancelled");
+        String path = request.getServletPath().replace("/cancelMatch/", "");
+        String userData = path.substring(0, path.indexOf("$"));
+        String gameData = path.substring(path.indexOf("$") + 1, path.length());
+        //System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
+        long userId = userService.getUserIdFromData(userData);
+        User user = userService.findById(userId);
+        if(user == null) {
+            throw new UserNotFoundException("Can't find user");
+        }
+        final int URL_DATE_LENGTH =12;
+        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
+        if(gameData.length() < MIN_LENGTH) {
+            throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
+        }
+
+        String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
+        String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
+        String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
+        Game game = gameService.findByKey(teamName1, startTime, finishTime);
+        if(game == null) {
+            throw new GameNotFoundException("Can't find game");
+        }
+        gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
+
+        userService.sendCancelOptionMatch(user, game, gameData);
+        return new ModelAndView("cancelledMatchAssistance");
     }
 
 }

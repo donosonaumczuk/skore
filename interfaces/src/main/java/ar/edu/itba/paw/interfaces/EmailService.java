@@ -9,6 +9,6 @@ public interface EmailService {
 
     public void sendConfirmMatch(User user, Game game, String url);
 
-    public void sendCancelOptionMatch(User user, Game game, String url);
+    public void sendCancelMatch(User user, Game game, String url);
 
     }

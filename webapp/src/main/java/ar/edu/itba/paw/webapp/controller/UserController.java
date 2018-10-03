@@ -142,13 +142,13 @@ public class UserController extends BaseController{
                 joinMatchForm.getEmail());
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
         if(!game.getType().contains("Friendly")) {
-            throw new CantJoinCompetitiveMatchException("Need to be have an account to join this match");
-
+            return new ModelAndView("cantJoinCompetitive");
+            //throw new CantJoinCompetitiveMatchException("Need to have an account to join this match");
         }
         else {
             userService.sendConfirmMatchAssistance(u, game, data);
         }
-            return new ModelAndView("redirect:/match/" + data);
+            return new ModelAndView("confirmationMatchMailSend");
     }
 
 

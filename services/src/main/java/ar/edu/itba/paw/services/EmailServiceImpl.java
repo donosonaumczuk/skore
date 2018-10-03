@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendCancelOptionMatch(User user, Game game, String url) {
+    public void sendCancelMatch(User user, Game game, String url) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Cancel Match Assistance");

@@ -120,6 +120,15 @@ public class UserServiceImpl implements UserService {
         }
         return id;
     }
+
+
+    @Override
+    public void sendCancelOptionMatch(User user, Game game, String data) {
+        String phrase = user.getUserId() + user.getFirstName() + "$" + data;
+        SimpleEncrypter encrypter = new SimpleEncrypter();
+        encrypter.SimpleCipherEncrypt(phrase);
+        emailSender.sendCancelMatch(user, game, "/cancelMatch/" + phrase);
+    }
 }
 
 ///joinMatch/2018100302291.5-3590166870201810030249

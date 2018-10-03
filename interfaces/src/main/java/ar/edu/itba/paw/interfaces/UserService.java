@@ -30,4 +30,5 @@ public interface UserService {
 
     public long getUserIdFromData (String data);
 
+    public void sendCancelOptionMatch(User user, Game game, String data);
 }
