@@ -91,9 +91,10 @@ function getDefaultEndPoint() {
 }
 
 function deleteButtonPostAppendMatch(match) {
-    var key = getMatchURLKey(match.startTime, match.team1.name, match.finishTime);
+    var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
 
     $("#" + key).find(".join-button").click(function () {
+
         $.ajax({
             type:   'POST',
             url:    contextPath + '/deleteMatch',
@@ -109,7 +110,7 @@ function deleteButtonPostAppendMatch(match) {
 }
 
 function cancelButtonPostAppendMatch(match) {
-    var key = getMatchURLKey(match.startTime, match.team1.name, match.finishTime);
+    var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
 
     $("#" + key).find(".join-button").click(function () {
         $.ajax({
@@ -134,4 +135,9 @@ function getCancelButton(match) {
 function getDeleteButton(match) {
     return '<a class="btn btn-negative join-button"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
+}
+
+function joinButtonPostAppendMatch(match) {
+    //Do nothing...
+    return;
 }
