@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.SimpleEncrypter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    public EmailService emailSender;
 
     public UserServiceImpl() {
 
@@ -95,4 +101,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void sendConfirmMatchAssistance(User user, Game game, String data) {
+        String phrase = user.getUserId() + user.getFirstName() + "$" + data;
+        SimpleEncrypter encrypter = new SimpleEncrypter();
+        encrypter.SimpleCipherEncrypt(phrase);
+        emailSender.sendConfirmMatch(user, game, "/confirmMatch/" + phrase );
+    }
+
+
 }
+
+///joinMatch/2018100302291.5-3590166870201810030249

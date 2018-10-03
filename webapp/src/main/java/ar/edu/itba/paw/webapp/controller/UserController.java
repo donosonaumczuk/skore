@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.Exceptions.CantJoinCompetitiveMatchException;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.JoinMatchForm;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.MatchForm;
@@ -44,12 +47,15 @@ public class UserController extends BaseController{
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
-    private PremiumUserService us;
+    private PremiumUserService premiumUserService;
 
     @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @RequestMapping(value = "/create", method = {RequestMethod.GET })
     public ModelAndView createForm(@ModelAttribute("registerForm") UserForm userForm){
@@ -59,17 +65,14 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/create", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
                                final BindingResult errors, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        //evans
         if(errors.hasErrors()) {
             System.out.println("imageFile: " + userForm.getImage().getContentType() + "\n\n\n\n");
             return createForm(userForm);
         }
-        final PremiumUser user = us.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
+        final PremiumUser user = premiumUserService.create(userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
                 userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword(),
                 userForm.getImage());
-        //us.addRole(user.getUserName(), USER_ROLE_ID); evans
-        //return new ModelAndView("redirect:/userId=" + u.getUserId());
         return new ModelAndView("index");
     }
 
@@ -82,32 +85,9 @@ public class UserController extends BaseController{
         return mav;
     }
 
-
-    @RequestMapping("/joinMatch")
-    public ModelAndView joinMatch() {
-        return new ModelAndView("joinMatch");
-
-    }
-
-    @RequestMapping(value = "/joinMatch", method = {RequestMethod.GET })
-    public ModelAndView createJoinMatchForm(@ModelAttribute("joinMatchForm") JoinMatchForm joinMatchForm){
-        return new ModelAndView("joinMatch");
-    }
-
-    @RequestMapping(value = "/joinMatch", method = {RequestMethod.POST })
-    public ModelAndView joinMatch(@Valid @ModelAttribute("joinMatchForm") final JoinMatchForm joinMatchForm,
-                               final BindingResult errors) {
-        if(errors.hasErrors()) {
-            return createJoinMatchForm(joinMatchForm);
-        }
-        //final User u = us.create(userForm.getUsername(), "a", "b" );
-        //return new ModelAndView("redirect:/userId=" + u.getUserId());
-        return new ModelAndView("index");
-    }
-
     @RequestMapping(value = "/profile/{username}", method = {RequestMethod.GET})
     public ModelAndView userProfile(@PathVariable("username") String username) {
-        Optional<PremiumUser> u = us.findByUserName(username);
+        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
         if(!u.isPresent())
             return new ModelAndView("404UserNotFound").addObject("username", username);
 
@@ -117,9 +97,58 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
-        us.confirmationPath(path);
+        premiumUserService.confirmationPath(path);
         return new ModelAndView("index");
     }
+
+    @RequestMapping(value = "/joinMatch/*", method = {RequestMethod.GET })
+    public ModelAndView joinMatch(HttpServletRequest request){
+        String path = request.getServletPath().replace("/joinMatch/", "");
+      PremiumUser user = loggedUser();
+        if(user == null) {
+            return new ModelAndView("redirect:/joinMatchForm/" + path);
+        }
+        return new ModelAndView("redirect:/joinCompetitiveMatch/" + path);
+    }
+
+    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.GET })
+    public ModelAndView createJoinMatchForm(@ModelAttribute("joinMatchForm") JoinMatchForm joinMatchForm,
+                                            @PathVariable String data){
+
+        return new ModelAndView("joinMatch").addObject("data", data);
+    }
+
+    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.POST })
+    public ModelAndView joinMatchForm(@Valid @ModelAttribute("joinMatchForm") final JoinMatchForm joinMatchForm,
+                               final BindingResult errors, HttpServletRequest request, @PathVariable String data) {
+
+        if(errors.hasErrors()) {
+            return createJoinMatchForm(joinMatchForm, data);
+        }
+        final int URL_DATE_LENGTH = 12;
+        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
+        if(data.length() < MIN_LENGTH) {
+            throw new GameNotFoundException("path '" + data + "' is too short to be formatted to a key");
+        }
+        String startTime = gameService.urlDateToKeyDate(data.substring(0, URL_DATE_LENGTH));
+        String teamName1 = data.substring(URL_DATE_LENGTH, data.length() - URL_DATE_LENGTH);
+        String finishTime = gameService.urlDateToKeyDate(data.substring(data.length() - URL_DATE_LENGTH));
+
+
+        final User u = userService.create(joinMatchForm.getFirstName(), joinMatchForm.getLastName(),
+                joinMatchForm.getEmail());
+        Game game = gameService.findByKey(teamName1, startTime, finishTime);
+        if(!game.getType().contains("Friendly")) {
+            throw new CantJoinCompetitiveMatchException("Need to be have an account to join this match");
+
+        }
+        else {
+            game = gameService.insertUserInGame(teamName1, startTime, finishTime, u.getUserId());
+            userService.sendConfirmMatchAssistance(u, game, data);
+        }
+            return new ModelAndView("redirect:/match/" + data);
+    }
+
 
     ///joinCompetitiveMatch/201810021226$1|1-6967621630201810021246
     @RequestMapping(value = "/joinCompetitiveMatch/*")
@@ -139,10 +168,6 @@ public class UserController extends BaseController{
         String startTime = gameService.urlDateToKeyDate(path.substring(0, URL_DATE_LENGTH));
         String teamName1 = path.substring(URL_DATE_LENGTH, path.length() - URL_DATE_LENGTH);
         String finishTime = gameService.urlDateToKeyDate(path.substring(path.length() - URL_DATE_LENGTH));
-        System.out.println(startTime + "\n\n");
-        System.out.println(teamName1 + "\n\n");
-        System.out.println(finishTime + "\n\n");
-
         Game game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
 
 
