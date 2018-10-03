@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @FutureTime
-@TeamIdIfNotIndividual
+//@TeamIdIfNotIndividual
 public class MatchForm {
     @Size(min = 4, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
@@ -44,10 +44,10 @@ public class MatchForm {
     @NotEmpty
     private String competitivity;
 
-    @NotEmpty
-    private String mode;
+//    @NotEmpty
+//    private String mode;
 
-    private String teamId;
+    //private String teamId;
 
     public String getMatchName() {
         return matchName;
@@ -145,19 +145,19 @@ public class MatchForm {
         this.competitivity = competitivity;
     }
 
-    public String getMode() {
-        return mode;
-    }
+//    public String getMode() {
+//        return mode;
+//    }
+//
+//    public void setMode(String mode) {
+//        this.mode = mode;
+//    }
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(String teamId) {
-        this.teamId = teamId;
-    }
+//    public String getTeamId() {
+//        return teamId;
+//    }
+//
+//    public void setTeamId(String teamId) {
+//        this.teamId = teamId;
+//    }
 }

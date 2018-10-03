@@ -20,15 +20,15 @@ var currentFilters = filters.toJoin;
 var endPointURL = getDefaultEndPoint();
 
 function getToJoinURL() {
-    return '/toJoinMatch';
+    return contextPath + '/toJoinMatch';
 }
 
 function getJoinedURL() {
-    return '/joinedMatch';
+    return contextPath + '/joinedMatch';
 }
 
 function getCreatedURL() {
-    return '/createdMatch';
+    return contextPath + '/createdMatch';
 }
 
 $("#to-join" ).click(function() {
@@ -96,7 +96,7 @@ function deleteButtonPostAppendMatch(match) {
     $("#" + key).find(".join-button").click(function () {
         $.ajax({
             type:   'POST',
-            url:    '/deleteMatch',
+            url:    contextPath + '/deleteMatch',
             data: {
                 teamName1: match.team1.name,
                 startTime: timeStampFormat(match.startTime),
@@ -114,7 +114,7 @@ function cancelButtonPostAppendMatch(match) {
     $("#" + key).find(".join-button").click(function () {
         $.ajax({
             type:   'POST',
-            url:    '/removePlayerFromMatch',
+            url:    contextPath + '/removePlayerFromMatch',
             data: {
                 teamName1: match.team1.name,
                 startTime: timeStampFormat(match.startTime),

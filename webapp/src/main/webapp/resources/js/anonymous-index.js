@@ -15,4 +15,4 @@ var filters = {
 };
 
 var currentFilters = filters;
-var endPointURL = '/filterMatch';
+var endPointURL = contextPath + '/filterMatch';

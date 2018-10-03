@@ -21,16 +21,23 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <img class="profile-pic" src="/img/user-default.svg"/>
+                    <img class="profile-pic" src="<c:url value="/img/user-default.svg"/>"/>
                 </div>
             </div>
 
             <div class="row text-center">
                 <div class="col">
                     <p class="profile-name"><c:out value="${user.getFullName()}"/></p>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col">
                     <p class="profile-username">@<c:out value="${user.getUserName()}"/></p>
                 </div>
             </div>
+
+
 
         </div> <!-- END Form container -->
     </div>

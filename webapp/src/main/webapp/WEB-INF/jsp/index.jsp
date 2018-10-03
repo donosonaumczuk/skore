@@ -75,7 +75,7 @@
 
                     <div class="row p-2 mt-2" id="loader">
                         <div class="offset-5 col-2">
-                            <img class="img-fluid" src="/img/loader.gif">
+                            <img class="img-fluid" src="<c:url value="/img/loader.gif"/>">
                         </div>
                     </div>
 

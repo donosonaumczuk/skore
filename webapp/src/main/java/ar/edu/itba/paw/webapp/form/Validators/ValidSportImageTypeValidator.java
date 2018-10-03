@@ -22,7 +22,7 @@ public class ValidSportImageTypeValidator
         //System.out.println("image : |" + image + "|" + "\n\n\n\n" );
 
         //System.out.println("type : |" + type + "|" + "\n\n\n\n" );
-        return type.equals("png") || type.equals("jpeg") || type.equals("svg+xml");
+        return type.equals("png") || type.equals("jpeg");
     }
 
 }

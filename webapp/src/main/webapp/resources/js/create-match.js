@@ -57,7 +57,7 @@ $(function () {
 $(function () {
     $('#timepicker-from').datetimepicker({
         format: 'HH:mm',
-        defaultDate: moment(getTimePlusHalfOur(), "HH:mm"),
+        defaultDate: moment(getTimePlusHalfOur(), "HH:mm")
     });
 });
 

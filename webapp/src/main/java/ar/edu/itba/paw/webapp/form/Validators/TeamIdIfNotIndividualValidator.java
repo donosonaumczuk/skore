@@ -18,18 +18,18 @@ public class TeamIdIfNotIndividualValidator
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("{ar.edu.itba.paw.webapp.form.Validators.TeamIdIfNotIndividual.message}")
-                .addNode("teamId").addConstraintViolation();
-        MatchForm matchForm = (MatchForm) obj;
-        String mode = matchForm.getMode();
-        if(mode != null) {
-            if (mode.equals("Team")) {
-                return matchForm.getTeamId().length() > 0;
-            }
+//        context.buildConstraintViolationWithTemplate("{ar.edu.itba.paw.webapp.form.Validators.TeamIdIfNotIndividual.message}")
+//                .addNode("teamId").addConstraintViolation();
+//        MatchForm matchForm = (MatchForm) obj;
+//        String mode = matchForm.getMode();
+//        if(mode != null) {
+//            if (mode.equals("Team")) {
+//                return matchForm.getTeamId().length() > 0;
+//            }
             return true;
-        }
-        else {
-            return false;
-        }
+//        }
+//        else {
+//            return false;
+//        }
     }
 }
