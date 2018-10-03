@@ -26,7 +26,7 @@
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <img class="profile-pic" src="/img/404UserNotFound.gif"/>
+                    <img class="profile-pic" src="<c:url value="/img/404UserNotFound.gif"/>"/>
                 </div>
             </div>
             <div class="row text-center">

@@ -111,7 +111,7 @@ var postAppendMatch = joinButtonPostAppendMatch;
 
 $.ajax({
     type:   'POST',
-    url:    '/lang'
+    url:    contextPath + '/lang'
 }).done(function(data) {
     lang = JSON.parse(data).lang;
     loadMatches();
@@ -292,7 +292,7 @@ function getLoader() {
     return '' +
         '<div class="row p-2 mt-2" id="loader">' +
             '<div class="offset-5 col-2">' +
-                '<img class="img-fluid" src="/img/loader.gif">' +
+                '<img class="img-fluid" src="' + contextPath + '/img/loader.gif">' +
             '</div>' +
         '</div>';
 
@@ -328,21 +328,21 @@ function getMatchCard(match) {
         '<div class="col">' +
         '<div class="row mb-4">' +
         '<div class="col-2 col-sm-1 pl-0">' +
-        '<img src="/profile/image/' + username + '" class="user-avatar" alt="user-pic">' +
+        '<img src="' + contextPath + '/profile/image/' + username + '" class="user-avatar" alt="user-pic">' +
         '</div>' +
         '<div class="col-3 col-sm-4">' +
         '<div class="row">' +
         '<p class="name-label">' + title + '</p>' +
         '</div>' +
         '<div class="row">' +
-        '<a class="username-label" href="/profile/' + username + '">@' + username + '</a>' +
+        '<a class="username-label" href="' + contextPath + '/profile/' + username + '">@' + username + '</a>' +
         '</div>' +
         '</div>' +
         '<div class="col-2 col-sm-3">' +
         '<div class="container-fluid pt-2">' +
         '<div class="row">' +
         '<div class="col col-xl-4 mr-0 mt-1">' +
-        '<img src="/sport/image/' + sportId + '" class="sport-img" alt="sport-pic">' +
+        '<img src="' + contextPath + '/sport/image/' + sportId + '" class="sport-img" alt="sport-pic">' +
         '</div>' +
         '<div class="col-6 col-xl d-none d-sm-block pl-0">' +
         '<p class="sport-label">' + sport + '</p>' +
@@ -398,7 +398,7 @@ function getTypeLabel(type) {
 
 function getJoinButton(match) {
     var prefix = isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/';
-    return '<a class="btn btn-green join-button" href="'+ prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
+    return '<a class="btn btn-green join-button" href="'+ contextPath + prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
         '" role="button"><i class="fas fa-plus mr-1"></i>' + labelMap.toJoin[lang] + '</a>';
 }
 

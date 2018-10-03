@@ -6,5 +6,5 @@ import javax.servlet.ServletContext;
 
 public class ContextServlet {
     @Autowired
-    private ServletContext servletContext;
+    public ServletContext servletContext;
 }
