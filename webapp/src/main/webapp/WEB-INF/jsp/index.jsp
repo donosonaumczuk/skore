@@ -22,7 +22,7 @@
     <div class="container-fluid">
         <div class="row">
 
-            <div class="d-none d-md-block sidepanel col-md-4 col-lg-4 offset-xl-1 col-xl-3">
+            <div class="sidepanel col-md-4 col-lg-4 offset-xl-1 col-xl-3 navbar-collapse" id="navbarSupportedContent">
                 <div class="container-fluid"> <!-- Leftside panel container -->
                     <div class="row">
                         <div class="col text-center create-match p-4">

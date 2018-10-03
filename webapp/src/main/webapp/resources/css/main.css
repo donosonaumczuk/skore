@@ -268,9 +268,9 @@ html {
 
 /* sm - Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-    .primary-nav {
-        background-color: blueviolet;
-    }
+    /*.primary-nav {*/
+        /*background-color: blueviolet;*/
+    /*}*/
 
     .user-avatar {
         width: 47px;
@@ -280,16 +280,16 @@ html {
 
 /* md - Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .primary-nav {
-        background-color: lightseagreen;
-    }
+    /*.primary-nav {*/
+        /*background-color: lightseagreen;*/
+    /*}*/
 }
 
 /* lg - Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    .primary-nav {
-        background-color: indianred;
-    }
+    /*.primary-nav {*/
+        /*background-color: indianred;*/
+    /*}*/
 
     html {
         font-size: 1rem;
@@ -298,7 +298,7 @@ html {
 
 /* xl - Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    .primary-nav {
-        background-color: black;
-    }
+    /*.primary-nav {*/
+        /*background-color: black;*/
+    /*}*/
 }

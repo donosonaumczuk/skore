@@ -109,6 +109,16 @@ var reachEndOfPagination = false;
 var getButton = getJoinButton;
 var postAppendMatch = joinButtonPostAppendMatch;
 
+$( window ).resize(function() {
+    var width = $(window).width();
+    if(width < 768) {
+        $('.sidepanel').addClass('collapse navbar-collapse');
+    }
+    else {
+        $('.sidepanel').removeClass('collapse navbar-collapse');
+    }
+});
+
 $.ajax({
     type:   'POST',
     url:    contextPath + '/lang'
@@ -295,8 +305,8 @@ function getLoader() {
                 '<img class="img-fluid" src="' + contextPath + '/img/loader.gif">' +
             '</div>' +
         '</div>';
-
 }
+
 function getMatchURLKey(startTime, team1, finishTime) {
     var key = '' + startTime.year + ((startTime.monthValue > 9)? '':'0') + startTime.monthValue +
         ((startTime.dayOfMonth > 9)? '':'0') + startTime.dayOfMonth;
@@ -324,7 +334,7 @@ function getMatchCard(match) {
     var team1Name = match.team1.name;
 
     var matchCard = '' +
-        '<div class="row p-2 mt-2 match-card rounded-border" id="' + getMatchURLKey(startTime, team1Name, finishTime) + '">' +
+        '<div class="row p-2 mt-2 match-card rounded-border" id="' + getMatchURLKey(startTime, match.team1, finishTime) + '">' +
         '<div class="col">' +
         '<div class="row mb-4">' +
         '<div class="col-2 col-sm-1 pl-0">' +
@@ -410,7 +420,7 @@ function isFriendlyMatch(type) {
 }
 
 function joinButtonPostAppendMatch(match) {
-    /* Do nothing... */
+    //Do nothing...
     return;
 }
 

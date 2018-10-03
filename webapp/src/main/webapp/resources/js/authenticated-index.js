@@ -103,7 +103,7 @@ function deleteButtonPostAppendMatch(match) {
                 finishTime: timeStampFormat(match.finishTime)
             }
         }).done(function(data) {
-            //TODO
+            console.log(data);
         });
     });
 }
@@ -121,7 +121,7 @@ function cancelButtonPostAppendMatch(match) {
                 finishTime: timeStampFormat(match.finishTime)
             }
         }).done(function(data) {
-            //TODO
+            console.log(data);
         });
     });
 }
@@ -134,9 +134,4 @@ function getCancelButton(match) {
 function getDeleteButton(match) {
     return '<a class="btn btn-negative join-button"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
-}
-
-function joinButtonPostAppendMatch(match) {
-    /* Do nothing... */
-    return;
 }

@@ -3,10 +3,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav class="navbar fixed-top primary-nav">
-    <button class="navbar-toggler d-md-none" type="button"><span class="fas fa-bars"></span></button>
+    <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="fas fa-bars"></span>
+    </button>
     <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
-    <a class="d-sm-none login-link" href="<c:url value="/login"/>"><i class="fas fa-user"></i></a>
+    <c:choose>
+        <c:when test="${isLogged}">
+            <a class="d-sm-none login-link" href="<c:url value="/logout"/>"><i class="fas fa-sign-out-alt"></i></a>
+        </c:when>
+        <c:otherwise>
+            <a class="d-sm-none login-link" href="<c:url value="/login"/>"><i class="fas fa-user"></i></a>
+        </c:otherwise>
+    </c:choose>
     <c:choose>
         <c:when test="${isLogged}">
             <form class="d-none d-sm-block form-inline">
@@ -24,7 +33,6 @@
             </form>
         </c:otherwise>
     </c:choose>
-
 </nav>
 
 <%--<nav class="navbar d-none d-sm-block fixed-top second-nav">--%>
