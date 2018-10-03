@@ -80,11 +80,11 @@ public class Filters {
             Iterator iterator = same.get(key).iterator();
             list.add("%"+iterator.next()+"%");
             query = (isFirst)? query: query + " AND";
-            query = query + " (" + key + " LIKE ?";
+            query = query + " (lower(" + key + ") LIKE lower(?)";
 
             while(iterator.hasNext()) {
                 list.add("%"+iterator.next()+"%");
-                query = query + " OR " + key + " LIKE ?";
+                query = query + " OR lower(" + key + ") LIKE lower(?)";
             }
             query = query + ")";
             isFirst = false;
