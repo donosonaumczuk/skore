@@ -111,14 +111,14 @@ public class UserController extends BaseController{
         return new ModelAndView("redirect:/joinCompetitiveMatch/" + path);
     }
 
-    @RequestMapping(value = "/joinMatchForm/{data}", method = {RequestMethod.GET })
+    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.GET })
     public ModelAndView createJoinMatchForm(@ModelAttribute("joinMatchForm") JoinMatchForm joinMatchForm,
                                             @PathVariable String data){
 
         return new ModelAndView("joinMatch").addObject("data", data);
     }
 
-    @RequestMapping(value = "/joinMatchForm/{data}", method = {RequestMethod.POST })
+    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.POST })
     public ModelAndView joinMatchForm(@Valid @ModelAttribute("joinMatchForm") final JoinMatchForm joinMatchForm,
                                final BindingResult errors, HttpServletRequest request, @PathVariable String data) {
 
@@ -143,11 +143,11 @@ public class UserController extends BaseController{
 
         }
         else {
-            gameService.insertUserInGame(teamName1, startTime, finishTime, u.getUserId());
+            game = gameService.insertUserInGame(teamName1, startTime, finishTime, u.getUserId());
+            userService.sendConfirmMatchAssistance(u, game, data);
         }
             return new ModelAndView("redirect:/match/" + data);
     }
-
 
 
     ///joinCompetitiveMatch/201810021226$1|1-6967621630201810021246

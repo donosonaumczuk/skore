@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,4 +23,7 @@ public interface UserService {
 
     @Transactional
     public User updateEmail(final long userId, final String newEmail);
+
+    public void sendConfirmMatchAssistance(User user, Game game, String data);
+
 }

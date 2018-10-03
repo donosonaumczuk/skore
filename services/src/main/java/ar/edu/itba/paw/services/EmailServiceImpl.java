@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,37 @@ public class EmailServiceImpl implements EmailService {
                         "\t"+url);
         emailSender.send(message);
     }
+
+
+    @Async
+    @Override
+    public void sendConfirmMatch(User user, Game game, String url) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Confirm Match Assistance");
+        message.setText("Dear "+user.getFirstName()+" "+user.getLastName()+": \n" +
+                "\t To confirm your assistance to the match: " + game.getTitle() + "\n" +
+                "\t starting at: " + game.getStartTime() + "\n" +
+                "\t ending at: " + game.getFinishTime() + "\n" +
+                "click the following link: \n" +
+                "\t" + url);
+        emailSender.send(message);
+    }
+
+    @Async
+    @Override
+    public void sendCancelOptionMatch(User user, Game game, String url) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Cancel Match Assistance");
+        message.setText("Dear "+user.getFirstName()+" "+user.getLastName()+": \n" +
+                "\t To cancel your assistance to the match: " + game.getTitle() + "\n" +
+                "\t starting at: " + game.getStartTime() + "\n" +
+                "\t ending at: " + game.getFinishTime() + "\n" +
+                "click the following link: \n" +
+                "\t" + url);
+        emailSender.send(message);
+    }
+
 }
 
