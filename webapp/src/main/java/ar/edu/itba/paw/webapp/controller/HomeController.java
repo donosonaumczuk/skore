@@ -28,15 +28,11 @@ import java.time.format.DateTimeFormatter;
 @Controller
 public class HomeController extends BaseController{
 
-    @Autowired
-    private ServletContext servletContext;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping("/")
     public ModelAndView index() {
         final ModelAndView mav = new ModelAndView("index");
-        LOGGER.debug("|{}|", servletContext.getContextPath());
         return mav;
 
     }
