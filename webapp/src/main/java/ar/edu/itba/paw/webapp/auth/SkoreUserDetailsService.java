@@ -41,7 +41,6 @@ public class SkoreUserDetailsService implements UserDetailsService {
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         Set<Role> roles = currentUser.getRoles();
         for(Role role : roles) {
-            System.out.println("role: " + role.getName() + "\n\n\n\n");
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
