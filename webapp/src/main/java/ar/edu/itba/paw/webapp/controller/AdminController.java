@@ -47,7 +47,7 @@ public class AdminController extends BaseController{
         }
         int playerQuantity= 0;
         for(int i = 0; i< sportForm.getPlayerQuantity().length(); i++) {
-            playerQuantity = playerQuantity*10 + sportForm.getPlayerQuantity().charAt(i);
+            playerQuantity = playerQuantity*10 + (sportForm.getPlayerQuantity().charAt(i)-'0');
         }
         final Sport sport = sportService.create(sportForm.getSportName(), playerQuantity,
                 sportForm.getDisplayName(), sportForm.getImage());
