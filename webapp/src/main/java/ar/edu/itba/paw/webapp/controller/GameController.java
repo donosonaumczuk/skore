@@ -14,13 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -244,9 +241,9 @@ public class GameController extends BaseController{
             throw new GameNotFoundException("Can't find game");
         }
         List<User> players = game.getTeam1().getPlayers();
-        if(!userService.isInTeam(user, players)) {
+        if(!players.contains(user)) {
             players = game.getTeam2().getPlayers();
-            if (!userService.isInTeam(user, players)) {
+            if (!players.contains(user)) {
                 try {
                     game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
                     LOGGER.trace("added to Match");

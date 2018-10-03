@@ -30,6 +30,4 @@ public interface UserService {
 
     public long getUserIdFromData (String data);
 
-    public boolean isInTeam(User user, List<User> players);
-
 }

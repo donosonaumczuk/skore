@@ -120,18 +120,6 @@ public class UserServiceImpl implements UserService {
         }
         return id;
     }
-
-    @Override
-    public boolean isInTeam(User user, List<User> players) {
-        for(User u : players) {
-            if(u.equals(user)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 }
 
 ///joinMatch/2018100302291.5-3590166870201810030249
