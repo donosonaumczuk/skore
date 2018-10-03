@@ -17,6 +17,8 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     public JavaMailSender emailSender;
 
+    private static String URL_PREFIX = "http://pawserver.it.itba.edu.ar/paw-2018b-04/";
+
     @Async
     @Override
     public void sendConfirmAccount(PremiumUser user, String url) {
@@ -25,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject("Confirm Account");
         message.setText("Dear "+user.getFirstName()+" "+user.getLastName()+": \n" +
                         "\t Plese click in the following url to confirm your account: \n" +
-                        "\t"+url);
+                        "\t <a href=\""+URL_PREFIX+url+"\">");
         emailSender.send(message);
     }
 
@@ -41,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
                 "\t starting at: " + game.getStartTime() + "\n" +
                 "\t ending at: " + game.getFinishTime() + "\n" +
                 "click the following link: \n" +
-                "\t" + url);
+                "\t"+URL_PREFIX+url);
         emailSender.send(message);
     }
 
@@ -56,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
                 "\t starting at: " + game.getStartTime() + "\n" +
                 "\t ending at: " + game.getFinishTime() + "\n" +
                 "click the following link: \n" +
-                "\t" + url);
+                "\t"+URL_PREFIX+url);
         emailSender.send(message);
     }
 
