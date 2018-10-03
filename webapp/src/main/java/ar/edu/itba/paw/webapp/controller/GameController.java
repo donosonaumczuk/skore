@@ -242,17 +242,29 @@ public class GameController extends BaseController{
         }
         List<User> players = game.getTeam1().getPlayers();
         if(!players.contains(user)) {
-            players = game.getTeam2().getPlayers();
-            if (!players.contains(user)) {
-                try {
-                    game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
-                    LOGGER.trace("added to Match");
-                } catch (TeamFullException e) {
-                    LOGGER.error("Team is already full");
+            if(game.getTeam2() != null) {
+                players = game.getTeam2().getPlayers();
+                if (!players.contains(user)) {
+                    try {
+                        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+                        LOGGER.trace("added to Match");
+                    } catch (TeamFullException e) {
+                        LOGGER.error("Team is already full");
 
-                    new ModelAndView("TeamFull");
+                        new ModelAndView("TeamFull");
+                    }
                 }
             }
+            else {
+                    try {
+                        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+                        LOGGER.trace("added to Match");
+                    } catch (TeamFullException e) {
+                        LOGGER.error("Team is already full");
+
+                        new ModelAndView("TeamFull");
+                    }
+                }
         }
         userService.sendCancelOptionMatch(user, game, gameData);
         return new ModelAndView("confirmedMatchAssistance");
