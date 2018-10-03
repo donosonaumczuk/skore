@@ -4,6 +4,8 @@ import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface UserService {
     @Transactional
     public User findById(final long id);
@@ -27,5 +29,7 @@ public interface UserService {
     public void sendConfirmMatchAssistance(User user, Game game, String data);
 
     public long getUserIdFromData (String data);
+
+    public boolean isInTeam(User user, List<User> players);
 
 }

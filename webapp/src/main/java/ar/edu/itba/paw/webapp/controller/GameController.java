@@ -239,12 +239,24 @@ public class GameController extends BaseController{
         String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
         String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
         String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
-        try {
-            Game game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
-        }catch(TeamFullException e) {
-            new ModelAndView("TeamFull");
+        Game game = gameService.findByKey(teamName1, startTime, finishTime);
+        if(game == null) {
+            throw new GameNotFoundException("Can't find game");
         }
-        LOGGER.trace("added to Match");
+        List<User> players = game.getTeam1().getPlayers();
+        if(!userService.isInTeam(user, players)) {
+            players = game.getTeam2().getPlayers();
+            if (!userService.isInTeam(user, players)) {
+                try {
+                    game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+                    LOGGER.trace("added to Match");
+                } catch (TeamFullException e) {
+                    LOGGER.error("Team is already full");
+
+                    new ModelAndView("TeamFull");
+                }
+            }
+        }
         return new ModelAndView("redirect:/match/" + gameData);
     }
 

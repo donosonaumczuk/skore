@@ -167,7 +167,11 @@ public class UserController extends BaseController{
         String startTime = gameService.urlDateToKeyDate(path.substring(0, URL_DATE_LENGTH));
         String teamName1 = path.substring(URL_DATE_LENGTH, path.length() - URL_DATE_LENGTH);
         String finishTime = gameService.urlDateToKeyDate(path.substring(path.length() - URL_DATE_LENGTH));
-        Game game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+        Game game = gameService.findByKey(teamName1, startTime, finishTime);
+        if(game == null) {
+            throw new GameNotFoundException("can't find game");
+        }
+        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
 
 
         return new ModelAndView("redirect:/match/" + path);

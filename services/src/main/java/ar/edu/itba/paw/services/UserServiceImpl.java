@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -118,6 +119,16 @@ public class UserServiceImpl implements UserService {
             }
         }
         return id;
+    }
+
+    @Override
+    public boolean isInTeam(User user, List<User> players) {
+        for(User u : players) {
+            if(u.equals(user)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
