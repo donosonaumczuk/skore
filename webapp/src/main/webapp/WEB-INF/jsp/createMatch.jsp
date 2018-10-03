@@ -43,20 +43,20 @@
                         <form:errors path="competitivity" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inscription"><spring:message code="inscriptionModeLabel"/><span class="text-muted">*</span></label>
-                    <div class="input-group">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">
-                            <label class="btn btn-green" id="individual">
-                                <form:radiobutton path="mode" name="options" value="Individual" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="individualLabel"/>
-                            </label>
-                            <label class="btn btn-green" id="team">
-                                <form:radiobutton path="mode" name="options" value="Team" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>
-                            </label>
-                        </div>
-                        <form:errors path="mode" element="div" cssClass="invalid-feedback d-block"/>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label for="inscription"><spring:message code="inscriptionModeLabel"/><span class="text-muted">*</span></label>--%>
+                    <%--<div class="input-group">--%>
+                        <%--<div class="btn-group btn-group-toggle" data-toggle="buttons" id="inscription">--%>
+                            <%--<label class="btn btn-green" id="individual">--%>
+                                <%--<form:radiobutton path="mode" name="options" value="Individual" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="individualLabel"/>--%>
+                            <%--</label>--%>
+                            <%--<label class="btn btn-green" id="team">--%>
+                                <%--<form:radiobutton path="mode" name="options" value="Team" autocomplete="false"/><i class="d-none fas fa-check"></i> <spring:message code="teamLabel"/>--%>
+                            <%--</label>--%>
+                        <%--</div>--%>
+                        <%--<form:errors path="mode" element="div" cssClass="invalid-feedback d-block"/>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
@@ -67,7 +67,7 @@
                     </form:select>
                     <form:errors path="sportName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
-                <div class="form-group collapse" id="collapseTeam">
+               <%-- <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/><span class="text-muted">*</span></label>
                     <form:select  path="teamId" id="inputTeam" class="form-control">
                         <option value="" selected><spring:message code="chooseTeamLabel"/></option>
@@ -75,7 +75,7 @@
                         <option value="Team2">Team2</option>
                     </form:select>
                     <form:errors path="teamId" element="div" cssClass="invalid-feedback d-block"/>
-                </div>
+                </div>--%>
                 <div class="form-group">
                     <label for="datepicker"><spring:message code="dateLabel"/><span class="text-muted">*</span></label>
                     <small id="dateFormatHelp" class="form-text text-muted"><spring:message code="dateFormatLabel"/></small>

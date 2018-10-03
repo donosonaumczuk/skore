@@ -28,9 +28,16 @@
             <div class="row text-center">
                 <div class="col">
                     <p class="profile-name"><c:out value="${user.getFullName()}"/></p>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col">
                     <p class="profile-username">@<c:out value="${user.getUserName()}"/></p>
                 </div>
             </div>
+
+
 
         </div> <!-- END Form container -->
     </div>

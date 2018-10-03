@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @PasswordMatches
 public class UserForm {
     @Size(min = 2, max = 100)
-    @Pattern(regexp ="[a-zA-Z]+")
+    @Pattern(regexp ="[a-zA-Z ]+")
     private String firstName;
 
     @Size(min = 2, max = 100)
