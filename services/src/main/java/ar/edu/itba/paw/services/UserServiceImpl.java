@@ -109,6 +109,17 @@ public class UserServiceImpl implements UserService {
         emailSender.sendConfirmMatch(user, game, "/confirmMatch/" + phrase );
     }
 
+    @Override
+    public long getUserIdFromData (String data) {
+        long id = 0;
+        for(int i = 0; i < data.length() && (data.charAt(i) >= '0' && data.charAt(i) <= '9'); i++) {
+            if(data.charAt(i) >= '0' && data.charAt(i) <= '9') {
+                id = id * 10 + (data.charAt(i) - '0');
+            }
+        }
+        return id;
+    }
+
 
 }
 

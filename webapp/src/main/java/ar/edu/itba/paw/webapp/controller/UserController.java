@@ -143,7 +143,6 @@ public class UserController extends BaseController{
 
         }
         else {
-            game = gameService.insertUserInGame(teamName1, startTime, finishTime, u.getUserId());
             userService.sendConfirmMatchAssistance(u, game, data);
         }
             return new ModelAndView("redirect:/match/" + data);
