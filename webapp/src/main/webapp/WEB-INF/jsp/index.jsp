@@ -39,16 +39,16 @@
                             </div>
                             <c:if test="${isLogged}">
                                 <div class="row mb-4">
-                                    <label for="matches">Matches</label>
+                                    <label for="matches"><spring:message code="matchesLabel"/></label>
                                     <div class="btn-group input-group btn-group-toggle" data-toggle="buttons" id="matches">
                                         <label class="btn btn-secondary active" id="to-join">
-                                            <input type="radio" name="options" id="option1" autocomplete="off" checked> TO JOIN
+                                            <input type="radio" name="options" id="option1" autocomplete="off" checked> <spring:message code="toJoinLabel"/>
                                         </label>
                                         <label class="btn btn-secondary" id="joined">
-                                            <input type="radio" name="options" id="option2" autocomplete="off"> JOINED
+                                            <input type="radio" name="options" id="option2" autocomplete="off"> <spring:message code="joinedLabel"/>
                                         </label>
                                         <label class="btn btn-secondary" id="created">
-                                            <input type="radio" name="options" autocomplete="off"> CREATED
+                                            <input type="radio" name="options" autocomplete="off"> <spring:message code="createdLabel"/>
                                         </label>
                                     </div>
                                 </div>
