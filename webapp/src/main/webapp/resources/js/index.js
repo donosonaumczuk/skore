@@ -257,12 +257,13 @@ function getLoader() {
 function getMatchURLKey(startTime, team1, finishTime) {
     var key = '' + startTime.year + ((startTime.monthValue > 9)? '':'0') + startTime.monthValue +
         ((startTime.dayOfMonth > 9)? '':'0') + startTime.dayOfMonth;
+    key += ((startTime.hour > 9)? '':'0') + ((startTime.minute > 9)? '':'0');
     key += team1.name;
-
     key += finishTime.year + ((finishTime.monthValue > 9)? '':'0') + finishTime.monthValue +
         ((finishTime.dayOfMonth > 9)? '':'0') + finishTime.dayOfMonth;
-    return key;
+    key += ((finishTime.hour > 9)? '':'0') + ((finishTime.minute > 9)? '':'0');
 
+    return key;
 }
 
 function getMatchCard(match) {
@@ -353,12 +354,15 @@ function getTypeLabel(type) {
 }
 
 function getJoinButton(match) {
+    console.log(isFriendlyMatch(match.type));
+    console.log(isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/');
     var prefix = isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/';
     return '<a class="btn btn-green" href="'+ prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
         '" role="button"><i class="fas fa-plus mr-1"></i>' + labelMap.toJoin[lang] + '</a>';
 }
 
 function isFriendlyMatch(type) {
+    console.log(type.split("-")[1]);
     if(type.split("-")[1] == "Friendly")
         return true;
 
