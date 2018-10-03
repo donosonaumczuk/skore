@@ -299,7 +299,8 @@ public class GameServiceImpl implements GameService {
         return findByKey(teamName1, startTime, finishTime);
     }
 
-    private String urlDateToKeyDate(final String date) {
+    @Override
+    public String urlDateToKeyDate(final String date) {
         StringBuilder formattedDate = new StringBuilder(date);
 
         formattedDate = formattedDate.insert(4, "-");
