@@ -8,6 +8,10 @@
     <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
     <jsp:include page="css.jsp"></jsp:include>
     <link rel="icon" href="/img/bullseye-solid.ico" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+          integrity="sha384-OHBBOqpYHNsIqQy8hL1U+8OXf9hH6QRxi0+EODezv82DfnZoV7qoHAZDwMwEJvSw"
+          crossorigin="anonymous">
     <title>skore</title>
 </head>
 <body>
@@ -23,23 +27,41 @@
                     <div class="row">
                         <div class="col text-center create-match p-4">
                             <p><spring:message code="cantFindMatchMessage"/></p>
-                            <button id="create-match-btn" class="btn btn-white-succ" type="submit"><spring:message code="createAMatchMessage"/></button>
+                            <button id="create-match-btn" class="btn btn-white-succ" type="button">
+                                <spring:message code="createAMatchMessage"/>
+                            </button>
                         </div>
                     </div>
                     <div class="row filters p-4 mt-2">
                         <div class="container-fluid">
                             <div class="row">
-                                <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/></p>
+                                <p class="left-panel-title"></i><spring:message code="filtersAndCategoriesMessage"/></p>
                             </div>
-                            <div class="row mb-4">
+                            <c:if test="${isLogged}">
+                                <div class="row mb-4">
+                                    <label for="matches">Matches</label>
+                                    <div class="btn-group input-group btn-group-toggle" data-toggle="buttons" id="matches">
+                                        <label class="btn btn-secondary active" id="to-join">
+                                            <input type="radio" name="options" id="option1" autocomplete="off" checked> TO JOIN
+                                        </label>
+                                        <label class="btn btn-secondary" id="joined">
+                                            <input type="radio" name="options" id="option2" autocomplete="off"> JOINED
+                                        </label>
+                                        <label class="btn btn-secondary" id="created">
+                                            <input type="radio" name="options" autocomplete="off"> CREATED
+                                        </label>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <div class="row mb-4" id="country">
                                 <label for="country-filter"><spring:message code="countryLabel"/></label>
                                 <input class="form-control filter-input mb-2" type="text" id="country-filter"/>
                             </div>
-                            <div class="row mb-4">
+                            <div class="row mb-4" id="state">
                                 <label for="state-filter"><spring:message code="stateLabel"/></label>
                                 <input class="form-control filter-input mb-2" type="text" id="state-filter"/>
                             </div>
-                            <div class="row mb-4">
+                            <div class="row mb-4" id="city">
                                 <label for="state-filter"><spring:message code="cityLabel"/></label>
                                 <input class="form-control filter-input mb-2" type="text" id="city-filter"/>
                             </div>
@@ -64,9 +86,15 @@
 
     <%-- Include JS Scripts --%>
     <jsp:include page="js.jsp"></jsp:include>
+    <c:choose>
+        <c:when test="${isLogged}">
+            <script src="<c:url value="/js/authenticated-index.js"/>"></script>
+        </c:when>
+        <c:otherwise>
+            <script src="<c:url value="/js/anonymous-index.js"/>"></script>
+        </c:otherwise>
+    </c:choose>
     <script src="<c:url value="/js/index.js"/>"></script>
-    <script src="<c:url value="/js/filters.js"/>" type="text/javascript"></script>
-    <script src="<c:url value="/js/load-matches.js"/>" type="text/javascript"></script>
 
 </body>
 </html>

@@ -87,7 +87,6 @@
                         <form:errors path="date" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="timepicker-from"><spring:message code="fromLabel"/><span class="text-muted">*</span></label>
@@ -114,7 +113,6 @@
                     <label for="description"><spring:message code="descriptionLabel"/></label>
                     <form:textarea class="form-control" id="description" path="description" rows="3" maxlength="140"/>
                     <form:errors path="description" element="div" cssClass="invalid-feedback d-block"/>
-
                 </div>
                 <div class="form-group" id="locationField">
                     <label for="autocomplete"><spring:message code="addressLabel"/><span class="text-muted">*</span></label>
@@ -124,7 +122,6 @@
                     <label for="country"><spring:message code="countryLabel"/><span class="text-muted">*</span></label>
                     <form:input type="text" path="country" class="form-control" id="country" readonly="true"/>
                     <form:errors path="country" element="div" cssClass="invalid-feedback d-block"/>
-
                 </div>
                 <div class="form-row">
                     <div class="form-group col-9">

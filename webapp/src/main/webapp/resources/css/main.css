@@ -73,13 +73,26 @@ body {
     background-color: transparent;
 }
 
+.btn-green:hover {
+    background-color: #abdf91;
+    color: #1c7931;
+}
+
+.btn-negative {
+    border-color: darkred;
+    color: darkred;
+    background-color: transparent;
+}
+
+.btn-negative:hover {
+    background-color: #ffaea7;
+    color: darkred;
+}
+
 .sport-label {
     font-size: 1.3rem;
 }
 
-.btn-green:hover {
-    background-color: #abdf91;
-}
 
 .sign-in-container {
     margin-top: 9rem;

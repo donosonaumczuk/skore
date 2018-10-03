@@ -63,7 +63,7 @@ public class GameController extends BaseController{
     }
 
 
-    @RequestMapping(value="/filterMatchLoggedIsPart", method= RequestMethod.POST)
+    @RequestMapping(value="/joinedMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGamesLoggedIsPart(@RequestParam final String body) throws IOException {
         JSONObject json = new JSONObject(body);
@@ -83,7 +83,7 @@ public class GameController extends BaseController{
         return objectMapper.writeValueAsString(games);
     }
 
-    @RequestMapping(value="/filterMatchLoggedIsNotPart", method= RequestMethod.POST)
+    @RequestMapping(value="/toJoinMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGamesLoggedIsNotPart(@RequestParam final String body) throws IOException {
         JSONObject json = new JSONObject(body);
@@ -155,7 +155,7 @@ public class GameController extends BaseController{
         return objectMapper.writeValueAsString(ans);
     }
 
-    @RequestMapping(value="/filterMatchLoggedCreateBy", method= RequestMethod.POST)
+    @RequestMapping(value="/createdMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String filterGamesLoggedCreateBy(@RequestParam final String body) throws IOException {
         JSONObject json = new JSONObject(body);
@@ -203,7 +203,7 @@ public class GameController extends BaseController{
     @RequestMapping(value = "/match/*", method = {RequestMethod.GET})
     public ModelAndView matchDetails(HttpServletRequest request) {
         String matchURLKey = request.getServletPath().substring(7); /* /match/ .length */
-        
+
         Game game;
         try {
             game = gameService.findByKeyFromURL(matchURLKey);
