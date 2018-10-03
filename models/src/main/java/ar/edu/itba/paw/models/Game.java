@@ -104,7 +104,6 @@ public class Game {
 
         Game aGame = ((Game) object);
         return getTeam1().equals(aGame.getTeam1())
-                && getTeam2().equals(aGame.getTeam2())
                 && getStartTime().equals(aGame.getStartTime())
                 && getFinishTime().equals(aGame.getFinishTime());
     }

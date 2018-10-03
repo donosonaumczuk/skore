@@ -145,7 +145,7 @@ public class GameServiceImpl implements GameService {
         for (User user:game.getTeam2().getPlayers()) {
             if(user.getUserId() == userId) {
                 LOGGER.trace("Found user: {} in team2",userId);
-                teamService.removePlayer(game.team1Name(), userId);
+                teamService.removePlayer(game.team2Name(), userId);
                 return findByKey(teamName1, startTime, finishTime);
             }
         }
@@ -299,7 +299,8 @@ public class GameServiceImpl implements GameService {
         return findByKey(teamName1, startTime, finishTime);
     }
 
-    private String urlDateToKeyDate(final String date) {
+    @Override
+    public String urlDateToKeyDate(final String date) {
         StringBuilder formattedDate = new StringBuilder(date);
 
         formattedDate = formattedDate.insert(4, "-");
