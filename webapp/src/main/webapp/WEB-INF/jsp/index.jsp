@@ -27,9 +27,9 @@
                     <div class="row">
                         <div class="col text-center create-match p-4">
                             <p><spring:message code="cantFindMatchMessage"/></p>
-                            <button id="create-match-btn" class="btn btn-white-succ" type="button">
+                            <a id="create-match-btn" class="btn btn-white-succ" role="button">
                                 <spring:message code="createAMatchMessage"/>
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div class="row filters p-4 mt-2">

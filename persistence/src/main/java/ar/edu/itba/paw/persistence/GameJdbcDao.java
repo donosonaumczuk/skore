@@ -237,9 +237,10 @@ public class GameJdbcDao implements GameDao {
     @Override
     public boolean remove(final String teamName1, final String startTime, final String finishTime) {
         LOGGER.trace("Try to delete game: {}|{}|{}", teamName1, startTime, finishTime);
-        final String sqlQuery = "DELETE FROM games WHERE teamName1 = ? AND startTime = ? AND " +
-                "finishTime = ?;";
+        final String sqlQuery = "DELETE FROM games WHERE teamName1 = ? AND startTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS') AND" +
+                " finishTime = TO_TIMESTAMP(?,'YYYY-MM-DD HH24:MI:SS');";
         int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName1, startTime, finishTime);
         return rowsDeleted > 0;
     }
 }
+

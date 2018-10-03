@@ -1,7 +1,3 @@
-$('#create-match-btn').click( function() {
-    window.location.href = '/createMatch';
-});
-
 var labelMap = {
     toJoin: {
         "en": "JOIN",
@@ -189,8 +185,6 @@ function loadMatches() {
 
         matchArray = JSON.parse(matchJSON);
 
-        console.log(matchArray);
-
         removeLoader();
 
         for(var i = 0; i < matchArray.length; i++) {
@@ -226,6 +220,12 @@ function getMatchRequestBody() {
         'pageNumber: "' + pageNumber + '" }';
 }
 
+function timeStampFormat(time) {
+    return time.year + "-" + ((time.monthValue > 9)? '':'0') + time.monthValue + "-" +
+        ((time.dayOfMonth > 9)? '':'0') + time.dayOfMonth + " " + ((time.hour > 9)? '':'0') +
+        time.hour + ":" + ((time.minute > 9)? '':'0') + time.minute + ":00";
+}
+
 function formatTime(hours, minutes) {
     if(hours < 10)
         hours = '0' + hours;
@@ -257,11 +257,11 @@ function getLoader() {
 function getMatchURLKey(startTime, team1, finishTime) {
     var key = '' + startTime.year + ((startTime.monthValue > 9)? '':'0') + startTime.monthValue +
         ((startTime.dayOfMonth > 9)? '':'0') + startTime.dayOfMonth;
-    key += ((startTime.hour > 9)? '':'0') + ((startTime.minute > 9)? '':'0');
+    key += ((startTime.hour > 9)? '':'0') + startTime.hour + ((startTime.minute > 9)? '':'0') + startTime.minute;
     key += team1.name;
     key += finishTime.year + ((finishTime.monthValue > 9)? '':'0') + finishTime.monthValue +
         ((finishTime.dayOfMonth > 9)? '':'0') + finishTime.dayOfMonth;
-    key += ((finishTime.hour > 9)? '':'0') + ((finishTime.minute > 9)? '':'0');
+    key += ((finishTime.hour > 9)? '':'0') + finishTime.hour + ((finishTime.minute > 9)? '':'0') + finishTime.minute;
 
     return key;
 }
@@ -277,11 +277,11 @@ function getMatchCard(match) {
     var availability = match.quantityOccupiedPlaces + ' / ' + (match.team1.sport.quantity * 2);
     var place = match.place;
     var location = place.street + ', ' + place.city + ', ' + place.state + ', ' + place.country;
-
     var sportId = match.team1.sport.name;
+    var team1Name = match.team1.name;
 
     var matchCard = '' +
-        '<div class="row p-2 mt-2 match-card rounded-border">' +
+        '<div class="row p-2 mt-2 match-card rounded-border" id="' + getMatchURLKey(startTime, team1Name, finishTime) + '">' +
         '<div class="col">' +
         '<div class="row mb-4">' +
         '<div class="col-2 col-sm-1 pl-0">' +
@@ -354,15 +354,12 @@ function getTypeLabel(type) {
 }
 
 function getJoinButton(match) {
-    console.log(isFriendlyMatch(match.type));
-    console.log(isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/');
     var prefix = isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/';
-    return '<a class="btn btn-green" href="'+ prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
+    return '<a class="btn btn-green join-button" href="'+ prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
         '" role="button"><i class="fas fa-plus mr-1"></i>' + labelMap.toJoin[lang] + '</a>';
 }
 
 function isFriendlyMatch(type) {
-    console.log(type.split("-")[1]);
     if(type.split("-")[1] == "Friendly")
         return true;
 

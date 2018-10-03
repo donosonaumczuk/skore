@@ -67,8 +67,6 @@ $("#created").click(function() {
 function loadCurrentFilters() {
     pageNumber = 1;
 
-    console.log(currentFilters);
-
     $('.badge').remove();
 
     var countries = Object.keys(currentFilters.country);
@@ -92,20 +90,48 @@ function getDefaultEndPoint() {
 }
 
 function deleteButtonPostAppendMatch(match) {
+    var key = getMatchURLKey(match.startTime, match.team1.name, match.finishTime);
 
+    $("#" + key).find(".join-button").click(function () {
+        $.ajax({
+            type:   'POST',
+            url:    '/deleteMatch',
+            data: {
+                teamName1: match.team1.name,
+                startTime: timeStampFormat(match.startTime),
+                finishTime: timeStampFormat(match.finishTime)
+            }
+        }).done(function(data) {
+            console.log(data);
+        });
+    });
 }
 
 function cancelButtonPostAppendMatch(match) {
+    var key = getMatchURLKey(match.startTime, match.team1.name, match.finishTime);
 
+    $("#" + key).find(".join-button").click(function () {
+        $.ajax({
+            type:   'POST',
+            url:    '/removePlayerFromMatch',
+            data: {
+                teamName1: match.team1.name,
+                startTime: timeStampFormat(match.startTime),
+                finishTime: timeStampFormat(match.finishTime)
+            }
+        }).done(function(data) {
+            console.log(data);
+        });
+    });
 }
 
 function getCancelButton(match) {
-    return '<a class="btn btn-negative" href="/joinMatch/' + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
+    return '<a class="btn btn-negative join-button"' +
         ' role="button"><i class="fas fa-times mr-1"></i>' + labelMap.joined[lang] + '</a>';
 }
 
 function getDeleteButton(match) {
-    return '<a class="btn btn-negative" href="/joinMatch/' + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
+    return '<a class="btn btn-negative join-button"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
 }
 
