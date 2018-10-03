@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.Exceptions.CannotValidateUserException;
-import ar.edu.itba.paw.Exceptions.CantJoinCompetitiveMatchException;
-import ar.edu.itba.paw.Exceptions.GameNotFoundException;
-import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.Exceptions.*;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -74,7 +71,10 @@ public class UserController extends BaseController{
                 userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(), userForm.getCountry(),
                 userForm.getState(), userForm.getCity(), userForm.getStreet(), 0, userForm.getPassword(),
                 userForm.getImage());
-        return new ModelAndView("index");
+        if(user == null) {
+            throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
+        }
+        return new ModelAndView("sendingConfirmationAccountMail");
     }
 
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
