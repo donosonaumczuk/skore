@@ -17,7 +17,8 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     public JavaMailSender emailSender;
 
-    private static String URL_PREFIX = "http://pawserver.it.itba.edu.ar/paw-2018b-04/";
+    //private static String URL_PREFIX = "http://pawserver.it.itba.edu.ar/paw-2018b-04/";
+    private static String URL_PREFIX = "http://localhost:8080/";
 
     @Async
     @Override
