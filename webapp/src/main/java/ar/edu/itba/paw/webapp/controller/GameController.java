@@ -254,8 +254,11 @@ public class GameController extends BaseController{
             } catch (TeamFullException e) {
                 LOGGER.error("Team is already full");
 
-                new ModelAndView("TeamFull");
+                new ModelAndView("teamFull");
             }
+        }
+        else {
+            return new ModelAndView("alreadyInGame");
         }
         userService.sendCancelOptionMatch(user, game, gameData);
         return new ModelAndView("confirmedMatchAssistance");
