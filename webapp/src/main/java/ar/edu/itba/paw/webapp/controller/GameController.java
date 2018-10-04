@@ -251,10 +251,10 @@ public class GameController extends BaseController{
             try {
                 game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
                 LOGGER.trace("added to Match");
-            } catch (TeamFullException e) {
+            } catch (Exception e) {
                 LOGGER.error("Team is already full");
 
-                new ModelAndView("teamFull");
+                return new ModelAndView("teamFull");
             }
         }
         else {
