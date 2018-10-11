@@ -46,14 +46,13 @@ public class UserJdbcDao implements UserDao {
             args.put("firstName", firstName);
             args.put("lastName", lastName);
             args.put("email", email);
-            jdbcInsert.execute(args);
+            //jdbcInsert.execute(args);
 
             //Should be with these three statements evans
-            //Number userId = jdbcInsert.executeAndReturnKey(args);// should be with this statement
-            //return Optional.of(new User(firstName, lastName, email, userId.longValue()));
-            List<User> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, firstName, lastName, email);
-            return userList.stream().findFirst();
-
+            Number userId = jdbcInsert.executeAndReturnKey(args);// should be with this statement
+            return Optional.of(new User(firstName, lastName, email, userId.longValue()));
+            //List<User> userList = jdbcTemplate.query(sqlQuery, ROW_MAPPER, firstName, lastName, email);
+            //return userList.stream().findFirst();
 
         }
 
