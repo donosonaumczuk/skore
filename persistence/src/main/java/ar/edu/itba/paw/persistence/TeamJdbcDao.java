@@ -181,7 +181,7 @@ public class TeamJdbcDao implements TeamDao {
                         resultSet.getInt("isTemp") == 1,
                         new Sport(resultSet.getString("sportName"),
                             resultSet.getInt("playerQuantity"),
-                            resultSet.getString("displayName")));
+                            resultSet.getString("displayName"), null));
     }
 
     private static User mapAPlayer(ResultSet resultSet) throws SQLException, DataAccessException {

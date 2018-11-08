@@ -84,7 +84,7 @@ public class GameServiceImplTest {
 
         DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME);
+        Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME, null);
 
         PremiumUser leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME,LEADER_1_LASTNAME,LEADER_1_EMAIL,LEADER_1_USERID,LEADER_1_USERNAME);
         Team team1 = new Team(leaderTeam1, TEAM_1_ACRONYM, TEAMNAME_1, TEAM_1_ISTEMP, sport);

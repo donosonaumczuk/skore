@@ -33,7 +33,7 @@ public class SportJdbcDaoTest {
     private DataSource dataSource;
 
     @Autowired
-    private SportJdbcDao sportDao;
+    private SportHibernateDao sportDao;
 
     private JdbcTemplate jdbcTemplate;
 
