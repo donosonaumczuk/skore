@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
         encrypter.SimpleCipherEncrypt(phrase);
-        emailSender.sendConfirmMatch(user, game, "/confirmMatch/" + phrase );
+        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase );
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
         encrypter.SimpleCipherEncrypt(phrase);
-        emailSender.sendCancelMatch(user, game, "/cancelMatch/" + phrase);
+        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase);
     }
 }
 

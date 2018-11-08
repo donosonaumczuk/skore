@@ -180,7 +180,14 @@ public class UserController extends BaseController{
         if(game == null) {
             throw new GameNotFoundException("can't find game");
         }
-        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+        try {
+            game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+            LOGGER.trace("added to Match");
+        } catch (Exception e) {
+            LOGGER.error("Team is already full");
+
+            return new ModelAndView("teamFull");
+        }
 
 
         return new ModelAndView("redirect:/match/" + path);

@@ -247,31 +247,18 @@ public class GameController extends BaseController{
         if(game == null) {
             throw new GameNotFoundException("Can't find game");
         }
-        List<User> players = game.getTeam1().getPlayers();
-        if(!players.contains(user)) {
-            if(game.getTeam2() != null) {
-                players = game.getTeam2().getPlayers();
-                if (!players.contains(user)) {
-                    try {
-                        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
-                        LOGGER.trace("added to Match");
-                    } catch (TeamFullException e) {
-                        LOGGER.error("Team is already full");
+        if(!isPlayerInTeam(game, user)) {
+            try {
+                game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+                LOGGER.trace("added to Match");
+            } catch (Exception e) {
+                LOGGER.error("Team is already full");
 
-                        new ModelAndView("TeamFull");
-                    }
-                }
+                return new ModelAndView("teamFull");
             }
-            else {
-                    try {
-                        game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
-                        LOGGER.trace("added to Match");
-                    } catch (TeamFullException e) {
-                        LOGGER.error("Team is already full");
-
-                        new ModelAndView("TeamFull");
-                    }
-                }
+        }
+        else {
+            return new ModelAndView("alreadyInGame");
         }
         userService.sendCancelOptionMatch(user, game, gameData);
         return new ModelAndView("confirmedMatchAssistance");
@@ -302,10 +289,25 @@ public class GameController extends BaseController{
         if(game == null) {
             throw new GameNotFoundException("Can't find game");
         }
-        gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
+        if(isPlayerInTeam(game, user)) {
+            gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
+        }
 
-        userService.sendCancelOptionMatch(user, game, gameData);
         return new ModelAndView("cancelledMatchAssistance");
+    }
+
+    private boolean isPlayerInTeam(Game game, User user) {
+        List<User> players = game.getTeam1().getPlayers();
+        if(players.contains(user)) {
+            return true;
+        }
+        if(game.getTeam2() != null) {
+            players = game.getTeam2().getPlayers();
+            if (players.contains(user)) {
+                    return true;
+            }
+        }
+        return false;
     }
 
 }
