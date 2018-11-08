@@ -105,6 +105,7 @@ public class UserController extends BaseController{
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
         if(premiumUserService.confirmationPath(path)) {
+            //should login here before and load his profile
             return new ModelAndView("accountConfirmed");
         }
         throw new CannotValidateUserException("Can't validate user");
