@@ -5,50 +5,57 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//@Entity
-//@Table(name = "accounts")
+@Entity
+@Table(name = "accounts")
+@PrimaryKeyJoinColumn(name = "userId")
 public class PremiumUser extends User{
 
-//    @Id
-  //  @Column(name = "username", length = 100, nullable = false)
+    @Column(name = "username", length = 100, nullable = false, unique = true)
     private String userName;
 
-    //@Column(name = "cellphone", length = 100)
+    @Column(name = "cellphone", length = 100)
     private String cellphone;
 
-    //@Column
+    @Column
     private LocalDate birthday;
 
-    //@Embedded
+    @Embedded
     private Place home;
 
-    //@Column
+    @Column
     private int reputation;
 
-    //@Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    //@Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
-    //@Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false)
     private String code;
 
-   // @ManyToMany(fetch = FetchType.LAZY)
-    private List<PremiumUser> friends;
+    @Column
+    private byte image[];
 
-   // @ManyToMany(fetch = FetchType.LAZY)
-    private List<Notification> notifications;
+    @Column
+    private boolean enabled;
 
-    //@OneToMany(fetch = FetchType.EAGER)
-    private List<Sport> likes;
+    //@ManyToMany(fetch = FetchType.LAZY)
+    //private List<PremiumUser> friends;
 
-   // @OneToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    //@ManyToMany(fetch = FetchType.LAZY)
+    //private List<Notification> notifications;
+
+    //@ManyToMany(fetch = FetchType.EAGER)
+    //private List<Sport> likes;
+
+   // @ManyToMany(fetch = FetchType.EAGER)
+    //private Set<Role> roles;
 
     public PremiumUser(String firstName, String lastName, String email, long userId,
                        String userName, String cellphone, LocalDate birthday,
-                       Place home, int reputation, String password, String code) {
+                       Place home, int reputation, String password, String code,
+                       byte image[]) {
         super(firstName, lastName, email, userId);
 
         this.userName       = userName;
@@ -59,10 +66,12 @@ public class PremiumUser extends User{
         this.password       = password;
         this.email          = email;
         this.code           = code;
-        this.friends        = new LinkedList<>();
-        this.notifications  = new ArrayList<>();
-        this.likes          = new ArrayList<>();
-        this.roles          = new HashSet<>();
+//        this.friends        = new LinkedList<>();
+//        this.notifications  = new ArrayList<>();
+//        this.likes          = new ArrayList<>();
+//        this.roles          = new HashSet<>();
+        enabled             = false;
+        this.image          = image;
     }
 
     public PremiumUser(String firstName, String lastName, String email, long userId, String userName) {
@@ -130,41 +139,58 @@ public class PremiumUser extends User{
         this.code = code;
     }
 
-    public List<PremiumUser> getFriends() {
-        return friends;
+//    public List<PremiumUser> getFriends() {
+//        return friends;
+//    }
+//
+//    public void setFriends(final List<PremiumUser> friends) {
+//        this.friends = friends;
+//    }
+//
+//    public List<Notification> getNotifications() {
+//        return notifications;
+//    }
+//
+//    public void setNotifications(final List<Notification> notifications) {
+//        this.notifications = notifications;
+//    }
+//
+//    public List<Sport> getLikes() {
+//        return likes;
+//    }
+//
+//    public void setLikes(final List<Sport> likes) {
+//        this.likes = likes;
+//    }
+//
+//    public Set<Role> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(Collection<Role> newRoles) {
+//
+//        this.roles.clear();
+//        this.roles.addAll(newRoles);
+//    }
+
+//    public void addRole(final Role newRole) {
+//        roles.add(newRole);
+//    }
+
+    public boolean getEnabled() {
+        return enabled;
     }
 
-    public void setFriends(final List<PremiumUser> friends) {
-        this.friends = friends;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public List<Notification> getNotifications() {
-        return notifications;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setNotifications(final List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
-    public List<Sport> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(final List<Sport> likes) {
-        this.likes = likes;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> newRoles) {
-
-        this.roles.clear();
-        this.roles.addAll(newRoles);
-    }
-    public void addRole(final Role newRole) {
-        roles.add(newRole);
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override

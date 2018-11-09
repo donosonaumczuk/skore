@@ -26,6 +26,10 @@ public class Place {
         this.street     = street;
     }
 
+    public Place() {
+
+    }
+
     public void setCountry(final String country) {
         this.country = country;
     }
