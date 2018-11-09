@@ -45,8 +45,10 @@ public class TestConfig {
 
 
     @Bean
-
-    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
+    public PlatformTransactionManager transactionManager(
+            final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+
+
 }

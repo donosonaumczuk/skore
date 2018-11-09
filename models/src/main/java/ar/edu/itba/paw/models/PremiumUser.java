@@ -1,21 +1,49 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+//@Entity
+//@Table(name = "accounts")
 public class PremiumUser extends User{
+
+//    @Id
+  //  @Column(name = "username", length = 100, nullable = false)
     private String userName;
+
+    //@Column(name = "cellphone", length = 100)
     private String cellphone;
+
+    //@Column
     private LocalDate birthday;
+
+    //@Embedded
     private Place home;
+
+    //@Column
     private int reputation;
+
+    //@Column(length = 100, nullable = false, unique = true)
     private String email;
+
+    //@Column(length = 100, nullable = false)
     private String password;
+
+    //@Column(length = 100, nullable = false)
     private String code;
+
+   // @ManyToMany(fetch = FetchType.LAZY)
     private List<PremiumUser> friends;
+
+   // @ManyToMany(fetch = FetchType.LAZY)
     private List<Notification> notifications;
+
+    //@OneToMany(fetch = FetchType.EAGER)
     private List<Sport> likes;
+
+   // @OneToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public PremiumUser(String firstName, String lastName, String email, long userId,

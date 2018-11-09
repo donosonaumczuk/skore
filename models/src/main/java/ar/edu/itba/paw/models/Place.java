@@ -1,11 +1,22 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class Place {
+
+    @Column(name = "country", length = 100)
     private String country;
+
+    @Column(name = "state", length = 100)
     private String state;
+
+    @Column(name = "city", length = 100)
     private String city;
+
+    @Column(name = "street", length = 100)
     private String street;
 
     public Place(String country, String state, String city, String street) {

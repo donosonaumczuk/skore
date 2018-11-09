@@ -39,7 +39,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-"ar.edu.itba.paw.webapp.config"})
+        "ar.edu.itba.paw.webapp.config"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -150,7 +150,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-
         factoryBean.setPackagesToScan("ar.edu.itba.paw.models", "ar.edu.itba.paw.persistance");
 
         factoryBean.setDataSource(dataSource());

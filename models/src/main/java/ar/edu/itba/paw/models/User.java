@@ -9,7 +9,8 @@ import java.util.Objects;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
+//    @SequenceGenerator(name = "users_userid", sequenceName = "users_userid_seq", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")//TODO: los test no pasan con esto no se si andara en POSTGRESQL
     @Column(name = "userid")
     private long userId;
 
@@ -32,6 +33,13 @@ public class User {
         this.email      = email;
         this.userId     = userId;
     }
+
+    public User(String firstName, String lastName, String email) {
+        this.firstName  = firstName;
+        this.lastName   = lastName;
+        this.email      = email;
+    }
+
 
     public long getUserId() {
         return userId;
