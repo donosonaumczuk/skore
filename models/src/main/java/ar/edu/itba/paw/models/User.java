@@ -1,21 +1,32 @@
 package ar.edu.itba.paw.models;
 
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
+    @Id
+//    @SequenceGenerator(name = "users_userid", sequenceName = "users_userid_seq", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")//TODO: los test no pasan con esto no se si andara en POSTGRESQL
+    @Column(name = "userid")
     private long userId;
+
+    @Column(name = "firstname", length = 100)
     private String firstName;
+
+    @Column(name = "lastname", length = 100)
     private String lastName;
+
+    @Column(name = "email", length = 100)
     private String email;
 
-//    public User() {
-//        firstName = "Agustin";
-//        userId = 57774;
-//        lastName = "Izaguirre";
-//        email = "aizaguirre@itba.edu.ar";
-//    }
+    public User() {
+
+    }
 
     public User(String firstName, String lastName, String email, long userId) {
         this.firstName  = firstName;
@@ -23,6 +34,13 @@ public class User {
         this.email      = email;
         this.userId     = userId;
     }
+
+    public User(String firstName, String lastName, String email) {
+        this.firstName  = firstName;
+        this.lastName   = lastName;
+        this.email      = email;
+    }
+
 
     public long getUserId() {
         return userId;

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
     lastName varchar(100)
 );
 
+
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
@@ -30,6 +31,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   image       BLOB,
   UNIQUE(email)
 );
+
 CREATE TABLE IF NOT EXISTS notification(
   startTime TIMESTAMP,
   content   VARCHAR(100),

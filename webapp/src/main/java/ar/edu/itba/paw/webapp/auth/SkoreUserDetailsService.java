@@ -31,7 +31,7 @@ public class SkoreUserDetailsService implements UserDetailsService {
     @Autowired
     private PremiumUserService us;
 
-        @Override
+    @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final Optional<PremiumUser> user = us.findByUserName(username);
         if(!user.isPresent()) {

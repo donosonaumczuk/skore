@@ -37,11 +37,11 @@ public interface PremiumUserDao {
 
     public Optional<PremiumUser> findByEmail(final String email);
 
-    public boolean addRole(final String username, final int roleId);
+    //public boolean addRole(final String username, final int roleId);
 
     public boolean enableUser(final String username, final String code);
 
-    public List<Role> getRoles(final String username);
+   // public List<Role> getRoles(final String username);
 
     }
 
