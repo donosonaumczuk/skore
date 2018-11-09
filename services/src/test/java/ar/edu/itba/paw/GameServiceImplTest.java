@@ -108,7 +108,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.findByKeyFromURL(URL);
 
-        inOrder(gameDaoMock).verify(gameDaoMock).findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         Assert.assertEquals(GAME_1.get(), ans);
     }
 
@@ -119,8 +118,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_1_ID);
 
-        inOrder(gameDaoMock).verify(gameDaoMock, atLeast(2))
-                .findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_1, USER_1_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }
@@ -132,8 +129,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_2_ID);
 
-        inOrder(gameDaoMock).verify(gameDaoMock, atLeast(2))
-                .findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_2, USER_2_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }

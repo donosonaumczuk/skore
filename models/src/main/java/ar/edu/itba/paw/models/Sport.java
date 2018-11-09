@@ -11,43 +11,43 @@ import java.util.Objects;
 public class Sport {
 
     @Id
-    @Column(length = 100, name = "sportName")
-    private String name;
+    @Column(length = 100)
+    private String sportName;
 
-    @Column(name = "playerQuantity")
-    private int quantity;
+    @Column
+    private int playerQuantity;
 
-    @Column(length = 100, name = "dispayName")
+    @Column(length = 100)
     private String displayName;
 
-    @Column(name = "imageSport")
-    private byte[] image;
+    @Column
+    private byte[] imageSport;
 
     /* package */public Sport() {
         // For Hibernate
     }
 
     public Sport(String name, int quantity, String displayName, byte[] image) {
-        this.name           = name;
-        this.quantity       = quantity;
+        this.sportName      = name;
+        this.playerQuantity = quantity;
         this.displayName    = displayName;
-        this.image          = image;
+        this.imageSport     = image;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.sportName = name;
     }
 
     public String getName() {
-        return name;
+        return sportName;
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.playerQuantity = quantity;
     }
 
     public int getQuantity() {
-        return quantity;
+        return playerQuantity;
     }
 
     public String getDisplayName() {
@@ -59,11 +59,11 @@ public class Sport {
     }
 
     public byte[] getImage() {
-        return image;
+        return imageSport;
     }
 
     public void setImage(byte[] image) {
-        this.image = image;
+        this.imageSport = image;
     }
 
     @Override
@@ -78,6 +78,6 @@ public class Sport {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(sportName);
     }
 }

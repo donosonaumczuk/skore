@@ -53,6 +53,7 @@ public class SportHibernateDao implements SportDao {
 
     @Override
     public Optional<Sport> findByName(final String sportName) {
-        return Optional.of(em.find(Sport.class, sportName));
+            Sport sport = em.find(Sport.class, sportName);
+            return (sport == null)?Optional.empty():Optional.of(sport);
     }
 }
