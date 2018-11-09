@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence;
+/*package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -239,5 +239,5 @@ public class GameJdbcDao implements GameDao {
         int rowsDeleted = jdbcTemplate.update(sqlQuery, teamName1, startTime, finishTime);
         return rowsDeleted > 0;
     }
-}
+}*/
 

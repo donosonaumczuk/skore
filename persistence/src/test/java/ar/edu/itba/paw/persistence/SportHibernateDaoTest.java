@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Sport;
-import com.sun.org.apache.xerces.internal.xs.ShortList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS notification(
   seen      INTEGER,
   userName  VARCHAR(100),
   FOREIGN KEY (userName) REFERENCES accounts(userName) ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (startTime, content)
+  PRIMARY KEY (startTime, content, userName)
 )/;
 
 CREATE TABLE IF NOT EXISTS likes(
