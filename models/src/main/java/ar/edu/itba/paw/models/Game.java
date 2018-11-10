@@ -24,8 +24,6 @@ public class Game {
     @Column(length = 100, nullable = false)
     private String type;
 
-    private int quantityOccupiedPlaces;
-
     @Column(length = 140)
     private String description;
 
@@ -33,7 +31,7 @@ public class Game {
     private String title;
 
     @Column(length = 100)
-    private String tornament;
+    private String tornamentName;
 
     /* package */public Game() {
         // For Hibernate
@@ -41,7 +39,7 @@ public class Game {
 
     public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
                 LocalDateTime finishTime, String type, String result, String description,
-                String title, String tornament) {
+                String title, String tornamentName) {
         this.team2                  = team2;
         this.place                  = place;
         this.primaryKey             = new GamePK(team1, startTime, finishTime);
@@ -49,8 +47,8 @@ public class Game {
         this.result                 = result;
         this.description            = description;
         this.title                  = title;
-        this.tornament              = tornament;
-        this.quantityOccupiedPlaces = team1.getPlayers().size() + team2.getPlayers().size();
+        this.tornamentName          = tornamentName;
+        //this.quantityOccupiedPlaces = team1.getPlayers().size() + team2.getPlayers().size();
     }
 
     public Team getTeam1() {
@@ -118,11 +116,11 @@ public class Game {
     }
 
     public void setTornament(String tornament) {
-        this.tornament = tornament;
+        this.tornamentName = tornament;
     }
 
     public String getTornament() {
-        return tornament;
+        return tornamentName;
     }
 
     @Override
@@ -142,9 +140,9 @@ public class Game {
         return Objects.hash(primaryKey);
     }
 
-    public int getQuantityOccupiedPlaces() {
-        return quantityOccupiedPlaces;
-    }
+//    public int getQuantityOccupiedPlaces() {
+//        return quantityOccupiedPlaces;
+//    }
 
     public String getDescription() {
         return description;
