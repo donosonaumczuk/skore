@@ -12,11 +12,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class NotificationHibernateDao implements NotificationDao{
+public class NotificationHibernateDao implements NotificationDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -29,7 +30,8 @@ public class NotificationHibernateDao implements NotificationDao{
                                          final String userName) {
         PremiumUser user = premiumUserDao.findByUserName(userName)
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
-        Notification notification = new Notification(LocalDateTime.parse(startTime), content, false,
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Notification notification = new Notification(LocalDateTime.parse(startTime, formatter), content, false,
                 user);
         em.persist(notification);
         return Optional.of(notification);
@@ -47,7 +49,7 @@ public class NotificationHibernateDao implements NotificationDao{
 
     @Override
     public List<Notification> getNotificationsByUserName(final String userName) {
-        final TypedQuery<Notification> query = em.createQuery("FROM Notification WHERE userName = :userName, ",
+        final TypedQuery<Notification> query = em.createQuery("FROM Notification WHERE userName = :userName",
                 Notification.class);
         query.setParameter("userName", userName);
         final List<Notification> list = query.getResultList();

@@ -49,25 +49,31 @@ public class NotificationHibernateTest {
         account = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
                 "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
                 null, 50,"321dammiano_aguistin123", "admin", null);
-        notification = new Notification(LocalDateTime.parse("2018-12-12 0:00:00"), "Tiene un patido en un dia",
+        notification = new Notification(LocalDateTime.parse("2018-12-12T00:00:00"), "Tiene un patido en un dia",
                 false, account);
-        notificationNotInserted = new Notification(LocalDateTime.parse("2017-12-12 0:00:00"), "Tiene un patido " +
+        notificationNotInserted = new Notification(LocalDateTime.parse("2017-12-12T00:00:00"), "Tiene un patido " +
                 "en dos dia", false, account);
         notifications = new LinkedList<>();
-        notifications.add(new Notification(LocalDateTime.parse("206-12-12 0:00:00"), "Tiene un patido en un dia",
+        notifications.add(new Notification(LocalDateTime.parse("2016-12-12T00:00:00"), "Tiene un patido en un dia",
                 false, account));
         notifications.add(notification);
     }
 
     @Before
     public void initializeDatabase() {
-        notifications.forEach(em::persist);
+        for (Notification n: notifications) {
+            em.merge(n.getOwner().getUser());
+            em.merge(n.getOwner());
+            em.merge(n);
+        }
         em.flush();
     }
 
     @After
     public void removeAllData() {
         em.createNativeQuery("delete from notification");
+        em.createNativeQuery("delete from accounts");
+        em.createNativeQuery("delete from users");
         em.flush();
     }
 
