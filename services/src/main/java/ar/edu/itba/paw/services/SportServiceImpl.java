@@ -26,10 +26,8 @@ public class SportServiceImpl implements SportService {
     @Override
     public Sport findByName(final String sportName) {
         Optional<Sport> sport = sportDao.findByName(sportName);
-        if(sport.isPresent()) {
-            return sport.get();
-        }
-        throw new SportNotFoundException("Can't find sport with name: " + sportName);
+
+        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
     }
 
 
@@ -37,11 +35,8 @@ public class SportServiceImpl implements SportService {
     public Sport create(final String sportName, final int playerQuantity, final String displayName,
                         final MultipartFile file) throws IOException {
         Optional<Sport> sport = sportDao.create(sportName, playerQuantity, displayName, file);
-        if(sport.isPresent()) {
-            return sport.get();
-        }
-        throw new SportNotFoundException("Can't find sport with name: " + sportName);
 
+        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
     }
 
     @Override
@@ -58,10 +53,7 @@ public class SportServiceImpl implements SportService {
     @Override
     public byte[] readImage(final String sportName) {
         Optional<byte[]> imagesOpt = sportDao.readImage(sportName);
-        if(!imagesOpt.isPresent()) {
-            LOGGER.error("Fail to read image from {}", sportName);
-            throw new ImageNotFoundException("Fail to read image from " + sportName);
-        }
-        return imagesOpt.get();
+
+        return imagesOpt.orElseThrow(() -> new ImageNotFoundException("Fail to read image from " + sportName));
     }
 }

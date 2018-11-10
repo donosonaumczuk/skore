@@ -71,16 +71,11 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                                         cellphone, formattedBirthday, country, state, city, street, reputation,
                                         encodedPassword, file);
-        if(user.isPresent()) {
-            LOGGER.trace("Sending confirmation email to {}", email);
-            sendConfirmationMail(user.get());
-            return user.get();
-        }
-        else {
-            LOGGER.error("Can't create user with username: {}", userName);
-
-            throw new CannotCreateUserException("Can't create user with with userName: " + userName );
-        }
+        PremiumUser ans = user
+                .orElseThrow(() -> new CannotCreateUserException("Can't create user with with userName: " + userName ));
+        LOGGER.trace("Sending confirmation email to {}", email);
+        sendConfirmationMail(ans);
+        return ans;
     }
 
     @Override
@@ -99,11 +94,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     @Override
     public byte[] readImage(final String userName) {
         Optional<byte[]> imagesOpt = premiumUserDao.readImage(userName);
-        if(!imagesOpt.isPresent()) {
-            LOGGER.error("Fail to read image from {}", userName);
-            throw new ImageNotFoundException("Fail to read image from " + userName);
-        }
-        return imagesOpt.get();
+        return imagesOpt.orElseThrow(() -> new ImageNotFoundException("Fail to read image from " + userName));
     }
 
     @Override
@@ -120,15 +111,8 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
                 newCity, newStreet, newReputation, new BCryptPasswordEncoder().encode(newPassword), oldUserName);
-        if(user.isPresent()) {
-            LOGGER.trace("{] updated", oldUserName);
-            return user.get();
-        }
-        else {
-            LOGGER.error("Can't find user {}", oldUserName);
 
-            throw new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist.");
-        }
+        return user.orElseThrow(() -> new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist."));
     }
 
     private static String formatDate(String birthday) {
@@ -147,23 +131,14 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         Optional<PremiumUser> user;
         LOGGER.trace("Looking for role with id: {}", roleId);
 
-        if(role.isPresent()) {
-            LOGGER.trace("Looking for user with username: {}", username);
-            user = premiumUserDao.findByUserName(username);
-            if(user.isPresent()) {
-                LOGGER.trace("Adding role {} to user with username: {}", role.get().getName(), username);
+        Role ans = role.orElseThrow(() ->
+                new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId));
+        LOGGER.trace("Looking for user with username: {}", username);
+        user = premiumUserDao.findByUserName(username);
+        user.orElseThrow(() -> new UserNotFoundException("Can't find user with username: " + username));
 
-                premiumUserDao.addRole(username, roleId);
-            }
-            else {
-                LOGGER.error("Can't find user with username {}", username);
-                throw new UserNotFoundException("Can't find user with username: " + username);
-            }
-        }
-        else {
-            LOGGER.error("Can't find role with id {}", roleId);
-            throw new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId);
-        }
+        LOGGER.trace("Adding role {} to user with username: {}", ans.getName(), username);
+        premiumUserDao.addRole(username, roleId);
     }
 
     @Override

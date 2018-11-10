@@ -29,11 +29,8 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team findByTeamName(final String teamName) {
         Optional<Team> team = teamDao.findByTeamName(teamName);
-        if(!team.isPresent()) {
-            LOGGER.error("Could not find team: {}", teamName);
-            throw new TeamNotFoundException("Team " + teamName + " does not exists");
-        }
-        return team.get();
+
+        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
     @Override
@@ -41,12 +38,9 @@ public class TeamServiceImpl implements TeamService {
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName) {
         Optional<Team> team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
-            sportName);
-        if(!team.isPresent()) {
-            LOGGER.error("Could not create team: {}", teamName);
-            throw new TeamNotFoundException("Team " + teamName + " does not exists");
-        }
-        return team.get();
+            sportName, null);
+
+        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
     private Team createTempTeam(final String start, final String leaderName, final long leaderId,
@@ -89,21 +83,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team addPlayer(final String teamName, final long userId) {
         Optional<Team> team = teamDao.addPlayer(teamName, userId);
-        if(!team.isPresent()) {
-            LOGGER.error("Could not add player: {} to team: {}", userId, teamName);
-            throw new TeamNotFoundException("Team " + teamName + " does not exists");
-        }
-        return team.get();
+
+        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
     @Override
     public Team removePlayer(final String teamName, final long userId) {
         Optional<Team> team = teamDao.removePlayer(teamName, userId);
-        if(!team.isPresent()) {
-            LOGGER.error("Could not remove player: {} from team: {}", userId, teamName);
-            throw new TeamNotFoundException("Team " + teamName + " does not exists");
-        }
-        return team.get();
+
+        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
     @Override
@@ -112,10 +100,7 @@ public class TeamServiceImpl implements TeamService {
                                final String oldTeamName) {
         Optional<Team> team = teamDao.updateTeamInfo(newTeamName, newAcronym, newLeaderName,
                 newSportName, oldTeamName);
-        if(!team.isPresent()) {
-            LOGGER.error("Could not update team: {}", oldTeamName);
-            throw new TeamNotFoundException("Team " + newTeamName + " does not exists");
-        }
-        return team.get();
+
+        return team.orElseThrow(() -> new TeamNotFoundException("Team " + newTeamName + " does not exists"));
     }
 }

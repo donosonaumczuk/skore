@@ -67,13 +67,9 @@ public class GameServiceImpl implements GameService {
 
         Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime + ":00", finishTime + ":00", type, result,
                 country, state, city, street, tornamentName, description, title);
-        if(!game.isPresent()) {
-            LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
-                    teamName1, teamName2, newStartTime, finishTime);
-            throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
-                    + " starting at " + newStartTime + "and finishing at " + finishTime);
-        }
-        return game.get();
+
+        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
+                + " starting at " + newStartTime + "and finishing at " + finishTime));
     }
 
     @Override
@@ -156,13 +152,9 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game findByKey(String teamName1, String startTime, String finishTime) {
         Optional<Game> game = gameDao.findByKey(teamName1, startTime, finishTime);
-        if(!game.isPresent()) {
-            LOGGER.error("Could not find a game: {} |starting at {} |finishing at {}",
-                    teamName1, startTime, finishTime);
-            throw new GameNotFoundException("There is not a game of " + teamName1
-                    + " starting at " + startTime + "and finishing at " + finishTime);
-        }
-        return game.get();
+
+        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1
+                + " starting at " + startTime + "and finishing at " + finishTime));
     }
 
     @Override
@@ -254,13 +246,8 @@ public class GameServiceImpl implements GameService {
         Optional<Game> game = gameDao.modify(teamName1, teamName2, startTime, finishTime, type, result,
                 country, state, city, street, tornamentName, description, teamName1Old, startTimeOld,
                 finishTimeOld);
-        if(!game.isPresent()) {
-            LOGGER.error("Could not modify this game:: {} |starting at {} |finishing at {}",
-                    teamName1Old, startTimeOld, finishTimeOld);
-            throw new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
-                    + " starting at " + startTime + "and finishing at " + finishTime);
-        }
-        return game.get();
+        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1
+                + " starting at " + startTime + "and finishing at " + finishTime));
     }
 
     @Override
