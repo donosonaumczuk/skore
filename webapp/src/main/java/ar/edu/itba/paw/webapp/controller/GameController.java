@@ -111,12 +111,12 @@ public class GameController extends BaseController{
         LOGGER.trace("Asking to add logged player from {}|{}|{}", teamName1,startTime,finishTime);
         boolean ans;
         try {
-            gameService.insertUserInGame(teamName1, startTime, finishTime, loggedUser().getUserId());
-            LOGGER.trace("insert user: {} success", loggedUser().getUserId());
+            gameService.insertUserInGame(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
+            LOGGER.trace("insert user: {} success", loggedUser().getUser().getUserId());
             ans = true;
         }
         catch (Exception e) {
-            LOGGER.trace("insert user: {} fail", loggedUser().getUserId());
+            LOGGER.trace("insert user: {} fail", loggedUser().getUser().getUserId());
             ans = false;
         }
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,12 +131,12 @@ public class GameController extends BaseController{
         LOGGER.trace("Asking to remove logged player from {}|{}|{}", teamName1,startTime,finishTime);
         boolean ans;
         try {
-            gameService.deleteUserInGame(teamName1, startTime, finishTime, loggedUser().getUserId());
-            LOGGER.trace("delete user: {} success", loggedUser().getUserId());
+            gameService.deleteUserInGame(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
+            LOGGER.trace("delete user: {} success", loggedUser().getUser().getUserId());
             ans = true;
         }
         catch (Exception e) {
-            LOGGER.trace("insert user: {} fail", loggedUser().getUserId());
+            LOGGER.trace("insert user: {} fail", loggedUser().getUser().getUserId());
             ans = false;
         }
         ObjectMapper objectMapper = new ObjectMapper();
@@ -149,7 +149,7 @@ public class GameController extends BaseController{
                                             @RequestParam final String startTime,
                                             @RequestParam final String finishTime) throws IOException {
         LOGGER.trace("Asking to delete a match");
-        boolean ans = gameService.remove(teamName1, startTime, finishTime, loggedUser().getUserId());
+        boolean ans = gameService.remove(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
         ObjectMapper objectMapper = new ObjectMapper();
         LOGGER.trace("The result for delete a match is {}", ans);
         return objectMapper.writeValueAsString(ans);
@@ -197,10 +197,11 @@ public class GameController extends BaseController{
 //                matchForm.getSportName(), matchForm.getMatchName());
 
         Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
-                matchForm.getDuration(), "Individual" + "-" + matchForm.getCompetitivity(), matchForm.getCountry(), matchForm.getState(),
+                matchForm.getDuration(), "Individual" + "-" + matchForm.getCompetitivity(), matchForm.getCountry(),
+                matchForm.getState(),
                 matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
-                null, matchForm.getDescription(), loggedUser.getUserName(),loggedUser.getUserId(),
-                matchForm.getSportName(), matchForm.getMatchName());
+                null, matchForm.getDescription(), loggedUser.getUserName(),
+                loggedUser.getUser().getUserId(), matchForm.getSportName(), matchForm.getMatchName());
 
                 LOGGER.debug("Match created \n\n");
 

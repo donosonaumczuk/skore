@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendConfirmAccount(PremiumUser user, String url) {
-        final String body = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ": </p>" +
+        final String body = "<p>Dear " + user.getUser().getFirstName() + " " + user.getUser().getLastName() + ": </p>" +
                 "<p>\t Plese click in the following url to confirm your account:</p>" +
                 "<p>\t <a href='" + URL_PREFIX + url + "'>" + URL_PREFIX + url + "</a></p>";
         try {

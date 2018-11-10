@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -37,10 +38,18 @@ public class TeamServiceImpl implements TeamService {
     public Team create(final String leaderName, final long leaderId,
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName) {
-        Optional<Team> team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
-            sportName, null);
+
+        Optional<Team> team = Optional.empty();
+        try {
+            team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
+                    sportName, null);
+
+        }catch (IOException e) {
+            LOGGER.error("image corrupted\n");
+        }
 
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
+
     }
 
     private Team createTempTeam(final String start, final String leaderName, final long leaderId,

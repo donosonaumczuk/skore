@@ -254,7 +254,7 @@ public class GameServiceImpl implements GameService {
     public boolean remove(final String teamName1, final String startTime, final String finishTime,
                           final long userId) {
         Game game = findByKey(teamName1, startTime, finishTime);
-        if(game.getTeam1().getLeader().getUserId() != userId) {
+        if(game.getTeam1().getLeader().getUser().getUserId() != userId) {
             return false;
         }
         return gameDao.remove(teamName1, startTime, finishTime);
