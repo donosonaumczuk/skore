@@ -12,6 +12,9 @@ public class PremiumUser {
     @Column(name = "userName", length = 100)
     private String userName;
 
+    @Column(name = "email", length = 100, unique = true)
+    private String email;
+
     @Column(name = "cellphone", length = 100)
     private String cellphone;
 
@@ -71,6 +74,7 @@ public class PremiumUser {
         this.reputation     = reputation;
         this.password       = password;
         this.code           = code;
+        this.email          = email;
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
     //    this.likes          = new ArrayList<>();
@@ -81,6 +85,7 @@ public class PremiumUser {
 
     public PremiumUser(String firstName, String lastName, String email, String userName) {
         this.user     = new User(firstName, lastName, email);
+        this.email    = email;
         this.userName = userName;
     }
 
@@ -106,6 +111,14 @@ public class PremiumUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFullName() {

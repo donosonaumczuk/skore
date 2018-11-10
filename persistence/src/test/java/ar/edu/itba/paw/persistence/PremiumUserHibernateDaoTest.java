@@ -140,21 +140,18 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(insertedUser);
 
         //exercise class
-        PremiumUser user = premiumUserDao.findByUserName(insertedUser.getUserName()).get();
-        user.setUserName("newUserName");
-        user.getUser().setFirstName("newFirstName");
         premiumUserDao.updateUserInfo("newFirstName", insertedUser.getUser().getLastName(),
-                "newEmail", insertedUser.getUserName(),insertedUser.getCellphone(),
+                "newEmail", insertedUser.getUserName(), insertedUser.getCellphone(),
                 insertedUser.getBirthday().toString(), insertedUser.getHome().getCountry(),
                 insertedUser.getHome().getState(), insertedUser.getHome().getCity(),
                 insertedUser.getHome().getStreet(), insertedUser.getReputation(),
-                insertedUser.getPassword(), insertedUser.getUserName());
-        PremiumUser returnedUser = em.find(PremiumUser.class, "newUserName");
+                "newPassword", insertedUser.getUserName());
+        PremiumUser returnedUser = em.find(PremiumUser.class, insertedUser.getUserName());
 
         //postconditions
         Assert.assertNotNull(returnedUser);
-        //Assert.assertTrue(returnedUser.getUserName().equals("newUserName"));
         Assert.assertTrue(returnedUser.getUser().getFirstName().equals("newFirstName"));
+        Assert.assertTrue(returnedUser.getPassword().equals("newPassword"));
 
     }
 
