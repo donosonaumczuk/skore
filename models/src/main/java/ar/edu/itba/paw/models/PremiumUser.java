@@ -49,11 +49,11 @@ public class PremiumUser {
     //@ManyToMany(fetch = FetchType.LAZY)
     //private List<Notification> notifications;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "likes",
-//    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
-//    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
-//    private List<Sport> likes;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "likes",
+    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
+    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
+    private List<Sport> likes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userRoles" ,
@@ -77,7 +77,7 @@ public class PremiumUser {
         this.email          = email;
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
-    //    this.likes          = new ArrayList<>();
+        this.likes          = new ArrayList<>();
         this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
@@ -189,13 +189,13 @@ public class PremiumUser {
 //        this.notifications = notifications;
 //    }
 //
-//    public List<Sport> getLikes() {
-//        return likes;
-//    }
-//
-//    public void setLikes(final List<Sport> likes) {
-//        this.likes = likes;
-//    }
+    public List<Sport> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(final List<Sport> likes) {
+        this.likes = likes;
+    }
 
     public Set<Role> getRoles() {
         return roles;

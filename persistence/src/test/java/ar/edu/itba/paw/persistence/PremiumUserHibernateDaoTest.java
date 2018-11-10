@@ -188,42 +188,40 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     }
 
 
-//    @Test
-//    public void testRemoveRoles() {
-//        //set up
-//        Role role = new Role("ROLE_USER", 1);
-//        insertedUser.getRoles().add(role);
-//        em.persist(role);
-//        em.persist(insertedUser);
-//
-//        //exercise the class
-//        boolean returnedValue = premiumUserDao.removeRole(insertedUser.getUserName(),
-//                role.getRoleId());
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
-//
-//        //postconditions
-//        Assert.assertTrue(returnedValue);
-//        Assert.assertEquals(0, user.getRoles().size());
-//        Assert.assertTrue(!user.getRoles().contains(role));
-//    }
-//
-//    @Test
-//    public void testgetRoles() {
-//        //set up
-//        Role role = new Role("ROLE_USER", 1);
-//        em.persist(role);
-//        em.persist(insertedUser);
-//
-//        //exercise the class
-//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
-//                role.getRoleId());
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
-//
-//        //postconditions
-//        Assert.assertTrue(returnedValue);
-//        Assert.assertEquals(1, user.getRoles().size());
-//        Assert.assertTrue(user.getRoles().contains(role));
-//    }
+    @Test
+    public void testRemoveRoles() {
+        //set up
+        Role role = new Role("ROLE_USER", 1);
+        insertedUser.getRoles().add(role);
+        em.persist(role);
+        em.persist(insertedUser);
+
+        //exercise the class
+        boolean returnedValue = premiumUserDao.removeRole(insertedUser.getUserName(),
+                role.getRoleId());
+        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
+
+        //postconditions
+        Assert.assertTrue(returnedValue);
+        Assert.assertEquals(0, user.getRoles().size());
+        Assert.assertTrue(!user.getRoles().contains(role));
+    }
+
+    @Test
+    public void testGetRoles() {
+        //set up
+        Role role = new Role("ROLE_USER", 1);
+        em.persist(role);
+        insertedUser.getRoles().add(role);
+        em.persist(insertedUser);
+
+        //exercise the class
+        Set<Role> roles = premiumUserDao.getRoles(insertedUser.getUserName());
+
+        //postconditions
+        Assert.assertEquals(1, roles.size());
+        Assert.assertTrue(roles.contains(role));
+    }
 //
 //    @Test
 //    public void testGetLikes() {

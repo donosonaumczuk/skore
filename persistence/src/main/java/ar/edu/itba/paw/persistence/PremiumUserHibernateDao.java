@@ -194,52 +194,52 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
 
-//    public boolean addSport(final String username, String sportName) {
-//        Sport sport = em.find(Sport.class, sportName);
-//        Optional<PremiumUser> premiumUser = findByUserName(username);
-//
-//        if(sport == null || !premiumUser.isPresent()) {
-//            return false;
-//        }
-//
-//        PremiumUser user = premiumUser.get();
-//        if(user.getLikes().contains(sport)) {
-//            return false;
-//        }
-//        else {
-//            user.getLikes().add(sport);
-//            em.merge(premiumUser);
-//            return true;
-//        }
-//
-//    }
-//
-//    public List<Sport> getSports(String username) {
-//        Optional<PremiumUser> premiumUser = findByUserName(username);
-//        if(premiumUser.isPresent()) {
-//            return premiumUser.get().getLikes();
-//        }
-//        else return null;
-//    }
-//
-//    public boolean removeSport(final String username, String sportName) {
-//        Sport sport = em.find(Sport.class, sportName);
-//        Optional<PremiumUser> premiumUser = findByUserName(username);
-//
-//        if(sport == null || !premiumUser.isPresent()) {
-//            return false;
-//        }
-//
-//        PremiumUser user = premiumUser.get();
-//        if(user.getLikes().contains(sport)) {
-//            user.getLikes().remove(sport);
-//            em.merge(user);
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
-//
-//    }
+    public boolean addSport(final String username, String sportName) {
+        Sport sport = em.find(Sport.class, sportName);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(sport == null || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getLikes().contains(sport)) {
+            return false;
+        }
+        else {
+            user.getLikes().add(sport);
+            em.merge(premiumUser);
+            return true;
+        }
+
+    }
+
+    public List<Sport> getSports(String username) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        if(premiumUser.isPresent()) {
+            return premiumUser.get().getLikes();
+        }
+        else return null;
+    }
+
+    public boolean removeSport(final String username, String sportName) {
+        Sport sport = em.find(Sport.class, sportName);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(sport == null || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getLikes().contains(sport)) {
+            user.getLikes().remove(sport);
+            em.merge(user);
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
 
 }
