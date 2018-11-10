@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.models;
 
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,17 +15,18 @@ public class NotificationPK implements Serializable {
     @Column(length = 100)
     private String content;
 
-    @Column(length = 100)
-    private String userName;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "userName")
+    private PremiumUser owner;
 
     /* package */public NotificationPK() {
         // For Hibernate
     }
 
-    public NotificationPK(LocalDateTime startTime, String content, String userName) {
+    public NotificationPK(LocalDateTime startTime, String content, PremiumUser owner) {
         this.startTime = startTime;
         this.content   = content;
-        this.userName  = userName;
+        this.owner  = owner;
     }
 
     public LocalDateTime getStartTime() {
@@ -37,8 +37,8 @@ public class NotificationPK implements Serializable {
         return content;
     }
 
-    public String getUserName() {
-        return userName;
+    public PremiumUser getOwner() {
+        return owner;
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -49,8 +49,8 @@ public class NotificationPK implements Serializable {
         this.content = content;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setOwner(PremiumUser owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -61,11 +61,11 @@ public class NotificationPK implements Serializable {
 
         NotificationPK aNotificationPK = ((NotificationPK) object);
         return (startTime.equals(aNotificationPK.startTime) && content.equals(aNotificationPK.content)
-                && userName.equals(aNotificationPK.userName));
+                && owner.equals(aNotificationPK.owner));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startTime, content, userName);
+        return Objects.hash(startTime, content, owner);
     }
 }

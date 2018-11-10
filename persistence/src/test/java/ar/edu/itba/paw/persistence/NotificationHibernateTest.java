@@ -47,7 +47,7 @@ public class NotificationHibernateTest {
 
     public NotificationHibernateTest() {
         account = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
-                0, "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
+                "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
                 null, 50,"321dammiano_aguistin123", "admin", null);
         notification = new Notification(LocalDateTime.parse("2018-12-12 0:00:00"), "Tiene un patido en un dia",
                 false, account);
@@ -80,7 +80,7 @@ public class NotificationHibernateTest {
         Assert.assertEquals(notificationNotInserted, notificationReturn);
         Assert.assertEquals(notificationNotInserted, em.find(Notification.class ,new NotificationPK(
                 notificationNotInserted.getTime(), notificationNotInserted.getContent(),
-                notificationNotInserted.getOwner().getUserName())));
+                notificationNotInserted.getOwner())));
     }
 
     @Test

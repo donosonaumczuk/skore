@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-//@Entity
-//@Table(name = "notification")
+@Entity
+@Table(name = "notification")
 public class Notification {
 
     @EmbeddedId
@@ -14,18 +14,13 @@ public class Notification {
     @Column
     private boolean seen;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "userName")
-    private PremiumUser owner;
-
     /* package */public Notification() {
         // For Hibernate
     }
 
     public Notification(LocalDateTime startTime, String content, boolean seen, PremiumUser owner) {
-        this.primaryKey = new NotificationPK(startTime, content, owner.getUserName());
+        this.primaryKey = new NotificationPK(startTime, content, owner);
         this.seen       = seen;
-        this.owner      = owner;
     }
 
     public LocalDateTime getTime() {
@@ -45,7 +40,7 @@ public class Notification {
     }
 
     public PremiumUser getOwner() {
-        return owner;
+        return primaryKey.getOwner();
     }
 
     @Override

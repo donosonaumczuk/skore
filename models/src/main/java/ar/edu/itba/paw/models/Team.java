@@ -9,17 +9,17 @@ import java.util.Objects;
 @Table(name = "teams")
 public class Team {
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "isPartOf",
-//            joinColumns = { @JoinColumn(name = "teamName") },
-//            inverseJoinColumns = { @JoinColumn(name = "userId") }
-//    )
-//    private List<User> players;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "isPartOf",
+            joinColumns = { @JoinColumn(name = "teamName") },
+            inverseJoinColumns = { @JoinColumn(name = "userId") }
+    )
+    private List<User> players;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "leaderName")
-//    private PremiumUser leader;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leaderName")
+    private PremiumUser leader;
 
     @Column(length = 100)
     private String acronym;
@@ -43,13 +43,13 @@ public class Team {
     }
 
     public Team(PremiumUser leader, String acronym, String teamName, boolean isTemp, Sport sport, byte[] image) {
-//        this.leader     = leader;
+        this.leader     = leader;
         this.acronym    = acronym;
         this.teamName   = teamName;
         this.isTemp     = isTemp;
         this.sport      = sport;
         this.image      = image;
-//        this.players    = new LinkedList<>();
+        this.players    = new LinkedList<>();
     }
 
     public Sport getSport() {
@@ -77,31 +77,31 @@ public class Team {
     }
 
     public PremiumUser getLeader() {
-        return null;//TODO
+        return leader;
     }
 
     public List<User> getPlayers() {
-        return null; //TODO
+        return players;
     }
 
     public void addPlayer(final User player) {
-        //players.add(player);
+        players.add(player);
     }
 
     public boolean removePlayer(final long userId) {
-//        int i = 0;
-//        for (User u: players) {
-//            if(u.getUserId() == userId) {
-//                players.remove(i);
-//                return true;
-//            }
-//            i++;
-//        }
+        int i = 0;
+        for (User u: players) {
+            if(u.getUserId() == userId) {
+                players.remove(i);
+                return true;
+            }
+            i++;
+        }
         return false;
     }
 
     public void setLeader(PremiumUser leader) {
-        //this.leader = leader;
+        this.leader = leader;
     }
 
     public void setSport(Sport sport) {

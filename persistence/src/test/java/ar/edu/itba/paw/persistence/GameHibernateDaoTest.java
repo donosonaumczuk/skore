@@ -50,17 +50,17 @@ public class GameHibernateDaoTest {
     public GameHibernateDaoTest() {
         Sport sport         = new Sport("baloncesto", 5, "Baloncesto", null);
         account             = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
-                            0, "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
+                             "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
                             null, 50,"321dammiano_aguistin123", "admin", null);
         PremiumUser accountAux = new PremiumUser("Agustin", "Izaguirre", "elIza@itba.edu.ar",
-                            0, "Docker", "92358122", LocalDate.parse("1990-10-04"),
+                             "Docker", "92358122", LocalDate.parse("1990-10-04"),
                             null, 50,"321dammiano_aguistin123", "admin", null);
         Team team1          = new Team(accountAux, "C.A.R.", "Club Atletico River", false, sport,
                             null);
-        team1.addPlayer(accountAux);
+        team1.addPlayer(accountAux.getUser());
         Team team2          = new Team(accountAux, "C.A.B.", "Club Atletico Boca", false, sport,
                             null);
-        team2.addPlayer(accountAux);
+        team2.addPlayer(accountAux.getUser());
         game1                = new Game(team1, team2, new Place("Argentina", "Buenos Aires",
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2018-11-11 17:00:00"),
                             LocalDateTime.parse("2018-11-11 19:00;00"), "competitive", "2-1",
@@ -68,7 +68,7 @@ public class GameHibernateDaoTest {
                             "Libertadores");
         Team team3          = new Team(account, "C.A.I.", "Club Atletico Independiente", false,
                             sport, null);
-        team3.addPlayer(account);
+        team3.addPlayer(account.getUser());
         gameNotInserted     = new Game(team1, team3,  new Place("Argentina", "Buenos Aires",
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2018-12-11 17:00:00"),
                             LocalDateTime.parse("2018-12-11 19:00;00"), "competitive", "0-0",

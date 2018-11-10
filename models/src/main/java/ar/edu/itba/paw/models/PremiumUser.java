@@ -40,17 +40,17 @@ public class PremiumUser {
     @JoinColumn(name = "userId")
     private User user;
 
-    //@ManyToMany(fetch = FetchType.LAZY)TODO: for next iteration
-    //private List<PremiumUser> friends;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<PremiumUser> friends;
 
-    //@ManyToMany(fetch = FetchType.LAZY)
-    //private List<Notification> notifications;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Notification> notifications;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "likes",
-//    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
-//    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
-//    private List<Sport> likes;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "likes",
+    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
+    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
+    private List<Sport> likes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userRoles" ,
@@ -71,9 +71,9 @@ public class PremiumUser {
         this.reputation     = reputation;
         this.password       = password;
         this.code           = code;
-//        this.friends        = new LinkedList<>();
-//        this.notifications  = new ArrayList<>();
-    //    this.likes          = new ArrayList<>();
+        this.friends        = new LinkedList<>();
+        this.notifications  = new ArrayList<>();
+        this.likes          = new ArrayList<>();
         this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
@@ -160,29 +160,29 @@ public class PremiumUser {
         this.code = code;
     }
 
-//    public List<PremiumUser> getFriends() {
-//        return friends;
-//    }
-//
-//    public void setFriends(final List<PremiumUser> friends) {
-//        this.friends = friends;
-//    }
-//
-//    public List<Notification> getNotifications() {
-//        return notifications;
-//    }
-//
-//    public void setNotifications(final List<Notification> notifications) {
-//        this.notifications = notifications;
-//    }
-//
-//    public List<Sport> getLikes() {
-//        return likes;
-//    }
-//
-//    public void setLikes(final List<Sport> likes) {
-//        this.likes = likes;
-//    }
+    public List<PremiumUser> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(final List<PremiumUser> friends) {
+        this.friends = friends;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(final List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public List<Sport> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(final List<Sport> likes) {
+        this.likes = likes;
+    }
 
     public Set<Role> getRoles() {
         return roles;
