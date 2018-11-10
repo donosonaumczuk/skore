@@ -151,7 +151,10 @@ public class GameHibernateDao implements GameDao {
 //
 //        LOGGER.trace("Try to find a game with this criteria: {}", getGamesQuery);
 //        return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
-        return null;
+        String queryString = "FROM Game";
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+
+        return query.getResultList();
     }
 
     @Override
