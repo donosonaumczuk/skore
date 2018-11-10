@@ -50,28 +50,28 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     /* Production */
-    @Bean
-    public DataSource dataSource() {
-        final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setDriverClass(org.postgresql.Driver.class);
-        dataSource.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2018b-04");
-        dataSource.setUsername("paw-2018b-04");
-        dataSource.setPassword("oc7Yzau4N");
-
-        return dataSource;
-    }
-
-    /* Local */
 //    @Bean
 //    public DataSource dataSource() {
 //        final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 //        dataSource.setDriverClass(org.postgresql.Driver.class);
-//        dataSource.setUrl("jdbc:postgresql://localhost:5432/paw");
-//        dataSource.setUsername("pawuser");
-//        dataSource.setPassword("paw");
+//        dataSource.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2018b-04");
+//        dataSource.setUsername("paw-2018b-04");
+//        dataSource.setPassword("oc7Yzau4N");
 //
 //        return dataSource;
 //    }
+
+    /* Local */
+    @Bean
+    public DataSource dataSource() {
+        final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+        dataSource.setDriverClass(org.postgresql.Driver.class);
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/paw");
+        dataSource.setUsername("pawuser");
+        dataSource.setPassword("paw");
+
+        return dataSource;
+    }
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
@@ -100,8 +100,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-        //messageSource.setCacheSeconds(5);//TODO EVANS: should be greater on production
-        messageSource.setCacheSeconds(600);
+        //messageSource.setCacheSeconds(5); /* Local */
+        messageSource.setCacheSeconds(600); /* Production */
         return messageSource;
     }
 
@@ -116,8 +116,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("skoreReal@gmail.com");
-        mailSender.setPassword("skore12345678910");
+        mailSender.setUsername("skore.noreply@gmail.com");
+        mailSender.setPassword("skorepaw");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

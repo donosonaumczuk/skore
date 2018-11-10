@@ -48,6 +48,61 @@ public class Place {
     }
 
     @Override
+    public String toString() {
+        String location = "";
+        boolean putComma = false;
+
+        if(street.length() > 0 && street.charAt(street.length() - 1) == ' ') {
+            street = street.substring(0, street.length() - 1);
+        }
+
+        if(street.length() > 0) {
+            location += street;
+            putComma = true;
+        }
+
+        if(city.length() > 0 && city.charAt(city.length() - 1) == ' ') {
+            city = city.substring(0, city.length() - 1);
+        }
+
+        if(city.length() > 0) {
+            if(putComma) {
+                location += ", ";
+            }
+
+            location += city;
+            putComma = true;
+        }
+
+        if(state.length() > 0 && state.charAt(state.length() - 1) == ' ') {
+            state = state.substring(0, state.length() - 1);
+        }
+
+        if(state.length() > 0) {
+            if(putComma) {
+                location += ", ";
+            }
+
+            location += state;
+            putComma = true;
+        }
+
+        if(country.length() > 0 && country.charAt(country.length() - 1) == ' ') {
+            country = country.substring(0, country.length() - 1);
+        }
+
+        if(country.length() > 0) {
+            if(putComma) {
+                location += ", ";
+            }
+
+            location += country;
+        }
+
+        return location;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if(object == null || !object.getClass().equals(getClass())) {
             return false;

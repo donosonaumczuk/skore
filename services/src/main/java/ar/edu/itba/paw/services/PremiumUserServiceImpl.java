@@ -13,6 +13,7 @@ import ar.edu.itba.paw.models.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -132,13 +135,11 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     private static String formatDate(String birthday) {
-        String month = "" + birthday.charAt(0) + birthday.charAt(1);
-        String day = "" + birthday.charAt(3) + birthday.charAt(4);
-        String year = "" + birthday.charAt(6) + birthday.charAt(7) + birthday.charAt(8) + birthday.charAt(9);
-        String formattedDate = year + "-" + month + "-" + day;
+        DateTimeFormatter formater1 = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formater2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = LocalDateTime.parse(birthday, formater1).format(formater2);
         LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
         return formattedDate;
-
     }
 
     @Override
@@ -202,7 +203,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     public void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user));
+        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
 
 }

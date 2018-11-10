@@ -38,7 +38,8 @@ public class ResourceController extends BaseController{
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String handleLanguage() {
         LOGGER.trace("Handling language request for client i18n");
-        return "{ \"lang\" : \"" + messageSource.getMessage("lang", null, LocaleContextHolder.getLocale()) + "\" }";
+        return "{ \"lang\" : \"" + messageSource.getMessage("lang", null, LocaleContextHolder.getLocale()) +
+                "\" }";
     }
 
     @RequestMapping(value = "/{type}/image/{id}", method = {RequestMethod.GET})
@@ -46,20 +47,19 @@ public class ResourceController extends BaseController{
                                                 @PathVariable final String id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] media;
-        if(type.compareTo("profile")==0) {
+        if(type.compareTo("profile") == 0) {
             try {
                 media = premiumUserService.readImage(id);
             } catch (Exception e) {
                 headers.add("Location", "/img/user-default.svg");
                 return new ResponseEntity<>(headers, HttpStatus.FOUND);
             }
-
             if(media == null) {
                 headers.add("Location", "/img/user-default.svg");
                 return new ResponseEntity<>(headers, HttpStatus.FOUND);
             }
         }
-        else if(type.compareTo("sport")==0)  {
+        else if(type.compareTo("sport") == 0)  {
             media = sportService.readImage(id);
         }
         else {

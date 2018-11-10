@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.SimpleEncrypter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.User;
@@ -106,8 +107,8 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmMatchAssistance(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.SimpleCipherEncrypt(phrase);
-        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase );
+        encrypter.simpleCipherEncrypt(phrase);
+        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
 
     @Override
@@ -126,8 +127,8 @@ public class UserServiceImpl implements UserService {
     public void sendCancelOptionMatch(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.SimpleCipherEncrypt(phrase);
-        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase);
+        encrypter.simpleCipherEncrypt(phrase);
+        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
 }
 

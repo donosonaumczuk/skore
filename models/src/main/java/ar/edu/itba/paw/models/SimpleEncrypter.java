@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models;
 
 public class SimpleEncrypter {
 
-    public  String SimpleCipherEncrypt(String phrase) {
+    public  String simpleCipherEncrypt(String phrase) {
         String encriptedPhrase= "";
         for(int i = 0; i < phrase.length(); i++) {
             if((phrase.charAt(i) >= 'a' && phrase.charAt(i) <= 'z') ||
@@ -22,7 +22,7 @@ public class SimpleEncrypter {
         return encriptedPhrase;
     }
 
-    public String SimpleCipherDecrypt(String encriptedPhrase) {
+    public String simpleCipherDecrypt(String encriptedPhrase) {
         String decriptedPhrase= "";
         for(int i = 0; i <  encriptedPhrase.length(); i++) {
             if((encriptedPhrase.charAt(i) >= 'a' && encriptedPhrase.charAt(i) <= 'z') ||

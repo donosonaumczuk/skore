@@ -329,7 +329,7 @@ function getMatchCard(match) {
     var title = match.title;
     var availability = match.quantityOccupiedPlaces + ' / ' + (match.team1.sport.quantity * 2);
     var place = match.place;
-    var location = place.street + ', ' + place.city + ', ' + place.state + ', ' + place.country;
+    var location = getMatchLocation(place.street, place.city, place.state, place.country);
     var sportId = match.team1.sport.name;
     var team1Name = match.team1.name;
 
@@ -396,6 +396,60 @@ function getMatchCard(match) {
         '</div>' +
         '</div>';
     return matchCard;
+}
+
+function getMatchLocation(street, city, state, country) {
+    matchLocation = "";
+    putComma = false;
+
+    if(street.length > 0 && street.charAt(street.length - 1) == " ") {
+        street = street.substr(0, street.length - 1);
+    }
+
+    if(street.length > 0) {
+        matchLocation += street;
+        putComma = true;
+    }
+
+    if(city.length > 0 && city.charAt(city.length - 1) == " ") {
+        city = city.substr(0, city.length - 1);
+    }
+
+    if(city.length > 0) {
+        if(putComma) {
+            matchLocation += ", ";
+        }
+
+        matchLocation += city;
+        putComma = true;
+    }
+
+    if(state.length > 0 && state.charAt(state.length - 1) == " ") {
+        state = state.substr(0, state.length - 1);
+    }
+
+    if(state.length > 0) {
+        if(putComma) {
+            matchLocation += ", ";
+        }
+
+        matchLocation += state;
+        putComma = true;
+    }
+
+    if(country.length > 0 && country.charAt(country.length - 1) == " ") {
+        country = country.substr(0, country.length - 1);
+    }
+
+    if(country.length > 0) {
+        if(putComma) {
+            matchLocation += ", ";
+        }
+
+        matchLocation += country;
+    }
+
+    return matchLocation;
 }
 
 function getTypeLabel(type) {

@@ -9,13 +9,14 @@ import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import org.joda.time.LocalDateTime;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,22 +39,20 @@ public class GameServiceImpl implements GameService {
 
     private static String getFinishTime(final String startTime, String duration) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        java.time.LocalTime durationTime = java.time.LocalTime.parse(duration, timeFormatter);
+        LocalTime durationTime = LocalTime.parse(duration, timeFormatter);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        java.time.LocalDateTime startDateTime = java.time.LocalDateTime.parse(startTime, dateTimeFormatter);
+        LocalDateTime startDateTime = LocalDateTime.parse(startTime, dateTimeFormatter);
         String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
                 .format(dateTimeFormatter);
         return finishTime;
     }
-    private static String formatDate(String date) {
-        String month = "" + date.charAt(0) + date.charAt(1);
-        String day = "" + date.charAt(3) + date.charAt(4);
-        String year = "" + date.charAt(6) + date.charAt(7) + date.charAt(8) + date.charAt(9);
-        String hour ="" + date.charAt(11) + date.charAt(12);
-        String min ="" + date.charAt(14) + date.charAt(15);
-        String formattedDate = year + "-" + month + "-" + day + " " + hour + ":" + min;
-        return formattedDate;
 
+    private static String formatDate(String date) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(date, timeFormatter);
+        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDate = localDateTime.format(timeFormatter);
+        return formattedDate;
     }
 
     @Override
@@ -65,8 +64,8 @@ public class GameServiceImpl implements GameService {
         final String newStartTime = formatDate(startTime);
         String finishTime = getFinishTime(newStartTime, duration);
 
-        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime + ":00", finishTime + ":00", type, result,
-                country, state, city, street, tornamentName, description, title);
+        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime + ":00", finishTime +
+                        ":00", type, result, country, state, city, street, tornamentName, description, title);
         if(!game.isPresent()) {
             LOGGER.error("Could not create this game: {} vs {} |starting at {} |finishing at {}",
                     teamName1, teamName2, newStartTime, finishTime);
