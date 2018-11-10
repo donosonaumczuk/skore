@@ -82,7 +82,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     public void testCreatePremiumUser() throws IOException {
 
         //set up
-        //em.remove(insertedUser);
+        em.remove(insertedUser);
 
         //exercise class
         Optional<PremiumUser> returnedValue = premiumUserDao.create(insertedUser.getUser().getFirstName(),
@@ -259,22 +259,23 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
     }
 
-//    @Test
-//    public void testRemoveLikes() {
-//        //set up
-//        Sport sport = new Sport("Padel", 1, "Padel", null);
-//        em.persist(sport);
-//        em.persist(insertedUser);
-//
-//        //exercise the class
-//        boolean returnedValue = premiumUserDao.addSport(insertedUser.getUserName(), sport.getName());
-//
-//        //postconditions
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
-//        Assert.assertTrue(returnedValue);
-//        Assert.assertTrue(user.getLikes().contains(sport));
-//        Assert.assertEquals(1, user.getLikes().size());
-//    }
+    @Test
+    public void testRemoveLikes() {
+        //set up
+        Sport sport = new Sport("Padel", 1, "Padel", null);
+        em.persist(sport);
+        insertedUser.getLikes().add(sport);
+        em.persist(insertedUser);
+
+        //exercise the class
+        boolean returnedValue = premiumUserDao.removeSport(insertedUser.getUserName(), sport.getName());
+
+        //postconditions
+        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
+        Assert.assertTrue(returnedValue);
+        Assert.assertTrue(!user.getLikes().contains(sport));
+        Assert.assertEquals(0, user.getLikes().size());
+    }
 
 
 }
