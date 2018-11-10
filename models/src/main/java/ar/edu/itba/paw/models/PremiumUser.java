@@ -2,31 +2,27 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "accounts")
-@PrimaryKeyJoinColumn(name = "userId")
-public class PremiumUser extends User{
+public class PremiumUser {
 
-    @Column(name = "username", length = 100, nullable = false, unique = true)
+    @Id
+    @Column(name = "userName", length = 100)
     private String userName;
 
     @Column(name = "cellphone", length = 100)
     private String cellphone;
 
-    @Column
+    @Column(name = "birthday")
     private LocalDate birthday;
 
     @Embedded
     private Place home;
 
-    @Column
+    @Column(name = "reputation")
     private int reputation;
-
-    @Column(length = 100, nullable = false, unique = true)
-    private String email;
 
     @Column(length = 100, nullable = false)
     private String password;
@@ -40,44 +36,61 @@ public class PremiumUser extends User{
     @Column
     private boolean enabled;
 
-    //@ManyToMany(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "userId")
+    private User user;
+
+    //@ManyToMany(fetch = FetchType.LAZY)TODO: for next iteration
     //private List<PremiumUser> friends;
 
     //@ManyToMany(fetch = FetchType.LAZY)
     //private List<Notification> notifications;
 
-    //@ManyToMany(fetch = FetchType.EAGER)
-    //private List<Sport> likes;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "likes",
+//    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
+//    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
+//    private List<Sport> likes;
 
-   // @ManyToMany(fetch = FetchType.EAGER)
-    //private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "userRoles" ,
+    joinColumns = {@JoinColumn(name = "username", referencedColumnName = "userName")},
+            inverseJoinColumns = {@JoinColumn(name = "role")})
+    private Set<Role> roles;
 
-    public PremiumUser(String firstName, String lastName, String email, long userId,
+    public PremiumUser(String firstName, String lastName, String email,
                        String userName, String cellphone, LocalDate birthday,
                        Place home, int reputation, String password, String code,
                        byte image[]) {
-        super(firstName, lastName, email, userId);
 
+        this.user           = new User(firstName, lastName, email);
         this.userName       = userName;
         this.cellphone      = cellphone;
         this.birthday       = birthday;
         this.home           = home;
         this.reputation     = reputation;
         this.password       = password;
-        this.email          = email;
         this.code           = code;
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
-//        this.likes          = new ArrayList<>();
-//        this.roles          = new HashSet<>();
+    //    this.likes          = new ArrayList<>();
+        this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
     }
 
-    public PremiumUser(String firstName, String lastName, String email, long userId, String userName) {
-        super(firstName, lastName, email, userId);
+    public PremiumUser(String firstName, String lastName, String email, String userName) {
+        this.user     = new User(firstName, lastName, email);
         this.userName = userName;
     }
+
+
+    public PremiumUser() {
+        //for hibernate
+    }
+
+
+
 
     public String getUserName() {
         return userName;
@@ -87,8 +100,16 @@ public class PremiumUser extends User{
         this.userName = userName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getFullName() {
-        return getFirstName() + " " + getLastName();
+        return getUser().getFirstName() + " " + getUser().getLastName();
     }
 
     public String getCellphone() {
@@ -162,20 +183,20 @@ public class PremiumUser extends User{
 //    public void setLikes(final List<Sport> likes) {
 //        this.likes = likes;
 //    }
-//
-//    public Set<Role> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Collection<Role> newRoles) {
-//
-//        this.roles.clear();
-//        this.roles.addAll(newRoles);
-//    }
 
-//    public void addRole(final Role newRole) {
-//        roles.add(newRole);
-//    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> newRoles) {
+
+        this.roles.clear();
+        this.roles.addAll(newRoles);
+    }
+
+    public void addRole(final Role newRole) {
+        roles.add(newRole);
+    }
 
     public boolean getEnabled() {
         return enabled;

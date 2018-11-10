@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.User;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,12 @@ public class UserHibernateDaoTest {
 
     public UserHibernateDaoTest() {
         insertedUser = new User("userName", "lastName", "email");
+    }
+
+    @After
+    public void removeAllData() {
+        em.createNativeQuery("delete from user");
+        em.flush();
     }
 
     @Test
@@ -62,7 +69,7 @@ public class UserHibernateDaoTest {
 
         //postconditions
         Assert.assertTrue(returnedValue.isPresent());
-        Assert.assertTrue(returnedValue.get().equals(insertedUser));
+        Assert.assertTrue(returnedValue.get().getFirstName().equals(insertedUser.getFirstName()));
     }
 
     @Test
@@ -88,10 +95,11 @@ public class UserHibernateDaoTest {
                 "newUserName", "newLastName", "newEmail");
         User expectedUser = new User("newUserName", "newLastName", "newEmail",
                 insertedUser.getUserId());
+        User user = em.find(User.class, insertedUser.getUserId());
 
         //postconditions
         Assert.assertTrue(returnedValue.isPresent());
-        Assert.assertTrue(expectedUser.equals(returnedValue.get()));
+        Assert.assertTrue(expectedUser.equals(user));
     }
 
     @Test
