@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
-@Table(name = "notification")
+//@Entity
+//@Table(name = "notification")
 public class Notification {
 
     @EmbeddedId
@@ -15,6 +15,7 @@ public class Notification {
     private boolean seen;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "userName")
     private PremiumUser owner;
 
     /* package */public Notification() {

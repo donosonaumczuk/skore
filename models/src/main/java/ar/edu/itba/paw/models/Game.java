@@ -1,39 +1,60 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "games")
 public class Game {
-    private Team team1;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teamName2")
     private Team team2;
+
+    @EmbeddedId
+    private GamePK primaryKey;
+
+    @Embedded
     private Place place;
-    private LocalDateTime startTime;
-    private LocalDateTime finishTime;
+
+    @Column(length = 100)
     private String result;
+
+    @Column(length = 100, nullable = false)
     private String type;
+
     private int quantityOccupiedPlaces;
+
+    @Column(length = 140)
     private String description;
+
+    @Column(length = 100)
     private String title;
+
+    @Column(length = 100)
     private String tornament;
 
+    /* package */public Game() {
+        // For Hibernate
+    }
+
     public Game(Team team1, Team team2, Place place, LocalDateTime startTime,
-                LocalDateTime finishTime, String type, int quantityOccupiedPlaces,
-                String result, String description, String title, String tornament) {
-        this.team1                  = team1;
+                LocalDateTime finishTime, String type, String result, String description,
+                String title, String tornament) {
         this.team2                  = team2;
         this.place                  = place;
-        this.startTime              = startTime;
-        this.finishTime             = finishTime;
+        this.primaryKey             = new GamePK(team1, startTime, finishTime);
         this.type                   = type;
         this.result                 = result;
-        this.quantityOccupiedPlaces = quantityOccupiedPlaces;
         this.description            = description;
         this.title                  = title;
         this.tornament              = tornament;
+        this.quantityOccupiedPlaces = team1.getPlayers().size() + team2.getPlayers().size();
     }
 
     public Team getTeam1() {
-        return team1;
+        return primaryKey.getTeam1();
     }
 
     public Team getTeam2() {
@@ -41,7 +62,7 @@ public class Game {
     }
 
     public void setTeam1(Team team1) {
-        this.team1 = team1;
+        primaryKey.setTeam1(team1);
     }
 
     public void setTeam2(Team team2) {
@@ -49,7 +70,7 @@ public class Game {
     }
 
     public String team1Name() {
-        return team1.getName();
+        return primaryKey.getTeam1().getName();
     }
 
     public String team2Name() {
@@ -65,19 +86,19 @@ public class Game {
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return primaryKey.getStartTime();
     }
 
     public void setStartTime(final LocalDateTime startTime) {
-        this.startTime = startTime;
+        primaryKey.setStartTime(startTime);
     }
 
     public LocalDateTime getFinishTime() {
-        return finishTime;
+        return primaryKey.getFinishTime();
     }
 
     public void setFinishTime(final LocalDateTime finishTime) {
-        this.finishTime = finishTime;
+        primaryKey.setStartTime(finishTime);
     }
 
     public void setResult(final String result) {
@@ -88,8 +109,16 @@ public class Game {
         return result;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setTornament(String tornament) {
+        this.tornament = tornament;
     }
 
     public String getTornament() {
@@ -110,14 +139,19 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(team1, team2, startTime, finishTime);
+        return Objects.hash(primaryKey);
     }
+
     public int getQuantityOccupiedPlaces() {
         return quantityOccupiedPlaces;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {

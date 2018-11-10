@@ -53,7 +53,7 @@ public class TeamHibernateDaoTest {
         user            = new User("Agustin", "Dammiano", "dammiano@gmail.com", 0);
         account         = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
                             0, "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
-                            null, 50,"321dammiano_aguistin123", "admin");
+                            null, 50,"321dammiano_aguistin123", "admin", null);
         team            = new Team(account, "C.A.R.", "Club Atletico River", false, sport,
                             null);
         team.addPlayer(account);

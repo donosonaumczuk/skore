@@ -2,11 +2,13 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class NotificationPK implements Serializable{
+@Embeddable
+public class NotificationPK implements Serializable {
 
     @Column
     private LocalDateTime startTime;

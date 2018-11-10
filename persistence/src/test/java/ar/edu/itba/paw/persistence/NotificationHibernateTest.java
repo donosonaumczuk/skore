@@ -48,7 +48,7 @@ public class NotificationHibernateTest {
     public NotificationHibernateTest() {
         account = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
                 0, "dammiano98", "92262123", LocalDate.parse("1998-06-05"),
-                null, 50,"321dammiano_aguistin123", "admin");
+                null, 50,"321dammiano_aguistin123", "admin", null);
         notification = new Notification(LocalDateTime.parse("2018-12-12 0:00:00"), "Tiene un patido en un dia",
                 false, account);
         notificationNotInserted = new Notification(LocalDateTime.parse("2017-12-12 0:00:00"), "Tiene un patido " +
