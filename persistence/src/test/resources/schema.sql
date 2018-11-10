@@ -100,3 +100,12 @@ CREATE TABLE IF NOT EXISTS games (
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (teamName1, startTime, finishTime)
 );
+
+CREATE TABLE IF NOT EXISTS likes (
+  userName  VARCHAR(100),
+  sportName VARCHAR(100),
+  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  FOREIGN KEY (sportName) REFERENCES sports(sportName),
+  PRIMARY Key (userName, sportName)
+);
+
