@@ -32,15 +32,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     RoleHibernateDao roleDao;
 
     public Optional<PremiumUser> findByUserName(final String userName) {
-        final TypedQuery<PremiumUser> query = em.createQuery("FROM PremiumUser AS user WHERE user.userName = :username", PremiumUser.class);
-        query.setParameter("username", userName);
-        final List<PremiumUser> list = query.getResultList();
-        PremiumUser user = list.isEmpty() ? null : list.get(0);
-        if(user == null) {
+        PremiumUser premiumUser = em.find(PremiumUser.class, userName);
+
+        if(premiumUser == null) {
             return Optional.empty();
         }
         else {
-            return Optional.of(user);
+            return Optional.of(premiumUser);
         }
     }
 
@@ -55,11 +53,18 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             return Optional.empty();
         }
 
+        final Optional<User> basicUser = userDao.create(firstName, lastName, email);
+
+        if(!basicUser.isPresent()) {
+            return Optional.empty();
+        }
+
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
-        final PremiumUser newUser = new PremiumUser(firstName, lastName, email, userName,
-                cellphone, LocalDate.parse(birthday), new Place(country, state, city, street), reputation,
-                password, code, ((file==null)?null:file.getBytes()));
-        em.merge(newUser);
+        final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
+                basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
+                state, city, street), reputation, password, code, ((file==null)?null:file.getBytes()));
+        //em.persist(basicUser.get());
+        em.persist(newUser);
         return Optional.of(newUser);
     }
 
@@ -96,11 +101,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
         if(currentUser.isPresent()) {
-            userDao.updateBasicUserInfo(currentUser.get().getUserId(), newFirstName, newLastName, newEmail);
             final PremiumUser user = currentUser.get();
-            user.setFirstName(newFirstName);
-            user.setLastName(newLastName);
-            user.setEmail(newEmail);
+            user.getUser().setFirstName(newFirstName);
+            user.getUser().setLastName(newLastName);
+            user.getUser().setEmail(newEmail);
             user.setUserName(newUserName);
             user.setCellphone(newCellphone);
             final Place newHome = new Place(newCountry, newState, newCity, newStreet);
@@ -116,7 +120,8 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     public Optional<PremiumUser> findByEmail(final String email) {
-        final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as user where user.email = :email", PremiumUser.class);
+        final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as user where user.email = :email",
+                                                                PremiumUser.class);
         query.setParameter("email", email);
         final List<PremiumUser> list = query.getResultList();
         PremiumUser user = list.isEmpty() ? null : list.get(0);

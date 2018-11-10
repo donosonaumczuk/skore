@@ -6,22 +6,21 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id
-//    @SequenceGenerator(name = "users_userid", sequenceName = "users_userid_seq", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")//TODO: los test no pasan con esto no se si andara en POSTGRESQL
+    @SequenceGenerator(name = "users_userid", sequenceName = "users_userid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")//TODO: los test no pasan con esto no se si andara en POSTGRESQL
     @Column(name = "userid")
     private long userId;
 
-    @Column(name = "firstname", length = 100)
+    @Column(name = "firstname", length = 100, nullable = false)
     private String firstName;
 
-    @Column(name = "lastname", length = 100)
+    @Column(name = "lastname", length = 100, nullable = false)
     private String lastName;
 
-    @Column(name = "email", length = 100)
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
 
     public User() {

@@ -38,9 +38,16 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     private PremiumUser insertedUser;
 
     public PremiumUserHibernateDaoTest() {
-        insertedUser = new PremiumUser("firstName", "lastName", "email", 1, "userName", "cellphone",
-                LocalDate.parse("1994-12-26"), new Place("country", "state", "city", "street"),
-                10, "password", "code", null);
+        insertedUser = new PremiumUser("firstName", "lastName", "email",  "userName",
+                "cellphone", LocalDate.parse("1994-12-26"), new Place("country", "state",
+                "city", "street"), 10, "password", "code", null);
+    }
+
+    @After
+    public void removeAllData() {
+        em.createNativeQuery("delete from users");
+        em.createNativeQuery("delete from accounts");
+        //em.flush();
     }
 
 
@@ -51,7 +58,6 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         Optional<PremiumUser> returnedValue = premiumUserDao.findByUserName(insertedUser.getUserName());
-
         //postconditions
         Assert.assertTrue(returnedValue.isPresent());
         Assert.assertTrue(returnedValue.get().equals(insertedUser));
@@ -63,7 +69,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(insertedUser);
 
         //exercise class
-        Optional<PremiumUser> returnedValue = premiumUserDao.findByEmail(insertedUser.getEmail());
+        Optional<PremiumUser> returnedValue = premiumUserDao.findByEmail(insertedUser.getUser().getEmail());
 
         //postconditions
         Assert.assertTrue(returnedValue.isPresent());
@@ -71,20 +77,24 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     }
 
     @Test
-    public void testCreatePremiumUserl() throws IOException {
+    public void testCreatePremiumUser() throws IOException {
+
+        //set up
+        //em.remove(insertedUser);
 
         //exercise class
-        Optional<PremiumUser> returnedValue = premiumUserDao.create(insertedUser.getFirstName(),
-                insertedUser.getLastName(), "newEmail", "newUserName",
+        Optional<PremiumUser> returnedValue = premiumUserDao.create(insertedUser.getUser().getFirstName(),
+                insertedUser.getUser().getLastName(), "newEmail", "newUserName",
                 insertedUser.getCellphone(), "1994-12-26", insertedUser.getHome().getCountry(),
                 insertedUser.getHome().getState(), insertedUser.getHome().getCity(),
                 insertedUser.getHome().getStreet(), insertedUser.getReputation(), insertedUser.getPassword(),
                 null);
 
+
         //postconditions
-//        PremiumUser user = em.find(PremiumUser.class, 1);
-//        Assert.assertNotNull(user);
-//        Assert.assertTrue(user.equals(insertedUser));
+        PremiumUser user = em.find(PremiumUser.class, "newUserName");
+        Assert.assertNotNull(user);
+        Assert.assertTrue(!user.equals(insertedUser));
     }
 
     @Test
@@ -97,7 +107,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //postconditions
         Assert.assertTrue(returnedValue);
-        Assert.assertNull(em.find(PremiumUser.class, insertedUser.getUserId()));
+        Assert.assertNull(em.find(PremiumUser.class, insertedUser.getUserName()));
 
     }
 
@@ -132,22 +142,23 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         //exercise class
         PremiumUser user = premiumUserDao.findByUserName(insertedUser.getUserName()).get();
         user.setUserName("newUserName");
-        user.setFirstName("newFirstName");
-        premiumUserDao.updateUserInfo("newFirstName", insertedUser.getLastName(),
-                insertedUser.getEmail(), "newUserName",insertedUser.getCellphone(),
+        user.getUser().setFirstName("newFirstName");
+        premiumUserDao.updateUserInfo("newFirstName", insertedUser.getUser().getLastName(),
+                "newEmail", insertedUser.getUserName(),insertedUser.getCellphone(),
                 insertedUser.getBirthday().toString(), insertedUser.getHome().getCountry(),
                 insertedUser.getHome().getState(), insertedUser.getHome().getCity(),
                 insertedUser.getHome().getStreet(), insertedUser.getReputation(),
                 insertedUser.getPassword(), insertedUser.getUserName());
-        PremiumUser returnedUser = em.find(PremiumUser.class, insertedUser.getUserId());
+        PremiumUser returnedUser = em.find(PremiumUser.class, "newUserName");
 
         //postconditions
         Assert.assertNotNull(returnedUser);
-        Assert.assertTrue(returnedUser.getUserName().equals("newUserName"));
-        Assert.assertTrue(returnedUser.getFirstName().equals("newFirstName"));
+        //Assert.assertTrue(returnedUser.getUserName().equals("newUserName"));
+        Assert.assertTrue(returnedUser.getUser().getFirstName().equals("newFirstName"));
 
     }
 
+    @Test
     public void testEnableUser() {
         //set up
         em.persist(insertedUser);
@@ -156,7 +167,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         premiumUserDao.enableUser("userName", "code");
 
         //postcondition
-        PremiumUser premiumUser = em.find(PremiumUser.class, insertedUser.getUserId());
+        PremiumUser premiumUser = em.find(PremiumUser.class, insertedUser.getUserName());
         Assert.assertTrue(premiumUser.getEnabled());
 
     }
@@ -171,7 +182,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         //exercise the class
         boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
                 role.getRoleId());
-        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
 
         //postconditions
         Assert.assertTrue(returnedValue);
