@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.Sport;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -222,59 +224,56 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         Assert.assertEquals(1, roles.size());
         Assert.assertTrue(roles.contains(role));
     }
-//
-//    @Test
-//    public void testGetLikes() {
-//        //set up
-//        Role role = new Role("ROLE_USER", 1);
-//        em.persist(role);
-//        em.persist(insertedUser);
-//
-//        //exercise the class
-//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
-//                role.getRoleId());
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
-//
-//        //postconditions
-//        Assert.assertTrue(returnedValue);
-//        Assert.assertEquals(1, user.getRoles().size());
-//        Assert.assertTrue(user.getRoles().contains(role));
-//    }
-//
-//    @Test
-//    public void testAddLikes() {
-//        //set up
-//        Role role = new Role("ROLE_USER", 1);
-//        em.persist(role);
-//        em.persist(insertedUser);
-//
-//        //exercise the class
-//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
-//                role.getRoleId());
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
-//
-//        //postconditions
-//        Assert.assertTrue(returnedValue);
-//        Assert.assertEquals(1, user.getRoles().size());
-//        Assert.assertTrue(user.getRoles().contains(role));
-//    }
-//
+
+    @Test
+    public void testGetLikes() {
+        //set up
+        Sport sport = new Sport("Padel", 1, "Padel", null);
+        em.persist(sport);
+        insertedUser.getLikes().add(sport);
+        em.persist(insertedUser);
+
+        //exercise the class
+        List<Sport> sports = premiumUserDao.getSports(insertedUser.getUserName());
+
+        //postconditions
+        Assert.assertEquals(1, sports.size());
+        Assert.assertTrue(sports.contains(sport));
+    }
+
+    @Test
+    public void testAddLikes() {
+        //set up
+        Sport sport = new Sport("Padel", 1, "Padel", null);
+        em.persist(sport);
+        em.persist(insertedUser);
+
+        //exercise the class
+        boolean returnedValue = premiumUserDao.addSport(insertedUser.getUserName(), sport.getName());
+
+        //postconditions
+        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
+        Assert.assertTrue(returnedValue);
+        Assert.assertTrue(user.getLikes().contains(sport));
+        Assert.assertEquals(1, user.getLikes().size());
+
+    }
+
 //    @Test
 //    public void testRemoveLikes() {
 //        //set up
-//        Role role = new Role("ROLE_USER", 1);
-//        em.persist(role);
+//        Sport sport = new Sport("Padel", 1, "Padel", null);
+//        em.persist(sport);
 //        em.persist(insertedUser);
 //
 //        //exercise the class
-//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
-//                role.getRoleId());
-//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//        boolean returnedValue = premiumUserDao.addSport(insertedUser.getUserName(), sport.getName());
 //
 //        //postconditions
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserName());
 //        Assert.assertTrue(returnedValue);
-//        Assert.assertEquals(1, user.getRoles().size());
-//        Assert.assertTrue(user.getRoles().contains(role));
+//        Assert.assertTrue(user.getLikes().contains(sport));
+//        Assert.assertEquals(1, user.getLikes().size());
 //    }
 
 

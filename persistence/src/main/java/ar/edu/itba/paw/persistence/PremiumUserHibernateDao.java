@@ -208,7 +208,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
         else {
             user.getLikes().add(sport);
-            em.merge(premiumUser);
+            em.merge(user);
             return true;
         }
 
