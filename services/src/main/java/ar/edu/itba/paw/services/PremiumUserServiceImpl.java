@@ -10,6 +10,7 @@ import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
+import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -135,9 +137,10 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     private static String formatDate(String birthday) {
-        DateTimeFormatter formater1 = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        DateTimeFormatter formater2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = LocalDateTime.parse(birthday, formater1).format(formater2);
+        DateTimeFormatter toParse = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate parsed = LocalDate.parse(birthday, toParse);
+        String formattedDate = parsed.format(toFormat);
         LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
         return formattedDate;
     }
