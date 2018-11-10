@@ -43,6 +43,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private BCryptPasswordEncoder bcrypt;
+
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}",userName);
@@ -69,7 +72,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
                               final MultipartFile file) throws IOException {
-       final String encodedPassword = new BCryptPasswordEncoder().encode(password);
+       final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
         final String formattedBirthday = formatDate(birthday);
@@ -124,7 +127,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, new BCryptPasswordEncoder().encode(newPassword), oldUserName);
+                newCity, newStreet, newReputation, bcrypt.encode(newPassword), oldUserName);
         if(user.isPresent()) {
             LOGGER.trace("{] updated", oldUserName);
             return user.get();

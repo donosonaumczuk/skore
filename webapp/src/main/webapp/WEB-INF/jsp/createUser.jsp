@@ -52,14 +52,13 @@
                     <form:input class="form-control" path="email" type="text"/>
                     <form:errors path="email" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
-                <div class="input-group">
-                    <div class="custom-file">
+                <div class="form-group">
+                    <form:label path="image"><spring:message code="imageLabel"/></form:label>
+                    <div class="input-group custom-file">
                         <input type="file"  name="image" class="custom-file-input" id="image" multiple onchange="showname()">
-                        <label class="custom-file-label" for="image" id="fileLabel"aria-describedby="inputGroupFileAddon02" >
-                           </label>
+                        <label class="custom-file-label" for="image" id="fileLabel"aria-describedby="inputGroupFileAddon02" ></label>
                     </div>
                     <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
-
                 </div>
                 <div class="form-group">
                     <form:label path="cellphone"><spring:message code="cellphoneLabel"/></form:label>
