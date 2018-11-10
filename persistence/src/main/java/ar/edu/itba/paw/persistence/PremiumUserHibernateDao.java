@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
-import ar.edu.itba.paw.models.Place;
-import ar.edu.itba.paw.models.PremiumUser;
-import ar.edu.itba.paw.models.Role;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,9 +115,6 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-
-
-
     public Optional<PremiumUser> findByEmail(final String email) {
         final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as user where user.email = :email", PremiumUser.class);
         query.setParameter("email", email);
@@ -130,6 +125,20 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
         else {
             return Optional.of(user);
+        }
+    }
+
+    public boolean enableUser(final String username, final String code) {
+        Optional<PremiumUser> currentUser = findByUserName(username);
+
+        if(currentUser.isPresent() && currentUser.get().getCode().equals(code)) {
+            final PremiumUser user = currentUser.get();
+            user.setEnabled(true);
+            em.merge(user);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -158,12 +167,19 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return user.getRoles();
     }
 
-    public boolean enableUser(final String username, final String code) {
-        Optional<PremiumUser> currentUser = findByUserName(username);
 
-        if(currentUser.isPresent() && currentUser.get().getCode().equals(code)) {
-            final PremiumUser user = currentUser.get();
-            user.setEnabled(true);
+
+    public boolean removeRole(final String username, final int roleId) {
+        Role role = em.find(Role.class, roleId);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(role == null || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getRoles().contains(role)) {
+            user.getRoles().remove(role);
             em.merge(user);
             return true;
         }
@@ -171,5 +187,54 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             return false;
         }
     }
+
+
+//    public boolean addSport(final String username, String sportName) {
+//        Sport sport = em.find(Sport.class, sportName);
+//        Optional<PremiumUser> premiumUser = findByUserName(username);
+//
+//        if(sport == null || !premiumUser.isPresent()) {
+//            return false;
+//        }
+//
+//        PremiumUser user = premiumUser.get();
+//        if(user.getLikes().contains(sport)) {
+//            return false;
+//        }
+//        else {
+//            user.getLikes().add(sport);
+//            em.merge(premiumUser);
+//            return true;
+//        }
+//
+//    }
+//
+//    public List<Sport> getSports(String username) {
+//        Optional<PremiumUser> premiumUser = findByUserName(username);
+//        if(premiumUser.isPresent()) {
+//            return premiumUser.get().getLikes();
+//        }
+//        else return null;
+//    }
+//
+//    public boolean removeSport(final String username, String sportName) {
+//        Sport sport = em.find(Sport.class, sportName);
+//        Optional<PremiumUser> premiumUser = findByUserName(username);
+//
+//        if(sport == null || !premiumUser.isPresent()) {
+//            return false;
+//        }
+//
+//        PremiumUser user = premiumUser.get();
+//        if(user.getLikes().contains(sport)) {
+//            user.getLikes().remove(sport);
+//            em.merge(user);
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+//
+//    }
 
 }

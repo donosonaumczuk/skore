@@ -39,18 +39,21 @@ public class PremiumUser extends User{
     @Column
     private boolean enabled;
 
-    //@ManyToMany(fetch = FetchType.LAZY)
+    //@ManyToMany(fetch = FetchType.LAZY)TODO: for next iteration
     //private List<PremiumUser> friends;
 
     //@ManyToMany(fetch = FetchType.LAZY)
     //private List<Notification> notifications;
 
-    //@ManyToMany(fetch = FetchType.EAGER)
-    //private List<Sport> likes;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "likes",
+//    joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
+//    inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})
+//    private List<Sport> likes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userRoles" ,
-    joinColumns = {@JoinColumn(name = "username")},
+    joinColumns = {@JoinColumn(name = "username", referencedColumnName = "")},
             inverseJoinColumns = {@JoinColumn(name = "role")})
     private Set<Role> roles;
 
@@ -70,7 +73,7 @@ public class PremiumUser extends User{
         this.code           = code;
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
-//        this.likes          = new ArrayList<>();
+    //    this.likes          = new ArrayList<>();
         this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
@@ -96,7 +99,7 @@ public class PremiumUser extends User{
         this.code           = code;
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
-//        this.likes          = new ArrayList<>();
+      //  this.likes          = new ArrayList<>();
         this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
@@ -105,6 +108,7 @@ public class PremiumUser extends User{
     public PremiumUser() {
         //for hibernate
     }
+
     public String getUserName() {
         return userName;
     }
@@ -188,7 +192,7 @@ public class PremiumUser extends User{
 //    public void setLikes(final List<Sport> likes) {
 //        this.likes = likes;
 //    }
-//
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -199,9 +203,9 @@ public class PremiumUser extends User{
         this.roles.addAll(newRoles);
     }
 
-//    public void addRole(final Role newRole) {
-//        roles.add(newRole);
-//    }
+    public void addRole(final Role newRole) {
+        roles.add(newRole);
+    }
 
     public boolean getEnabled() {
         return enabled;

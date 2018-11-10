@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.Set;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:schema.sql")
 @Transactional
-public class PremiumUserHibernateDaoTest {
+public class PremiumUserHibernateDaoTest implements Serializable{
 
     @PersistenceContext
     private EntityManager em;
@@ -101,7 +102,7 @@ public class PremiumUserHibernateDaoTest {
     }
 
     @Test
-    public void testRemoveNonExistend() {
+    public void testRemoveNonExistenUser() {
         //exercise class
         boolean returnedValue = premiumUserDao.remove(insertedUser.getUserName());
 
@@ -161,7 +162,7 @@ public class PremiumUserHibernateDaoTest {
     }
 
     @Test
-    public void testGetRoles() {
+    public void testAddRoles() {
         //set up
         Role role = new Role("ROLE_USER", 1);
         em.persist(role);
@@ -178,6 +179,97 @@ public class PremiumUserHibernateDaoTest {
         Assert.assertTrue(user.getRoles().contains(role));
     }
 
+
+//    @Test
+//    public void testRemoveRoles() {
+//        //set up
+//        Role role = new Role("ROLE_USER", 1);
+//        insertedUser.getRoles().add(role);
+//        em.persist(role);
+//        em.persist(insertedUser);
+//
+//        //exercise the class
+//        boolean returnedValue = premiumUserDao.removeRole(insertedUser.getUserName(),
+//                role.getRoleId());
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//
+//        //postconditions
+//        Assert.assertTrue(returnedValue);
+//        Assert.assertEquals(0, user.getRoles().size());
+//        Assert.assertTrue(!user.getRoles().contains(role));
+//    }
+//
+//    @Test
+//    public void testgetRoles() {
+//        //set up
+//        Role role = new Role("ROLE_USER", 1);
+//        em.persist(role);
+//        em.persist(insertedUser);
+//
+//        //exercise the class
+//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
+//                role.getRoleId());
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//
+//        //postconditions
+//        Assert.assertTrue(returnedValue);
+//        Assert.assertEquals(1, user.getRoles().size());
+//        Assert.assertTrue(user.getRoles().contains(role));
+//    }
+//
+//    @Test
+//    public void testGetLikes() {
+//        //set up
+//        Role role = new Role("ROLE_USER", 1);
+//        em.persist(role);
+//        em.persist(insertedUser);
+//
+//        //exercise the class
+//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
+//                role.getRoleId());
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//
+//        //postconditions
+//        Assert.assertTrue(returnedValue);
+//        Assert.assertEquals(1, user.getRoles().size());
+//        Assert.assertTrue(user.getRoles().contains(role));
+//    }
+//
+//    @Test
+//    public void testAddLikes() {
+//        //set up
+//        Role role = new Role("ROLE_USER", 1);
+//        em.persist(role);
+//        em.persist(insertedUser);
+//
+//        //exercise the class
+//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
+//                role.getRoleId());
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//
+//        //postconditions
+//        Assert.assertTrue(returnedValue);
+//        Assert.assertEquals(1, user.getRoles().size());
+//        Assert.assertTrue(user.getRoles().contains(role));
+//    }
+//
+//    @Test
+//    public void testRemoveLikes() {
+//        //set up
+//        Role role = new Role("ROLE_USER", 1);
+//        em.persist(role);
+//        em.persist(insertedUser);
+//
+//        //exercise the class
+//        boolean returnedValue = premiumUserDao.addRole(insertedUser.getUserName(),
+//                role.getRoleId());
+//        PremiumUser user = em.find(PremiumUser.class, insertedUser.getUserId());
+//
+//        //postconditions
+//        Assert.assertTrue(returnedValue);
+//        Assert.assertEquals(1, user.getRoles().size());
+//        Assert.assertTrue(user.getRoles().contains(role));
+//    }
 
 
 }
