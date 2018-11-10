@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+  email       VARCHAR(100),
   password    VARCHAR(100) NOT NULL,
   country     VARCHAR(100),
   state       VARCHAR(100),
@@ -31,6 +32,7 @@ CREATE TABLE IF NOT EXISTS accounts(
   enabled     BOOLEAN,
   code        VARCHAR(100) NOT NULL,
   image       BLOB,
+  UNIQUE(email)
 );
 
 CREATE TABLE IF NOT EXISTS notification(

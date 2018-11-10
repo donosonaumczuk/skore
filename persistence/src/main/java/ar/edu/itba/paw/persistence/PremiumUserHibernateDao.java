@@ -120,8 +120,8 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     public Optional<PremiumUser> findByEmail(final String email) {
-        final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as user where user.email = :email",
-                                                                PremiumUser.class);
+        final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
+                                                "u.email = :email", PremiumUser.class);
         query.setParameter("email", email);
         final List<PremiumUser> list = query.getResultList();
         PremiumUser user = list.isEmpty() ? null : list.get(0);
