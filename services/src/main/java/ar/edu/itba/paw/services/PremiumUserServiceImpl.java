@@ -135,7 +135,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     private static String formatDate(String birthday) {
-        DateTimeFormatter formater1 = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formater1 = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         DateTimeFormatter formater2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = LocalDateTime.parse(birthday, formater1).format(formater2);
         LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
