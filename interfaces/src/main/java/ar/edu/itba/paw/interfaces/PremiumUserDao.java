@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PremiumUserDao {
 
@@ -37,11 +38,11 @@ public interface PremiumUserDao {
 
     public Optional<PremiumUser> findByEmail(final String email);
 
-    //public boolean addRole(final String username, final int roleId);
+    public boolean addRole(final String username, final int roleId);
 
     public boolean enableUser(final String username, final String code);
 
-   // public List<Role> getRoles(final String username);
+    public Set<Role> getRoles(final String username);
 
     }
 

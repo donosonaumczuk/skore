@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class PremiumUserHibernateDao implements PremiumUserDao {
@@ -27,6 +29,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     @Autowired
     UserHibernateDao userDao;
+
+    @Autowired
+    RoleHibernateDao roleDao;
 
     public Optional<PremiumUser> findByUserName(final String userName) {
         final TypedQuery<PremiumUser> query = em.createQuery("FROM PremiumUser AS user WHERE user.userName = :username", PremiumUser.class);
@@ -52,17 +57,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             return Optional.empty();
         }
 
-        Optional<User> basicUser = userDao.create(firstName, lastName, email);
-
-        if(!basicUser.isPresent()) {
-            return Optional.empty();
-        }
-
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
-        final PremiumUser newUser = new PremiumUser(firstName, lastName, email, basicUser.get().getUserId(), userName,
+        final PremiumUser newUser = new PremiumUser(firstName, lastName, email, userName,
                 cellphone, LocalDate.parse(birthday), new Place(country, state, city, street), reputation,
                 password, code, ((file==null)?null:file.getBytes()));
-        em.persist(newUser);
+        em.merge(newUser);
         return Optional.of(newUser);
     }
 
@@ -81,8 +80,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         if(premiumUser.isPresent()) {
             PremiumUser user = premiumUser.get();
             byte image[] = user.getImage();
-            return Optional.of(image);
+            if(image != null) {
+                return Optional.of(image);
+            }
         }
+
         return  Optional.empty();
     }
 
@@ -131,8 +133,30 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-   // public boolean addRole(final String username, final int roleId);
-    // public boolean getRoles(final String username, final int roleId);
+    public boolean addRole(final String username, final int roleId) {
+        Optional<Role> role = roleDao.findRoleById(roleId);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(!role.isPresent() || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        user.getRoles().add(role.get());
+        em.merge(user);
+        return true;
+    }
+
+    public Set<Role> getRoles(final String username) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(!premiumUser.isPresent()) {
+            return null;
+        }
+
+        PremiumUser user = premiumUser.get();
+        return user.getRoles();
+    }
 
     public boolean enableUser(final String username, final String code) {
         Optional<PremiumUser> currentUser = findByUserName(username);

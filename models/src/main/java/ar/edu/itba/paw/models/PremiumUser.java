@@ -2,7 +2,6 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -49,8 +48,11 @@ public class PremiumUser extends User{
     //@ManyToMany(fetch = FetchType.EAGER)
     //private List<Sport> likes;
 
-   // @ManyToMany(fetch = FetchType.EAGER)
-    //private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "userRoles" ,
+    joinColumns = {@JoinColumn(name = "username")},
+            inverseJoinColumns = {@JoinColumn(name = "role")})
+    private Set<Role> roles;
 
     public PremiumUser(String firstName, String lastName, String email, long userId,
                        String userName, String cellphone, LocalDate birthday,
@@ -69,7 +71,7 @@ public class PremiumUser extends User{
 //        this.friends        = new LinkedList<>();
 //        this.notifications  = new ArrayList<>();
 //        this.likes          = new ArrayList<>();
-//        this.roles          = new HashSet<>();
+        this.roles          = new HashSet<>();
         enabled             = false;
         this.image          = image;
     }
@@ -79,6 +81,30 @@ public class PremiumUser extends User{
         this.userName = userName;
     }
 
+    public PremiumUser(String firstName, String lastName, String email,
+                       String userName, String cellphone, LocalDate birthday,
+                       Place home, int reputation, String password, String code,
+                       byte image[]) {
+
+        this.userName       = userName;
+        this.cellphone      = cellphone;
+        this.birthday       = birthday;
+        this.home           = home;
+        this.reputation     = reputation;
+        this.password       = password;
+        this.email          = email;
+        this.code           = code;
+//        this.friends        = new LinkedList<>();
+//        this.notifications  = new ArrayList<>();
+//        this.likes          = new ArrayList<>();
+        this.roles          = new HashSet<>();
+        enabled             = false;
+        this.image          = image;
+    }
+
+    public PremiumUser() {
+        //for hibernate
+    }
     public String getUserName() {
         return userName;
     }
@@ -163,15 +189,15 @@ public class PremiumUser extends User{
 //        this.likes = likes;
 //    }
 //
-//    public Set<Role> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Collection<Role> newRoles) {
-//
-//        this.roles.clear();
-//        this.roles.addAll(newRoles);
-//    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> newRoles) {
+
+        this.roles.clear();
+        this.roles.addAll(newRoles);
+    }
 
 //    public void addRole(final Role newRole) {
 //        roles.add(newRole);
