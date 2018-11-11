@@ -1,45 +1,68 @@
 package ar.edu.itba.paw.models;
 
-public class SimpleEncrypter {
+import org.omg.IOP.Encoding;
+import sun.java2d.pipe.SpanShapeRenderer;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
-    public  String simpleCipherEncrypt(String phrase) {
-        String encriptedPhrase= "";
-        for(int i = 0; i < phrase.length(); i++) {
-            if((phrase.charAt(i) >= 'a' && phrase.charAt(i) <= 'z') ||
-                    (phrase.charAt(i) >= 'A' && phrase.charAt(i) <= 'Z') ) {
-                if (phrase.charAt(i) == 'z') {
-                    encriptedPhrase += 'a';
-                } else if (phrase.charAt(i) == 'Z') {
-                    encriptedPhrase += 'A';
-                } else {
-                    encriptedPhrase += (char) (phrase.charAt(i) + 1);
-                }
-            }
-            else {
-                encriptedPhrase += phrase.charAt(i);
-            }
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.Key;
+
+public class SimpleEncrypter {
+    private Cipher cipher;
+    private SecretKey key;
+
+    public SimpleEncrypter() {
+        try {
+            KeyGenerator generator = KeyGenerator.getInstance("AES");
+            generator.init(128);
+            byte fixedKey [] = new byte[] {49, 74, 32, -79, 89, -46, 80, -120, -81, -5, -42,
+                                            33, 11, -82, 48, 25};
+            key = new SecretKeySpec(fixedKey, "AES");
+            cipher = Cipher.getInstance("AES");
         }
-        return encriptedPhrase;
+        catch(Exception e) {
+            System.out.println("Can't instanciate encrypter");
+        }
     }
 
-    public String simpleCipherDecrypt(String encriptedPhrase) {
-        String decriptedPhrase= "";
-        for(int i = 0; i <  encriptedPhrase.length(); i++) {
-            if((encriptedPhrase.charAt(i) >= 'a' && encriptedPhrase.charAt(i) <= 'z') ||
-                    (encriptedPhrase.charAt(i) >= 'A' && encriptedPhrase.charAt(i) <= 'Z') ) {
-                if (encriptedPhrase.charAt(i) == 'a') {
-                    decriptedPhrase += 'z';
-                } else if (encriptedPhrase.charAt(i) == 'A') {
-                    decriptedPhrase += 'Z';
-                }
-                else {
-                    decriptedPhrase += (char) (encriptedPhrase.charAt(i) - 1);
-                }
-            }
-            else {
-                decriptedPhrase += encriptedPhrase.charAt(i);
-            }
+
+    public String encriptString(String textToBeEncrypted) {
+        String encryptedString = null;
+
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            final byte[] encriptedBytes = cipher.doFinal(textToBeEncrypted.getBytes());
+            encryptedString = new BASE64Encoder().encode(encriptedBytes);
         }
-        return decriptedPhrase;
+        catch(Exception e) {
+            System.out.println("Can't encrypt");
+        }
+
+        return encryptedString;
+
+    }
+
+    public String decryptString(String textToBeDecrypted) {
+        String decryptedString = null;
+
+        try {
+
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            final byte[] decodedBytes = new BASE64Decoder().decodeBuffer(textToBeDecrypted);
+            final byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+            decryptedString = new String(decryptedBytes);
+        } catch(Exception ex) {
+            System.out.println("The Exception is=" + ex);
+        }
+
+        return decryptedString;
     }
 }
+

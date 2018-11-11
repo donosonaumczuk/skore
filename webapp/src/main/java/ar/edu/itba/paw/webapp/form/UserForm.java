@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
 @PasswordMatches
 public class UserForm {
     @Size(min = 2, max = 100)
-    @Pattern(regexp ="[a-zA-ZÁÉÍÓÚÞáéíñóöúü ]+")
+    @Pattern(regexp ="[a-zA-ZÁÉÍÓÚáéíñóöúü ]+")
     private String firstName;
 
     @Size(min = 2, max = 100)
-    @Pattern(regexp ="[a-zA-ZÁÉÍÓÚÞáéíñóöúü ]+")
+    @Pattern(regexp ="[a-zA-ZÁÉÍÓÚáéíñóöúü ]+")
     private String lastName;
 
     @NotEmpty

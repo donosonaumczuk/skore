@@ -104,6 +104,7 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
+        System.out.println("llego el path1:" + path.length() + "\n\n");
         if(premiumUserService.confirmationPath(path)) {
             return new ModelAndView("accountConfirmed");
         }

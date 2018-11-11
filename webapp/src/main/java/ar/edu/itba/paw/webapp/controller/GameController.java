@@ -6,6 +6,7 @@ import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -222,13 +224,24 @@ public class GameController extends BaseController{
         return new ModelAndView("match").addObject("match", game);
     }
 
-    @RequestMapping(value = "/confirmMatch/*")
+    @RequestMapping(value = "/confirmMatch/**")
     public ModelAndView confirmMatch(HttpServletRequest request) {
         LOGGER.trace("Match assistance confirmed");
         String path = request.getServletPath().replace("/confirmMatch/", "");
-        String userData = path.substring(0, path.indexOf("$"));
-        String gameData = path.substring(path.indexOf("$") + 1, path.length());
-        //System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
+        System.out.println("\n\npath:\n\n");
+//        for(int i = 0; i < 90; i ++) {
+//            if(path.charAt(i) != '%') {
+//                System.out.print(path.charAt(i));
+//            }
+//        }
+//        System.out.println("end\n\n\n");
+        SimpleEncrypter encrypter = userService.getEncrypter();
+        String data = encrypter.decryptString(path);
+        System.out.println("\n\ndata=" + data + "\n\n");
+
+        String userData = data.substring(0, data.indexOf("$"));
+        String gameData = data.substring(data.indexOf("$") + 1, data.length());
+        System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
         long userId = userService.getUserIdFromData(userData);
         User user = userService.findById(userId);
         if(user == null) {
