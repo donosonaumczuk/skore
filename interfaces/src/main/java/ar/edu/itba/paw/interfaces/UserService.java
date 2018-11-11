@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,4 +32,7 @@ public interface UserService {
     public long getUserIdFromData (String data);
 
     public void sendCancelOptionMatch(User user, Game game, String data);
+
+    public SimpleEncrypter getEncrypter();
+
 }

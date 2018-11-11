@@ -28,6 +28,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public EmailService emailSender;
 
+    private SimpleEncrypter encrypter = new SimpleEncrypter();
+
     public UserServiceImpl() {
 
     }
@@ -106,8 +108,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendConfirmMatchAssistance(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
-        SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.simpleCipherEncrypt(phrase);
+        phrase = encrypter.encriptString(phrase);
         emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
 
@@ -127,9 +128,12 @@ public class UserServiceImpl implements UserService {
     public void sendCancelOptionMatch(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.simpleCipherEncrypt(phrase);
+        encrypter.encriptString(phrase);
         emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
-}
 
+    public SimpleEncrypter getEncrypter() {
+        return encrypter;
+    }
+}
 ///joinMatch/2018100302291.5-3590166870201810030249
