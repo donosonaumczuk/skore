@@ -76,6 +76,7 @@ function geolocate() {
 $(function () {
     $('#datepicker').datetimepicker({
         format: 'L',
+        defaultDate: moment(getDateWithFormat(), "MM-DD-YYYY"),
         maxDate: moment(getDateWithFormat(), "MM-DD-YYYY")
     });
 });

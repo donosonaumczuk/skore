@@ -121,8 +121,12 @@ public class UserController extends BaseController{
             Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
                     user.getPassword(), userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
-              return new ModelAndView("userProfile").addObject("user", user);
-            //return new ModelAndView("accountConfirmed");
+            System.out.println("is logged:" + isLogged() + "\n");
+
+            return new ModelAndView("userProfile").addObject("isLogged", true)
+                                                            .addObject("user", user)
+                                                            .addObject("loggedUser", user);
+           // return new ModelAndView("accountConfirmed");
         }
         throw new CannotValidateUserException("Can't validate user");
     }
