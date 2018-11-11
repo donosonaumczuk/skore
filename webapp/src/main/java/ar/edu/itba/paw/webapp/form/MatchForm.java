@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 //@TeamIdIfNotIndividual
 public class MatchForm {
     @Size(min = 4, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Pattern(regexp = "[a-zA-Z0-9¿?¡!ÁÉÍÓÚáéíñóöúü ]+")
     private String matchName;
 
     @NotEmpty

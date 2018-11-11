@@ -22,9 +22,13 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +46,9 @@ public class UserController extends BaseController{
     private static final int USER_ROLE_ID = 0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    @Autowired
+    private UserDetailsService skoreUserDetailsService;
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
@@ -106,6 +113,14 @@ public class UserController extends BaseController{
         String path = request.getServletPath();
         System.out.println("llego el path1:" + path.length() + "\n\n");
         if(premiumUserService.confirmationPath(path)) {
+     //       int splitIndex = path.indexOf('&');
+    //        String username = path.substring(0, splitIndex);
+//            UserDetails userDetails = skoreUserDetailsService.loadUserByUsername (username);
+//            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+//                    userDetails.getPassword(), userDetails.getAuthorities());
+//            SecurityContextHolder.getContext().setAuthentication(auth);
+//            PremiumUser user = premiumUserService.findByUserName(username).get();
+//              return new ModelAndView("userProfile").addObject("user", user);
             return new ModelAndView("accountConfirmed");
         }
         throw new CannotValidateUserException("Can't validate user");
