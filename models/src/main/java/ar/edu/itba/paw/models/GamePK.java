@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Embeddable
 public class GamePK implements Serializable {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teamName1")
     private Team team1;
 

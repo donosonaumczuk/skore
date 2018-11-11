@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-public class UserHibernateDao implements UserDao{
+public class UserHibernateDao implements UserDao {
 
     @PersistenceContext
     private EntityManager em;

@@ -9,7 +9,7 @@ import java.util.Objects;
 @Table(name = "teams")
 public class Team {
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "isPartOf",
             joinColumns = { @JoinColumn(name = "teamName") },
@@ -17,7 +17,7 @@ public class Team {
     )
     private List<User> players;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "leaderName")
     private PremiumUser leader;
 
@@ -31,7 +31,7 @@ public class Team {
     @Column(nullable = false)
     private boolean isTemp;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sportName")
     private Sport sport;
 
@@ -106,6 +106,10 @@ public class Team {
 
     public void setSport(Sport sport) {
         this.sport = sport;
+    }
+
+    public void setPlayers(List<User> players) {
+        this.players = players;
     }
 
     @Override

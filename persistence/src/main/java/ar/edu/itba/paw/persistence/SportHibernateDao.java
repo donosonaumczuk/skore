@@ -47,7 +47,10 @@ public class SportHibernateDao implements SportDao {
     @Override
     public Optional<byte[]> readImage(final String sportName) {
         Optional<Sport> sport = findByName(sportName);
-        return sport.isPresent()?Optional.of(sport.get().getImage()):Optional.empty();
+        if(sport.isPresent() && sport.get().getImage() != null) {
+            return Optional.of(sport.get().getImage());
+        }
+        return Optional.empty();
     }
 
     @Override

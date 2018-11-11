@@ -100,8 +100,8 @@ public class GameServiceImplTest {
 
         GAME_1 = Optional.of(new Game(team1, team2,
                  null, LocalDateTime.parse(STARTTIME_1, dateformat),
-                LocalDateTime.parse(FINISHTIME_1, dateformat), null, QUANTITY_1,
-                null, null, null, null));
+                LocalDateTime.parse(FINISHTIME_1, dateformat), null, null,
+                null, null, null));
     }
 
     @Test

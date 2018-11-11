@@ -65,7 +65,7 @@ public class GameHibernateDaoTest {
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2018-11-11T17:00:00"),
                             LocalDateTime.parse("2018-11-11T19:00:00"), "competitive", "2-1",
                             "Alan prefiere verlo y recursar", "La final de la libertadores",
-                            "Libertadores");
+                            null);
         Team team3          = new Team(account, "C.A.I.", "Club Atletico Independiente", false,
                             sport, null);
         team3.addPlayer(account.getUser());

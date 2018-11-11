@@ -59,6 +59,7 @@ public class GameController extends BaseController{
                 json.getInt("pageNumber"));
         LOGGER.trace("Returning {} games that match the criteria", games.size());
         ObjectMapper objectMapper = new ObjectMapper();
+        setUpGame(games);
         return objectMapper.writeValueAsString(games);
     }
 
@@ -80,6 +81,7 @@ public class GameController extends BaseController{
                 json.getInt("pageNumber"), loggedUser());
         LOGGER.trace("Returning {} games that match the criteria", games.size());
         ObjectMapper objectMapper = new ObjectMapper();
+        setUpGame(games);
         return objectMapper.writeValueAsString(games);
     }
 
@@ -100,6 +102,7 @@ public class GameController extends BaseController{
                 json.getInt("pageNumber"), loggedUser());
         LOGGER.trace("Returning {} games that match the criteria",games.size());
         ObjectMapper objectMapper = new ObjectMapper();
+        setUpGame(games);
         return objectMapper.writeValueAsString(games);
     }
 
@@ -172,6 +175,7 @@ public class GameController extends BaseController{
                 json.getInt("pageNumber"), loggedUser());
         LOGGER.trace("Returning {} games that match the criteria",games.size());
         ObjectMapper objectMapper = new ObjectMapper();
+        setUpGame(games);
         return objectMapper.writeValueAsString(games);
     }
 
@@ -311,4 +315,15 @@ public class GameController extends BaseController{
         return false;
     }
 
+    private void setUpGame(List<Game> games) {
+        for (Game g: games) {
+            g.setQuantityOccupiedPlaces();
+            g.getTeam1().getLeader().setFriends(null);
+            g.getTeam1().getLeader().setLikes(null);
+            g.getTeam1().getLeader().setNotifications(null);
+            if(g.getTeam2() != null) {
+                g.getTeam2().setLeader(null);
+            }
+        }
+    }
 }

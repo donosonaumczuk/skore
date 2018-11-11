@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.Role;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-public class RoleHibernateDao {
+public class RoleHibernateDao implements RoleDao {
 
     @PersistenceContext
     private EntityManager em;

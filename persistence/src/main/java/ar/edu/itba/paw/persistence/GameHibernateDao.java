@@ -71,89 +71,75 @@ public class GameHibernateDao implements GameDao {
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces, final PremiumUser loggedUser,
                                 final boolean listOfGamesThatIsPartOf, final boolean wantCreated) {
-//        "SELECT teamName1, teamName2, startTime, finishTime, sports.sportName AS sportName, " +
-//                "playerQuantity, displayName, country, state, city, street, type, result, description, " +
-//                "count(team1.userId) as OccupiedQuantity1, count(team2.userId) as OccupiedQuantity2, " +
-//                "title, tornamentName, team1.leaderName as leaderUserName1, team2.leaderName as leaderUserName2 " +
-//                "FROM games LEFT OUTER JOIN (teams NATURAL JOIN isPartOf) as team2 " +
-//                "ON games.teamName2 = team2.teamName, " +
-//                "(teams NATURAL JOIN isPartOf) as team1, sports " +
-//                "WHERE teamName1 = team1.teamName AND team1.sportName = sports.sportName";
-//        String groupBy = " GROUP BY startTime, finishTime, teamName1, sports.sportName, playerQuantity, " +
-//                "sports.displayName,  country, state, city, street, type, result, description, title, tornamentName, " +
-//                "team1.teamName, team1.leaderName, teamName2, team2.teamName, team2.leaderName";
-//
-//        final List<Object> filters = new ArrayList<>();
-//        final Filters gameFilters = new Filters();
-//
-//        gameFilters.addMinFilter("games.startTime", minStartTime);
-//        gameFilters.addMinFilter("games.finishTime", minFinishTime);
-//        gameFilters.addMinFilter("sports.playerQuantity", minQuantity);
-//
-//        gameFilters.addMaxFilter("games.startTime", maxStartTime);
-//        gameFilters.addMaxFilter("games.finishTime", maxFinishTime);
-//        gameFilters.addMaxFilter("sports.playerQuantity", maxQuantity);
-//
-//        gameFilters.addSameFilter("games.type", types);
-//        gameFilters.addSameFilter("sports.sportName", sportNames);
-//        gameFilters.addSameFilter("games.country", countries);
-//        gameFilters.addSameFilter("games.state", states);
-//        gameFilters.addSameFilter("games.city", cities);
-//
-//        gameFilters.addMinHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
-//                minFreePlaces);
-//        gameFilters.addMaxHavingFilter("2*sports.playerQuantity-count(team1.userId)-count(team2.userId)",
-//                maxFreePlaces);
-//
-//        String whereQuery = "";
-//
-//        if(loggedUser != null) {
-//            String start;
-//            String logicalOperator;
-//            if (listOfGamesThatIsPartOf) {
-//                start = "IN";
-//                logicalOperator = "OR";
-//            } else {
-//                start = "NOT IN";
-//                logicalOperator = "AND";
-//            }
-//            String nestedQuery =
-//                    "SELECT teamAux.userId " +
-//                            "FROM games as gameAux, (teams NATURAL JOIN isPartOf) AS teamAux " +
-//                            "WHERE gameAux.startTime = games.startTime AND " +
-//                            "gameAux.finishTime = games.finishTime AND " +
-//                            "gameAux.teamName1 = games.teamName1";
-//            whereQuery =
-//                    "(? " + start + " (" + nestedQuery + " AND gameAux.teamName1 = teamAux.teamName AND " +
-//                            "teamAux.teamName = games.teamName1) " +
-//                            logicalOperator + " ? " + start + " (" + nestedQuery + " AND gameAux.teamName2 = teamAux.teamName AND " +
-//                            "teamAux.teamName = games.teamName2))";
-//
-//            filters.add(loggedUser.getUserId());
-//            filters.add(loggedUser.getUserId());
-//
-//            whereQuery = (whereQuery.equals("")) ? whereQuery : " AND " + whereQuery;
-//
-//            if (wantCreated) {
-//                whereQuery = whereQuery + " AND (team1.leaderName = ?)";
-//            } else {
-//                whereQuery = whereQuery + " AND (team1.leaderName != ?)";
-//            }
-//
-//            filters.add(loggedUser.getUserName());
-//        }
-//
-//        String nextWhere = gameFilters.generateQueryWhere(filters);
-//        whereQuery = (nextWhere.equals(""))? whereQuery : whereQuery + " AND " + nextWhere;
-//
-//        getGamesQuery = getGamesQuery + whereQuery + groupBy +
-//                gameFilters.generateQueryHaving(filters) + ";";
-//
-//        LOGGER.trace("Try to find a game with this criteria: {}", getGamesQuery);
-//        return jdbcTemplate.query(getGamesQuery, filters.toArray(), ROW_MAPPER);
-        String queryString = "FROM Game";
-        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        Filters filter = new Filters("SELECT games FROM Game as games, " +
+                "Team t WHERE teamName1 = t.teamName");
+        filter.addFilter("games.primaryKey.startTime", ">",
+                "startTimeMin", minStartTime);
+        filter.addFilter("games.primaryKey.startTime", "<",
+                "startTimeMax", maxStartTime);
+        filter.addFilter("games.primaryKey.finishTime", ">",
+                "finishTimeMin", minFinishTime);
+        filter.addFilter("games.primaryKey.finishTime", "<",
+                "finishTimeMax", maxFinishTime);
+//TODO        final List<String> types,
+//TODO        final Integer minQuantity,
+//TODO        final Integer maxQuantity,
+        filter.addListFilters("sportName", "like",
+                "sportName", sportNames);
+        filter.addListFilters("lower(country)", "like",
+                "country", countries);
+        filter.addListFilters("lower(state)", "like",
+                "state", states);
+        filter.addListFilters("lower(city)", "like",
+                "city", cities);
+//TODO        final Integer minFreePlaces,
+//TODO        final Integer maxFreePlaces,
+//TODO        final PremiumUser loggedUser,
+//TODO        final boolean listOfGamesThatIsPartOf,
+//TODO        final boolean wantCreated
 
+        String queryString = filter.toString();
+        if(loggedUser != null) {
+            String start;
+            String logicalOperator;
+            if (listOfGamesThatIsPartOf) {
+                start = "IN";
+                logicalOperator = "OR";
+            } else {
+                start = "NOT IN";
+                logicalOperator = "AND";
+            }
+            String nestedQuery1 =
+                    "SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName";
+            String nestedQuery2 =
+                    "SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.team2.teamName = t.teamName";
+            queryString = queryString + " AND" +
+                    " (:userId1 " + start + " (" + nestedQuery1 + ") " +
+                            logicalOperator + " :userId2 " + start + " (" + nestedQuery2 + "))";
+
+            if (wantCreated) {
+                queryString = queryString + " AND (games.primaryKey.team1.leader.userName = :user)";
+            } else {
+                queryString = queryString + " AND (games.primaryKey.team1.leader.userName != :user)";
+            }
+        }
+
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        List<String> valueName = filter.getValueNames();
+        List<Object> values    = filter.getValues();
+
+        for(int i = 0; i < valueName.size(); i++) {
+            query.setParameter(valueName.get(i), values.get(i));
+        }
+        if(loggedUser != null) {
+            query.setParameter("userId1", loggedUser.getUser().getUserId());
+            query.setParameter("userId2", loggedUser.getUser().getUserId());
+            query.setParameter("user", loggedUser.getUserName());
+        }
         return query.getResultList();
     }
 

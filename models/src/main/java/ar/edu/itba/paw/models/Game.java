@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -8,7 +11,7 @@ import java.util.Objects;
 @Table(name = "games")
 public class Game {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teamName2")
     private Team team2;
 
@@ -33,6 +36,9 @@ public class Game {
     @Column(length = 100)
     private String tornamentName;
 
+    @Transient
+    private int quantityOccupiedPlaces;
+
     /* package */public Game() {
         // For Hibernate
     }
@@ -48,7 +54,6 @@ public class Game {
         this.description            = description;
         this.title                  = title;
         this.tornamentName          = tornamentName;
-        //this.quantityOccupiedPlaces = team1.getPlayers().size() + team2.getPlayers().size();
     }
 
     public Team getTeam1() {
@@ -158,5 +163,18 @@ public class Game {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setQuantityOccupiedPlaces() {
+        quantityOccupiedPlaces = primaryKey.getTeam1().getPlayers().size()
+                + ((team2 == null)?0:team2.getPlayers().size());
+    }
+
+    public GamePK getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public int getQuantityOccupiedPlaces() {
+        return quantityOccupiedPlaces;
     }
 }
