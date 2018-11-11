@@ -107,7 +107,6 @@ var lang = 'en';
 var pageNumber = 1;
 var reachEndOfPagination = false;
 var getButton = getJoinButton;
-var postAppendMatch = joinButtonPostAppendMatch;
 
 $(window).resize(function() {
     var width = $(window).width();
@@ -243,7 +242,6 @@ function loadMatches() {
         for(var i = 0; i < matchArray.length; i++) {
             var matchCard = getMatchCard(matchArray[i]);
             $('.match-container').append(matchCard);
-            // postAppendMatch(matchArray[i]); TODO check
         }
     });
 }
@@ -498,11 +496,6 @@ function isFriendlyMatch(type) {
         return true;
 
     return false;
-}
-
-function joinButtonPostAppendMatch(match) {
-    //Do nothing...
-    return;
 }
 
 function getBadge(value, context) {

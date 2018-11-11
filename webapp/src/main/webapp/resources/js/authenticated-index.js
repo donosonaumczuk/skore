@@ -35,7 +35,6 @@ $("#to-join" ).click(function() {
     clearMatchs();
     putLoader();
     getButton = getJoinButton;
-    postAppendMatch = joinButtonPostAppendMatch;
     endPointURL = getToJoinURL();
     currentFilters = filters.toJoin;
     loadCurrentFilters();
@@ -46,7 +45,6 @@ $("#joined").click(function() {
     clearMatchs();
     putLoader();
     getButton = getCancelButton;
-    postAppendMatch = cancelButtonPostAppendMatch;
     endPointURL = getJoinedURL();
     currentFilters = filters.joined;
     loadCurrentFilters();
@@ -57,7 +55,6 @@ $("#created").click(function() {
     clearMatchs();
     putLoader();
     getButton = getDeleteButton;
-    postAppendMatch = deleteButtonPostAppendMatch;
     endPointURL = getCreatedURL();
     currentFilters = filters.created;
     loadCurrentFilters();
@@ -90,32 +87,8 @@ function getDefaultEndPoint() {
     return getToJoinURL();
 }
 
-function deleteButtonPostAppendMatch(match) {
-    var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
-
-    $.when( $("#" + key).id == key ).then(
-        console.log($("#" + key))
-    );
-
-    // $("#" + key).find(".join-button").click(function() {
-    //     console.log("will do the delete ajaxxx!");
-    //
-    //     $.ajax({
-    //         type:   'POST',
-    //         url:    contextPath + '/deleteMatch',
-    //         data: {
-    //             teamName1: match.team1.name,
-    //             startTime: timeStampFormat(match.startTime),
-    //             finishTime: timeStampFormat(match.finishTime)
-    //         }
-    //     }).done(function(data) {
-    //         console.log(data);
-    //     });
-    // });
-}
-
-function postDelete(key) {
-    data = getDataFromKey(key);
+function deleteMatch(key) {
+    var data = getDataFromKey(key);
 
     $.ajax({
         type:   'POST',
@@ -126,39 +99,36 @@ function postDelete(key) {
             finishTime: data['finishTime']
         }
     }).done(function(data) {
-        console.log(data);
+        if(data == 'true') {
+            document.getElementById(key).remove();
+        }
     });
 }
 
-function cancelButtonPostAppendMatch(match) {
-    var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
+function cancelAssistance(key) {
+    var data = getDataFromKey(key);
 
-    $("#" + key).find(".join-button").click(function() {
-        $.ajax({
-            type:   'POST',
-            url:    contextPath + '/removePlayerFromMatch',
-            data: {
-                teamName1: match.team1.name,
-                startTime: timeStampFormat(match.startTime),
-                finishTime: timeStampFormat(match.finishTime)
-            }
-        }).done(function(data) {
-            console.log(data);
-        });
+    $.ajax({
+        type:   'POST',
+        url:    contextPath + '/removePlayerFromMatch',
+        data: {
+            teamName1: data['team1name'],
+            startTime: data['startTime'],
+            finishTime: data['finishTime']
+        }
+    }).done(function(data) {
+        if(data == 'true') {
+            document.getElementById(key).remove();
+        }
     });
 }
 
 function getCancelButton(match) {
-    return '<a class="btn btn-negative join-button"' +
+    return '<a class="btn btn-negative join-button" onclick="cancelAssistance(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
         ' role="button"><i class="fas fa-times mr-1"></i>' + labelMap.joined[lang] + '</a>';
 }
 
 function getDeleteButton(match) {
-    return '<a class="btn btn-negative join-button" onclick="postDelete(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
+    return '<a class="btn btn-negative join-button" onclick="deleteMatch(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
-}
-
-function joinButtonPostAppendMatch(match) {
-    //Do nothing...
-    return;
 }
