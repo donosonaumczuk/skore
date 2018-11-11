@@ -113,15 +113,16 @@ public class UserController extends BaseController{
         String path = request.getServletPath();
         System.out.println("llego el path1:" + path.length() + "\n\n");
         if(premiumUserService.confirmationPath(path)) {
-     //       int splitIndex = path.indexOf('&');
-    //        String username = path.substring(0, splitIndex);
-//            UserDetails userDetails = skoreUserDetailsService.loadUserByUsername (username);
-//            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-//                    userDetails.getPassword(), userDetails.getAuthorities());
-//            SecurityContextHolder.getContext().setAuthentication(auth);
-//            PremiumUser user = premiumUserService.findByUserName(username).get();
-//              return new ModelAndView("userProfile").addObject("user", user);
-            return new ModelAndView("accountConfirmed");
+            path = path.replace("/confirm/", "");
+            int splitIndex = path.indexOf('&');
+            String username = path.substring(0, splitIndex);
+            PremiumUser user = premiumUserService.findByUserName(username).get();//should never be empty
+            UserDetails userDetails = skoreUserDetailsService.loadUserByUsername (username);
+            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+                    user.getPassword(), userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+              return new ModelAndView("userProfile").addObject("user", user);
+            //return new ModelAndView("accountConfirmed");
         }
         throw new CannotValidateUserException("Can't validate user");
     }
