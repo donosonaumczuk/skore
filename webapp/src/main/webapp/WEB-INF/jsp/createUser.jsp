@@ -54,6 +54,7 @@
                 </div>
                 <div class="form-group">
                     <form:label path="image"><spring:message code="imageLabel"/></form:label>
+                    <small id="imgFormatHelp" class="form-text text-muted"><spring:message code="imageFormat"/></small>
                     <div class="input-group custom-file">
                         <input type="file"  name="image" class="custom-file-input" id="image" multiple onchange="showname()">
                         <label class="custom-file-label" for="image" id="fileLabel"aria-describedby="inputGroupFileAddon02" ></label>

@@ -93,26 +93,47 @@ function getDefaultEndPoint() {
 function deleteButtonPostAppendMatch(match) {
     var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
 
-    $("#" + key).find(".join-button").click(function () {
+    $.when( $("#" + key).id == key ).then(
+        console.log($("#" + key))
+    );
 
-        $.ajax({
-            type:   'POST',
-            url:    contextPath + '/deleteMatch',
-            data: {
-                teamName1: match.team1.name,
-                startTime: timeStampFormat(match.startTime),
-                finishTime: timeStampFormat(match.finishTime)
-            }
-        }).done(function(data) {
-            console.log(data);
-        });
+    // $("#" + key).find(".join-button").click(function() {
+    //     console.log("will do the delete ajaxxx!");
+    //
+    //     $.ajax({
+    //         type:   'POST',
+    //         url:    contextPath + '/deleteMatch',
+    //         data: {
+    //             teamName1: match.team1.name,
+    //             startTime: timeStampFormat(match.startTime),
+    //             finishTime: timeStampFormat(match.finishTime)
+    //         }
+    //     }).done(function(data) {
+    //         console.log(data);
+    //     });
+    // });
+}
+
+function postDelete(key) {
+    data = getDataFromKey(key);
+
+    $.ajax({
+        type:   'POST',
+        url:    contextPath + '/deleteMatch',
+        data: {
+            teamName1: data['team1name'],
+            startTime: data['startTime'],
+            finishTime: data['finishTime']
+        }
+    }).done(function(data) {
+        console.log(data);
     });
 }
 
 function cancelButtonPostAppendMatch(match) {
     var key = getMatchURLKey(match.startTime, match.team1, match.finishTime);
 
-    $("#" + key).find(".join-button").click(function () {
+    $("#" + key).find(".join-button").click(function() {
         $.ajax({
             type:   'POST',
             url:    contextPath + '/removePlayerFromMatch',
@@ -133,7 +154,7 @@ function getCancelButton(match) {
 }
 
 function getDeleteButton(match) {
-    return '<a class="btn btn-negative join-button"' +
+    return '<a class="btn btn-negative join-button" onclick="postDelete(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
 }
 

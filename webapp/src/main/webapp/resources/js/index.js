@@ -109,7 +109,7 @@ var reachEndOfPagination = false;
 var getButton = getJoinButton;
 var postAppendMatch = joinButtonPostAppendMatch;
 
-$( window ).resize(function() {
+$(window).resize(function() {
     var width = $(window).width();
     if(width < 768) {
         $('.sidepanel').addClass('collapse navbar-collapse');
@@ -243,7 +243,7 @@ function loadMatches() {
         for(var i = 0; i < matchArray.length; i++) {
             var matchCard = getMatchCard(matchArray[i]);
             $('.match-container').append(matchCard);
-            postAppendMatch(matchArray[i]);
+            // postAppendMatch(matchArray[i]); TODO check
         }
     });
 }
@@ -317,6 +317,33 @@ function getMatchURLKey(startTime, team1, finishTime) {
     key += ((finishTime.hour > 9)? '':'0') + finishTime.hour + ((finishTime.minute > 9)? '':'0') + finishTime.minute;
 
     return key;
+}
+
+function getDataFromKey(key) {
+    var startYear = key.substring(0, 4);
+    var startMonth = key.substring(4, 6);
+    var startDay = key.substring(6, 8);
+    var startHours = key.substring(8, 10);
+    var startMin = key.substring(10, 12);
+    var startTime = startYear + "-" + startMonth + "-" + startDay + " " + startHours + ":" + startMin + ":00";
+
+    var n = key.length;
+    var team1name = key.substring(12, n - 12);
+
+    var finishMin = key.substring(n - 2, n);
+    var finishHours = key.substring(n - 4, n - 2);
+    var finishDay = key.substring(n - 6, n - 4);
+    var finishMonth = key.substring(n - 8, n - 6);
+    var finishYear = key.substring(n - 12, n - 8);
+    var finishTime = finishYear + "-" + finishMonth + "-" + finishDay + " " + finishHours + ":" + finishMin + ":00";
+
+    var data = new Array();
+
+    data['startTime'] = startTime;
+    data['team1name'] = team1name;
+    data['finishTime'] = finishTime;
+
+    return data;
 }
 
 function getMatchCard(match) {
