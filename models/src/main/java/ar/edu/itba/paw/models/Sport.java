@@ -1,31 +1,53 @@
 package ar.edu.itba.paw.models;
 
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "sports")
 public class Sport {
-    private String name;
-    private int quantity;
+
+    @Id
+    @Column(length = 100)
+    private String sportName;
+
+    @Column
+    private int playerQuantity;
+
+    @Column(length = 100)
     private String displayName;
 
-    public Sport(String name, int quantity, String displayName) {
-        this.name           = name;
-        this.quantity       = quantity;
+    @Column
+    private byte[] imageSport;
+
+    /* package */public Sport() {
+        // For Hibernate
+    }
+
+    public Sport(String name, int quantity, String displayName, byte[] image) {
+        this.sportName      = name;
+        this.playerQuantity = quantity;
         this.displayName    = displayName;
+        this.imageSport     = image;
     }
+
     public void setName(String name) {
-        this.name = name;
+        this.sportName = name;
     }
+
     public String getName() {
-        return name;
+        return sportName;
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.playerQuantity = quantity;
     }
 
     public int getQuantity() {
-        return quantity;
+        return playerQuantity;
     }
 
     public String getDisplayName() {
@@ -34,6 +56,14 @@ public class Sport {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public byte[] getImage() {
+        return imageSport;
+    }
+
+    public void setImage(byte[] image) {
+        this.imageSport = image;
     }
 
     @Override
@@ -48,6 +78,6 @@ public class Sport {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(sportName);
     }
 }

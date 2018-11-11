@@ -1,31 +1,55 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "teams")
 public class Team {
-    private List<User> players;
-    private PremiumUser leader;
-    private String acronym;
-    private String name;
-    private boolean isTemp;
-    private Sport sport;
-    private String leaderUserName;
 
-    public Team(PremiumUser leader, String acronym, String name, boolean isTemp, Sport sport) {
-        this.leader     = leader;
-        this.acronym    = acronym;
-        this.name       = name;
-        this.isTemp     = isTemp;
-        this.sport      = sport;
-        this.players    = new LinkedList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "isPartOf",
+            joinColumns = { @JoinColumn(name = "teamName") },
+            inverseJoinColumns = { @JoinColumn(name = "userId") }
+    )
+    private List<User> players;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "leaderName")
+    private PremiumUser leader;
+
+    @Column(length = 100)
+    private String acronym;
+
+    @Id
+    @Column(length = 100)
+    private String teamName;
+
+    @Column(nullable = false)
+    private boolean isTemp;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "sportName")
+    private Sport sport;
+
+    @Column
+    private byte[] image;
+
+    /* package */public Team() {
+        // For Hibernate
     }
 
-    public Team(String name, Sport sport, String leaderUserName) {
-        this.name = name;
-        this.sport = sport;
-        this.leaderUserName = leaderUserName;
+    public Team(PremiumUser leader, String acronym, String teamName, boolean isTemp, Sport sport, byte[] image) {
+        this.leader     = leader;
+        this.acronym    = acronym;
+        this.teamName   = teamName;
+        this.isTemp     = isTemp;
+        this.sport      = sport;
+        this.image      = image;
+        this.players    = new LinkedList<>();
     }
 
     public Sport getSport() {
@@ -37,11 +61,11 @@ public class Team {
     }
 
     public String getName() {
-        return name;
+        return teamName;
     }
 
     public void setName(final String newName) {
-        name = newName;
+        teamName = newName;
     }
 
     public String getAcronym() {
@@ -56,24 +80,36 @@ public class Team {
         return leader;
     }
 
-    public void setLeader(final PremiumUser newLeader) {
-       leader = newLeader;
-    }
-
     public List<User> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(final List<User> players) {
-        this.players = players;
     }
 
     public void addPlayer(final User player) {
         players.add(player);
     }
 
-    public String getLeaderUserName() {
-        return leaderUserName;
+    public boolean removePlayer(final long userId) {
+        int i = 0;
+        for (User u: players) {
+            if(u.getUserId() == userId) {
+                players.remove(i);
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    public void setLeader(PremiumUser leader) {
+        this.leader = leader;
+    }
+
+    public void setSport(Sport sport) {
+        this.sport = sport;
+    }
+
+    public void setPlayers(List<User> players) {
+        this.players = players;
     }
 
     @Override
@@ -88,6 +124,6 @@ public class Team {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(teamName);
     }
 }

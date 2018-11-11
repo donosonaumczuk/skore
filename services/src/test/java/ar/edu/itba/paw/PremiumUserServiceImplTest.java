@@ -37,8 +37,7 @@ public class PremiumUserServiceImplTest {
     public void confirmationPathFinishTest() {
         when(premiumUserDaoMock.enableUser(USERNAME, CODE)).thenReturn(true);
         when(premiumUserDaoMock.findByUserName(USERNAME))
-                .thenReturn(Optional.of(new PremiumUser(FIRSTNAME, LASTNAME, EMAIL,
-                        ID, USERNAME)));
+                .thenReturn(Optional.of(new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME)));
 
         premiumUserService.confirmationPath(URL);
 
@@ -49,8 +48,7 @@ public class PremiumUserServiceImplTest {
     public void confirmationPathExceptionTest() {
         when(premiumUserDaoMock.enableUser(USERNAME, CODE)).thenReturn(false);
         when(premiumUserDaoMock.findByUserName(USERNAME))
-                .thenReturn(Optional.of(new PremiumUser(FIRSTNAME, LASTNAME, EMAIL,
-                        ID, USERNAME)));
+                .thenReturn(Optional.of(new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME)));
 
         premiumUserService.confirmationPath(URL);
 

@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.models.Place;
-import ar.edu.itba.paw.models.PremiumUser;
-import ar.edu.itba.paw.models.Role;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PremiumUserDao {
 
@@ -41,7 +39,16 @@ public interface PremiumUserDao {
 
     public boolean enableUser(final String username, final String code);
 
-    public List<Role> getRoles(final String username);
+    public Set<Role> getRoles(final String username);
 
-    }
+    public boolean removeRole(final String username, final int roleId);
+
+//    public List<Sport> getSports(final String username);
+//
+//    public boolean addSport(final String username, String sportName);
+//
+//    public boolean removeSport(final String username, String sportName);
+
+
+}
 

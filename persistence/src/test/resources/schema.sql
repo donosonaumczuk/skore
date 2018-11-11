@@ -1,3 +1,7 @@
+DROP SCHEMA PUBLIC CASCADE;
+
+CREATE SEQUENCE users_userid_seq START WITH 1 INCREMENT BY 1;
+
 CREATE TABLE IF NOT EXISTS sports(
   sportName       VARCHAR(100) PRIMARY KEY,
   playerQuantity  INTEGER,
@@ -15,6 +19,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS accounts(
   userName    VARCHAR(100) PRIMARY KEY,
   userId      INTEGER REFERENCES users(userId) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+  email       VARCHAR(100),
   password    VARCHAR(100) NOT NULL,
   country     VARCHAR(100),
   state       VARCHAR(100),
@@ -23,20 +28,20 @@ CREATE TABLE IF NOT EXISTS accounts(
   reputation  INTEGER,
   cellphone   VARCHAR(100),
   birthday    DATE,
-  email       VARCHAR (100) NOT NULL,
   role        VARCHAR (100),
   enabled     BOOLEAN,
   code        VARCHAR(100) NOT NULL,
   image       BLOB,
   UNIQUE(email)
 );
+
 CREATE TABLE IF NOT EXISTS notification(
   startTime TIMESTAMP,
   content   VARCHAR(100),
   seen      INTEGER,
   userName  VARCHAR(100),
   FOREIGN KEY (userName) REFERENCES accounts(userName) ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (startTime, content)
+  PRIMARY KEY (startTime, content, userName)
 );
 
 CREATE TABLE IF NOT EXISTS teams(
@@ -95,3 +100,12 @@ CREATE TABLE IF NOT EXISTS games (
   FOREIGN KEY (tornamentName) REFERENCES tornaments(tornamentName) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (teamName1, startTime, finishTime)
 );
+
+CREATE TABLE IF NOT EXISTS likes (
+  userName  VARCHAR(100),
+  sportName VARCHAR(100),
+  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  FOREIGN KEY (sportName) REFERENCES sports(sportName),
+  PRIMARY Key (userName, sportName)
+);
+

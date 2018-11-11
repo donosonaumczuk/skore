@@ -84,22 +84,24 @@ public class GameServiceImplTest {
 
         DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME);
+        Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME, null);
 
-        PremiumUser leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME,LEADER_1_LASTNAME,LEADER_1_EMAIL,LEADER_1_USERID,LEADER_1_USERNAME);
-        Team team1 = new Team(leaderTeam1, TEAM_1_ACRONYM, TEAMNAME_1, TEAM_1_ISTEMP, sport);
-        team1.addPlayer(leaderTeam1);
-        team1.addPlayer(new User(USER_1_FIRSTNAME,USER_1_LASTNAME,USER_1_EMAIL,USER_1_ID));
+        PremiumUser leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME, LEADER_1_LASTNAME, LEADER_1_EMAIL,
+                                                    LEADER_1_USERNAME);
+        Team team1 = new Team(leaderTeam1, TEAM_1_ACRONYM, TEAMNAME_1, TEAM_1_ISTEMP, sport, null);
+        team1.addPlayer(leaderTeam1.getUser());
+        team1.addPlayer(new User(USER_1_FIRSTNAME, USER_1_LASTNAME, USER_1_EMAIL, USER_1_ID));
 
-        PremiumUser leaderTeam2 = new PremiumUser(LEADER_2_FIRSTNAME,LEADER_2_LASTNAME,LEADER_2_EMAIL,LEADER_2_USERID,LEADER_2_USERNAME);
-        Team team2 = new Team(leaderTeam1, TEAM_2_ACRONYM, TEAMNAME_2, TEAM_2_ISTEMP, sport);
-        team2.addPlayer(leaderTeam2);
-        team2.addPlayer(new User(USER_2_FIRSTNAME,USER_2_LASTNAME,USER_2_EMAIL,USER_2_ID));
+        PremiumUser leaderTeam2 = new PremiumUser(LEADER_2_FIRSTNAME, LEADER_2_LASTNAME, LEADER_2_EMAIL,
+                                                    LEADER_2_USERNAME);
+        Team team2 = new Team(leaderTeam1, TEAM_2_ACRONYM, TEAMNAME_2, TEAM_2_ISTEMP, sport, null);
+        team2.addPlayer(leaderTeam2.getUser());
+        team2.addPlayer(new User(USER_2_FIRSTNAME, USER_2_LASTNAME, USER_2_EMAIL, USER_2_ID));
 
         GAME_1 = Optional.of(new Game(team1, team2,
                  null, LocalDateTime.parse(STARTTIME_1, dateformat),
-                LocalDateTime.parse(FINISHTIME_1, dateformat), null, QUANTITY_1,
-                null, null, null, null));
+                LocalDateTime.parse(FINISHTIME_1, dateformat), null, null,
+                null, null, null));
     }
 
     @Test
@@ -108,7 +110,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.findByKeyFromURL(URL);
 
-        inOrder(gameDaoMock).verify(gameDaoMock).findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         Assert.assertEquals(GAME_1.get(), ans);
     }
 
@@ -119,8 +120,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_1_ID);
 
-        inOrder(gameDaoMock).verify(gameDaoMock, atLeast(2))
-                .findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_1, USER_1_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }
@@ -132,8 +131,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_2_ID);
 
-        inOrder(gameDaoMock).verify(gameDaoMock, atLeast(2))
-                .findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1);
         inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_2, USER_2_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }

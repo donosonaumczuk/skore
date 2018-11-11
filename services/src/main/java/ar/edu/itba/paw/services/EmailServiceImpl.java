@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
                 "<table cellspacing=\"0\" cellpadding=\"10\" border=\"0\">\n" +
                 "\t<tr>\n" +
                 "\t\t<td>\n" +
-                "\t\t\t<div class=\"text\" style=\"font-family: sans-serif;font-size: 18px\">" + messageSource.getMessage("emailConfirmAccountGreeting", null, locale) + user.getFirstName() + "!</div>\n" +
+                "\t\t\t<div class=\"text\" style=\"font-family: sans-serif;font-size: 18px\">" + messageSource.getMessage("emailConfirmAccountGreeting", null, locale) + user.getUser().getFirstName() + "!</div>\n" +
                 "\t\t</td>\n" +
                 "\t</tr>\n" +
                 "\t<tr>\n" +
@@ -233,4 +233,3 @@ public class EmailServiceImpl implements EmailService {
     }
 
 }
-

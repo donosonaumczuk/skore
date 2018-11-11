@@ -1,25 +1,34 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "notification")
 public class Notification {
-    private LocalDateTime time;
-    private String content;
+
+    @EmbeddedId
+    private NotificationPK primaryKey;
+
+    @Column
     private boolean seen;
 
-    public Notification(LocalDateTime time, String content, boolean seen) {
-        this.time = time;
-        this.content = content;
-        this.seen = seen;
+    /* package */public Notification() {
+        // For Hibernate
+    }
+
+    public Notification(LocalDateTime startTime, String content, boolean seen, PremiumUser owner) {
+        this.primaryKey = new NotificationPK(startTime, content, owner);
+        this.seen       = seen;
     }
 
     public LocalDateTime getTime() {
-        return time;
+        return primaryKey.getStartTime();
     }
 
     public String getContent() {
-        return content;
+        return primaryKey.getContent();
     }
 
     public boolean hasBeenSeen() {
@@ -30,6 +39,10 @@ public class Notification {
         seen = true;
     }
 
+    public PremiumUser getOwner() {
+        return primaryKey.getOwner();
+    }
+
     @Override
     public boolean equals(Object object) {
         if(object == null || !object.getClass().equals(getClass())) {
@@ -37,12 +50,11 @@ public class Notification {
         }
 
         Notification aNotification = ((Notification) object);
-        return getTime().equals(aNotification.getTime())
-                && getContent().equals(aNotification.getContent());
+        return this.primaryKey.equals(aNotification.primaryKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(time, content);
+        return Objects.hash(primaryKey.hashCode());
     }
 }

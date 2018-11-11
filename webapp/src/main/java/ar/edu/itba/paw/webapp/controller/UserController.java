@@ -202,7 +202,7 @@ public class UserController extends BaseController{
             throw new GameNotFoundException("can't find game");
         }
         try {
-            game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
+            game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUser().getUserId());
             LOGGER.trace("added to Match");
         } catch (Exception e) {
             LOGGER.error("Team is already full");

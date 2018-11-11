@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Team;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface TeamDao {
@@ -10,7 +12,8 @@ public interface TeamDao {
 
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
-                                 final boolean isTemp, final String sportName);
+                                 final boolean isTemp, final String sportName,
+                                 final MultipartFile file) throws IOException;
 
     public boolean remove(final String teamName);
 
