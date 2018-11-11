@@ -345,18 +345,18 @@ function getDataFromKey(key) {
 }
 
 function getMatchCard(match) {
+    console.log(match);
     var startTime = match.startTime;
     var date = formatDate(startTime.dayOfWeek, startTime.monthValue, startTime.dayOfMonth, startTime.year);
     var finishTime = match.finishTime;
     var time = formatTime(startTime.hour, startTime.minute) + ' - ' + formatTime(finishTime.hour, finishTime.minute);
-    var username = match.team1.leaderUserName;
+    var username = match.team1.leader.userName;
     var sport = match.team1.sport.displayName;
     var title = match.title;
     var availability = match.quantityOccupiedPlaces + ' / ' + (match.team1.sport.quantity * 2);
     var place = match.place;
     var location = getMatchLocation(place.street, place.city, place.state, place.country);
     var sportId = match.team1.sport.name;
-    var team1Name = match.team1.name;
 
     var matchCard = '' +
         '<div class="row p-2 mt-2 match-card rounded-border" id="' + getMatchURLKey(startTime, match.team1, finishTime) + '">' +
