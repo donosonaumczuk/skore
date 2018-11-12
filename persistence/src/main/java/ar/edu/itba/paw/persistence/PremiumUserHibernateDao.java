@@ -97,7 +97,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final String oldUserName) {
+                                                final MultipartFile file, final String oldUserName) throws IOException {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
         if(currentUser.isPresent()) {
@@ -111,6 +111,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             user.setHome(newHome);
             user.setReputation(newReputation);
             user.setPassword(newPassword);
+            user.setImage(((file==null)?null:file.getBytes()));
             em.merge(user);
             return Optional.of(user);
         }

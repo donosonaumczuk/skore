@@ -77,7 +77,7 @@ $(function () {
     $('#datepicker').datetimepicker({
         format: 'L',
         defaultDate: moment(getDateWithFormat(), "MM-DD-YYYY"),
-        maxDate: moment(getDateWithFormat(), "MM-DD-YYYY")
+        //maxDate: moment(getDateWithFormat(), "MM-DD-YYYY") /* This broke spring reload form data */
     });
 });
 

@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Place;
+import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,7 +34,7 @@ public interface PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final String oldUserName);
+                                                final MultipartFile file, final String oldUserName) throws IOException;
 
 
     public Optional<PremiumUser> findByEmail(final String email);
@@ -40,15 +44,6 @@ public interface PremiumUserDao {
     public boolean enableUser(final String username, final String code);
 
     public Set<Role> getRoles(final String username);
-
-    public boolean removeRole(final String username, final int roleId);
-
-//    public List<Sport> getSports(final String username);
-//
-//    public boolean addSport(final String username, String sportName);
-//
-//    public boolean removeSport(final String username, String sportName);
-
 
 }
 
