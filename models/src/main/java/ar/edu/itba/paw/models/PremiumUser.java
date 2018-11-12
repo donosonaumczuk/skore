@@ -34,19 +34,28 @@ public class PremiumUser {
     private String code;
 
     @Column
-    private byte image[];
+    private byte[] image;
 
     @Column
     private boolean enabled;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "friendof",
+            joinColumns = @JoinColumn (name = "userName"),
+            inverseJoinColumns = @JoinColumn(name = "friendsusername"))
     private List<PremiumUser> friends;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "friendof",
+//            joinColumns = @JoinColumn (name = "friendsusername"),
+//            inverseJoinColumns = @JoinColumn(name = "userName"))
+//    private List<PremiumUser> friendsof;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="primaryKey.owner")
     private List<Notification> notifications;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -60,6 +69,10 @@ public class PremiumUser {
     joinColumns = {@JoinColumn(name = "username", referencedColumnName = "userName")},
             inverseJoinColumns = {@JoinColumn(name = "role")})
     private Set<Role> roles;
+
+    public PremiumUser() {
+        //for hibernate
+    }
 
     public PremiumUser(String firstName, String lastName, String email,
                        String userName, String cellphone, LocalDate birthday,
@@ -94,9 +107,7 @@ public class PremiumUser {
     }
 
 
-    public PremiumUser() {
-        //for hibernate
-    }
+
 
 
 
