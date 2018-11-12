@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.*;
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.PremiumUserDao;
-import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.RoleDao;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
 import org.mockito.cglib.core.Local;
@@ -24,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +32,9 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
     @Autowired
     private PremiumUserDao premiumUserDao;
+
+    @Autowired
+    private GameService gameService;
 
     @Autowired
     public EmailService emailSender;
@@ -48,6 +50,12 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         LOGGER.trace("Looking for user with username: {}",userName);
 
         Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
+        if(user.isPresent()) {
+            List<List<Game>> listsOfgames = gameService.getGamesThatPlay(user.get().getUser().getUserId());
+            user.get().setGamesInTeam1(listsOfgames.get(0));
+            user.get().setGamesInTeam2(listsOfgames.get(1));
+            user.get().setWinRate(calculateWinRate(user.get()));
+        }
         return user;
     }
 
@@ -200,4 +208,33 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale()); //TODO: check if locale works here
     }
 
+    private double calculateWinRate(final PremiumUser user) {
+        List<Game> gamesTeam = user.getGamesInTeam1();
+        double wins = 0;
+        double gamesPlay = 0;
+
+        for (Game g:gamesTeam) {
+            if(g.getResult() != null) {
+                String[] value = g.getResult().split("-");
+                if(Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
+                    wins++;
+                }
+                gamesPlay++;
+            }
+
+        }
+
+        gamesTeam = user.getGamesInTeam2();
+        for (Game g:gamesTeam) {
+            if(g.getResult() != null) {
+                String[] value = g.getResult().split("-");
+                if(Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
+                    wins++;
+                }
+                gamesPlay++;
+            }
+
+        }
+        return (wins/gamesPlay) * 100;
+    }
 }

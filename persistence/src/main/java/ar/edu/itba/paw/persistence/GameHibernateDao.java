@@ -133,7 +133,7 @@ public class GameHibernateDao implements GameDao {
                 queryString = queryString + " AND (games.primaryKey.team1.leader.userName != :user)";
             }
         }
-        queryString = queryString + " AND (games.result IS NOT NULL)";
+        queryString = queryString + " AND (games.result IS NULL)";
 
         final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
         List<String> valueName = filter.getValueNames();

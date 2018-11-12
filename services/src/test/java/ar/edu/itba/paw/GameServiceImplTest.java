@@ -120,7 +120,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_1_ID);
 
-        inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_1, USER_1_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }
 
@@ -131,7 +130,6 @@ public class GameServiceImplTest {
 
         Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_2_ID);
 
-        inOrder(teamServiceMock).verify(teamServiceMock).removePlayer(TEAMNAME_2, USER_2_ID);
         Assert.assertEquals(GAME_1.get(), ans);
     }
 }

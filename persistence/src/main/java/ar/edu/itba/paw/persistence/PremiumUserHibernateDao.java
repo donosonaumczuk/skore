@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
+import ar.edu.itba.paw.interfaces.RoleDao;
+import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.*;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +29,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private EntityManager em;
 
     @Autowired
-    UserHibernateDao userDao;
+    UserDao userDao;
 
     @Autowired
-    RoleHibernateDao roleDao;
+    RoleDao roleDao;
 
     private static final String userRole = "ROLE_USER";
     private static final int userRoleId = 0;
