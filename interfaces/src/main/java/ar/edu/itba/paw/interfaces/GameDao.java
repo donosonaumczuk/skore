@@ -24,6 +24,10 @@ public interface GameDao {
                                 final Integer maxFreePlaces, final PremiumUser loggedUser,
                                 final boolean listOfGamesThatIsPartOf, final boolean wantCreated);
 
+    public List<Game> gamesThatAUserPlayInTeam1(final long userId);
+
+    public List<Game> gamesThatAUserPlayInTeam2(final long userId);
+
     public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,

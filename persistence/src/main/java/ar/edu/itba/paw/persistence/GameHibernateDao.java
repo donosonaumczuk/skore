@@ -133,6 +133,7 @@ public class GameHibernateDao implements GameDao {
                 queryString = queryString + " AND (games.primaryKey.team1.leader.userName != :user)";
             }
         }
+        queryString = queryString + " AND (games.result IS NOT NULL)";
 
         final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
         List<String> valueName = filter.getValueNames();
@@ -146,6 +147,34 @@ public class GameHibernateDao implements GameDao {
             query.setParameter("userId2", loggedUser.getUser().getUserId());
             query.setParameter("user", loggedUser.getUserName());
         }
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Game> gamesThatAUserPlayInTeam1(final long userId) {
+        String queryString =
+                "SELECT games " +
+                "FROM Game as games " +
+                "WHERE :userId IN " +
+                            "(SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName)";
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Game> gamesThatAUserPlayInTeam2(final long userId) {
+        String queryString =
+                "SELECT games " +
+                "FROM Game as games " +
+                "WHERE :userId IN " +
+                            "(SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.team2.teamName = t.teamName)";
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 

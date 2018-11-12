@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import org.json.JSONArray;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.List;
 
 public interface GameService {
@@ -89,4 +90,10 @@ public interface GameService {
 
     public String urlDateToKeyDate(String date);
 
+    @Transactional
+    public Game updateResultOfGame(final String teamName1, final String starTime, final String finishTime,
+                                   final int scoreTeam1, final int scoreTeam2);
+
+    @Transactional
+    public List<List<Game>> getGamesThatPlay(final long userId);
 }
