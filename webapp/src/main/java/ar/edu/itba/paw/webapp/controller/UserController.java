@@ -108,6 +108,17 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", u.get());
     }
 
+    @RequestMapping(value = "/edit/{username}", method = {RequestMethod.GET})
+    public ModelAndView editUser(@PathVariable("username") String username) {
+        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
+
+        if(!u.isPresent()) {
+            return new ModelAndView("404UserNotFound").addObject("username", username);
+        }
+
+        return new ModelAndView("editUser").addObject("user", u.get());
+    }
+
     @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();

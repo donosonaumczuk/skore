@@ -137,7 +137,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     }
 
     @Test
-    public void testupdateUserInfo() {
+    public void testupdateUserInfo() throws IOException {
         //set up
         em.persist(insertedUser);
 
@@ -147,13 +147,14 @@ public class PremiumUserHibernateDaoTest implements Serializable{
                 insertedUser.getBirthday().toString(), insertedUser.getHome().getCountry(),
                 insertedUser.getHome().getState(), insertedUser.getHome().getCity(),
                 insertedUser.getHome().getStreet(), insertedUser.getReputation(),
-                "newPassword", insertedUser.getUserName());
+                "newPassword",null, insertedUser.getUserName());
         PremiumUser returnedUser = em.find(PremiumUser.class, insertedUser.getUserName());
 
         //postconditions
         Assert.assertNotNull(returnedUser);
         Assert.assertTrue(returnedUser.getUser().getFirstName().equals("newFirstName"));
         Assert.assertTrue(returnedUser.getPassword().equals("newPassword"));
+        //Assert.assertTrue(returnedUser.getEmail().equals("newEmail"));
 
     }
 

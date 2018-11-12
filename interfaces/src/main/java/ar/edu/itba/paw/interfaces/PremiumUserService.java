@@ -37,7 +37,7 @@ public interface PremiumUserService {
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final String oldUserName);
+                                      final MultipartFile file, final String oldUserName) throws IOException;
     @Transactional
     public void addRole(final String username, final int roleId);
 
@@ -50,4 +50,4 @@ public interface PremiumUserService {
 
 
 
-    }
+}
