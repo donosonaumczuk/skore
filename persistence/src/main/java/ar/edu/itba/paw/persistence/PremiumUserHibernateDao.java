@@ -31,6 +31,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     @Autowired
     RoleHibernateDao roleDao;
 
+    private static final String userRole = "ROLE_USER";
+    private static final int userRoleId = 0;
+
     public Optional<PremiumUser> findByUserName(final String userName) {
         PremiumUser premiumUser = em.find(PremiumUser.class, userName);
 
@@ -60,9 +63,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
 
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
+        final Role role = roleDao.findRoleById(userRoleId).get();//should never be empty
         final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
                 basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
                 state, city, street), reputation, password, code, ((file==null)?null:file.getBytes()));
+        newUser.addRole(role);
         //em.persist(basicUser.get());
         em.persist(newUser);
         return Optional.of(newUser);
