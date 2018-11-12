@@ -25,12 +25,12 @@
             <form:form modelAttribute="editUserForm" action="${editUrl}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <form:label path="firstName"><spring:message code="firstNameLabel"/><span class="text-muted">*</span></form:label>
-                    <form:input class="form-control" path="firstName" type="text" value="${user.firstName}"/>
+                    <form:input class="form-control" path="firstName" type="text" value="${user.user.firstName}"/>
                     <form:errors path="firstName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group">
                     <form:label path="lastName"><spring:message code="lastNameLabel"/><span class="text-muted">*</span></form:label>
-                    <form:input class="form-control" path="lastName" type="text" value="${user.lastName}"/>
+                    <form:input class="form-control" path="lastName" type="text" value="${user.user.lastName}"/>
                     <form:errors path="lastName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group">

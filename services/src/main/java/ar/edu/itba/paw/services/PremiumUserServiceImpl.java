@@ -127,7 +127,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, bcrypt.encode(newPassword), file, oldUserName);
+                newCity, newStreet, newReputation, newPassword, file, oldUserName);
         if(user.isPresent()) {
             LOGGER.trace("{] updated", oldUserName);
             return user.get();
@@ -137,6 +137,25 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
             throw new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist.");
         }
+    }
+
+    @Override
+    public PremiumUser changePassword(final String newPassword, final String userName) {
+        String encryptedPassword = bcrypt.encode(newPassword);
+        Optional<PremiumUser> foundUser = findByUserName(userName);
+        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't" +
+                " find user with username:" + userName));
+//        Optional<PremiumUser> modifiedUser = premiumUserDao.updateUserInfo(currentUser.getUser().
+//                        getFirstName(), currentUser.getUser().getLastName(),
+//                    currentUser.getEmail(), userName, currentUser.getCellphone(),
+//                 newBirthday, currentUser.getHome().getCountry(), currentUser.getHome().getState(),
+//                currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
+//                currentUser.getReputation(), encryptedPassword, file, userName);
+//        PremiumUser newUser = modifiedUser.orElseThrow(() -> new UserNotFoundException("Can't" +
+//                " find user with username:" + userName));
+//        LOGGER.trace("{] password updated", userName);
+//        return newUser;
+        return currentUser;
     }
 
     private static String formatDate(String birthday) {

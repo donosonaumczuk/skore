@@ -161,7 +161,7 @@ public class UserController extends BaseController{
                 currentUser.getReputation(), currentUser.getPassword(), image, currentUser.getUserName());
 
 
-        return new ModelAndView("profile/" + username);
+        return new ModelAndView("userProfile").addObject("user", currentUser);
     }
 
 
