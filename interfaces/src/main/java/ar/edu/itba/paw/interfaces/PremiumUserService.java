@@ -41,7 +41,7 @@ public interface PremiumUserService {
                                       final MultipartFile file, final String oldUserName) throws IOException;
 
     @Transient
-    public PremiumUser changePassword(final String newPassword, final String userName);
+    public PremiumUser changePassword(final String newPassword, final String userName) throws IOException;
 
     @Transactional
     public void addRole(final String username, final int roleId);

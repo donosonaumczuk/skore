@@ -152,7 +152,7 @@ public class UserController extends BaseController{
             image = editUserForm.getImage();
         }
 
-        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
          currentUser = premiumUserService.updateUserInfo(editUserForm.getFirstName(), editUserForm.getLastName(),
                 currentUser.getEmail(), currentUser.getUserName(), editUserForm.getCellphone(),
                 currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),

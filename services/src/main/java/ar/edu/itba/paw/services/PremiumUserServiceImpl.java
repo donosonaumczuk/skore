@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.CannotCreateUserException;
-import ar.edu.itba.paw.Exceptions.CannotValidateUserException;
-import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.Exceptions.*;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -124,11 +121,19 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
     }
 
     @Override
-    public PremiumUser changePassword(final String newPassword, final String username) {
+    public PremiumUser changePassword(final String newPassword, final String username) throws IOException{
         Optional <PremiumUser> premiumUser = findByUserName(username);
         PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
                 "with username:" + username));
-        return currentUser;//TODO: modify password
+        final String encodedPassword = bcrypt.encode(newPassword);
+        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(currentUser.getUser().getFirstName(),
+                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
+                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
+                currentUser.getHome().getState(),currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
+                currentUser.getReputation(), encodedPassword, null, username);
+
+        return user.orElseThrow(() -> new CannotModifyUserException("Can't modify user with username:" + username));
     }
 
     private static String formatDate(String birthday) {
