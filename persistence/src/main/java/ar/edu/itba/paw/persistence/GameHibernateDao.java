@@ -38,8 +38,14 @@ public class GameHibernateDao implements GameDao {
                 teamName1, teamName2, startTime,finishTime);
         Team team1 = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
-        Team team2 = teamDao.findByTeamName(teamName2)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+        Team team2;
+        if(teamName2 != null) {
+            team2 = teamDao.findByTeamName(teamName2)
+                    .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+        }
+        else {
+            team2 = null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Game game = new Game(team1, team2, new Place(country, state, city, street),
                 LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(finishTime, formatter),

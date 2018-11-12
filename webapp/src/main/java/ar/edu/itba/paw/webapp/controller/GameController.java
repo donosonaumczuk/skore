@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class GameController extends BaseController{
@@ -196,20 +197,13 @@ public class GameController extends BaseController{
         PremiumUser loggedUser = loggedUser();
 
         LOGGER.debug("Match form completed, creating match...");
-//        Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
-//                matchForm.getDuration(), matchForm.getMode() + "-" + matchForm.getCompetitivity(), matchForm.getCountry(), matchForm.getState(),
-//                matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
-//                null, matchForm.getDescription(), loggedUser.getUserName(),loggedUser.getUserId(),
-//                matchForm.getSportName(), matchForm.getMatchName());
 
         Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
                 matchForm.getDuration(), "Individual" + "-" + matchForm.getCompetitivity(), matchForm.getCountry(),
-                matchForm.getState(),
-                matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
+                matchForm.getState(), matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
                 null, matchForm.getDescription(), loggedUser.getUserName(),
                 loggedUser.getUser().getUserId(), matchForm.getSportName(), matchForm.getMatchName());
-
-                LOGGER.debug("Match created \n\n");
+        LOGGER.debug("Match created \n\n");
 
         return new ModelAndView("index");
     }
@@ -315,7 +309,7 @@ public class GameController extends BaseController{
     }
 
     private boolean isPlayerInTeam(Game game, User user) {
-        List<User> players = game.getTeam1().getPlayers();
+        Set<User> players = game.getTeam1().getPlayers();
         if(players.contains(user)) {
             return true;
         }

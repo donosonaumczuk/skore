@@ -150,7 +150,7 @@ public class TeamHibernateDaoTest {
         Assert.assertTrue(returnedTeam.isPresent());
         Assert.assertEquals(team.getName(), returnedTeam.get().getName());
         Assert.assertEquals(2, returnedTeam.get().getPlayers().size());
-        Assert.assertEquals(user.getUserId(), returnedTeam.get().getPlayers().get(1).getUserId());
+        Assert.assertEquals(true, returnedTeam.get().getPlayers().contains(user));
     }
 
     @Test

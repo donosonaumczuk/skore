@@ -99,7 +99,6 @@ public class UserServiceImpl implements UserService {
         return id;
     }
 
-
     @Override
     public void sendCancelOptionMatch(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;

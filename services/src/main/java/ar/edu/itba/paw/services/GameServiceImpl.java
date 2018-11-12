@@ -72,15 +72,17 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game createNoTeamGame(final String startTime, final String finishTime,
+    public Game createNoTeamGame(final String startTime, final String duration,
                                  final String type, final String country,
                                  final String state, final String city,
                                  final String street, final String tornamentName,
                                  final String description, final String creatorName,
                                  final long creatorId, final String sportName, final String title) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
-        return create(team1.getName(), null, startTime, finishTime, type, null,
+        Game game = create(team1.getName(), null, startTime, duration, type, null,
                       country, state, city, street, tornamentName, description, title);
+        insertUserInGame(game.getTeam1().getName(), startTime, duration, creatorId);
+        return game;
     }
 
     @Override
@@ -97,11 +99,13 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game insertUserInGameTeam(final String teamName1, final String startTime,
-                                      final String finishTime, final long userId,
+                                      final String duration, final long userId,
                                       final boolean toTeam1) {
-        Game game = findByKey(teamName1, startTime, finishTime);
+        final String newStartTime = formatDate(startTime);
+        String finishTime = getFinishTime(newStartTime, duration);
+        Game game = findByKey(teamName1, newStartTime + ":00", finishTime + ":00");
         Game gameAns;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(!toTeam1) {
             if(game.getTeam2() == null) {
                 Team team2 = teamService.createTempTeam2(null, userId,

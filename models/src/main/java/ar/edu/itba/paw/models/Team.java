@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "teams")
@@ -15,7 +13,7 @@ public class Team {
             joinColumns = { @JoinColumn(name = "teamName") },
             inverseJoinColumns = { @JoinColumn(name = "userId") }
     )
-    private List<User> players;
+    private Set<User> players;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "leaderName")
@@ -29,7 +27,7 @@ public class Team {
     private String teamName;
 
     @Column(nullable = false)
-    private boolean isTemp;
+    private int isTemp;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sportName")
@@ -46,10 +44,10 @@ public class Team {
         this.leader     = leader;
         this.acronym    = acronym;
         this.teamName   = teamName;
-        this.isTemp     = isTemp;
+        this.isTemp     = (isTemp)?1:0;
         this.sport      = sport;
         this.image      = image;
-        this.players    = new LinkedList<>();
+        this.players    = new HashSet<>();
     }
 
     public Sport getSport() {
@@ -57,7 +55,7 @@ public class Team {
     }
 
     public boolean isTemporal() {
-        return isTemp;
+        return isTemp == 1;
     }
 
     public String getName() {
@@ -80,7 +78,7 @@ public class Team {
         return leader;
     }
 
-    public List<User> getPlayers() {
+    public Set<User> getPlayers() {
         return players;
     }
 
@@ -108,7 +106,7 @@ public class Team {
         this.sport = sport;
     }
 
-    public void setPlayers(List<User> players) {
+    public void setPlayers(Set<User> players) {
         this.players = players;
     }
 
