@@ -32,6 +32,8 @@ function getCreatedURL() {
 }
 
 $("#to-join" ).click(function() {
+    // var currentURL = document.location; //TODO: remove later
+    window.history.replaceState("object or string", "Title", '/'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
     getButton = getJoinButton;
@@ -42,6 +44,8 @@ $("#to-join" ).click(function() {
 });
 
 $("#joined").click(function() {
+    // var currentURL = document.location; //TODO: remove later
+    window.history.replaceState("object or string", "Title", '/joined'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
     getButton = getCancelButton;
@@ -52,6 +56,8 @@ $("#joined").click(function() {
 });
 
 $("#created").click(function() {
+    // var currentURL = document.location; //TODO: remove later
+    window.history.replaceState("object or string", "Title", '/created'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
     getButton = getDeleteButton;

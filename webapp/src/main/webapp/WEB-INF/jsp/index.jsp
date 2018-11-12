@@ -41,13 +41,13 @@
                                 <div class="row mb-4">
                                     <label for="matches"><spring:message code="matchesLabel"/></label>
                                     <div class="btn-group input-group btn-group-toggle" data-toggle="buttons" id="matches">
-                                        <label class="btn btn-secondary active" id="to-join">
+                                        <label class="btn btn-secondary <c:if test="${section.equals(\"default\")}">active</c:if>" id="to-join">
                                             <input type="radio" name="options" id="option1" autocomplete="off" checked> <spring:message code="toJoinLabel"/>
                                         </label>
-                                        <label class="btn btn-secondary" id="joined">
+                                        <label class="btn btn-secondary <c:if test="${section.equals(\"joined\")}">active</c:if>" id="joined">
                                             <input type="radio" name="options" id="option2" autocomplete="off"> <spring:message code="joinedLabel"/>
                                         </label>
-                                        <label class="btn btn-secondary" id="created">
+                                        <label class="btn btn-secondary <c:if test="${section.equals(\"created\")}">active</c:if>" id="created">
                                             <input type="radio" name="options" autocomplete="off"> <spring:message code="createdLabel"/>
                                         </label>
                                     </div>
