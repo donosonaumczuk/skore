@@ -111,7 +111,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             user.setHome(newHome);
             user.setReputation(newReputation);
             user.setPassword(newPassword);
-            user.setImage(((file==null)?null:file.getBytes()));
+            if(file == null) {
+                user.setImage(file.getBytes());
+            }
             em.merge(user);
             return Optional.of(user);
         }
