@@ -118,7 +118,7 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, new BCryptPasswordEncoder().encode(newPassword),file, oldUserName);
+                newCity, newStreet, newReputation, newPassword, file, oldUserName);
 
         return user.orElseThrow(() -> new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist."));
     }

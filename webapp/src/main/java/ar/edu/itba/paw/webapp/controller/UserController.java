@@ -134,15 +134,14 @@ public class UserController extends BaseController{
                                  @PathVariable("username") String username, final BindingResult errors,
                                  @RequestParam(value = "file", required = false)
                                          MultipartFile file) throws IOException {
-        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
-
-        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
-                "username:" + username));
 
         if(errors.hasErrors()) {
             return editUserForm(editUserForm, username);
         }
 
+        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
+        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
+                "username:" + username));
         MultipartFile image;
 
         if(editUserForm.getImage().getSize() == 0) {
@@ -154,7 +153,7 @@ public class UserController extends BaseController{
         }
 
         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        premiumUserService.updateUserInfo(editUserForm.getFirstName(), editUserForm.getLastName(),
+         currentUser = premiumUserService.updateUserInfo(editUserForm.getFirstName(), editUserForm.getLastName(),
                 currentUser.getEmail(), currentUser.getUserName(), editUserForm.getCellphone(),
                 currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
                 currentUser.getHome().getState(), currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
