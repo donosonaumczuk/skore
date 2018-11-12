@@ -81,7 +81,9 @@ public class GameServiceImpl implements GameService {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
         Game game = create(team1.getName(), null, startTime, duration, type, null,
                       country, state, city, street, tornamentName, description, title);
-        insertUserInGame(game.getTeam1().getName(), startTime, duration, creatorId);
+        final String newStartTime = formatDate(startTime);
+        String finishTime = getFinishTime(newStartTime, duration);
+        insertUserInGame(game.getTeam1().getName(), newStartTime + ":00", finishTime + ":00", creatorId);
         return game;
     }
 
@@ -99,11 +101,9 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game insertUserInGameTeam(final String teamName1, final String startTime,
-                                      final String duration, final long userId,
+                                      final String finishTime, final long userId,
                                       final boolean toTeam1) {
-        final String newStartTime = formatDate(startTime);
-        String finishTime = getFinishTime(newStartTime, duration);
-        Game game = findByKey(teamName1, newStartTime + ":00", finishTime + ":00");
+        Game game = findByKey(teamName1, startTime, finishTime);
         Game gameAns;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(!toTeam1) {

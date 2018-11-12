@@ -90,7 +90,7 @@ public class Team {
         int i = 0;
         for (User u: players) {
             if(u.getUserId() == userId) {
-                players.remove(i);
+                players.remove(u);
                 return true;
             }
             i++;
