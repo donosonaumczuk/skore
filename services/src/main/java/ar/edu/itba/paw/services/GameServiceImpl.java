@@ -288,7 +288,10 @@ public class GameServiceImpl implements GameService {
         String teamName1 = matchURLKey.substring(URL_DATE_LENGTH, length - URL_DATE_LENGTH);
         String finishTime = urlDateToKeyDate(matchURLKey.substring(length - URL_DATE_LENGTH));
 
-        return findByKey(teamName1, startTime, finishTime);
+        Game game = findByKey(teamName1, startTime, finishTime);
+        teamService.getAccountsList(game.getTeam1());
+        teamService.getAccountsList(game.getTeam2());
+        return game;
     }
 
     @Override

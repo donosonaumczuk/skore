@@ -31,4 +31,7 @@ public interface TeamService {
     public Team updateTeamInfo(final String newTeamName, final String newAcronym,
                                final String newLeaderName, final String newSportName,
                                final String oldTeamName);
+
+    @Transactional
+    public void getAccountsList(Team team);
 }

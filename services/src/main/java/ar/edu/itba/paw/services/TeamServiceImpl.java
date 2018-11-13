@@ -2,9 +2,12 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.Exceptions.TeamNotCreated;
 import ar.edu.itba.paw.Exceptions.TeamNotFoundException;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +28,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamDao teamDao;
+
+    @Autowired
+    private PremiumUserService premiumUserService;
 
     public TeamServiceImpl() {
 
@@ -111,5 +120,17 @@ public class TeamServiceImpl implements TeamService {
                 newSportName, oldTeamName);
 
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + newTeamName + " does not exists"));
+    }
+
+    @Override
+    public void getAccountsList(Team team) {//TODO: testing
+        if(team != null) {
+            HashMap<User, PremiumUser> accountsList = new HashMap<>();
+            for (User u:team.getPlayers()) {
+                Optional<PremiumUser> account = premiumUserService.findById(u.getUserId());
+                accountsList.put(u, (account.isPresent())?account.get():null);
+            }
+            team.setAccountsPlayers(accountsList);
+        }
     }
 }

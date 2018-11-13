@@ -36,18 +36,22 @@ public class Team {
     @Column
     private byte[] image;
 
+    @Transient
+    private Map<User, PremiumUser> accountsPlayers;
+
     /* package */public Team() {
         // For Hibernate
     }
 
     public Team(PremiumUser leader, String acronym, String teamName, boolean isTemp, Sport sport, byte[] image) {
-        this.leader     = leader;
-        this.acronym    = acronym;
-        this.teamName   = teamName;
-        this.isTemp     = (isTemp)?1:0;
-        this.sport      = sport;
-        this.image      = image;
-        this.players    = new HashSet<>();
+        this.leader          = leader;
+        this.acronym         = acronym;
+        this.teamName        = teamName;
+        this.isTemp          = (isTemp)?1:0;
+        this.sport           = sport;
+        this.image           = image;
+        this.players         = new LinkedHashSet<>();
+        this.accountsPlayers = new HashMap<>();
     }
 
     public Sport getSport() {
@@ -123,5 +127,13 @@ public class Team {
     @Override
     public int hashCode() {
         return Objects.hash(teamName);
+    }
+
+    public Map<User, PremiumUser> getAccountsPlayers() {
+        return accountsPlayers;
+    }
+
+    public void setAccountsPlayers(Map<User, PremiumUser> accountsPlayers) {
+        this.accountsPlayers = accountsPlayers;
     }
 }

@@ -146,6 +146,20 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    public Optional<PremiumUser> findById(final long userId) {
+        final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
+                "u.user.userId = :userId", PremiumUser.class);
+        query.setParameter("userId", userId);
+        final List<PremiumUser> list = query.getResultList();
+        PremiumUser user = list.isEmpty() ? null : list.get(0);
+        if(user == null) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(user);
+        }
+    }
+
     public boolean enableUser(final String username, final String code) {
         Optional<PremiumUser> currentUser = findByUserName(username);
 

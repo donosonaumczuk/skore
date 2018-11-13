@@ -17,6 +17,8 @@ public interface PremiumUserDao {
 
     public Optional<PremiumUser> findByUserName(final String userName);
 
+    public Optional<PremiumUser> findById(final long userId);
+
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
                                         final String cellphone, final String birthday,

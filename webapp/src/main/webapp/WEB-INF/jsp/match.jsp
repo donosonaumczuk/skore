@@ -27,28 +27,148 @@
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <label>Start Time: <c:out value="${match.getStartTime()}"/></label>
+                    <label><spring:message code="match.startTime"/>: <c:out value="${match.getStartTimeString()}"/></label>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <label>Finish Time: <c:out value="${match.getFinishTime()}"/></label>
+                    <label><spring:message code="match.finishTime"/>: <c:out value="${match.getFinishTimeString()}"/></label>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <label>Sport: <c:out value="${match.getTeam1().getSport().getDisplayName()}"/></label>
+                    <label><spring:message code="match.sport"/>: <c:out value="${match.getTeam1().getSport().getDisplayName()}"/></label>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col">
-                    <label>Type: <c:out value="${match.getType()}"/></label>
+                    <label><spring:message code="match.type"/>: <spring:message code="${match.getType()}"/></label>
                 </div>
             </div>
-            <div class="row text-center">
-                <div class="col">
-                    <label>Description: <c:out value="${match.getDescription()}"/></label>
+            <c:if test="${match.getResult() != null}">
+                <div class="row text-center">
+                    <div class="col">
+                        <label><spring:message code="match.result"/>: <label><c:out value="${match.getResult()}"/></label></label>
+                    </div>
                 </div>
+            </c:if>
+            <c:if test="${match.getDescription() != null}">
+                <div class="row text-center">
+                    <div class="col">
+                        <label><spring:message code="match.description"/>:</label>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col">
+                        <label><label><c:out value="${match.getDescription()}"/></label></label>
+                    </div>
+                </div>
+            </c:if>
+            <div class="row text-center">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <c:choose>
+                            <c:when test="${match.getTeam1().isTemporal()}">
+                                <th scope="col"><spring:message code="match.team"/> 1</th>
+                            </c:when>
+                            <c:otherwise>
+                                <th scope="col"><c:out value="${match.getTeam1().getName()}"/></th>
+                            </c:otherwise>
+                        </c:choose>
+                        <c:choose>
+                            <c:when test="${match.getTeam2()==null || match.getTeam2().isTemporal()}">
+                                <th scope="col"><spring:message code="match.team"/> 2</th>
+                            </c:when>
+                            <c:otherwise>
+                                <th scope="col"><c:out value="${match.getTeam2().getName()}"/></th>
+                            </c:otherwise>
+                        </c:choose>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:set var = "iterator1" value = "${match.getTeam1().getAccountsPlayers().entrySet().iterator()}"/>
+                    <c:set var = "iterator2" value = "${(match.getTeam2()==null)?null:match.getTeam2().getAccountsPlayers().entrySet().iterator()}"/>
+                    <c:choose>
+                        <c:when test="${match.getTeam2()==null || match.getTeam2().getAccountsPlayers().size() < match.getTeam1().getAccountsPlayers().size()}">
+                            <c:forEach items="${match.getTeam1().getAccountsPlayers().entrySet()}" var="entry">
+                                <tr>
+                                    <th scope="row">
+                                        <c:choose>
+                                            <c:when test="${entry.getValue() == null}">
+                                                <c:out value="${entry.getKey().getFirstName()}"/> <c:out value="${entry.getKey().getLastName()}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="<c:url value = "/profile/${entry.getValue().getUserName()}"/>">
+                                                    <c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </th>
+                                    <c:choose>
+                                        <c:when test="${match.getTeam2() == null || !iterator2.hasNext()}">
+                                            <td></td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>
+                                                <c:set var = "entry2" value = "${iterator2.next()}"/>
+                                                <c:choose>
+                                                    <c:when test="${entry2.getValue() == null}">
+                                                        <c:out value="${entry2.getKey().getFirstName()}"/> <c:out value="${entry2.getKey().getLastName()}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="<c:url value = "/profile/${entry2.getValue().getUserName()}"/>">
+                                                            <c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach items="${match.getTeam2().getAccountsPlayers().entrySet()}" var="entry">
+                                <tr>
+                                    <c:choose>
+                                        <c:when test="${!iterator1.hasNext()}">
+                                            <th scope="row"></th>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <th scope="row">
+                                                <c:set var = "entry2" value = "${iterator1.next()}"/>
+                                                <c:choose>
+                                                    <c:when test="${entry2.getValue() == null}">
+                                                        <c:out value="${entry2.getKey().getFirstName()}"/> <c:out value="${entry2.getKey().getLastName()}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="<c:url value = "/profile/${entry2.getValue().getUserName()}"/>">
+                                                            <c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </th>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${entry.getValue() == null}">
+                                                <c:out value="${entry.getKey().getFirstName()}"/> <c:out value="${entry.getKey().getLastName()}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="<c:url value = "/profile/${entry.getValue().getUserName()}"/>">
+                                                    <c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </t
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
             </div>
         </div> <!-- END Form container -->
     </div>
