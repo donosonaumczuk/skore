@@ -32,7 +32,7 @@
                 <div class="row filters p-4 mt-2">
                     <div class="container-fluid">
                         <div class="row">
-                            <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" title="Para agregar varios filtros de una sola vez puede escribirlos separados por comas o espacios"/></p>
+                            <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" title="Para agregar varios filtros de una sola vez puede escribirlos separados por espacios"/></p>
                         </div>
                         <c:if test="${isLogged}">
                             <div class="row mb-4">

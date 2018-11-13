@@ -33,24 +33,27 @@ body {
     width: 37px;
     height: 37px;
     border-radius: 50%;
+    background-color: white;
 }
 
 .profile-name {
     color: black;
     font-weight: bold;
-    font-size: 4rem;
+    font-size: 2rem;
+    margin-bottom: 0rem;
 }
 
 .profile-username {
     color: darkgrey;
     font-style: italic;
-    font-size: 2rem;
+    font-size: 1.3rem;
 }
 
 .profile-pic {
     width: 12rem;
     height: 12rem;
     border-radius: 50%;
+    background-color: white;
 }
 
 .sport-img {

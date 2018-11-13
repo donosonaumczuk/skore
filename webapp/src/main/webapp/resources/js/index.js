@@ -468,9 +468,10 @@ function getMatchCard(match) {
     var place = match.place;
     var location = getMatchLocation(place.street, place.city, place.state, place.country);
     var sportId = match.team1.sport.name;
+    var matchKey = getMatchURLKey(startTime, match.team1, finishTime);
 
     var matchCard = '' +
-        '<div class="row p-2 mt-2 match-card rounded-border" id="' + getMatchURLKey(startTime, match.team1, finishTime) + '">' +
+        '<div class="row p-2 mt-2 match-card rounded-border" onclick="clickMatch(\'' + matchKey + '\')" id="' + matchKey + '">' +
         '<div class="col">' +
         '<div class="row mb-4">' +
         '<div class="col-2 col-sm-1 pl-0">' +
@@ -532,6 +533,10 @@ function getMatchCard(match) {
         '</div>' +
         '</div>';
     return matchCard;
+}
+
+function clickMatch(matchKey) {
+    window.location.href = contextPath + "match/" + matchKey;
 }
 
 function getMatchLocation(street, city, state, country) {
