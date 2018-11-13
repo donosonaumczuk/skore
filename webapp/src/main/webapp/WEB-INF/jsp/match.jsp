@@ -100,7 +100,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="<c:url value = "/profile/${entry.getValue().getUserName()}"/>">
-                                                    <c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
+                                                    @<c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
@@ -118,7 +118,7 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <a href="<c:url value = "/profile/${entry2.getValue().getUserName()}"/>">
-                                                            <c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
+                                                            @<c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
                                                         </a>
                                                     </c:otherwise>
                                                 </c:choose>
@@ -144,7 +144,7 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <a href="<c:url value = "/profile/${entry2.getValue().getUserName()}"/>">
-                                                            <c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
+                                                            @<c:out value="${entry2.getValue().getUserName()}"/> <?--TODO-->
                                                         </a>
                                                     </c:otherwise>
                                                 </c:choose>
@@ -158,7 +158,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="<c:url value = "/profile/${entry.getValue().getUserName()}"/>">
-                                                    <c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
+                                                    @<c:out value="${entry.getValue().getUserName()}"/> <?--TODO-->
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
