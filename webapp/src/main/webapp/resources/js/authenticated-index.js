@@ -1,22 +1,3 @@
-var filters = {
-    toJoin: {
-        country: {},
-        state: {},
-        city: {}
-    },
-    joined: {
-        country: {},
-        state: {},
-        city: {}
-    },
-    created: {
-        country: {},
-        state: {},
-        city: {}
-    }
-};
-
-var currentFilters = filters.toJoin;
 var endPointURL = getDefaultEndPoint();
 
 function getToJoinURL() {
@@ -66,28 +47,6 @@ $("#created").click(function() {
     loadCurrentFilters();
     loadMatches();
 });
-
-function loadCurrentFilters() {
-    pageNumber = 1;
-    reachEndOfPagination = false;
-
-    $('.badge').remove();
-
-    var countries = Object.keys(currentFilters.country);
-    for(var i = 0; i < countries.length; i++) {
-        addBadge(countries[i], 'country');
-    }
-
-    var states = Object.keys(currentFilters.state);
-    for(var i = 0; i < states.length; i++) {
-        addBadge(states[i], 'state');
-    }
-
-    var cities = Object.keys(currentFilters.city);
-    for(var i = 0; i < cities.length; i++) {
-        addBadge(cities[i], 'city');
-    }
-}
 
 function getDefaultEndPoint() {
     return getToJoinURL();

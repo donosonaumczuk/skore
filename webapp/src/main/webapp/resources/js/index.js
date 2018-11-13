@@ -144,7 +144,31 @@ $(document).ready(function(){
             e.preventDefault();
         }
     });
+
+    loadCurrentFilters();
 });
+
+function loadCurrentFilters() {
+    pageNumber = 1;
+    reachEndOfPagination = false;
+
+    $('.badge').remove();
+
+    var countries = Object.keys(currentFilters.country);
+    for(var i = 0; i < countries.length; i++) {
+        addBadge(countries[i], 'country');
+    }
+
+    var states = Object.keys(currentFilters.state);
+    for(var i = 0; i < states.length; i++) {
+        addBadge(states[i], 'state');
+    }
+
+    var cities = Object.keys(currentFilters.city);
+    for(var i = 0; i < cities.length; i++) {
+        addBadge(cities[i], 'city');
+    }
+}
 
 $(".filter-input").keyup(function (e) {
     if (e.keyCode == 13) {
@@ -345,7 +369,6 @@ function getDataFromKey(key) {
 }
 
 function getMatchCard(match) {
-    console.log(match);
     var startTime = match.startTime;
     var date = formatDate(startTime.dayOfWeek, startTime.monthValue, startTime.dayOfMonth, startTime.year);
     var finishTime = match.finishTime;

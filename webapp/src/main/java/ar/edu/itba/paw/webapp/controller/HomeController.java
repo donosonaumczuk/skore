@@ -35,11 +35,10 @@ public class HomeController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView index(@RequestParam(name = "country", required = false) String[] countries,
-                              @RequestParam(name = "state", required = false) String[] states,
-                              @RequestParam(name = "city", required = false) String[] cities,
+    public ModelAndView index(@RequestParam(name = "country", defaultValue = "") String[] countries,
+                              @RequestParam(name = "state", defaultValue = "") String[] states,
+                              @RequestParam(name = "city", defaultValue = "") String[] cities,
                               @RequestParam Map<String, String> requestParams) {
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"); //TODO: DELETE THIS DEBUG LINES
         if(requestParams != null) {
             for (String filter : requestParams.keySet()) {
                 if(!isValidFilter(filter)) {
@@ -48,27 +47,61 @@ public class HomeController extends BaseController {
             }
         }
 
-        if(countries != null) {
-            for (String country : countries) { //TODO: DELETE THIS DEBUG LINES
-                System.out.println("\ncountry = " + country);
-            }
-        }
+        final ModelAndView mav = new ModelAndView("index");
 
-        if(states != null) {
-            for (String state : states) { //TODO: DELETE THIS DEBUG LINES
-                System.out.println("\nstate = " + state);
-            }
-        }
+        mav.addObject("section", "default");
+        mav.addObject("countries", countries);
+        mav.addObject("states", states);
+        mav.addObject("cities", cities);
 
-        if(cities != null) {
-            for (String city : cities) { //TODO: DELETE THIS DEBUG LINES
-                System.out.println("\ncity = " + city);
-            }
-        }
-
-        final ModelAndView mav = new ModelAndView("index").addObject("section", "default");
         return mav;
+    }
 
+
+    @RequestMapping(value = "/joined", method = RequestMethod.GET)
+    public ModelAndView joinedMatches(@RequestParam(name = "country", defaultValue = "") String[] countries,
+                                      @RequestParam(name = "state", defaultValue = "") String[] states,
+                                      @RequestParam(name = "city", defaultValue = "") String[] cities,
+                                      @RequestParam Map<String, String> requestParams) {
+        if(requestParams != null) {
+            for (String filter : requestParams.keySet()) {
+                if(!isValidFilter(filter)) {
+                    return new ModelAndView("404"); //TODO: add a message like '404 bad request: wrong params'
+                }
+            }
+        }
+
+        final ModelAndView mav = new ModelAndView("index");
+
+        mav.addObject("section", "joined");
+        mav.addObject("countries", countries);
+        mav.addObject("states", states);
+        mav.addObject("cities", cities);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/created", method = RequestMethod.GET)
+    public ModelAndView createdMatches(@RequestParam(name = "country", defaultValue = "") String[] countries,
+                                       @RequestParam(name = "state", defaultValue = "") String[] states,
+                                       @RequestParam(name = "city", defaultValue = "") String[] cities,
+                                       @RequestParam Map<String, String> requestParams) {
+        if(requestParams != null) {
+            for (String filter : requestParams.keySet()) {
+                if(!isValidFilter(filter)) {
+                    return new ModelAndView("404"); //TODO: add a message like '404 bad request: wrong params'
+                }
+            }
+        }
+
+        final ModelAndView mav = new ModelAndView("index");
+
+        mav.addObject("section", "created");
+        mav.addObject("countries", countries);
+        mav.addObject("states", states);
+        mav.addObject("cities", cities);
+
+        return mav;
     }
 
     private boolean isValidFilter(String filter) {
@@ -81,18 +114,5 @@ public class HomeController extends BaseController {
         }
 
         return false;
-    }
-
-
-    @RequestMapping(value = "/joined", method = RequestMethod.GET)
-    public ModelAndView joinedMatches() {
-        final ModelAndView mav = new ModelAndView("index").addObject("section", "joined");
-        return mav;
-    }
-
-    @RequestMapping(value = "/created", method = RequestMethod.GET)
-    public ModelAndView createdMatches() {
-        final ModelAndView mav = new ModelAndView("index").addObject("section", "created");
-        return mav;
     }
 }
