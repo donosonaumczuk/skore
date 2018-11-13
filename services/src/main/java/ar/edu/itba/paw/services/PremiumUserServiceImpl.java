@@ -220,7 +220,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     public void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale()); //TODO: check if locale works here
+        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
     }
 
     private double calculateWinRate(final PremiumUser user) {

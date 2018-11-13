@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmMatchAssistance(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encriptString(phrase);
-        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale()); //TODO: check if locale works here
+        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale());
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
         encrypter.encriptString(phrase);
-        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale()); //TODO: check if locale works here
+        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale());
     }
 
     public SimpleEncrypter getEncrypter() {
