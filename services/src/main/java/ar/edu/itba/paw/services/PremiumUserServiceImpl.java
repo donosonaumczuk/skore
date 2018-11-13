@@ -237,4 +237,6 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         }
         return (wins/gamesPlay) * 100;
     }
+
+   
 }

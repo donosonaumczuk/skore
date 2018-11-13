@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 @ValidCurrentPassword
 public class ModifyPasswordForm {
 
-    private String userName;
+    private String username;
 
     @Size(min = 5, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
@@ -24,12 +24,12 @@ public class ModifyPasswordForm {
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String repeatNewPassword;
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getOldPassword() {

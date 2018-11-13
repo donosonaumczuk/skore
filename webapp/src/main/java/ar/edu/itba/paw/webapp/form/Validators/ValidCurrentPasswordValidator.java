@@ -27,7 +27,9 @@ public class ValidCurrentPasswordValidator implements ConstraintValidator<ValidC
         context.buildConstraintViolationWithTemplate("{ar.edu.itba.paw.webapp.form.Validators.ValidCurrentPassword.message}")
                 .addNode("oldPassword").addConstraintViolation();
         ModifyPasswordForm form = (ModifyPasswordForm) obj;
-        PremiumUser user = premiumUserService.findByUserName(form.getUserName()).get();//should never be empty
-        return form.getOldPassword().equals(bcrypt.encode(user.getPassword()));
+        PremiumUser user = premiumUserService.findByUserName(form.getUsername()).get();//should never be empty
+        //String encodePassword =premiumUserService.encodePassword(form.getOldPassword());
+        //return user.getPassword().equals(encodePassword);
+        return bcrypt.matches(form.getOldPassword(), user.getPassword());
     }
 }
