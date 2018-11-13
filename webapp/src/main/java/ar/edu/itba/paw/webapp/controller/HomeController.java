@@ -38,6 +38,7 @@ public class HomeController extends BaseController {
     public ModelAndView index(@RequestParam(name = "country", defaultValue = "") String[] countries,
                               @RequestParam(name = "state", defaultValue = "") String[] states,
                               @RequestParam(name = "city", defaultValue = "") String[] cities,
+                              @RequestParam(name = "sport", defaultValue = "") String[] sports,
                               @RequestParam Map<String, String> requestParams) {
         if(requestParams != null) {
             for (String filter : requestParams.keySet()) {
@@ -53,6 +54,7 @@ public class HomeController extends BaseController {
         mav.addObject("countries", countries);
         mav.addObject("states", states);
         mav.addObject("cities", cities);
+        mav.addObject("sports", sports);
 
         return mav;
     }
@@ -62,6 +64,7 @@ public class HomeController extends BaseController {
     public ModelAndView joinedMatches(@RequestParam(name = "country", defaultValue = "") String[] countries,
                                       @RequestParam(name = "state", defaultValue = "") String[] states,
                                       @RequestParam(name = "city", defaultValue = "") String[] cities,
+                                      @RequestParam(name = "sport", defaultValue = "") String[] sports,
                                       @RequestParam Map<String, String> requestParams) {
         if(requestParams != null) {
             for (String filter : requestParams.keySet()) {
@@ -77,6 +80,7 @@ public class HomeController extends BaseController {
         mav.addObject("countries", countries);
         mav.addObject("states", states);
         mav.addObject("cities", cities);
+        mav.addObject("sports", sports);
 
         return mav;
     }
@@ -85,6 +89,7 @@ public class HomeController extends BaseController {
     public ModelAndView createdMatches(@RequestParam(name = "country", defaultValue = "") String[] countries,
                                        @RequestParam(name = "state", defaultValue = "") String[] states,
                                        @RequestParam(name = "city", defaultValue = "") String[] cities,
+                                       @RequestParam(name = "sport", defaultValue = "") String[] sports,
                                        @RequestParam Map<String, String> requestParams) {
         if(requestParams != null) {
             for (String filter : requestParams.keySet()) {
@@ -100,6 +105,7 @@ public class HomeController extends BaseController {
         mav.addObject("countries", countries);
         mav.addObject("states", states);
         mav.addObject("cities", cities);
+        mav.addObject("sports", sports);
 
         return mav;
     }
@@ -109,7 +115,7 @@ public class HomeController extends BaseController {
             return false;
         }
 
-        if(filter.equals("country") || filter.equals("state") || filter.equals("city")) {
+        if(filter.equals("country") || filter.equals("state") || filter.equals("city") || filter.equals("sport")) {
             return true;
         }
 

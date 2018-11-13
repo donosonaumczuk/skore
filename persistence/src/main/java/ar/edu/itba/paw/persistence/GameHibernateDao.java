@@ -77,7 +77,7 @@ public class GameHibernateDao implements GameDao {
                                 final List<String> cities, final Integer minFreePlaces,
                                 final Integer maxFreePlaces, final PremiumUser loggedUser,
                                 final boolean listOfGamesThatIsPartOf, final boolean wantCreated) {
-        Filters filter = new Filters("SELECT games FROM Game as games, " +
+        Filters  filter = new Filters("SELECT games FROM Game as games, " +
                 "Team t WHERE teamName1 = t.teamName");
         filter.addFilter("games.primaryKey.startTime", ">",
                 "startTimeMin", minStartTime);
@@ -90,7 +90,7 @@ public class GameHibernateDao implements GameDao {
 //TODO        final List<String> types,
 //TODO        final Integer minQuantity,
 //TODO        final Integer maxQuantity,
-        filter.addListFilters("sportName", "like",
+        filter.addListFilters("t.sport.sportName", "like",
                 "sportName", sportNames);
         filter.addListFilters("lower(country)", "like",
                 "country", countries);
