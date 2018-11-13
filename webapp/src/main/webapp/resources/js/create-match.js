@@ -95,3 +95,7 @@ function getDateWithFormat() {
 
     return mm + '/' + dd + '/' + yyyy;
 }
+
+$(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip(); //TODO: Check if works
+});
