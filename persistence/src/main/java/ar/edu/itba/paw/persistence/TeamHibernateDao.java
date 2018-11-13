@@ -46,8 +46,11 @@ public class TeamHibernateDao implements TeamDao {
                                  final boolean isTemp, final String sportName,
                                  final MultipartFile file) throws IOException {
         LOGGER.trace("Try to find leader: {}", leaderName);
-        PremiumUser leader = premiumUserDao.findByUserName(leaderName)
-                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+        PremiumUser leader = null;
+        if(leaderName != null) {
+            leader = premiumUserDao.findByUserName(leaderName)
+                    .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+        }
         LOGGER.trace("Find leader: {}", leaderName);
         LOGGER.trace("Try to find sport: {}", sportName);
         Sport sport = sportDao.findByName(sportName)
@@ -107,7 +110,7 @@ public class TeamHibernateDao implements TeamDao {
         Team team = findByTeamName(teamName)
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
 
-        if(team.getPlayers().size() > team.getSport().getQuantity()) {
+        if(team.getPlayers().size() >= team.getSport().getQuantity()) {
             LOGGER.error("The team: {} is full", teamName);
             throw new TeamFullException("The team " + teamName + "is full");
         }
