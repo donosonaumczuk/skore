@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.Validators.UniqueSportName;
 import ar.edu.itba.paw.webapp.form.Validators.ValidSportImageNotNull;
 import ar.edu.itba.paw.webapp.form.Validators.ValidSportImageSize;
 import ar.edu.itba.paw.webapp.form.Validators.ValidSportImageType;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 
 public class SportForm {
 
+    @UniqueSportName
     @Pattern(regexp ="([a-zA-Z0-9]+)")
     private String sportName;
 
