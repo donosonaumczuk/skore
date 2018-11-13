@@ -30,6 +30,7 @@ public class ValidCurrentPasswordValidator implements ConstraintValidator<ValidC
         PremiumUser user = premiumUserService.findByUserName(form.getUsername()).get();//should never be empty
         //String encodePassword =premiumUserService.encodePassword(form.getOldPassword());
         //return user.getPassword().equals(encodePassword);
-        return bcrypt.matches(form.getOldPassword(), user.getPassword());
+        boolean result = bcrypt.matches(form.getOldPassword(), user.getPassword());
+        return result;
     }
 }

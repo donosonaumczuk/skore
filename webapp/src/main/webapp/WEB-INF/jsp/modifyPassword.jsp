@@ -20,13 +20,9 @@
                     <a class="sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
                 </div>
             </div>
-            <c:url value="/modifyPassword/${user.userName}" var="modifyPasswordUrl" />
+            <c:url value="/modifyPassword" var="modifyPasswordUrl" />
             <form:form modelAttribute="modifyPasswordForm" action="${modifyPasswordUrl}" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <form:label path="username"><spring:message code="usernameLabel"/><span class="text-muted">*</span></form:label>
-                    <form:input class="form-control" path="username" type="text"/>
-                    <form:errors path="username" element="div" cssClass="invalid-feedback d-block"/>
-                </div>
+                    <form:hidden  path="username" value="AgustinIzaguirre"/>
                 <div class="form-group">
                     <form:label path="oldPassword"><spring:message code="oldPasswordLabel"/><span class="text-muted">*</span></form:label>
                     <form:input class="form-control" path="oldPassword" type="password"/>

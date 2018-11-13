@@ -165,14 +165,13 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/modifyPassword", method = {RequestMethod.GET})
     public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm) {
-        //Optional<PremiumUser> u = premiumUserService.findByUserName(usernames);
-
+//        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
+//
 //        if(!u.isPresent()) {
-//            return new ModelAndView("404UserNotFound").addObject("username", usernames);
+//            return new ModelAndView("404UserNotFound").addObject("username", username);
 //        }
-
-//        return new ModelAndView("modifyPassword").addObject("user", u.get())
-          //      .addObject("usernames", usernames);
+//
+//        return new ModelAndView("modifyPassword").addObject("user", u.get());
         return new ModelAndView("modifyPassword");
     }
 
@@ -190,12 +189,7 @@ public class UserController extends BaseController{
                 "username:" + modifyPasswordForm.getUsername()));
 
         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        currentUser = premiumUserService.updateUserInfo(currentUser.getUser().getFirstName(),
-                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
-                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat),
-                currentUser.getHome().getCountry(), currentUser.getHome().getState(),
-                currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
-                currentUser.getReputation(), modifyPasswordForm.getNewPassword(), null, currentUser.getUserName());
+        currentUser = premiumUserService.changePassword(modifyPasswordForm.getNewPassword(), currentUser.getUserName());
 
 
         return new ModelAndView("userProfile").addObject("user", currentUser);

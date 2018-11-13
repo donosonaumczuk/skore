@@ -40,7 +40,7 @@ public interface PremiumUserService {
                                       final int newReputation, final String newPassword,
                                       final MultipartFile file, final String oldUserName) throws IOException;
 
-    @Transient
+    @Transactional
     public PremiumUser changePassword(final String newPassword, final String userName) throws IOException;
 
     @Transactional
