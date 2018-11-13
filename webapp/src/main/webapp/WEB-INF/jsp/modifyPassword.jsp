@@ -22,7 +22,7 @@
             </div>
             <c:url value="/modifyPassword" var="modifyPasswordUrl" />
             <form:form modelAttribute="modifyPasswordForm" action="${modifyPasswordUrl}" method="post" enctype="multipart/form-data">
-                    <form:hidden  path="username" value="AgustinIzaguirre"/>
+                    <form:hidden  path="username" value="${loggedUser.userName}"/>
                 <div class="form-group">
                     <form:label path="oldPassword"><spring:message code="oldPasswordLabel"/><span class="text-muted">*</span></form:label>
                     <form:input class="form-control" path="oldPassword" type="password"/>

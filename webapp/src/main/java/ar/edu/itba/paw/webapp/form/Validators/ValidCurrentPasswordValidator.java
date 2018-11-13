@@ -28,9 +28,6 @@ public class ValidCurrentPasswordValidator implements ConstraintValidator<ValidC
                 .addNode("oldPassword").addConstraintViolation();
         ModifyPasswordForm form = (ModifyPasswordForm) obj;
         PremiumUser user = premiumUserService.findByUserName(form.getUsername()).get();//should never be empty
-        //String encodePassword =premiumUserService.encodePassword(form.getOldPassword());
-        //return user.getPassword().equals(encodePassword);
-        boolean result = bcrypt.matches(form.getOldPassword(), user.getPassword());
-        return result;
+        return bcrypt.matches(form.getOldPassword(), user.getPassword());
     }
 }

@@ -165,20 +165,23 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/modifyPassword", method = {RequestMethod.GET})
     public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm) {
-//        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
-//
-//        if(!u.isPresent()) {
-//            return new ModelAndView("404UserNotFound").addObject("username", username);
+       // String username = request.getServletPath().replace("/modifyPassword/", "");
+
+//        if(!isLogged()) {
+//            return new ModelAndView(("404UserNotLogged"));
 //        }
-//
-//        return new ModelAndView("modifyPassword").addObject("user", u.get());
+
+//        if(!u.isPresent()) {
+//            return new ModelAndView("404UserNotFound").addObject("username", data);
+//        }
+
         return new ModelAndView("modifyPassword");
+        //return new ModelAndView("modifyPassword");
     }
 
     @RequestMapping(value = "/modifyPassword", method = {RequestMethod.POST })
     public ModelAndView modifyPassword(@Valid @ModelAttribute("modifyPasswordForm") final ModifyPasswordForm
-                                                   modifyPasswordForm,
-                                                    final BindingResult errors) throws IOException {
+                                                   modifyPasswordForm, final BindingResult errors) throws IOException {
 
         if(errors.hasErrors()) {
             return modifyPasswordForm(modifyPasswordForm);
