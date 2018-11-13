@@ -88,7 +88,9 @@ public class UserController extends BaseController{
                 0, userForm.getPassword(), image);
 
         if(user == null) {
-            throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotCreateUser").addObject("attribute", userForm.getUsername());
+            //throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
         }
 
         return new ModelAndView("sendingConfirmationAccountMail");
@@ -197,12 +199,23 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/confirm/**")
     public ModelAndView confirmAccount(HttpServletRequest request) {
         String path = request.getServletPath();
+        path = path.replace("/confirm/", "");
+        int splitIndex = path.indexOf('&');
+        String username = path.substring(0, splitIndex);
+        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
+
+        if(!foundUser.isPresent()) {
+            return new ModelAndView("404UserNotFound").addObject("username", username);
+        }
+
+        PremiumUser user = premiumUserService.findByUserName(username).get();//should never be empty
+
+        if(user.getEnabled()) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "userIsAlreadyConfirmed").addObject("attribute", username);
+        }
 
         if(premiumUserService.confirmationPath(path)) {
-            path = path.replace("/confirm/", "");
-            int splitIndex = path.indexOf('&');
-            String username = path.substring(0, splitIndex);
-            PremiumUser user = premiumUserService.findByUserName(username).get();//should never be empty
             UserDetails userDetails = skoreUserDetailsService.loadUserByUsername (username);
             Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
                     user.getPassword(), userDetails.getAuthorities());
@@ -215,7 +228,9 @@ public class UserController extends BaseController{
             // return new ModelAndView("accountConfirmed");
         }
 
-        throw new CannotValidateUserException("Can't validate user");
+        return new ModelAndView("genericPageWithMessage").addObject("message",
+                "canNotValidateUser").addObject("attribute", "");
+        //CannotValidateUserException("Can't validate user");
     }
 
     @RequestMapping(value = "/joinMatch/*", method = {RequestMethod.GET })

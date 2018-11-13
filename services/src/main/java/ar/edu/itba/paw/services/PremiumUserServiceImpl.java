@@ -189,7 +189,9 @@ public class PremiumUserServiceImpl implements PremiumUserService{
             LOGGER.error("Can't find user with username {}", username);
             return false;
         }
+
         PremiumUser currentUser = user.get();
+
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
             LOGGER.error("Can't find user with username {}", username);
             return false;
@@ -204,9 +206,11 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
         Optional<PremiumUser> premiumUser = findByUserName(username);
+
         if(!premiumUser.isPresent()) {
             return false;
         }
+
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
         return enableUser(username, code);
     }
