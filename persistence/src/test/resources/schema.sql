@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS games (
   startTime     TIMESTAMP NOT NULL,
   finishTime    TIMESTAMP NOT NULL,
   type          VARCHAR(100) NOT NULL,
-  result        VARCHAR(100) NOT NULL,
+  result        VARCHAR(100),
   country       VARCHAR(100) NOT NULL,
   state         VARCHAR(100) NOT NULL,
   city          VARCHAR(100) NOT NULL,
