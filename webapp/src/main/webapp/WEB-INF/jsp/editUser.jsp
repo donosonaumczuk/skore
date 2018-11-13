@@ -21,7 +21,7 @@
                     <a class="sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
                 </div>
             </div>
-            <c:url value="/edit/${username}" var="editUrl" />
+            <c:url value="/editInfo" var="editUrl" />
             <form:form modelAttribute="editUserForm" action="${editUrl}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <form:label path="firstName"><spring:message code="firstNameLabel"/><span class="text-muted">*</span></form:label>
