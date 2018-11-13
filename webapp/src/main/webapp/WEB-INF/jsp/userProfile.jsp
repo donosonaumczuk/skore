@@ -36,6 +36,12 @@
                     <p class="profile-username">@<c:out value="${user.getUserName()}"/></p>
                 </div>
             </div>
+            <a  class="btn btn-white-succ" href="<c:url value="/editInfo"/>" role="button">
+                <spring:message code="editInfoMessage"/>
+            </a>
+            <a  class="btn btn-white-succ" href="<c:url value="/changePassword"/>" role="button">
+                <spring:message code="changePasswordMessage"/>
+            </a>
         </div> <!-- END Form container -->
     </div>
 </div>

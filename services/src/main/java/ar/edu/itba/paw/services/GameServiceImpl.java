@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.Exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.Exceptions.TeamFullException;
 import ar.edu.itba.paw.interfaces.GameDao;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,15 +74,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game createNoTeamGame(final String startTime, final String finishTime,
+    public Game createNoTeamGame(final String startTime, final String duration,
                                  final String type, final String country,
                                  final String state, final String city,
                                  final String street, final String tornamentName,
                                  final String description, final String creatorName,
                                  final long creatorId, final String sportName, final String title) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
-        return create(team1.getName(), null, startTime, finishTime, type, null,
+        Game game = create(team1.getName(), null, startTime, duration, type, null,
                       country, state, city, street, tornamentName, description, title);
+        final String newStartTime = formatDate(startTime);
+        String finishTime = getFinishTime(newStartTime, duration);
+        insertUserInGame(game.getTeam1().getName(), newStartTime + ":00", finishTime + ":00", creatorId);
+        return game;
     }
 
     @Override
@@ -101,7 +107,7 @@ public class GameServiceImpl implements GameService {
                                       final boolean toTeam1) {
         Game game = findByKey(teamName1, startTime, finishTime);
         Game gameAns;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(!toTeam1) {
             if(game.getTeam2() == null) {
                 Team team2 = teamService.createTempTeam2(null, userId,
@@ -296,5 +302,25 @@ public class GameServiceImpl implements GameService {
         formattedDate = formattedDate.insert(16, ":00");
 
         return formattedDate.toString();
+    }
+
+    @Override
+    public Game updateResultOfGame(final String teamName1, final String starTime, final String finishTime,
+                                   final int scoreTeam1, final int scoreTeam2) {
+        Game game = gameDao.findByKey(teamName1, starTime, finishTime)
+                .orElseThrow(() -> new GameNotFoundException("Game does not exist"));
+        if(game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
+            throw new GameHasNotBeenPlayException("The game has not been play");
+        }
+        game.setResult(scoreTeam1+"-"+scoreTeam2);
+        return game;
+    }
+
+    @Override
+    public List<List<Game>> getGamesThatPlay(final long userId) {
+        List<List<Game>> listsOfGames = new LinkedList<>();
+        listsOfGames.add(gameDao.gamesThatAUserPlayInTeam1(userId));
+        listsOfGames.add(gameDao.gamesThatAUserPlayInTeam2(userId));
+        return listsOfGames;
     }
 }

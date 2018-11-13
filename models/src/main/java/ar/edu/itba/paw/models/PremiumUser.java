@@ -34,19 +34,22 @@ public class PremiumUser {
     private String code;
 
     @Column
-    private byte image[];
+    private byte[] image;
 
     @Column
     private boolean enabled;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "friendof",
+            joinColumns = @JoinColumn (name = "userName"),
+            inverseJoinColumns = @JoinColumn(name = "friendsusername"))
     private List<PremiumUser> friends;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="primaryKey.owner")
     private List<Notification> notifications;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -60,6 +63,19 @@ public class PremiumUser {
     joinColumns = {@JoinColumn(name = "username", referencedColumnName = "userName")},
             inverseJoinColumns = {@JoinColumn(name = "role")})
     private Set<Role> roles;
+
+    @Transient
+    private double winRate;
+
+    @Transient
+    private List<Game> gamesInTeam1;
+
+    @Transient
+    private List<Game> gamesInTeam2;
+
+    public PremiumUser() {
+        //for hibernate
+    }
 
     public PremiumUser(String firstName, String lastName, String email,
                        String userName, String cellphone, LocalDate birthday,
@@ -92,14 +108,6 @@ public class PremiumUser {
         enabled        = false;
 
     }
-
-
-    public PremiumUser() {
-        //for hibernate
-    }
-
-
-
 
     public String getUserName() {
         return userName;
@@ -229,6 +237,30 @@ public class PremiumUser {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public double getWinRate() {
+        return winRate;
+    }
+
+    public List<Game> getGamesInTeam1() {
+        return gamesInTeam1;
+    }
+
+    public List<Game> getGamesInTeam2() {
+        return gamesInTeam2;
+    }
+
+    public void setWinRate(double winRate) {
+        this.winRate = winRate;
+    }
+
+    public void setGamesInTeam1(List<Game> gamesInTeam1) {
+        this.gamesInTeam1 = gamesInTeam1;
+    }
+
+    public void setGamesInTeam2(List<Game> gamesInTeam2) {
+        this.gamesInTeam2 = gamesInTeam2;
     }
 
     @Override

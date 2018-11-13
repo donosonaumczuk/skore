@@ -218,4 +218,20 @@ public class GameHibernateDaoTest {
         Assert.assertNull(em.find(Game.class, new GamePK(game1.getTeam1(), game1.getStartTime(),
                 game1.getFinishTime())));
     }
+
+    @Test
+    public void getGamesThatAUserPlayInTeam1() {
+
+        List<Game> games = gameDao.gamesThatAUserPlayInTeam1(account.getUser().getUserId());
+
+        Assert.assertEquals(1, games.size());
+    }
+
+    @Test
+    public void getGamesThatAUserPlayInTeam2() {
+
+        List<Game> games = gameDao.gamesThatAUserPlayInTeam2(account.getUser().getUserId());
+
+        Assert.assertEquals(0, games.size());
+    }
 }

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Transient;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -37,7 +38,11 @@ public interface PremiumUserService {
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final String oldUserName);
+                                      final MultipartFile file, final String oldUserName) throws IOException;
+
+    @Transactional
+    public PremiumUser changePassword(final String newPassword, final String userName) throws IOException;
+
     @Transactional
     public void addRole(final String username, final int roleId);
 
@@ -46,7 +51,6 @@ public interface PremiumUserService {
 
     @Transactional
     public boolean confirmationPath(String path);
-
 
 
 

@@ -38,8 +38,14 @@ public class GameHibernateDao implements GameDao {
                 teamName1, teamName2, startTime,finishTime);
         Team team1 = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
-        Team team2 = teamDao.findByTeamName(teamName2)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+        Team team2;
+        if(teamName2 != null) {
+            team2 = teamDao.findByTeamName(teamName2)
+                    .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+        }
+        else {
+            team2 = null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Game game = new Game(team1, team2, new Place(country, state, city, street),
                 LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(finishTime, formatter),
@@ -127,6 +133,7 @@ public class GameHibernateDao implements GameDao {
                 queryString = queryString + " AND (games.primaryKey.team1.leader.userName != :user)";
             }
         }
+        queryString = queryString + " AND (games.result IS NULL)";
 
         final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
         List<String> valueName = filter.getValueNames();
@@ -140,6 +147,34 @@ public class GameHibernateDao implements GameDao {
             query.setParameter("userId2", loggedUser.getUser().getUserId());
             query.setParameter("user", loggedUser.getUserName());
         }
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Game> gamesThatAUserPlayInTeam1(final long userId) {
+        String queryString =
+                "SELECT games " +
+                "FROM Game as games " +
+                "WHERE :userId IN " +
+                            "(SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName)";
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Game> gamesThatAUserPlayInTeam2(final long userId) {
+        String queryString =
+                "SELECT games " +
+                "FROM Game as games " +
+                "WHERE :userId IN " +
+                            "(SELECT p.userId " +
+                            "FROM Game g, Team t JOIN t.players p " +
+                            "WHERE games = g AND g.team2.teamName = t.teamName)";
+        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 

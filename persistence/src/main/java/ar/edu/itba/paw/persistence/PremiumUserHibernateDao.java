@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
+import ar.edu.itba.paw.interfaces.RoleDao;
+import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.*;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +29,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private EntityManager em;
 
     @Autowired
-    UserHibernateDao userDao;
+    UserDao userDao;
 
     @Autowired
-    RoleHibernateDao roleDao;
+    RoleDao roleDao;
+
+    private static final String userRole = "ROLE_USER";
+    private static final int userRoleId = 0;
 
     public Optional<PremiumUser> findByUserName(final String userName) {
         PremiumUser premiumUser = em.find(PremiumUser.class, userName);
@@ -60,9 +66,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
 
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
+        final Role role = roleDao.findRoleById(userRoleId).get();//should never be empty
         final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
                 basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
                 state, city, street), reputation, password, code, ((file==null)?null:file.getBytes()));
+        newUser.addRole(role);
         //em.persist(basicUser.get());
         em.persist(newUser);
         return Optional.of(newUser);
@@ -97,7 +105,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final String oldUserName) {
+                                                final MultipartFile file, final String oldUserName) throws IOException {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
         if(currentUser.isPresent()) {
@@ -111,6 +119,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             user.setHome(newHome);
             user.setReputation(newReputation);
             user.setPassword(newPassword);
+
+            if(file != null) {
+                user.setImage(file.getBytes());
+            }
+
             em.merge(user);
             return Optional.of(user);
         }
