@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Game {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "teamName2")
+    @JoinColumn(name = "teamName2", referencedColumnName = "teamName")
     private Team team2;
 
     @EmbeddedId

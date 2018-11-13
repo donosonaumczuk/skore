@@ -10,8 +10,8 @@ public class Team {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "isPartOf",
-            joinColumns = { @JoinColumn(name = "teamName") },
-            inverseJoinColumns = { @JoinColumn(name = "userId") }
+            joinColumns = { @JoinColumn(name = "teamName", referencedColumnName = "teamName") },
+            inverseJoinColumns = { @JoinColumn(name = "userId", referencedColumnName = "userId") }
     )
     private Set<User> players;
 

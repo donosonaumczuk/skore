@@ -122,6 +122,8 @@ public class TeamServiceImpl implements TeamService {
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + newTeamName + " does not exists"));
     }
 
+
+
     @Override
     public void getAccountsList(Team team) {
         if(team != null) {

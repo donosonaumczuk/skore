@@ -81,7 +81,9 @@ public class GameServiceImpl implements GameService {
                                  final String description, final String creatorName,
                                  final long creatorId, final String sportName, final String title) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
-        Game game = create(team1.getName(), null, startTime, duration, type, null,
+        Team team2 = teamService.createTempTeam2(creatorName, creatorId, sportName);
+
+        Game game = create(team1.getName(), team2.getName(), startTime, duration, type, null,
                       country, state, city, street, tornamentName, description, title);
         final String newStartTime = formatDate(startTime);
         String finishTime = getFinishTime(newStartTime, duration);
@@ -109,20 +111,9 @@ public class GameServiceImpl implements GameService {
         Game gameAns;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(!toTeam1) {
-            if(game.getTeam2() == null) {
-                Team team2 = teamService.createTempTeam2(null, userId,
-                        game.getTeam1().getSport().getName());
-                gameAns = modify(game.team1Name(), team2.getName(), formatter.format(game.getStartTime()),
-                        formatter.format(game.getFinishTime()), game.getType(), game.getResult(),
-                        game.getPlace().getCountry(), game.getPlace().getState(), game.getPlace().getCity(),
-                        game.getPlace().getStreet(), game.getTornament(), game.getDescription(), game.team1Name(),
-                        formatter.format(game.getStartTime()), formatter.format(game.getFinishTime()));
-            }
-            else {
-                teamService.addPlayer(game.team2Name(), userId);
-                gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
-                            formatter.format(game.getFinishTime()));
-            }
+            teamService.addPlayer(game.team2Name(), userId);
+            gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
+                        formatter.format(game.getFinishTime()));
         }
         else {
             teamService.addPlayer(game.team1Name(), userId);

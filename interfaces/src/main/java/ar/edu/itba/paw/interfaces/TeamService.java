@@ -12,16 +12,14 @@ public interface TeamService {
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName);
 
-    @Transactional
     Team createTempTeam1(final String leaderName, final long leaderId, final String sportName);
 
-    @Transactional
     Team createTempTeam2(final String leaderName, final long leaderId, final String sportName);
 
     @Transactional
     public boolean remove(final String teamName);
 
-    @Transactional
+
     public Team addPlayer(final String teamName, final long userId);
 
     @Transactional
