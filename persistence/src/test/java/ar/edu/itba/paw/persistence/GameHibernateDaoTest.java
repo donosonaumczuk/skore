@@ -63,7 +63,7 @@ public class GameHibernateDaoTest {
         team2.addPlayer(accountAux.getUser());
         game1                = new Game(team1, team2, new Place("Argentina", "Buenos Aires",
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2018-11-11T17:00:00"),
-                            LocalDateTime.parse("2018-11-11T19:00:00"), "competitive", "2-1",
+                            LocalDateTime.parse("2018-11-11T19:00:00"), "competitive", null,
                             "Alan prefiere verlo y recursar", "La final de la libertadores",
                             null);
         Team team3          = new Team(account, "C.A.I.", "Club Atletico Independiente", false,
@@ -71,11 +71,11 @@ public class GameHibernateDaoTest {
         team3.addPlayer(account.getUser());
         gameNotInserted     = new Game(team1, team3,  new Place("Argentina", "Buenos Aires",
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2018-12-11T17:00:00"),
-                            LocalDateTime.parse("2018-12-11T19:00:00"), "competitive", "0-0",
+                            LocalDateTime.parse("2018-12-11T19:00:00"), "competitive", null,
                             "Buen juego", "Partido inolvidable", null);
         game2               = new Game(team3, team2,  new Place("Chile", "Santiago de Chile",
                             "Ciudad autonoma de Buenos Aires", "Larea 1058"), LocalDateTime.parse("2019-12-11T17:00:00"),
-                            LocalDateTime.parse("2019-12-11T19:00:00"), "competitive", "1-0",
+                            LocalDateTime.parse("2019-12-11T19:00:00"), "competitive", null,
                             null, "Interesante", null);
         games = new LinkedList<>();
         games.add(game1);
@@ -102,7 +102,7 @@ public class GameHibernateDaoTest {
             em.persist(g.getTeam2());
             em.persist(g);
         }
-//        em.flush();
+        em.flush();
     }
 
     @After
