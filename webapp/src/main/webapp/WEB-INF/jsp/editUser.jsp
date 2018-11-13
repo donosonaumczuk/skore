@@ -12,6 +12,10 @@
 </head>
 <body>
 
+<%-- Include Navigation Bars --%>
+<jsp:include page="navbar.jsp"></jsp:include>
+
+
 <div class="container-fluid">
 
     <div class="row">

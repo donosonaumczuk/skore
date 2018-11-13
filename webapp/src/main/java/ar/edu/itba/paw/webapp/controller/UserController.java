@@ -162,7 +162,7 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", currentUser);
     }
 
-    @RequestMapping(value = "/modifyPassword", method = {RequestMethod.GET})
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
     public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm) {
 
 //        if(!isLogged()) {
@@ -173,7 +173,7 @@ public class UserController extends BaseController{
         return new ModelAndView("modifyPassword");
     }
 
-    @RequestMapping(value = "/modifyPassword", method = {RequestMethod.POST })
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST })
     public ModelAndView modifyPassword(@Valid @ModelAttribute("modifyPasswordForm") final ModifyPasswordForm
                                                    modifyPasswordForm, final BindingResult errors) throws IOException {
 

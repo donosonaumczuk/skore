@@ -12,6 +12,9 @@
 </head>
 <body>
 
+<%-- Include Navigation Bars --%>
+<jsp:include page="navbar.jsp"></jsp:include>
+
 <div class="container-fluid">
     <div class="row">
         <div class="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
@@ -20,7 +23,7 @@
                     <a class="sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
                 </div>
             </div>
-            <c:url value="/modifyPassword" var="modifyPasswordUrl" />
+            <c:url value="/changePassword" var="modifyPasswordUrl" />
             <form:form modelAttribute="modifyPasswordForm" action="${modifyPasswordUrl}" method="post" enctype="multipart/form-data">
                     <form:hidden  path="username" value="${loggedUser.userName}"/>
                 <div class="form-group">
