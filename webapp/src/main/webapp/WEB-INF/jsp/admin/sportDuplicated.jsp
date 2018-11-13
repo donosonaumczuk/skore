@@ -22,18 +22,15 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <p><c:out value="${sportName}"/><spring:message code="duplicatedSportMessage"/></p>
+                    <p><c:out value="${sportName}"/> <spring:message code="duplicatedSportMessage"/></p>
                 </div>
-            </div>
-            <div class="col">
-                <a class="link" href="<c:url value="/login"/>"><spring:message code="signInMessage"/></a>
             </div>
         </div> <!-- END Form container -->
     </div>
 </div>
 
 <%-- Include JS Scripts --%>
-<jsp:include page="js.jsp"></jsp:include>
+<jsp:include page="./../js.jsp"></jsp:include>
 
 </body>
 </html>

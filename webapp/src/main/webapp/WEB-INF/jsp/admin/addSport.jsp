@@ -37,12 +37,15 @@
                     <form:input class="form-control" path="playerQuantity" type="text"/>
                     <form:errors path="playerQuantity" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file"  name="image" class="custom-file-input" id="image" value="" multiple onchange="showname()"/>
-                        <label class="custom-file-label" id="fileLabel" for="image" aria-describedby="inputGroupFileAddon02"></label>
+                <div class="form-group">
+                    <form:label path="image"><spring:message code="sportImageLabel"/><span class="text-muted">*</span></form:label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file"  name="image" class="custom-file-input" id="image" value="" multiple onchange="showname()"/>
+                            <label class="custom-file-label" id="fileLabel" for="image" aria-describedby="inputGroupFileAddon02"></label>
+                        </div>
+                        <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
                     </div>
-                    <form:errors path="image" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
 
                 <small id="requiredHelp" class="form-text text-muted mb-2"><spring:message code="requiredHelpLabel"/></small>
