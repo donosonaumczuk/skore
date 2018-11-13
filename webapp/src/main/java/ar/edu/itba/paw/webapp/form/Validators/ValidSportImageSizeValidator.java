@@ -21,6 +21,8 @@ public class ValidSportImageSizeValidator
             return true;
         }
 
-        return image.getSize() < maxSize;
+        long value = image.getSize();
+
+        return value < maxSize;
     }
 }

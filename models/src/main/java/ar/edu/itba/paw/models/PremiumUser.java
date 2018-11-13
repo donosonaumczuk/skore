@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -261,6 +262,14 @@ public class PremiumUser {
 
     public void setGamesInTeam2(List<Game> gamesInTeam2) {
         this.gamesInTeam2 = gamesInTeam2;
+    }
+
+    public int getAge() {
+        LocalDate now = LocalDate.now();
+        now = now.minusDays(birthday.getDayOfMonth()-1);
+        now = now.minusMonths(birthday.getMonthValue()-1);
+        now = now.minusYears(birthday.getYear());
+        return now.getYear();
     }
 
     @Override
