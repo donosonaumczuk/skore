@@ -264,11 +264,11 @@ public class PremiumUser {
         this.gamesInTeam2 = gamesInTeam2;
     }
 
-    public int getAge(){
+    public int getAge() {
         LocalDate now = LocalDate.now();
-        now.minusDays(birthday.getDayOfMonth());
-        now.minusMonths(birthday.getMonthValue());
-        now.minusYears(birthday.getYear());
+        now = now.minusDays(birthday.getDayOfMonth()-1);
+        now = now.minusMonths(birthday.getMonthValue()-1);
+        now = now.minusYears(birthday.getYear());
         return now.getYear();
     }
 
