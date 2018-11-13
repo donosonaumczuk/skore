@@ -168,9 +168,14 @@ function loadCurrentFilters() {
     for(var i = 0; i < cities.length; i++) {
         addBadge(cities[i], 'city');
     }
+
+    var sports = Object.keys(currentFilters.sport);
+    for(var i = 0; i < sports.length; i++) {
+        addBadge(sports[i], 'sport');
+    }
 }
 
-$(".filter-input").keyup(function (e) {
+$(".filter-input").keyup(function(e) {
     if (e.keyCode == 13) {
         var value = $(this).val();
 
@@ -254,6 +259,19 @@ function getURLFromFilters() {
         }
 
         url += "city=" + cities[i];
+    }
+
+    var sports = Object.keys(currentFilters.sport);
+    for(var i = 0; i < sports.length; i++) {
+        if(started) {
+            url += "&";
+        }
+        else {
+            url += "?";
+            started = true;
+        }
+
+        url += "sport=" + sports[i];
     }
 
     return url;
@@ -348,10 +366,10 @@ function clearMatchs() {
 function getMatchRequestBody() {
     return '{ minStartTime: "", maxStartTime: "",' +
         'minFinishTime: "", maxFinishTime: "",' +
-        'types: [], sportNames: [],' +
+        'types: [], sports: ' + JSON.stringify(Object.keys(currentFilters['sport'])) + ',' +
         'minQuantity: "0", maxQuantity: "0",' +
-        'countries: ' + JSON.stringify(Object.keys(currentFilters['country'])) +
-        ', states: ' + JSON.stringify(Object.keys(currentFilters['state'])) +',' +
+        'countries: ' + JSON.stringify(Object.keys(currentFilters['country'])) + ',' +
+        'states: ' + JSON.stringify(Object.keys(currentFilters['state'])) +',' +
         'cities: ' + JSON.stringify(Object.keys(currentFilters['city'])) + ',' +
         'minFreePlaces: "0",' +
         'maxFreePlaces: "0",' +

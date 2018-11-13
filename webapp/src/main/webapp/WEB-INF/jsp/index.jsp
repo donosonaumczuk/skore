@@ -62,6 +62,10 @@
                             <label for="state-filter"><spring:message code="cityLabel"/></label>
                             <input class="form-control filter-input mb-2" type="text" id="city-filter"/>
                         </div>
+                        <div class="row mb-4" id="sport">
+                            <label for="state-filter"><spring:message code="sportLabel"/></label>
+                            <input class="form-control filter-input mb-2" type="text" id="sport-filter"/>
+                        </div>
                     </div>
                 </div>
             </div> <!-- END Leftside panel container -->
@@ -88,6 +92,9 @@
         <script>
             var filters = {
                 toJoin: {
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    },
                     country: {<c:if test="${section.equals(\"default\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
                     },
@@ -100,6 +107,9 @@
                     }
                 },
                 joined: {
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    },
                     country: {<c:if test="${section.equals(\"joined\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
                     },
@@ -112,6 +122,9 @@
                     }
                 },
                 created: {
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    },
                     country: {<c:if test="${section.equals(\"created\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
                     },
@@ -152,7 +165,9 @@
                 minFinishTime: null,
                 maxFinishTime: null,
                 types: [],
-                sportNames: [],
+                sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
+                    <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                },
                 minQuantity: 0,
                 maxQuantity: 0,
                 country: {<c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
@@ -168,6 +183,7 @@
                 maxFreePlaces: 0
             };
 
+            var section = '';
             var currentFilters = filters;
             var endPointURL = contextPath + '/filterMatch';
         </script>
