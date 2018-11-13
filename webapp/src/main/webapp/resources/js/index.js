@@ -109,6 +109,11 @@ var reachEndOfPagination = false;
 var getButton = getJoinButton;
 var collapsed = true;
 
+var width = $(window).width();
+if(width < 768) {
+    $('.sidepanel').addClass('collapse navbar-collapse');
+}
+
 $(window).resize(function() {
     var width = $(window).width();
     if(width < 768) {
