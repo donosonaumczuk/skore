@@ -4,6 +4,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
+<head>
+    <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
+    <jsp:include page="css.jsp"></jsp:include>
+    <link rel="icon" href="<c:url value="/img/bullseye-solid.ico"/>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" integrity="sha384-OHBBOqpYHNsIqQy8hL1U+8OXf9hH6QRxi0+EODezv82DfnZoV7qoHAZDwMwEJvSw" crossorigin="anonymous">
+    <title>skore</title>
+</head>
 <body>
 
 <%-- Include Navigation Bars --%>
@@ -121,12 +128,15 @@
             <c:choose>
                 <c:when test = "${section.equals(\"created\")}">
                     var currentFilters = filters.created;
+                    var section = '<c:out value="${section}"/>';
                 </c:when>
                 <c:when test = "${section.equals(\"joined\")}">
-                 var currentFilters = filters.joined;
+                    var currentFilters = filters.joined;
+                    var section = '<c:out value="${section}"/>';
                 </c:when>
                 <c:otherwise>
                     var currentFilters = filters.toJoin;
+                    var section = '';
                 </c:otherwise>
             </c:choose>
 
@@ -166,14 +176,4 @@
 <script src="<c:url value="/js/index.js"/>"></script>
 
 </body>
-<head>
-    <%-- Include Bootstrap v4.1.3 and Custom CSS --%>
-    <jsp:include page="css.jsp"></jsp:include>
-    <link rel="icon" href="<c:url value="/img/bullseye-solid.ico"/>" />
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
-          integrity="sha384-OHBBOqpYHNsIqQy8hL1U+8OXf9hH6QRxi0+EODezv82DfnZoV7qoHAZDwMwEJvSw"
-          crossorigin="anonymous">
-    <title>skore</title>
-</head>
 </html>

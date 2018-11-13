@@ -8,42 +8,46 @@ function getJoinedURL() {
     return contextPath + '/joinedMatch';
 }
 
+
 function getCreatedURL() {
     return contextPath + '/createdMatch';
 }
 
 $("#to-join" ).click(function() {
-    // var currentURL = document.location; //TODO: remove later
-    window.history.replaceState("object or string", "Title", '/'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
+    currentFilters = filters.toJoin;
+    section = '';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getJoinButton;
     endPointURL = getToJoinURL();
-    currentFilters = filters.toJoin;
     loadCurrentFilters();
     loadMatches();
 });
 
 $("#joined").click(function() {
-    // var currentURL = document.location; //TODO: remove later
-    window.history.replaceState("object or string", "Title", '/joined'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
+    currentFilters = filters.joined;
+    section = 'joined';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getCancelButton;
     endPointURL = getJoinedURL();
-    currentFilters = filters.joined;
     loadCurrentFilters();
     loadMatches();
 });
 
 $("#created").click(function() {
-    // var currentURL = document.location; //TODO: remove later
-    window.history.replaceState("object or string", "Title", '/created'); //TODO: try to edit URL on the fly
     clearMatchs();
     putLoader();
+    currentFilters = filters.created;
+    section = 'created';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getDeleteButton;
     endPointURL = getCreatedURL();
-    currentFilters = filters.created;
     loadCurrentFilters();
     loadMatches();
 });

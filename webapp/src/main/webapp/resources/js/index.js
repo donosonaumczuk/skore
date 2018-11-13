@@ -192,6 +192,7 @@ $(".filter-input").keyup(function (e) {
                 }
 
                 addBadge(values[i], context);
+                addFilterToURL(values[i], context);
                 currentFilters[context][values[i]] = true;
             }
             else {
@@ -201,6 +202,7 @@ $(".filter-input").keyup(function (e) {
                         badge.removeClass('animated bounceIn');
                     })
             }
+            
         }
 
         if(needToLoad) {
@@ -210,6 +212,65 @@ $(".filter-input").keyup(function (e) {
         $(this).val('');
     }
 });
+
+function getURLFromFilters() {
+    var url = "/" + section;
+    var started = false;
+
+    var countries = Object.keys(currentFilters.country);
+    for(var i = 0; i < countries.length; i++) {
+        if(started) {
+            url += "&";
+        }
+        else {
+            url += "?";
+            started = true;
+        }
+
+        url += "country=" + countries[i];
+    }
+
+    var states = Object.keys(currentFilters.state);
+    for(var i = 0; i < states.length; i++) {
+        if(started) {
+            url += "&";
+        }
+        else {
+            url += "?";
+            started = true;
+        }
+
+        url += "state=" + states[i];
+    }
+
+    var cities = Object.keys(currentFilters.city);
+    for(var i = 0; i < cities.length; i++) {
+        if(started) {
+            url += "&";
+        }
+        else {
+            url += "?";
+            started = true;
+        }
+
+        url += "city=" + cities[i];
+    }
+
+    return url;
+}
+
+function addFilterToURL(filter, context) {
+    var currentURL = document.location;
+
+    if(location.search == "") {
+        currentURL += "?";
+    }
+    else {
+        currentURL += "&";
+    }
+
+    window.history.pushState("", "", currentURL + context + '=' + filter);
+}
 
 $(window).scroll(function() {
     if($(window).scrollTop() + $(window).height() == $(document).height()) {
@@ -240,6 +301,8 @@ function addBadge(value, context) {
         putLoader();
         $(this).remove();
         delete currentFilters[context][value];
+        var url = getURLFromFilters();
+        window.history.pushState("", "", url);
         loadMatches();
     });
 }
