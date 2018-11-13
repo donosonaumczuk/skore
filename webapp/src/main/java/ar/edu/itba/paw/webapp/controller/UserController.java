@@ -163,6 +163,43 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", currentUser);
     }
 
+    @RequestMapping(value = "/modifyPassWord/{username}", method = {RequestMethod.GET})
+    public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm,
+                                     @PathVariable("username") String username) {
+        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
+
+        if(!u.isPresent()) {
+            return new ModelAndView("404UserNotFound").addObject("username", username);
+        }
+
+        return new ModelAndView("modifyPassword").addObject("user", u.get())
+                .addObject("username", username);
+    }
+
+    @RequestMapping(value = "/modifyPassWord/{username}", method = {RequestMethod.POST })
+    public ModelAndView modifyPassword(@Valid @ModelAttribute("modifyPasswordForm") final ModifyPasswordForm
+                                                   modifyPasswordForm, @PathVariable("username") String username,
+                                                    final BindingResult errors) throws IOException {
+
+        if(errors.hasErrors()) {
+            return modifyPasswordForm(modifyPasswordForm, username);
+        }
+
+        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
+        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
+                "username:" + username));
+
+        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        currentUser = premiumUserService.updateUserInfo(currentUser.getUser().getFirstName(),
+                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
+                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat),
+                currentUser.getHome().getCountry(), currentUser.getHome().getState(),
+                currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
+                currentUser.getReputation(), modifyPasswordForm.getNewPassword(), null, currentUser.getUserName());
+
+
+        return new ModelAndView("userProfile").addObject("user", currentUser);
+    }
 
 
 
