@@ -158,6 +158,6 @@ public class UserForm {
     }
 
     public void setImage(MultipartFile image) {
-        this.image = image;
+            this.image = image;
     }
 }

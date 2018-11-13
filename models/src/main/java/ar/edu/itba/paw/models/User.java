@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @SequenceGenerator(name = "users_userid", sequenceName = "users_userid_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")//TODO: los test no pasan con esto no se si andara en POSTGRESQL
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid")
     @Column(name = "userid")
     private long userId;
 

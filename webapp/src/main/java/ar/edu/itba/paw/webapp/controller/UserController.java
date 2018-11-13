@@ -263,7 +263,9 @@ public class UserController extends BaseController{
         final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
 
         if(data.length() < MIN_LENGTH) {
-            throw new GameNotFoundException("path '" + data + "' is too short to be formatted to a key");
+            return new ModelAndView("genericPageWithMessages").addObject("message",
+                    "canNotFoundGame").addObject("attribute", "");
+            //throw new GameNotFoundException("path '" + data + "' is too short to be formatted to a key");
         }
 
         String startTime = gameService.urlDateToKeyDate(data.substring(0, URL_DATE_LENGTH));
@@ -293,7 +295,7 @@ public class UserController extends BaseController{
         PremiumUser user = loggedUser();
 
         if(user == null) {
-            throw new UserNotFoundException("error in login");
+            throw new UserNotFoundException("error in login");//should never occur
         }
 
         String path = request.getServletPath().replace("/joinCompetitiveMatch/", "");
@@ -311,7 +313,9 @@ public class UserController extends BaseController{
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
 
         if(game == null) {
-            throw new GameNotFoundException("can't find game");
+            return new ModelAndView("genericPageWithMessages").addObject("message",
+                    "canNotFoundGame").addObject("attribute", "");
+            //throw new GameNotFoundException("can't find game");
         }
         try {
             game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUser().getUserId());
