@@ -22,7 +22,7 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <h2><spring:message code="${message}"/></h2>
+                    <h2><spring:message code="${message}" arguments="${attribute}"/></h2>
                 </div>
             </div>
         </div> <!-- END Form container -->

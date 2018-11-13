@@ -88,7 +88,9 @@ public class UserController extends BaseController{
                 0, userForm.getPassword(), image);
 
         if(user == null) {
-            throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotCreateUser").addObject("attribute", userForm.getUsername());
+            //throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
         }
 
         return new ModelAndView("sendingConfirmationAccountMail");
@@ -210,7 +212,7 @@ public class UserController extends BaseController{
 
         if(user.getEnabled()) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "userIsAlreadyConfirmed");
+                    "userIsAlreadyConfirmed").addObject("attribute", username);
         }
 
         if(premiumUserService.confirmationPath(path)) {
@@ -226,7 +228,8 @@ public class UserController extends BaseController{
             // return new ModelAndView("accountConfirmed");
         }
 
-        return new ModelAndView("genericPageWithMessage").addObject("message", "canNotValidateUser");
+        return new ModelAndView("genericPageWithMessage").addObject("message",
+                "canNotValidateUser").addObject("attribute", "");
         //CannotValidateUserException("Can't validate user");
     }
 
