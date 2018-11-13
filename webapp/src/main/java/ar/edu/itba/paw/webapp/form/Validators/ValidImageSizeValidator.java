@@ -20,6 +20,7 @@ public class ValidImageSizeValidator
         if(image == null) {
             return true;
         }
+        long value = image.getSize();
 
         return image.getSize() < maxSize;
     }

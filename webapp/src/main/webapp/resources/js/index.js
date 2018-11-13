@@ -291,7 +291,7 @@ function addFilterToURL(filter, context) {
         currentURL += "&";
     }
 
-    window.history.pushState("", "", currentURL + context + '=' + filter);
+    window.history.replaceState("", "", currentURL + context + '=' + filter);
 }
 
 $(window).scroll(function() {
@@ -326,7 +326,7 @@ function addBadge(value, context) {
         $(this).remove();
         delete currentFilters[context][value];
         var url = getURLFromFilters();
-        window.history.pushState("", "", url);
+        window.history.replaceState("", "", url);
         loadMatches();
         $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
     });
