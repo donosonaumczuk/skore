@@ -21,6 +21,10 @@ public class SportHibernateDao implements SportDao {
     @Override
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
                                   final MultipartFile file) throws IOException {
+        if(findByName(sportName).isPresent()) {
+            return Optional.empty();
+        }
+
         final Sport newSport = new Sport(sportName, playerQuantity, displayName, ((file==null)?null:file.getBytes()));
         em.persist(newSport);
         return Optional.of(newSport);

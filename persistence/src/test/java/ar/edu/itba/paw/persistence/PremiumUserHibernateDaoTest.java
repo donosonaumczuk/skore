@@ -278,6 +278,17 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         Assert.assertEquals(0, user.getLikes().size());
     }
 
+    @Test
+    public void testFindUserById() {
+        //set up
+        em.persist(insertedUser);
 
+        //exercise class
+        Optional<PremiumUser> returnedValue = premiumUserDao.findById(insertedUser.getUser().getUserId());
+
+        //postconditions
+        Assert.assertTrue(returnedValue.isPresent());
+        Assert.assertTrue(returnedValue.get().equals(insertedUser));
+    }
 }
 

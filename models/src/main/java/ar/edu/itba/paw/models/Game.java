@@ -5,6 +5,7 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -176,5 +177,15 @@ public class Game {
 
     public int getQuantityOccupiedPlaces() {
         return quantityOccupiedPlaces;
+    }
+
+    public String getStartTimeString() {
+        DateTimeFormatter formater= DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        return getStartTime().format(formater);
+    }
+
+    public String getFinishTimeString() {
+        DateTimeFormatter formater= DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        return getFinishTime().format(formater);
     }
 }

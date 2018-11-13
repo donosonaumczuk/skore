@@ -8,6 +8,11 @@
     </button>
     <a class="d-none d-sm-block navbar-brand nav-brand-font" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
     <a class="d-sm-none navbar-brand nav-brand-font" href="<c:url value="/"/>"><i class="fas fa-bullseye"></i>sk</a>
+    <c:if test="${isAdmin}">
+        <form class="d-none d-sm-block form-inline">
+            <a class="login-link" href="<c:url value="/admin/"/>"><spring:message code="adminLabel"/></a>
+        </form>
+    </c:if>
     <c:choose>
         <c:when test="${isLogged}">
             <a class="d-sm-none login-link" href="<c:url value="/logout"/>"><i class="fas fa-sign-out-alt"></i></a>

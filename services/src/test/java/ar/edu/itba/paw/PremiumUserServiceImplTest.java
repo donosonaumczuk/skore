@@ -78,7 +78,7 @@ public class PremiumUserServiceImplTest {
     public void findByKeyTestWinAll() {
         PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
-        Set<User> playerList = new HashSet<>();
+        LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
         List<List<Game>> listofList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
@@ -88,7 +88,7 @@ public class PremiumUserServiceImplTest {
         team1.setPlayers(playerList);
         Team team2 = new Team(null, null, null, false,
                 null, null);
-        team1.setPlayers(new HashSet<>());
+        team1.setPlayers(new LinkedHashSet<>());
         listTeam1.add(new Game(team1, team2, null, null, null, null,
                 "2-1", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, null,
@@ -109,7 +109,7 @@ public class PremiumUserServiceImplTest {
     public void findByKeyTestWinAndLose() {
         PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
-        Set<User> playerList = new HashSet<>();
+        LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
         List<List<Game>> listofList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
@@ -119,7 +119,7 @@ public class PremiumUserServiceImplTest {
         team1.setPlayers(playerList);
         Team team2 = new Team(null, null, null, false,
                 null, null);
-        team1.setPlayers(new HashSet<>());
+        team1.setPlayers(new LinkedHashSet<>());
         listTeam1.add(new Game(team1, team2, null, null, null, null,
                 "2-1", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, null,
@@ -140,7 +140,7 @@ public class PremiumUserServiceImplTest {
     public void findByKeyTestLoseAll() {
         PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
-        Set<User> playerList = new HashSet<>();
+        LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
         List<List<Game>> listofList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
@@ -150,7 +150,7 @@ public class PremiumUserServiceImplTest {
         team1.setPlayers(playerList);
         Team team2 = new Team(null, null, null, false,
                 null, null);
-        team1.setPlayers(new HashSet<>());
+        team1.setPlayers(new LinkedHashSet<>());
         listTeam1.add(new Game(team1, team2, null, null, null, null,
                 "2-5", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, null,

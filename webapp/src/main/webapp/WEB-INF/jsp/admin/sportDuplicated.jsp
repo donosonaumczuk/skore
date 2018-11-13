@@ -22,11 +22,8 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <p><spring:message code="AdminMainPageLabel"/></p>
+                    <p><c:out value="${sportName}"/> <spring:message code="duplicatedSportMessage"/></p>
                 </div>
-            </div>
-            <div class="col">
-                <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
             </div>
         </div> <!-- END Form container -->
     </div>

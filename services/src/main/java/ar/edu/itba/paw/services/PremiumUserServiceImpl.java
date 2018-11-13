@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUserService{
+public class PremiumUserServiceImpl implements PremiumUserService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserServiceImpl.class);
 
@@ -61,11 +61,22 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
 
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
-        LOGGER.trace("Looking for user with email: {}",email);
+        LOGGER.trace("Looking for user with email: {}", email);
         Optional<PremiumUser> user = premiumUserDao.findByEmail(email);
 
         if(!user.isPresent()) {
             LOGGER.error("Can't find user with email: {}", email);
+        }
+        return user;
+    }
+
+    @Override
+    public  Optional<PremiumUser> findById(final long userId) {
+        LOGGER.trace("Looking for user with id: {}", userId);
+        Optional<PremiumUser> user = premiumUserDao.findById(userId);
+
+        if(!user.isPresent()) {
+            LOGGER.error("Can't find user with id: {}", userId);
         }
         return user;
     }
@@ -216,7 +227,8 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         for (Game g:gamesTeam) {
             if(g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
+                if(Integer.parseInt(value[0]) > Integer.parseInt(value[1]) &&
+                        g.getType().split("-")[1].equals("Competitive")) {
                     wins++;
                 }
                 gamesPlay++;
@@ -228,7 +240,8 @@ public class PremiumUserServiceImpl extends UserServiceImpl implements PremiumUs
         for (Game g:gamesTeam) {
             if(g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
+                if(Integer.parseInt(value[0]) < Integer.parseInt(value[1]) &&
+                        g.getType().split("-")[1].equals("Competitive")) {
                     wins++;
                 }
                 gamesPlay++;
