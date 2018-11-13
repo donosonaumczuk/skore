@@ -123,7 +123,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void getAccountsList(Team team) {//TODO: testing
+    public void getAccountsList(Team team) {
         if(team != null) {
             HashMap<User, PremiumUser> accountsList = new HashMap<>();
             for (User u:team.getPlayers()) {
