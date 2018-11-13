@@ -250,4 +250,6 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
         return (wins/gamesPlay) * 100;
     }
+
+   
 }

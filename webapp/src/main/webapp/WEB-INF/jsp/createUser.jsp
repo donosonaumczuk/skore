@@ -81,7 +81,7 @@
 
                 <div class="form-group" id="locationField">
                     <label for="autocomplete"><spring:message code="addressLabel"/></label>
-                    <input type="text" class="form-control" id="autocomplete" placeholder="<spring:message code="enterAddressLabel"/>" onFocus="geolocate()" >
+                    <input type="text" class="form-control" id="autocomplete" placeholder="<spring:message code="enterUserAddressLabel"/>" onFocus="geolocate()" >
                 </div>
                 <div class="form-group">
                     <label for="country"><spring:message code="countryLabel"/></label>

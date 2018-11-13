@@ -1,22 +1,3 @@
-var filters = {
-    toJoin: {
-        country: {},
-        state: {},
-        city: {}
-    },
-    joined: {
-        country: {},
-        state: {},
-        city: {}
-    },
-    created: {
-        country: {},
-        state: {},
-        city: {}
-    }
-};
-
-var currentFilters = filters.toJoin;
 var endPointURL = getDefaultEndPoint();
 
 function getToJoinURL() {
@@ -27,6 +8,7 @@ function getJoinedURL() {
     return contextPath + '/joinedMatch';
 }
 
+
 function getCreatedURL() {
     return contextPath + '/createdMatch';
 }
@@ -34,9 +16,12 @@ function getCreatedURL() {
 $("#to-join" ).click(function() {
     clearMatchs();
     putLoader();
+    currentFilters = filters.toJoin;
+    section = '';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getJoinButton;
     endPointURL = getToJoinURL();
-    currentFilters = filters.toJoin;
     loadCurrentFilters();
     loadMatches();
 });
@@ -44,9 +29,12 @@ $("#to-join" ).click(function() {
 $("#joined").click(function() {
     clearMatchs();
     putLoader();
+    currentFilters = filters.joined;
+    section = 'joined';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getCancelButton;
     endPointURL = getJoinedURL();
-    currentFilters = filters.joined;
     loadCurrentFilters();
     loadMatches();
 });
@@ -54,34 +42,15 @@ $("#joined").click(function() {
 $("#created").click(function() {
     clearMatchs();
     putLoader();
+    currentFilters = filters.created;
+    section = 'created';
+    var url = getURLFromFilters();
+    window.history.pushState("", "", url);
     getButton = getDeleteButton;
     endPointURL = getCreatedURL();
-    currentFilters = filters.created;
     loadCurrentFilters();
     loadMatches();
 });
-
-function loadCurrentFilters() {
-    pageNumber = 1;
-    reachEndOfPagination = false;
-
-    $('.badge').remove();
-
-    var countries = Object.keys(currentFilters.country);
-    for(var i = 0; i < countries.length; i++) {
-        addBadge(countries[i], 'country');
-    }
-
-    var states = Object.keys(currentFilters.state);
-    for(var i = 0; i < states.length; i++) {
-        addBadge(states[i], 'state');
-    }
-
-    var cities = Object.keys(currentFilters.city);
-    for(var i = 0; i < cities.length; i++) {
-        addBadge(cities[i], 'city');
-    }
-}
 
 function getDefaultEndPoint() {
     return getToJoinURL();

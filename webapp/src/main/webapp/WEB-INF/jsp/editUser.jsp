@@ -12,6 +12,10 @@
 </head>
 <body>
 
+<%-- Include Navigation Bars --%>
+<jsp:include page="navbar.jsp"></jsp:include>
+
+
 <div class="container-fluid">
 
     <div class="row">
@@ -21,7 +25,7 @@
                     <a class="sign-in-brand" href="<c:url value="/"/>">sk<i class="fas fa-bullseye"></i>re</a>
                 </div>
             </div>
-            <c:url value="/edit/${username}" var="editUrl" />
+            <c:url value="/editInfo" var="editUrl" />
             <form:form modelAttribute="editUserForm" action="${editUrl}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <form:label path="firstName"><spring:message code="firstNameLabel"/><span class="text-muted">*</span></form:label>
@@ -47,18 +51,10 @@
                     <form:input class="form-control" path="cellphone" type="text" value="${user.cellphone}"/>
                     <form:errors path="cellphone" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
-
-                <small id="requiredHelp" class="form-text text-muted mb-2"><spring:message code="requiredHelpLabel"/></small>
                 <div class="text-center">
                     <button type="submit" class="btn btn-green mb-2"><spring:message code="modifyLabel"/></button>
                 </div>
             </form:form>
-            <div class="row mt-4 text-center">
-                <div class="col">
-                    <span class="mr-1"><spring:message code="haveAccountLabel"/></span>
-                    <a class="link" href="<c:url value="/login"/>"><spring:message code="signInMessage"/></a>
-                </div>
-            </div>
         </div> <!-- END Form container -->
     </div>
 </div>

@@ -106,7 +106,7 @@ public class UserController extends BaseController{
     }
 
     @RequestMapping(value = "/profile/{username}", method = {RequestMethod.GET})
-    public ModelAndView userProfile(@PathVariable("username") String username) {
+    public ModelAndView userProfile(@PathVariable String username) {
         Optional<PremiumUser> u = premiumUserService.findByUserName(username);
 
         if(!u.isPresent()) {
@@ -116,36 +116,35 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", u.get());
     }
 
-    @RequestMapping(value = "/edit/{username}", method = {RequestMethod.GET})
-    public ModelAndView editUserForm(@ModelAttribute("editUserForm") EditUserForm editUserForm,
-                                     @PathVariable("username") String username) {
-        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
+    @RequestMapping(value = "/editInfo", method = {RequestMethod.GET})
+    public ModelAndView editUserForm(@ModelAttribute("editUserForm") EditUserForm editUserForm) {
+        Optional<PremiumUser> u = premiumUserService.findByUserName(loggedUser().getUserName());
 
         if(!u.isPresent()) {
-            return new ModelAndView("404UserNotFound").addObject("username", username);
+            return new ModelAndView("404UserNotFound").addObject("username",
+                    loggedUser().getUserName());//should never occur
         }
 
         return new ModelAndView("editUser").addObject("user", u.get())
-                .addObject("username", username);
+                .addObject("username", loggedUser().getUserName());
     }
 
-    @RequestMapping(value = "/edit/{username}", method = {RequestMethod.POST })
+    @RequestMapping(value = "/editInfo", method = {RequestMethod.POST })
     public ModelAndView edituser(@Valid @ModelAttribute("editUserForm") final EditUserForm editUserForm,
-                                 @PathVariable("username") String username, final BindingResult errors,
+                                 final BindingResult errors,
                                  @RequestParam(value = "file", required = false)
                                          MultipartFile file) throws IOException {
 
         if(errors.hasErrors()) {
-            return editUserForm(editUserForm, username);
+            return editUserForm(editUserForm);
         }
 
-        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
+        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(loggedUser().getUserName());
         PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
-                "username:" + username));
+                "username:" + loggedUser().getUserName()));//should never occur
         MultipartFile image;
 
         if(editUserForm.getImage().getSize() == 0) {
-            //image = new MultipartFile(currentUser.getImage());
             image = null;
         }
         else {
@@ -163,6 +162,35 @@ public class UserController extends BaseController{
         return new ModelAndView("userProfile").addObject("user", currentUser);
     }
 
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
+    public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm) {
+
+//        if(!isLogged()) {
+//            return new ModelAndView(("404UserNotLogged"));
+//        }
+
+
+        return new ModelAndView("modifyPassword");
+    }
+
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST })
+    public ModelAndView modifyPassword(@Valid @ModelAttribute("modifyPasswordForm") final ModifyPasswordForm
+                                                   modifyPasswordForm, final BindingResult errors) throws IOException {
+
+        if(errors.hasErrors()) {
+            return modifyPasswordForm(modifyPasswordForm);
+        }
+
+        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(modifyPasswordForm.getUsername());
+        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
+                "username:" + modifyPasswordForm.getUsername()));
+
+        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        currentUser = premiumUserService.changePassword(modifyPasswordForm.getNewPassword(), currentUser.getUserName());
+
+
+        return new ModelAndView("userProfile").addObject("user", currentUser);
+    }
 
 
 
