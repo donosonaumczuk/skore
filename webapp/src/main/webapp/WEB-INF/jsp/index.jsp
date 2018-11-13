@@ -66,6 +66,11 @@
                             <label for="state-filter"><spring:message code="sportLabel"/></label>
                             <input class="form-control filter-input mb-2" type="text" id="sport-filter"/>
                         </div>
+                        <div class="row mb-4 text-center">
+                            <div class="col">
+                                <button class="btn btn-outline-secondary" onclick="applyFilters()"><i class="fas fa-plus mr-1"></i>ADD FILTERS</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div> <!-- END Leftside panel container -->

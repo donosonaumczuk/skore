@@ -180,47 +180,99 @@ function loadCurrentFilters() {
 
 $(".filter-input").keyup(function(e) {
     if (e.keyCode == 13) {
-        var value = $(this).val();
+        // var value = $(this).val();
+        //
+        // if(value.length == 0)
+        //     return;
+        //
+        // var context = $(this).parent().attr('id');
+        // var values = value.split(' ');
+        // var needToLoad = false;
+        //
+        // for(var i = 0; i < values.length; i++) {
+        //     if(currentFilters[context][values[i]] == undefined) {
+        //         if(!needToLoad) {
+        //             pageNumber = 1;
+        //             reachEndOfPagination = false;
+        //             clearMatchs();
+        //             putLoader();
+        //             needToLoad = true;
+        //         }
+        //
+        //         addBadge(values[i], context);
+        //         addFilterToURL(values[i], context);
+        //         currentFilters[context][values[i]] = true;
+        //     }
+        //     else {
+        //         var badge = $('#' + getBadgeId(htmlspecialchars(values[i]), context));
+        //         badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
+        //             function () {
+        //                 badge.removeClass('animated bounceIn');
+        //             })
+        //     }
+        //
+        // }
+        //
+        // if(needToLoad) {
+        //     loadMatches();
+        //     $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
+        // }
+        //
+        // $(this).val('');
 
-        if(value.length == 0)
-            return;
-
-        var context = $(this).parent().attr('id');
-        var values = value.split(' ');
-        var needToLoad = false;
-
-        for(var i = 0; i < values.length; i++) {
-            if(currentFilters[context][values[i]] == undefined) {
-                if(!needToLoad) {
-                    pageNumber = 1;
-                    reachEndOfPagination = false;
-                    clearMatchs();
-                    putLoader();
-                    needToLoad = true;
-                }
-
-                addBadge(values[i], context);
-                addFilterToURL(values[i], context);
-                currentFilters[context][values[i]] = true;
-            }
-            else {
-                var badge = $('#' + getBadgeId(htmlspecialchars(values[i]), context));
-                badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
-                    function () {
-                        badge.removeClass('animated bounceIn');
-                    })
-            }
-            
-        }
-
-        if(needToLoad) {
-            loadMatches();
-            $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
-        }
-
-        $(this).val('');
+        applyFilter(this); //TODO: check
     }
 });
+
+function applyFilters() {
+    var filterInputs = $(".filter-input");
+
+    for(var i = 0; i < filterInputs.length; i++) {
+        applyFilter(filterInputs[i]);
+    }
+}
+
+function applyFilter(filterInput) {
+    var value = $(filterInput).val();
+
+    if(value.length == 0)
+        return;
+
+    var context = $(filterInput).parent().attr('id');
+    var values = value.split(' ');
+    var needToLoad = false;
+
+    for(var i = 0; i < values.length; i++) {
+        if(currentFilters[context][values[i]] == undefined) {
+            if(!needToLoad) {
+                pageNumber = 1;
+                reachEndOfPagination = false;
+                clearMatchs();
+                putLoader();
+                needToLoad = true;
+            }
+
+            addBadge(values[i], context);
+            addFilterToURL(values[i], context);
+            currentFilters[context][values[i]] = true;
+        }
+        else {
+            var badge = $('#' + getBadgeId(htmlspecialchars(values[i]), context));
+            badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
+                function () {
+                    badge.removeClass('animated bounceIn');
+                })
+        }
+
+    }
+
+    if(needToLoad) {
+        loadMatches();
+        $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
+    }
+
+    $(filterInput).val('');
+}
 
 function getURLFromFilters() {
     var url = "/" + section;
