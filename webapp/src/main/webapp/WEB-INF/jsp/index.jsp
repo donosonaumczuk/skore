@@ -92,8 +92,8 @@
         <script charset="utf-8" type="text/javascript">
             var filters = {
                 toJoin: {
-                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
-                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="sport" items="${sports}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${sport}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
                     },
                     country: {<c:if test="${section.equals(\"default\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
@@ -107,8 +107,8 @@
                     }
                 },
                 joined: {
-                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
-                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="sport" items="${sports}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${sport}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
                     },
                     country: {<c:if test="${section.equals(\"joined\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
@@ -122,8 +122,8 @@
                     }
                 },
                 created: {
-                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
-                        <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                    sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="sport" items="${sports}"><c:if test="${!isFirst}">${","}</c:if>
+                        <c:out value="${sport}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
                     },
                     country: {<c:if test="${section.equals(\"created\")}"><c:set var="isFirst" value="${true}"/><c:forEach var="country" items="${countries}"><c:if test="${!isFirst}">${","}</c:if>
                         <c:out value="${country}: true"/><c:set var="isFirst" value="${false}"/></c:forEach></c:if>
@@ -165,8 +165,8 @@
                 minFinishTime: null,
                 maxFinishTime: null,
                 types: [],
-                sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
-                    <c:out value="${city}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
+                sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="sport" items="${sports}"><c:if test="${!isFirst}">${","}</c:if>
+                    <c:out value="${sport}: true"/><c:set var="isFirst" value="${false}"/></c:forEach>
                 },
                 minQuantity: 0,
                 maxQuantity: 0,

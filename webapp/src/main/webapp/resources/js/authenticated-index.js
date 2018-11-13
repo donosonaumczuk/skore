@@ -19,7 +19,7 @@ $("#to-join" ).click(function() {
     currentFilters = filters.toJoin;
     section = '';
     var url = getURLFromFilters();
-    window.history.pushState("", "", url);
+    window.history.replaceState("", "", url);
     getButton = getJoinButton;
     endPointURL = getToJoinURL();
     loadCurrentFilters();
@@ -32,7 +32,7 @@ $("#joined").click(function() {
     currentFilters = filters.joined;
     section = 'joined';
     var url = getURLFromFilters();
-    window.history.pushState("", "", url);
+    window.history.replaceState("", "", url);
     getButton = getCancelButton;
     endPointURL = getJoinedURL();
     loadCurrentFilters();
@@ -45,7 +45,7 @@ $("#created").click(function() {
     currentFilters = filters.created;
     section = 'created';
     var url = getURLFromFilters();
-    window.history.pushState("", "", url);
+    window.history.replaceState("", "", url);
     getButton = getDeleteButton;
     endPointURL = getCreatedURL();
     loadCurrentFilters();
