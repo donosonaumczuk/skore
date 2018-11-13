@@ -10,15 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 @RequestMapping("/admin")
 @Controller
@@ -30,7 +29,26 @@ public class AdminController extends BaseController{
 
     @RequestMapping("/")
     public ModelAndView index() {
-        return new ModelAndView("admin/index");
+        List<Sport> sports = sportService.getAllSports();
+
+        if(sports == null) {
+            sports = new LinkedList<>();
+        }
+
+        return new ModelAndView("admin/index").addObject("sports", sports);
+    }
+
+    @RequestMapping("/removeSport/${sportName}")
+    public ModelAndView removeSport(@PathVariable String sportName) {
+        sportService.remove(sportName);
+
+        List<Sport> sports = sportService.getAllSports();
+
+        if(sports == null) {
+            sports = new LinkedList<>();
+        }
+
+        return new ModelAndView("admin/index").addObject("sports", sports);
     }
 
     @RequestMapping(value = "/createSport", method = {RequestMethod.GET })
@@ -59,7 +77,13 @@ public class AdminController extends BaseController{
             return new ModelAndView("/admin/sportDuplicated").addObject("sportName", sportForm.getSportName());
         }
 
-        return new ModelAndView("/admin/index");
+        List<Sport> sports = sportService.getAllSports();
+
+        if(sports == null) {
+            sports = new LinkedList<>();
+        }
+
+        return new ModelAndView("/admin/index").addObject("sports", sports);
     }
 
 

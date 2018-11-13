@@ -21,14 +21,45 @@
         <div class="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
 
             <div class="row text-center">
-                <div class="col">
-                    <p><spring:message code="AdminMainPageLabel"/></p>
-                </div>
+                <c:if test="${sports.size() < 1}">
+                    <div class="col">
+                        <p><spring:message code="AdminMainPageLabel"/><a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a></p>
+                    </div>
+                </c:if>
             </div>
-            <div class="col">
-                <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
+            <div class="table-responsive">
+                <c:if test="${sports.size() > 0}">
+                    <table class="table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sport Name</th>
+                                <th>Display Name</th>
+                                <th>Player Quantity On Each Team</th>
+                                <th>
+                                    <div class="col">
+                                        <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var = "i" begin = "0" end = "${sports.size() - 1}">
+                                <tr>
+                                    <td><c:out value = "${sports.get(i).name}"/></td>
+                                    <td><c:out value = "${sports.get(i).displayName}"/></td>
+                                    <td><c:out value = "${sports.get(i).quantity}"/></td>
+                                    <td>
+                                        <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="EditSportLabel"/></a>
+                                        <a class="btn btn-primary" href="<c:url value="/admin/removeSport/${sports.get(i).name}"/>" role="button"><spring:message code="RemoveSportLabel"/></a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </c:if>
+
             </div>
-        </div> <!-- END Form container -->
+        </div>
     </div>
 </div>
 
