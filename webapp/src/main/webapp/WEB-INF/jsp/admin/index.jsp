@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col">
-                <a class="link" href="<c:url value="/admin/createSport"/>"><spring:message code="createSportLabel"/></a>
+                <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
             </div>
         </div> <!-- END Form container -->
     </div>
