@@ -90,7 +90,7 @@ body {
 }
 
 .sport-label {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 
@@ -186,6 +186,10 @@ body {
 .location-icon {
     color: #e74c31;
     font-size: 1.4rem;
+}
+
+.tooltip-icon {
+    opacity: 0.3;
 }
 
 .calendar-icon {

@@ -124,6 +124,7 @@ $.ajax({
 }).done(function(data) {
     lang = JSON.parse(data).lang;
     loadMatches();
+    $('[data-toggle="tooltip"]').tooltip(); //TODO: Check if works
 });
 
 $(document).ready(function(){
@@ -144,6 +145,8 @@ $(document).ready(function(){
             e.preventDefault();
         }
     });
+
+    $('[data-toggle="tooltip"]').tooltip();
 
     loadCurrentFilters();
 });
@@ -212,6 +215,7 @@ $(".filter-input").keyup(function(e) {
 
         if(needToLoad) {
             loadMatches();
+            $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
         }
 
         $(this).val('');
@@ -292,8 +296,10 @@ function addFilterToURL(filter, context) {
 
 $(window).scroll(function() {
     if($(window).scrollTop() + $(window).height() == $(document).height()) {
-        if(!reachEndOfPagination)
+        if(!reachEndOfPagination) {
             loadMatches();
+            $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
+        }
     }
 });
 
@@ -322,6 +328,7 @@ function addBadge(value, context) {
         var url = getURLFromFilters();
         window.history.pushState("", "", url);
         loadMatches();
+        $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
     });
 }
 
@@ -582,11 +589,11 @@ function getMatchLocation(street, city, state, country) {
 }
 
 function getTypeLabel(type) {
-    if(isFriendlyMatch(type)) {
-        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '</p>';
+    if(isFriendlyMatch(type)) { //TODO: CHECK SPAN TOOLTIP
+        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Amistoso</b> no requiere tener una cuenta para unirse. En caso de tener cuenta no impacta en el winrate"/></p>';
     }
 
-    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '</p>';
+    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate"/></p>';
 }
 
 function getJoinButton(match) {

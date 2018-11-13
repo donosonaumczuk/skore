@@ -32,7 +32,7 @@
                 <div class="row filters p-4 mt-2">
                     <div class="container-fluid">
                         <div class="row">
-                            <p class="left-panel-title"></i><spring:message code="filtersAndCategoriesMessage"/></p>
+                            <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" title="Para agregar varios filtros de una sola vez puede escribirlos separados por comas o espacios"/></p>
                         </div>
                         <c:if test="${isLogged}">
                             <div class="row mb-4">
@@ -89,7 +89,7 @@
 <jsp:include page="js.jsp"></jsp:include>
 <c:choose>
     <c:when test="${isLogged}">
-        <script>
+        <script charset="utf-8" type="text/javascript">
             var filters = {
                 toJoin: {
                     sport: {<c:set var="isFirst" value="${true}"/><c:forEach var="city" items="${cities}"><c:if test="${!isFirst}">${","}</c:if>
@@ -155,10 +155,10 @@
 
         </script>
 
-        <script src="<c:url value="/js/authenticated-index.js"/>"></script>
+        <script src="<c:url value="/js/authenticated-index.js"/>" charset="utf-8" type="text/javascript"></script>
     </c:when>
     <c:otherwise>
-        <script type="text/javascript">
+        <script charset="utf-8" type="text/javascript">
             var filters = {
                 minStartTime: null,
                 maxStartTime: null,
@@ -189,7 +189,7 @@
         </script>
     </c:otherwise>
 </c:choose>
-<script src="<c:url value="/js/index.js"/>"></script>
+<script src="<c:url value="/js/index.js"/>" charset="utf-8" type="text/javascript"></script>
 
 </body>
 </html>
