@@ -35,7 +35,7 @@
                             <p class="left-panel-title"><spring:message code="filtersAndCategoriesMessage"/><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" title="Para agregar varios filtros de una sola vez puede escribirlos separados por espacios"/></p>
                         </div>
                         <c:if test="${isLogged}">
-                            <div class="row mb-4">
+                            <div class="row mb-4 text-center">
                                 <label for="matches"><spring:message code="matchesLabel"/></label>
                                 <div class="btn-group input-group btn-group-toggle" data-toggle="buttons" id="matches">
                                     <label class="btn btn-secondary <c:if test="${section.equals(\"default\")}">active</c:if>" id="to-join">

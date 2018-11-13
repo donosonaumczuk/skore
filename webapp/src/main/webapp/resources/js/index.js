@@ -107,6 +107,7 @@ var lang = 'en';
 var pageNumber = 1;
 var reachEndOfPagination = false;
 var getButton = getJoinButton;
+var collapsed = true;
 
 $(window).resize(function() {
     var width = $(window).width();
@@ -117,6 +118,16 @@ $(window).resize(function() {
         $('.sidepanel').removeClass('collapse navbar-collapse');
     }
 });
+
+function navbarTogglerClick() {
+    if(collapsed) {
+        $(window).scrollTop($("body").offset().top);
+        collapsed = false;
+    }
+    else {
+        collapsed = true;
+    }
+}
 
 $.ajax({
     type:   'POST',
@@ -180,47 +191,7 @@ function loadCurrentFilters() {
 
 $(".filter-input").keyup(function(e) {
     if (e.keyCode == 13) {
-        // var value = $(this).val();
-        //
-        // if(value.length == 0)
-        //     return;
-        //
-        // var context = $(this).parent().attr('id');
-        // var values = value.split(' ');
-        // var needToLoad = false;
-        //
-        // for(var i = 0; i < values.length; i++) {
-        //     if(currentFilters[context][values[i]] == undefined) {
-        //         if(!needToLoad) {
-        //             pageNumber = 1;
-        //             reachEndOfPagination = false;
-        //             clearMatchs();
-        //             putLoader();
-        //             needToLoad = true;
-        //         }
-        //
-        //         addBadge(values[i], context);
-        //         addFilterToURL(values[i], context);
-        //         currentFilters[context][values[i]] = true;
-        //     }
-        //     else {
-        //         var badge = $('#' + getBadgeId(htmlspecialchars(values[i]), context));
-        //         badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
-        //             function () {
-        //                 badge.removeClass('animated bounceIn');
-        //             })
-        //     }
-        //
-        // }
-        //
-        // if(needToLoad) {
-        //     loadMatches();
-        //     $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
-        // }
-        //
-        // $(this).val('');
-
-        applyFilter(this); //TODO: check
+        applyFilter(this);
     }
 });
 
