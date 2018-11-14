@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.models.Sport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,9 @@ public class SportHibernateDao implements SportDao {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private GameHibernateDao gameDao;
 
     @Override
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
@@ -34,10 +38,12 @@ public class SportHibernateDao implements SportDao {
     public boolean remove(final String sportName) {
         Optional<Sport> sport = findByName(sportName);
         boolean ans = false;
+
         if(sport.isPresent()) {
             em.remove(sport.get());
             ans = true;
         }
+
         return ans;
     }
 

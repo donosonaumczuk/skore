@@ -23,7 +23,7 @@
             <div class="row text-center">
                 <c:if test="${sports.size() < 1}">
                     <div class="col">
-                        <p><spring:message code="AdminMainPageLabel"/><a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a></p>
+                        <p><spring:message code="AdminMainPageLabel"/><a class="btn btn-green mb-2" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a></p>
                     </div>
                 </c:if>
             </div>
@@ -37,7 +37,7 @@
                                 <th>Player Quantity On Each Team</th>
                                 <th>
                                     <div class="col">
-                                        <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
+                                        <a class="btn btn-green mb-2" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
                                     </div>
                                 </th>
                             </tr>
@@ -49,8 +49,9 @@
                                     <td><c:out value = "${sports.get(i).displayName}"/></td>
                                     <td><c:out value = "${sports.get(i).quantity}"/></td>
                                     <td>
-                                        <a class="btn btn-primary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="EditSportLabel"/></a>
-                                        <a class="btn btn-primary" href="<c:url value="/admin/removeSport/${sports.get(i).name}"/>" role="button"><spring:message code="RemoveSportLabel"/></a>
+                                        <div class="col">
+                                            <a class="btn btn-outline-secondary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="EditSportLabel"/></a>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>

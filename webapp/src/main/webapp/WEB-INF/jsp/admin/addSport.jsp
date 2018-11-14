@@ -12,6 +12,9 @@
 </head>
 <body>
 
+<%-- Include Navigation Bars --%>
+<jsp:include page="./../navbar.jsp"></jsp:include>
+
 <div class="container-fluid">
     <div class="row">
         <div class="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4"> <!-- Form container -->
