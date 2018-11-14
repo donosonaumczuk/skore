@@ -230,9 +230,10 @@ public class GameController extends BaseController{
         int team2Quantity = game.getTeam2().getPlayers().size();
         boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
         boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
-        //boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+       // boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        boolean hasResult = game.getResult() != null;
         boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
-        boolean canEdit = isFull && isCreator && hasFinished;
+        boolean canEdit = isFull && isCreator && hasFinished && !hasResult;
         return new ModelAndView("match").addObject("match", game)
                 .addObject("canEdit", canEdit)
                 .addObject("matchURLKey", matchURLKey);
@@ -287,16 +288,18 @@ public class GameController extends BaseController{
         String startTime = game.getStartTime().format(formatter);
         String finishTime = game.getFinishTime().format(formatter);
         try {
-            gameService.updateResultOfGame(game.team1Name(), startTime, finishTime,
+            game = gameService.updateResultOfGame(game.team1Name(), startTime, finishTime,
                     team1Score, team2Score);
         }
         catch(GameHasNotBeenPlayException e) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "CanNotUpdateResultHasNotPlayed").addObject("attribute", "");
         }
-        return new ModelAndView("match").addObject("match", game)
-                .addObject("canEdit", false)
-                .addObject("matchURLKey", submitResultForm.getMatchKey());
+
+        return new ModelAndView("redirect:/match/" + submitResultForm.getMatchKey());
+//        return new ModelAndView("match").addObject("match", game)
+//                .addObject("canEdit", false)
+//                .addObject("matchURLKey", submitResultForm.getMatchKey());
     }
 
     @RequestMapping(value = "/confirmMatch/**")
