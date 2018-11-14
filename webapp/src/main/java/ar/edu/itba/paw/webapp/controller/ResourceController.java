@@ -23,6 +23,12 @@ import java.util.Locale;
 public class ResourceController extends BaseController{
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
+    /* Production */
+    private static String URL_PREFIX = "/paw-2018b-04";
+
+    /* Local */
+//    private static String URL_PREFIX = "";
+
     @Autowired
     private MessageSource messageSource;
 
@@ -51,11 +57,11 @@ public class ResourceController extends BaseController{
             try {
                 media = premiumUserService.readImage(id);
             } catch (Exception e) {
-                headers.add("Location", "/img/user-default.svg");
+                headers.add("Location", URL_PREFIX + "/img/user-default.svg");
                 return new ResponseEntity<>(headers, HttpStatus.FOUND);
             }
             if(media == null) {
-                headers.add("Location", "/img/user-default.svg");
+                headers.add("Location", URL_PREFIX + "/img/user-default.svg");
                 return new ResponseEntity<>(headers, HttpStatus.FOUND);
             }
         }
