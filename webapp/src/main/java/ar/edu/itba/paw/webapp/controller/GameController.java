@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.Exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.Exceptions.TeamFullException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
@@ -9,6 +10,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.MatchForm;
+import ar.edu.itba.paw.webapp.form.SubmitResultForm;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -25,6 +27,8 @@ import sun.java2d.pipe.SpanShapeRenderer;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -217,10 +221,82 @@ public class GameController extends BaseController{
             game = gameService.findByKeyFromURL(matchURLKey);
         }
         catch (GameNotFoundException e) {
-            return new ModelAndView("404");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
         }
 
-        return new ModelAndView("match").addObject("match", game);
+        int sportQuantity = game.getTeam1().getSport().getQuantity();
+        int team1Quantity = game.getTeam1().getPlayers().size();
+        int team2Quantity = game.getTeam2().getPlayers().size();
+        boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
+        boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
+        //boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
+        boolean canEdit = isFull && isCreator && hasFinished;
+        return new ModelAndView("match").addObject("match", game)
+                .addObject("canEdit", canEdit)
+                .addObject("matchURLKey", matchURLKey);
+    }
+
+    @RequestMapping(value= "/submitMatchResult/{matchKey:.+}", method = {RequestMethod.GET})
+    public ModelAndView submitMatchResultForm(@ModelAttribute("submitResultForm") SubmitResultForm submitResultForm,
+                                      HttpServletRequest request, @PathVariable String matchKey) {
+        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
+        Game game = null;
+        try {
+            game = gameService.findByKeyFromURL(matchKey);
+        }
+        catch (GameNotFoundException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        }
+
+        return new ModelAndView("submitMatchResult").addObject("game", game)
+                .addObject("matchKey", matchKey);
+    }
+
+    @RequestMapping(value="/submitMatchResult/*",  method = {RequestMethod.POST})
+    public ModelAndView submitMatchResult(@Valid @ModelAttribute("submitResultForm") final SubmitResultForm submitResultForm,
+                                  final BindingResult errors, HttpServletRequest request) {
+        if(errors.hasErrors()) {
+            return submitMatchResultForm(submitResultForm, request, submitResultForm.getMatchKey());
+        }
+        int team1Score = 0, team2Score = 0;
+
+        for(int i = 0; i< submitResultForm.getTeam1Points().length(); i++) {
+            team1Score = team1Score * 10 + (submitResultForm.getTeam1Points().charAt(i) - '0');
+        }
+
+        for(int i = 0; i< submitResultForm.getTeam2Points().length(); i++) {
+            team2Score = team2Score * 10 + (submitResultForm.getTeam2Points().charAt(i) - '0');
+        }
+
+
+
+        Game game;
+        try {
+            game = gameService.findByKeyFromURL(submitResultForm.getMatchKey());
+        }
+        catch (GameNotFoundException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        }
+
+        //addResult
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String startTime = game.getStartTime().format(formatter);
+        String finishTime = game.getFinishTime().format(formatter);
+        try {
+            gameService.updateResultOfGame(game.team1Name(), startTime, finishTime,
+                    team1Score, team2Score);
+        }
+        catch(GameHasNotBeenPlayException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "CanNotUpdateResultHasNotPlayed").addObject("attribute", "");
+        }
+        return new ModelAndView("match").addObject("match", game)
+                .addObject("canEdit", false)
+                .addObject("matchURLKey", submitResultForm.getMatchKey());
     }
 
     @RequestMapping(value = "/confirmMatch/**")
@@ -243,9 +319,12 @@ public class GameController extends BaseController{
         System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
         long userId = userService.getUserIdFromData(userData);
         User user = userService.findById(userId);
+
         if(user == null) {
-            throw new UserNotFoundException("Can't find user");
+            return new ModelAndView("404UserNotFound").addObject("username", "");
+            //throw new UserNotFoundException("Can't find user");
         }
+
         final int URL_DATE_LENGTH =12;
         final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
         if(gameData.length() < MIN_LENGTH) {
@@ -257,7 +336,19 @@ public class GameController extends BaseController{
         String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
         if(game == null) {
-            throw new GameNotFoundException("Can't find game");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        //    throw new GameNotFoundException("Can't find game");
+        }
+
+        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyFinished").addObject("attribute", "");
+        }
+
+        if(LocalDateTime.now().isAfter(game.getStartTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyStarted").addObject("attribute", "");
         }
         if(!isPlayerInTeam(game, user)) {
             try {
@@ -309,6 +400,16 @@ public class GameController extends BaseController{
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "canNotFindMatch").addObject("attribute", "");
             //throw new GameNotFoundException("Can't find game");
+        }
+
+        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "cancelMatchHasAlreadyFinished");
+        }
+
+        if(LocalDateTime.now().isAfter(game.getStartTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "cancelMatchHasAlreadyStarted");
         }
 
         if(isPlayerInTeam(game, user)) {

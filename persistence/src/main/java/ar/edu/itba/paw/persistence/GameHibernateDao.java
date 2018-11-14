@@ -158,7 +158,8 @@ public class GameHibernateDao implements GameDao {
                 "WHERE :userId IN " +
                             "(SELECT p.userId " +
                             "FROM Game g, Team t JOIN t.players p " +
-                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName)";
+                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName " +
+                                "AND g.result IS NOT NULL)";
         final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
         query.setParameter("userId", userId);
         return query.getResultList();
@@ -172,7 +173,8 @@ public class GameHibernateDao implements GameDao {
                 "WHERE :userId IN " +
                             "(SELECT p.userId " +
                             "FROM Game g, Team t JOIN t.players p " +
-                            "WHERE games = g AND g.team2.teamName = t.teamName)";
+                            "WHERE games = g AND g.team2.teamName = t.teamName " +
+                                "AND g.result IS NOT NULL)";
         final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
         query.setParameter("userId", userId);
         return query.getResultList();

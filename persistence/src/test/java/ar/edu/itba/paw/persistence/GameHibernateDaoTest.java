@@ -224,7 +224,7 @@ public class GameHibernateDaoTest {
 
         List<Game> games = gameDao.gamesThatAUserPlayInTeam1(account.getUser().getUserId());
 
-        Assert.assertEquals(1, games.size());
+        Assert.assertEquals(0, games.size());
     }
 
     @Test
