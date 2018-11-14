@@ -62,6 +62,40 @@ public class Place {
         return country;
     }
 
+    public String getPublicLocation() {
+        boolean started = false;
+        String location = "";
+
+        if(city.length() > 0) {
+            if(started) {
+                location += ", ";
+            }
+
+            location += city;
+            started = true;
+        }
+
+        if(state.length() > 0) {
+            if(started) {
+                location += ", ";
+            }
+
+            location += state;
+            started = true;
+        }
+
+        if(country.length() > 0) {
+            if(started) {
+                location += ", ";
+            }
+
+            location += country;
+            started = true;
+        }
+
+        return location;
+    }
+
     @Override
     public String toString() {
         String location = "";

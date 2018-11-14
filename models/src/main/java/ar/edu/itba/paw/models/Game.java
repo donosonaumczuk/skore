@@ -188,4 +188,8 @@ public class Game {
         DateTimeFormatter formater= DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
         return getFinishTime().format(formater);
     }
+
+    public String getCompetitiveness() {
+        return type.split("-")[1];
+    }
 }

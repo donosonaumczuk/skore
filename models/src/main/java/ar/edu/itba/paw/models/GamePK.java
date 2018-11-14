@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Embeddable
 public class GamePK implements Serializable {
@@ -49,5 +50,10 @@ public class GamePK implements Serializable {
 
     public void setFinishTime(LocalDateTime finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public String toURLKey() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        return startTime.format(formatter) + team1.getName() + finishTime.format(formatter);
     }
 }

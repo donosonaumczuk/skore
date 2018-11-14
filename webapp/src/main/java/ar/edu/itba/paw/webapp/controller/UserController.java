@@ -37,6 +37,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -115,7 +116,12 @@ public class UserController extends BaseController{
             return new ModelAndView("404UserNotFound").addObject("username", username);
         }
 
-        return new ModelAndView("userProfile").addObject("user", u.get());
+        List<List<Game>> games = gameService.getGamesThatPlay(u.get().getUser().getUserId());
+        List<Game> homeGames = games.get(0);
+        List<Game> awayGames = games.get(1);
+
+        return new ModelAndView("userProfile").addObject("user", u.get())
+                .addObject("homeGames", homeGames).addObject("awayGames", awayGames);
     }
 
     @RequestMapping(value = "/editInfo", method = {RequestMethod.GET})

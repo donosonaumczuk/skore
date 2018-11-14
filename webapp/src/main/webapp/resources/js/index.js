@@ -335,6 +335,7 @@ function addFilterToURL(filter, context) {
 $(window).scroll(function() {
     if($(window).scrollTop() + $(window).height() == $(document).height()) {
         if(!reachEndOfPagination) {
+            putLoader();
             loadMatches();
         }
     }
@@ -572,14 +573,6 @@ function getMatchCard(match) {
         '</div>';
 
     return matchCard;
-}
-
-function clickMatch(matchKey) {
-    window.location.href = contextPath + "/match/" + matchKey;
-}
-
-function clickAvatar(username) {
-    window.location.href = contextPath + "/profile/" + username;
 }
 
 function getMatchLocation(street, city, state, country) {

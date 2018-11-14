@@ -17,6 +17,12 @@ body {
     color: white;
 }
 
+.profile-container {
+    margin-top: -2rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
 .filters {
     background-color: white;
     border-radius: 0.5rem;
@@ -64,6 +70,10 @@ body {
     border-width: 8px;
     border-color: black;
     background-color: white;
+}
+
+.profile-data {
+    font-size: 1.1rem;
 }
 
 .sport-img {

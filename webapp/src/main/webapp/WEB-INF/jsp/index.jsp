@@ -194,6 +194,7 @@
         </script>
     </c:otherwise>
 </c:choose>
+<script src="<c:url value="/js/clickToGo.js"/>" charset="utf-8" type="text/javascript"></script>
 <script src="<c:url value="/js/index.js"/>" charset="utf-8" type="text/javascript"></script>
 
 </body>
