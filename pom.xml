@@ -16,7 +16,7 @@
     <properties>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-        <org.postgresql.version>9.4-1206-jdbc42</org.postgresql.version>
+        <org.postgresql.version>9.3-1102-jdbc41</org.postgresql.version>
         <servlet-api.version>2.5</servlet-api.version>
         <jstl.version>1.2</jstl.version>
         <maven.compiler.source>1.8</maven.compiler.source>
