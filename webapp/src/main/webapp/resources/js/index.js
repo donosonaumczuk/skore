@@ -507,7 +507,7 @@ function getMatchCard(match) {
         '<div class="col">' +
         '<div class="row mb-4">' +
         '<div class="col-2 col-sm-1 pl-0">' +
-        '<img src="' + contextPath + '/profile/image/' + username + '" class="user-avatar" alt="user-pic">' +
+        '<img src="' + contextPath + '/profile/image/' + username + '" onclick="clickAvatar(\'' + username + '\'); event.stopPropagation();" class="user-avatar" alt="user-pic">' +
         '</div>' +
         '<div class="col-3 col-sm-4">' +
         '<div class="row">' +
@@ -564,11 +564,16 @@ function getMatchCard(match) {
         '</div>' +
         '</div>' +
         '</div>';
+
     return matchCard;
 }
 
 function clickMatch(matchKey) {
     window.location.href = contextPath + "match/" + matchKey;
+}
+
+function clickAvatar(username) {
+    window.location.href = contextPath + "/profile/" + username;
 }
 
 function getMatchLocation(street, city, state, country) {
@@ -627,10 +632,10 @@ function getMatchLocation(street, city, state, country) {
 
 function getTypeLabel(type) {
     if(isFriendlyMatch(type)) { //TODO: CHECK SPAN TOOLTIP
-        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Amistoso</b> no requiere tener una cuenta para unirse. En caso de tener cuenta no impacta en el winrate"/></p>';
+        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Amistoso</b> no requiere tener una cuenta para unirse. En caso de tener cuenta no impacta en el winrate"/></p>';
     }
 
-    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate"/></p>';
+    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate"/></p>';
 }
 
 function getJoinButton(match) {

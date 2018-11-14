@@ -39,6 +39,10 @@ body {
     background-color: white;
 }
 
+.user-avatar:hover {
+    opacity: 0.8;
+}
+
 .profile-name {
     color: black;
     font-weight: bold;
