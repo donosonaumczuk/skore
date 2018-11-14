@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </c:if>
-            <c:if test="${match.getDescription() != null}">
+            <c:if test="${match.getDescription() != null && match.getDescription().length() > 0}">
                 <div class="row text-center">
                     <div class="col">
                         <label><spring:message code="match.description"/>:</label>

@@ -27,7 +27,7 @@
                     </div>
                 </c:if>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive text-center">
                 <c:if test="${sports.size() > 0}">
                     <table class="table-striped table-bordered">
                         <thead>
