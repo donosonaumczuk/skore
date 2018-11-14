@@ -122,10 +122,10 @@
                                     <div class="row text-center">
                                         <div class="col mt-xl-2 ml-xl-4">
                                             <c:choose>
-                                                <c:when test="${Integer.parse(game.getResult().split(\"-\")[0]) > Integer.parse(game.getResult().split(\"-\")[1])}">
+                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) > Integer.parseInt(game.getResult().split(\"-\")[1])}">
                                                     <i class="name-label fas fa-check-circle mr-2"></i><spring:message code="winLabel"/>
                                                 </c:when>
-                                                <c:when test="${Integer.parse(game.getResult().split(\"-\")[0]) == Integer.parse(game.getResult().split(\"-\")[1])}">
+                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) == Integer.parseInt(game.getResult().split(\"-\")[1])}">
                                                     <i class="name-label fas fa-minus-circle mr-2"></i><spring:message code="tieLabel"/>
                                                 </c:when>
                                                 <c:otherwise>
@@ -205,10 +205,10 @@
                                     <div class="row text-center">
                                         <div class="col mt-xl-2 ml-xl-4">
                                             <c:choose>
-                                                <c:when test="${Integer.parse(game.getResult().split(\"-\")[0]) < Integer.parse(game.getResult().split(\"-\")[1])}">
+                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) < Integer.parseInt(game.getResult().split(\"-\")[1])}">
                                                     <i class="name-label fas fa-check-circle mr-2"></i><spring:message code="winLabel"/>
                                                 </c:when>
-                                                <c:when test="${Integer.parse(game.getResult().split(\"-\")[0]) == Integer.parse(game.getResult().split(\"-\")[1])}">
+                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) == Integer.parseInt(game.getResult().split(\"-\")[1])}">
                                                     <i class="name-label fas fa-minus-circle mr-2"></i><spring:message code="tieLabel"/>
                                                 </c:when>
                                                 <c:otherwise>
@@ -260,6 +260,6 @@
 <%-- Include JS Scripts --%>
 <jsp:include page="js.jsp"></jsp:include>
 <script src="<c:url value="/js/clickToGo.js"/>" charset="utf-8" type="text/javascript"></script>
-
+<script src="<c:url value="/js/profile.js"/>" charset="utf-8" type="text/javascript"></script>
 </body>
 </html>

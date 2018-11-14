@@ -190,15 +190,16 @@ body {
 }
 
 .loserWinRate {
-
+    color: darkred;
 }
 
 .winnerWinRate {
-
+    color: darkgreen;
 }
 
 .result-label {
-
+    font-size: 1.4rem;
+    font-weight: bold;
 }
 
 .bg-black {
