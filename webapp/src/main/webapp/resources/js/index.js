@@ -15,6 +15,14 @@ var labelMap = {
         "en": "FULL",
         "es": "COMPLETO"
     },
+    friendlyTooltip: {
+        "en": "<b>Friendly</b> does not requiere an account to join the match. Does not impact the winrate",
+        "es": "<b>Amistoso</b> no requiere tener una cuenta para unirse. No impacta en el winrate"
+    },
+    competitiveTooltip: {
+        "en": "<b>Competitive</b> requires an account to join the match. Impacts the winrate",
+        "es": "<b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate"
+    },
     days: {
         "MONDAY": {
             "en": "Monday",
@@ -144,7 +152,6 @@ $.ajax({
 }).done(function(data) {
     lang = JSON.parse(data).lang;
     loadMatches();
-    $('[data-toggle="tooltip"]').tooltip(); //TODO: Check if works
 });
 
 $(document).ready(function(){
@@ -241,14 +248,13 @@ function applyFilter(filterInput) {
             badge.addClass('animated bounceIn').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd',
                 function () {
                     badge.removeClass('animated bounceIn');
-                })
+                });
         }
 
     }
 
     if(needToLoad) {
         loadMatches();
-        $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
     }
 
     $(filterInput).val('');
@@ -330,7 +336,6 @@ $(window).scroll(function() {
     if($(window).scrollTop() + $(window).height() == $(document).height()) {
         if(!reachEndOfPagination) {
             loadMatches();
-            $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
         }
     }
 });
@@ -360,7 +365,6 @@ function addBadge(value, context) {
         var url = getURLFromFilters();
         window.history.replaceState("", "", url);
         loadMatches();
-        $('[data-toggle="tooltip"]').tooltip();//TODO: check if works
     });
 }
 
@@ -387,6 +391,8 @@ function loadMatches() {
             var matchCard = getMatchCard(matchArray[i]);
             $('.match-container').append(matchCard);
         }
+
+        $('[data-toggle="tooltip"]').tooltip();
     });
 }
 
@@ -631,11 +637,11 @@ function getMatchLocation(street, city, state, country) {
 }
 
 function getTypeLabel(type) {
-    if(isFriendlyMatch(type)) { //TODO: CHECK SPAN TOOLTIP
-        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Amistoso</b> no requiere tener una cuenta para unirse. En caso de tener cuenta no impacta en el winrate"/></p>';
+    if(isFriendlyMatch(type)) {
+        return '<p><span class="friendly-icon mr-2 fas fa-handshake"></span>' + labelMap.types.friendly[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="' + labelMap.friendlyTooltip[lang] + '"/></p>';
     }
 
-    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate"/></p>';
+    return '<p><span class="competitive-icon mr-2 fas fa-medal"></span>' + labelMap.types.competitive[lang] + '<span class="tooltip-icon ml-2 far fa-question-circle"  onclick="event.stopPropagation();" data-toggle="tooltip" data-placement="right" data-html="true" title="' + labelMap.competitiveTooltip[lang] + '"/></p>';
 }
 
 function getJoinButton(match) {

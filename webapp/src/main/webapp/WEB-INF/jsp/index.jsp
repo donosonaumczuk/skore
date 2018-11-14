@@ -37,7 +37,7 @@
                         <c:if test="${isLogged}">
                             <div class="row mb-4 text-center">
                                 <label for="matches"><spring:message code="matchesLabel"/></label>
-                                <div class="btn-group input-group btn-group-toggle" data-toggle="buttons" id="matches">
+                                <div class="btn-group ml-5 input-group btn-group-toggle" data-toggle="buttons" id="matches">
                                     <label class="btn btn-secondary <c:if test="${section.equals(\"default\")}">active</c:if>" id="to-join">
                                         <input type="radio" name="options" id="option1" autocomplete="off" checked> <spring:message code="toJoinLabel"/>
                                     </label>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="row mb-4 text-center">
                             <div class="col">
-                                <button class="btn btn-outline-secondary" onclick="applyFilters()"><i class="fas fa-plus mr-1"></i>ADD FILTERS</button>
+                                <button class="btn btn-outline-secondary" onclick="applyFilters()"><i class="fas fa-plus mr-1"></i><spring:message code="addFilters"/></button>
                             </div>
                         </div>
                     </div>

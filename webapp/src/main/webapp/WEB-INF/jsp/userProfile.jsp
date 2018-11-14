@@ -40,7 +40,7 @@
             <div class="row text-center">
                 <div class="col">
                     <c:if test="${isLogged && loggedUser.userName.equals(user.userName)}">
-                        <a class="btn btn-outline-secondary" href="<c:url value="/editInfo"/>" role="button"><i class="fas fa-edit"></i><spring:message code="editInfoMessage"/></a><a class="btn btn-outline-secondary" href="<c:url value="/changePassword"/>" role="button"><i class="fas fa-key"></i><spring:message code="changePasswordMessage"/></a>
+                        <a class="btn btn-outline-secondary mx-1" href="<c:url value="/editInfo"/>" role="button"><i class="mr-1 fas fa-edit"></i><spring:message code="editInfoMessage"/></a><a class="btn btn-outline-secondary mx-1" href="<c:url value="/changePassword"/>" role="button"><i class="mr-1 fas fa-key"></i><spring:message code="changePasswordMessage"/></a>
                     </c:if>
                 </div>
             </div>
