@@ -91,13 +91,11 @@ public class Team {
     }
 
     public boolean removePlayer(final long userId) {
-        int i = 0;
         for (User u: players) {
             if(u.getUserId() == userId) {
                 players.remove(u);
                 return true;
             }
-            i++;
         }
         return false;
     }
