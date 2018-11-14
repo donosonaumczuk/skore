@@ -61,7 +61,7 @@
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
                         <c:if test="${createMatchForm.sportName != null}">
-                             <option value="${createMatchForm.sportName}"><spring:message code="chooseSportLabel"/></option>
+                             <option value="${createMatchForm.sportName}">${createMatchForm.sportName}</option>
                         </c:if>
                         <c:if test="${createMatchForm.sportName == null}">
                             <option value=""><spring:message code="chooseSportLabel"/></option>
