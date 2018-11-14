@@ -87,16 +87,22 @@ public class AdminController extends BaseController{
             return editSportForm(editSportForm, request, editSportForm.getSportName());
         }
 
-        Sport sport = null;
+        MultipartFile image = editSportForm.getImage();
+
+        if(image.getSize() == 0) {
+            image = null;
+        }
 
         try {
-            sport = sportService.findByName(editSportForm.getSportName());
+            sportService.findByName(editSportForm.getSportName());
+            sportService.modifySport(editSportForm.getSportName(), editSportForm.getDisplayName(),
+                    image);
         }
         catch (Exception e) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "sportNotFoundMessage").addObject("attribute", "");
         }
-       // sportService.
+
         List<Sport> sports = sportService.getAllSports();
 
         if(sports == null) {
