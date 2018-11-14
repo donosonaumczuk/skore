@@ -282,30 +282,43 @@ public class GameController extends BaseController{
         String path = request.getServletPath().replace("/cancelMatch/", "");
         String userData = path.substring(0, path.indexOf("$"));
         String gameData = path.substring(path.indexOf("$") + 1, path.length());
-        //System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
         long userId = userService.getUserIdFromData(userData);
         User user = userService.findById(userId);
+
         if(user == null) {
-            throw new UserNotFoundException("Can't find user");
+            return new ModelAndView("404UserNotFound").addObject("username", "");
+            //throw new UserNotFoundException("Can't find user");
         }
+
         final int URL_DATE_LENGTH =12;
         final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
+
         if(gameData.length() < MIN_LENGTH) {
-            throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindGame").addObject("attribute", "");
+
+            //throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
         }
 
         String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
         String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
         String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
+
         if(game == null) {
-            throw new GameNotFoundException("Can't find game");
-        }
-        if(isPlayerInTeam(game, user)) {
-            gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+            //throw new GameNotFoundException("Can't find game");
         }
 
-        return new ModelAndView("cancelledMatchAssistance");
+        if(isPlayerInTeam(game, user)) {
+            gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
+            return new ModelAndView("cancelledMatchAssistance");
+        }
+
+        return new ModelAndView("genericPageWithMessage").addObject("message",
+                "matchAlreadyCanceled").addObject("attribute","");
+
     }
 
     private boolean isPlayerInTeam(Game game, User user) {
