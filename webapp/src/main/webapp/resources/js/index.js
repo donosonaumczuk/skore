@@ -362,7 +362,7 @@ function addBadge(value, context) {
         putLoader();
         $(this).remove();
         delete currentFilters[context][value];
-        var url = getURLFromFilters();
+        var url = contextPath + getURLFromFilters();
         window.history.replaceState("", "", url);
         loadMatches();
     });
