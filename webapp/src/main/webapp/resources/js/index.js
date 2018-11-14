@@ -575,7 +575,7 @@ function getMatchCard(match) {
 }
 
 function clickMatch(matchKey) {
-    window.location.href = contextPath + "match/" + matchKey;
+    window.location.href = contextPath + "/match/" + matchKey;
 }
 
 function clickAvatar(username) {
