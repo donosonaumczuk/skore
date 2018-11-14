@@ -27,7 +27,7 @@
 
             <div class="row text-center">
                 <div class="col">
-                    <p class="profile-name"><c:out value="${user.getFullName()}"/></p><c:if test="${isLogged && loggedUser.userName.equals(user.userName)}"><a class="btn btn-outline-secondary" href="<c:url value="/editInfo"/>" role="button"><i class="fas fa-edit"></i><spring:message code="editInfoMessage"/></a><a class="btn btn-outline-secondary" href="<c:url value="/changePassword"/>" role="button"><i class="fas fa-key"></i><spring:message code="changePasswordMessage"/></a></c:if>
+                    <p class="profile-name"><c:out value="${user.getFullName()}"/></p>
                 </div>
             </div>
 
@@ -36,6 +36,15 @@
                     <p class="profile-username">@<c:out value="${user.getUserName()}"/></p>
                 </div>
             </div>
+
+            <div class="row text-center">
+                <div class="col">
+                    <c:if test="${isLogged && loggedUser.userName.equals(user.userName)}">
+                        <a class="btn btn-outline-secondary" href="<c:url value="/editInfo"/>" role="button"><i class="fas fa-edit"></i><spring:message code="editInfoMessage"/></a><a class="btn btn-outline-secondary" href="<c:url value="/changePassword"/>" role="button"><i class="fas fa-key"></i><spring:message code="changePasswordMessage"/></a>
+                    </c:if>
+                </div>
+            </div>
+
         </div> <!-- END Form container -->
     </div>
 </div>

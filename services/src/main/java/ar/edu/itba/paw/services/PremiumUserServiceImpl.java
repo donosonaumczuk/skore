@@ -262,6 +262,10 @@ public class PremiumUserServiceImpl implements PremiumUserService{
             }
         }
 
-        return ((wins + 0.5 * ties)/played) * 100;
+        if(played != 0) {
+            return ((wins + 0.5 * ties)/played) * 100;
+        }
+
+        return -1;
     }
 }
