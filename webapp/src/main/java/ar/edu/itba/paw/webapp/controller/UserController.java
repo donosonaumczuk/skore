@@ -311,16 +311,24 @@ public class UserController extends BaseController{
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
 
         if(game == null) {
-            return new ModelAndView("genericPageWithMessages").addObject("message",
+            return new ModelAndView("genericPageWithMessage").addObject("message",
                     "canNotFoundGame").addObject("attribute", "");
         }
+
         try {
             game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUser().getUserId());
             LOGGER.trace("added to Match");
-        } catch (TeamFullException e) {
+        }
+        catch (TeamFullException e) {
             LOGGER.error("Team is already full");
-
             return new ModelAndView("teamFull");
+        }
+        catch(AlreadyJoinedToMatchException e) {
+            LOGGER.error("User has already joined match");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "userAlreadyRegistereduserAlreadyRegisteredOnGameOnGame")
+                    .addObject("attribute", "");
+
         }
 
         return new ModelAndView("redirect:/match/" + path);
