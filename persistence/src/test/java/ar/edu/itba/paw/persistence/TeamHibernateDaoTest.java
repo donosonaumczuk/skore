@@ -56,7 +56,6 @@ public class TeamHibernateDaoTest {
                             null, 50,"321dammiano_aguistin123", "admin", null);
         team            = new Team(account, "C.A.R.", "Club Atletico River", false, sport,
                             null);
-        team.addPlayer(account.getUser());
         teamNotInserted = new Team(account, "C.A.B.", "Club Atletico Boca", false, sport,
                             null);
         teamNotInserted.addPlayer(account.getUser());
@@ -144,6 +143,7 @@ public class TeamHibernateDaoTest {
 
     @Test
     public void testAddPlayer() {
+        team.addPlayer(account.getUser());
 
         final Optional<Team> returnedTeam = teamDao.addPlayer(team.getName(), user.getUserId());
 
@@ -155,6 +155,7 @@ public class TeamHibernateDaoTest {
 
     @Test
     public void testReamovePlayer() {
+        team.addPlayer(account.getUser());
 
         final Optional<Team> returnedTeam = teamDao.removePlayer(team.getName(), account.getUser().getUserId());
 

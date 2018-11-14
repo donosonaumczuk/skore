@@ -60,13 +60,19 @@
                 <div class="form-group">
                     <label for="inputSport"><spring:message code="sportLabel"/><span class="text-muted">*</span></label>
                     <form:select id="inputSport" path="sportName" class="form-control">
-                        <option value=""><spring:message code="chooseSportLabel"/></option>
+                        <c:if test="${createMatchForm.sportName != null}">
+                             <option value="${createMatchForm.sportName}"><spring:message code="chooseSportLabel"/></option>
+                        </c:if>
+                        <c:if test="${createMatchForm.sportName == null}">
+                            <option value=""><spring:message code="chooseSportLabel"/></option>
+                        </c:if>
                         <c:forEach var="sport" items="${sports}">
                             <option value="<c:out value="${sport.getName()}"/>"><c:out value="${sport.getDisplayName()}"/></option>
                         </c:forEach>
                     </form:select>
                     <form:errors path="sportName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
+
                <%-- <div class="form-group collapse" id="collapseTeam">
                     <label for="inputTeam"><spring:message code="teamLabel"/><span class="text-muted">*</span></label>
                     <form:select  path="teamId" id="inputTeam" class="form-control">
