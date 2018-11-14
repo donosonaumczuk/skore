@@ -32,6 +32,7 @@
                     <table class="table-striped table-bordered">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Sport Name</th>
                                 <th>Display Name</th>
                                 <th>Player Quantity On Each Team</th>
@@ -45,12 +46,13 @@
                         <tbody>
                             <c:forEach var = "i" begin = "0" end = "${sports.size() - 1}">
                                 <tr>
+                                    <td><img src="<c:url value="/sport/image/${sports.get(i).name}"/>" class="sport-img" alt="sport-pic"></td>
                                     <td><c:out value = "${sports.get(i).name}"/></td>
                                     <td><c:out value = "${sports.get(i).displayName}"/></td>
                                     <td><c:out value = "${sports.get(i).quantity}"/></td>
                                     <td>
                                         <div class="col">
-                                            <a class="btn btn-outline-secondary" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="EditSportLabel"/></a>
+                                            <a class="btn btn-outline-secondary" href="<c:url value="/admin/createSport"/>" role="button"><i class="fas fa-edit"></i><spring:message code="EditSportLabel"/></a>
                                         </div>
                                     </td>
                                 </tr>

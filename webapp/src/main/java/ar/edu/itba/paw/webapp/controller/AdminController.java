@@ -46,7 +46,8 @@ public class AdminController extends BaseController{
 
         try {
             sportService.findByName(sportName);
-        }catch (SportNotFoundException e) {
+        }
+        catch (SportNotFoundException e) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "sportNotFoundMessage").addObject("attribute", "");
         }
@@ -60,6 +61,20 @@ public class AdminController extends BaseController{
 
         return new ModelAndView("admin/index").addObject("sports", sports);
     }
+
+//    @RequestMapping("/editSport/**")
+//    public ModelAndView editSport(HttpServletRequest request) {
+//        String sportName = request.getServletPath().replace("/admin/editSport/", "");
+//
+//        try {
+//            sportService.findByName(sportName);
+//        }
+//        catch (SportNotFoundException e) {
+//            return new ModelAndView("genericPageWithMessage").addObject("message",
+//                    "sportNotFoundMessage").addObject("attribute", "");
+//        }
+//
+//    }
 
     @RequestMapping(value = "/createSport", method = {RequestMethod.GET })
     public ModelAndView createSportForm(@ModelAttribute("createSportForm") SportForm sportForm){
