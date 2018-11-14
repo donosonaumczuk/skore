@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.MatchForm;
+import ar.edu.itba.paw.webapp.form.SubmitResultForm;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -218,7 +219,8 @@ public class GameController extends BaseController{
             game = gameService.findByKeyFromURL(matchURLKey);
         }
         catch (GameNotFoundException e) {
-            return new ModelAndView("404");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
         }
 
         int sportQuantity = game.getTeam1().getSport().getQuantity();
@@ -226,11 +228,61 @@ public class GameController extends BaseController{
         int team2Quantity = game.getTeam2().getPlayers().size();
         boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
         boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
-        //boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
-        boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
+        boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        //boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         boolean canEdit = isFull && isCreator && hasFinished;
         return new ModelAndView("match").addObject("match", game)
-                .addObject("canEdit", canEdit);
+                .addObject("canEdit", canEdit)
+                .addObject("matchURLKey", matchURLKey);
+    }
+
+    @RequestMapping(value= "/submitMatchResult/{matchKey}", method = {RequestMethod.GET})
+    public ModelAndView submitMatchResultForm(@ModelAttribute("submitResultForm") SubmitResultForm submitResultForm,
+                                      HttpServletRequest request, @PathVariable String matchKey) {
+        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
+        Game game = null;
+        try {
+            game = gameService.findByKeyFromURL(matchKey);
+        }
+        catch (GameNotFoundException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        }
+
+        return new ModelAndView("submitMatchResult").addObject("game", game)
+                .addObject("matchKey", matchKey);
+    }
+
+    @RequestMapping(value="/submitMatchResult/*",  method = {RequestMethod.POST})
+    public ModelAndView submitMatchResult(@Valid @ModelAttribute("submitResultForm") final SubmitResultForm submitResultForm,
+                                  final BindingResult errors, HttpServletRequest request) {
+        if(errors.hasErrors()) {
+            return submitMatchResultForm(submitResultForm, request, submitResultForm.getMatchKey());
+        }
+        int team1Score = 0, team2Score = 0;
+
+        for(int i = 0; i< submitResultForm.getTeam1Points().length(); i++) {
+            team1Score = team1Score * 10 + (submitResultForm.getTeam1Points().charAt(i) - '0');
+        }
+
+        for(int i = 0; i< submitResultForm.getTeam2Points().length(); i++) {
+            team2Score = team2Score * 10 + (submitResultForm.getTeam2Points().charAt(i) - '0');
+        }
+
+        //addResult
+
+        Game game;
+        try {
+            game = gameService.findByKeyFromURL(submitResultForm.getMatchKey());
+        }
+        catch (GameNotFoundException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        }
+
+        return new ModelAndView("match").addObject("match", game)
+                .addObject("canEdit", false)
+                .addObject("matchURLKey", submitResultForm.getMatchKey());
     }
 
     @RequestMapping(value = "/confirmMatch/**")
