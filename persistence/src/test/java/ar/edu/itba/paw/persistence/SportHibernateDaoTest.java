@@ -93,7 +93,18 @@ public class SportHibernateDaoTest {
     }
 
     @Test
-    public void testRemoveNonExistantUser(){
+    public void testModifySport() throws IOException {
+        //exercise
+        Optional<Sport> returnedSport = sportDao.modifySport(sport.getName(),
+                "BASKETBALL", null);
+
+        //postconditions
+        Assert.assertTrue(returnedSport.isPresent());
+        Assert.assertEquals("BASKETBALL", returnedSport.get().getDisplayName());
+    }
+
+    @Test
+    public void testRemoveNonExistantSport(){
         //exercise class
         boolean returnValue = sportDao.remove(sportNotInserted.getName());
 
@@ -102,7 +113,7 @@ public class SportHibernateDaoTest {
     }
 
     @Test
-    public void testRemoveExistantUser(){
+    public void testRemoveExistantSport(){
         //exercise class
         boolean returnValue = sportDao.remove(sport.getName());
 
