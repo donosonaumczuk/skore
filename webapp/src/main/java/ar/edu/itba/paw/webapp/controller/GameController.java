@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.Exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.Exceptions.GameNotFoundException;
 import ar.edu.itba.paw.Exceptions.TeamFullException;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -228,8 +230,8 @@ public class GameController extends BaseController{
         int team2Quantity = game.getTeam2().getPlayers().size();
         boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
         boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
-        boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
-        //boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
+        //boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         boolean canEdit = isFull && isCreator && hasFinished;
         return new ModelAndView("match").addObject("match", game)
                 .addObject("canEdit", canEdit)
@@ -281,9 +283,17 @@ public class GameController extends BaseController{
         }
 
         //addResult
-        gameService.updateResultOfGame(game.team1Name(), game.getStartTimeString(), game.getFinishTimeString(),
-        team1Score, team2Score);
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String startTime = game.getStartTime().format(formatter);
+        String finishTime = game.getFinishTime().format(formatter);
+        try {
+            gameService.updateResultOfGame(game.team1Name(), startTime, finishTime,
+                    team1Score, team2Score);
+        }
+        catch(GameHasNotBeenPlayException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "CanNotUpdateResultHasNotPlayed").addObject("attribute", "");
+        }
         return new ModelAndView("match").addObject("match", game)
                 .addObject("canEdit", false)
                 .addObject("matchURLKey", submitResultForm.getMatchKey());
