@@ -220,7 +220,12 @@ public class GameController extends BaseController{
             return new ModelAndView("404");
         }
 
-        return new ModelAndView("match").addObject("match", game);
+        int sportQuantity = game.getTeam1().getSport().getQuantity();
+        int team1Quantity = game.getTeam1().getPlayers().size();
+        int team2Quantity = game.getTeam2().getPlayers().size();
+        boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
+        return new ModelAndView("match").addObject("match", game)
+                .addObject("isFull", isFull);
     }
 
     @RequestMapping(value = "/confirmMatch/**")
