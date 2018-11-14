@@ -24,10 +24,10 @@ public class ResourceController extends BaseController{
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     /* Production */
-//    private static String URL_PREFIX = "/paw-2018b-04";
+    private static String URL_PREFIX = "/paw-2018b-04";
 
     /* Local */
-    private static String URL_PREFIX = "";
+//    private static String URL_PREFIX = "";
 
     @Autowired
     private MessageSource messageSource;
