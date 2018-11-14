@@ -226,7 +226,8 @@ public class GameController extends BaseController{
         int team2Quantity = game.getTeam2().getPlayers().size();
         boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
         boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
-        boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        //boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         boolean canEdit = isFull && isCreator && hasFinished;
         return new ModelAndView("match").addObject("match", game)
                 .addObject("canEdit", canEdit);
