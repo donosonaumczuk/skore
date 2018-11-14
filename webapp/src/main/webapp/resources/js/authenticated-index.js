@@ -93,11 +93,11 @@ function cancelAssistance(key) {
 }
 
 function getCancelButton(match) {
-    return '<a class="btn btn-negative join-button" onclick="cancelAssistance(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
+    return '<a class="btn btn-negative join-button" onclick="cancelAssistance(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\'); event.stopPropagation();"' +
         ' role="button"><i class="fas fa-times mr-1"></i>' + labelMap.joined[lang] + '</a>';
 }
 
 function getDeleteButton(match) {
-    return '<a class="btn btn-negative join-button" onclick="deleteMatch(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\')"' +
+    return '<a class="btn btn-negative join-button" onclick="deleteMatch(\'' + getMatchURLKey(match.startTime, match.team1, match.finishTime) + '\'); event.stopPropagation();"' +
         ' role="button"><i class="fas fa-trash-alt mr-1"></i>' + labelMap.created[lang] + '</a>';
 }

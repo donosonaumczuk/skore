@@ -33,6 +33,9 @@ body {
     width: 37px;
     height: 37px;
     border-radius: 50%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
     background-color: white;
 }
 
@@ -53,6 +56,9 @@ body {
     width: 12rem;
     height: 12rem;
     border-radius: 50%;
+    border-style: solid;
+    border-width: 8px;
+    border-color: black;
     background-color: white;
 }
 
@@ -90,6 +96,10 @@ body {
 .btn-negative:hover {
     background-color: #ffaea7;
     color: darkred;
+}
+
+.full-match {
+    color: grey;
 }
 
 .sport-label {

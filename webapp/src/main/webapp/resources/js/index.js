@@ -11,6 +11,10 @@ var labelMap = {
         "en": "DELETE",
         "es": "ELIMINAR"
     },
+    full: {
+        "en": "FULL",
+        "es": "COMPLETO"
+    },
     days: {
         "MONDAY": {
             "en": "Monday",
@@ -630,6 +634,10 @@ function getTypeLabel(type) {
 }
 
 function getJoinButton(match) {
+    if(match.quantityOccupiedPlaces == (match.team1.sport.quantity * 2)) {
+        return '<p class="full-match"><i class="fas fa-check mr-1"></i>' + labelMap.full[lang] + '</p>';
+    }
+
     var prefix = isFriendlyMatch(match.type)? '/joinMatch/' : '/joinCompetitiveMatch/';
     return '<a class="btn btn-green join-button" href="'+ contextPath + prefix + getMatchURLKey(match.startTime, match.team1, match.finishTime) +
         '" role="button"><i class="fas fa-plus mr-1"></i>' + labelMap.toJoin[lang] + '</a>';
