@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models;
 
-import org.omg.IOP.Encoding;
-import sun.java2d.pipe.SpanShapeRenderer;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -9,10 +7,6 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.security.Key;
 
 public class SimpleEncrypter {
     private Cipher cipher;

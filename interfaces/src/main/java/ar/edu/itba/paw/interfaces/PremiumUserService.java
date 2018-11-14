@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.Transient;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface PremiumUserService {

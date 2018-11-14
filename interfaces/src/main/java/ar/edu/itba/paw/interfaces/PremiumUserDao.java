@@ -1,15 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
-import ar.edu.itba.paw.models.User;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
