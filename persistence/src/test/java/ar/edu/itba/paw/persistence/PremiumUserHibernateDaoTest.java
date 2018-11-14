@@ -82,6 +82,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     public void testCreatePremiumUser() throws IOException {
 
         //set up
+       // Role role = roleDao.create
         em.remove(insertedUser);
 
         //exercise class

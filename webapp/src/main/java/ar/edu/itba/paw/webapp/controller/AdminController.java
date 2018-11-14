@@ -5,6 +5,7 @@ import ar.edu.itba.paw.Exceptions.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.webapp.form.EditSportForm;
 import ar.edu.itba.paw.webapp.form.SportForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,19 +63,49 @@ public class AdminController extends BaseController{
         return new ModelAndView("admin/index").addObject("sports", sports);
     }
 
-//    @RequestMapping("/editSport/**")
-//    public ModelAndView editSport(HttpServletRequest request) {
-//        String sportName = request.getServletPath().replace("/admin/editSport/", "");
-//
-//        try {
-//            sportService.findByName(sportName);
-//        }
-//        catch (SportNotFoundException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "sportNotFoundMessage").addObject("attribute", "");
-//        }
-//
-//    }
+    @RequestMapping(value="/editSport/{sportName}",  method = {RequestMethod.GET})
+    public ModelAndView editSportForm(@ModelAttribute("editSportForm") EditSportForm editSportForm,
+                                      HttpServletRequest request, @PathVariable String sportName) {
+        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
+        Sport sport = null;
+        try {
+            sport = sportService.findByName(sportName);
+        }
+        catch (SportNotFoundException e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "sportNotFoundMessage").addObject("attribute", "");
+        }
+
+        return new ModelAndView("admin/editSport").addObject("sport", sport);
+    }
+
+    @RequestMapping(value="/editSport/*",  method = {RequestMethod.POST})
+    public ModelAndView editSport(@Valid @ModelAttribute("editSportForm") final EditSportForm editSportForm,
+                                  final BindingResult errors, @RequestParam(value = "file", required = false)
+                                              MultipartFile file, HttpServletRequest request) throws IOException {
+        if(errors.hasErrors()) {
+            return editSportForm(editSportForm, request, editSportForm.getSportName());
+        }
+
+        Sport sport = null;
+
+        try {
+            sport = sportService.findByName(editSportForm.getSportName());
+        }
+        catch (Exception e) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "sportNotFoundMessage").addObject("attribute", "");
+        }
+       // sportService.
+        List<Sport> sports = sportService.getAllSports();
+
+        if(sports == null) {
+            sports = new LinkedList<>();
+        }
+
+        return new ModelAndView("/admin/index").addObject("sports", sports);
+    }
+
 
     @RequestMapping(value = "/createSport", method = {RequestMethod.GET })
     public ModelAndView createSportForm(@ModelAttribute("createSportForm") SportForm sportForm){
@@ -83,9 +114,9 @@ public class AdminController extends BaseController{
 
     @RequestMapping(value = "/createSport", method = {RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("createSportForm") final SportForm sportForm,
-                               final BindingResult errors, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+                               final BindingResult errors, @RequestParam(value = "file", required = false)
+                                           MultipartFile file) throws IOException {
         if(errors.hasErrors()) {
-            System.out.println("imageFile: " + sportForm.getImage().getContentType() + "\n\n\n\n");
             return createSportForm(sportForm);
         }
 
@@ -98,7 +129,8 @@ public class AdminController extends BaseController{
         try {
             final Sport sport = sportService.create(sportForm.getSportName(), playerQuantity,
                     sportForm.getDisplayName(), sportForm.getImage());
-        }catch (Exception e) {
+        }
+        catch (Exception e) {
             return new ModelAndView("/admin/sportDuplicated").addObject("sportName", sportForm.getSportName());
         }
 

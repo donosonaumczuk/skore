@@ -32,13 +32,13 @@
                     <table class="table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Image</th>
-                                <th>Sport Name</th>
-                                <th>Display Name</th>
-                                <th>Player Quantity On Each Team</th>
+                                <th><spring:message code="imageMessage"/></th>
+                                <th><spring:message code="sportNameMessage"/></th>
+                                <th><spring:message code="displayNameMessage"/></th>
+                                <th><spring:message code="playerQuantityMessage"/></th>
                                 <th>
                                     <div class="col">
-                                        <a class="btn btn-green mb-2" href="<c:url value="/admin/createSport"/>" role="button"><spring:message code="createSportLabel"/></a>
+                                        <a class="btn btn-green mb-2" href="<c:url value="/admin/createSport"/>" role="button"><i class="fas fa-plus mr-1"></i><spring:message code="createSportLabel"/></a>
                                     </div>
                                 </th>
                             </tr>
@@ -52,7 +52,7 @@
                                     <td><c:out value = "${sports.get(i).quantity}"/></td>
                                     <td>
                                         <div class="col">
-                                            <a class="btn btn-outline-secondary" href="<c:url value="/admin/createSport"/>" role="button"><i class="fas fa-edit"></i><spring:message code="EditSportLabel"/></a>
+                                            <a class="btn btn-outline-secondary" href="<c:url value="/admin/editSport/${sports.get(i).name}"/>" role="button"><i class="fas fa-edit"></i><spring:message code="EditSportLabel"/></a>
                                         </div>
                                     </td>
                                 </tr>
