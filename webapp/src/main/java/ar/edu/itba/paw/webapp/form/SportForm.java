@@ -24,7 +24,6 @@ public class SportForm {
 
     @ValidSportImageSize
     @ValidSportImageType
-    @ValidSportImageNotNull
     private MultipartFile image;
 
     public String getSportName() {
