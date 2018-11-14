@@ -305,9 +305,12 @@ public class GameController extends BaseController{
         System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
         long userId = userService.getUserIdFromData(userData);
         User user = userService.findById(userId);
+
         if(user == null) {
-            throw new UserNotFoundException("Can't find user");
+            return new ModelAndView("404UserNotFound").addObject("username", "");
+            //throw new UserNotFoundException("Can't find user");
         }
+
         final int URL_DATE_LENGTH =12;
         final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
         if(gameData.length() < MIN_LENGTH) {
@@ -319,7 +322,19 @@ public class GameController extends BaseController{
         String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
         Game game = gameService.findByKey(teamName1, startTime, finishTime);
         if(game == null) {
-            throw new GameNotFoundException("Can't find game");
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "canNotFindMatch").addObject("attribute", "");
+        //    throw new GameNotFoundException("Can't find game");
+        }
+
+        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyFinished").addObject("attribute", "");
+        }
+
+        if(LocalDateTime.now().isAfter(game.getStartTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyStarted").addObject("attribute", "");
         }
         if(!isPlayerInTeam(game, user)) {
             try {
@@ -371,6 +386,16 @@ public class GameController extends BaseController{
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "canNotFindMatch").addObject("attribute", "");
             //throw new GameNotFoundException("Can't find game");
+        }
+
+        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "cancelMatchHasAlreadyFinished");
+        }
+
+        if(LocalDateTime.now().isAfter(game.getStartTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "cancelMatchHasAlreadyStarted");
         }
 
         if(isPlayerInTeam(game, user)) {
