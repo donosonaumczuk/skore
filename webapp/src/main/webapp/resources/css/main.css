@@ -189,6 +189,18 @@ body {
     cursor: pointer;
 }
 
+.loserWinRate {
+
+}
+
+.winnerWinRate {
+
+}
+
+.result-label {
+
+}
+
 .bg-black {
     background-color: #000000;
 }
