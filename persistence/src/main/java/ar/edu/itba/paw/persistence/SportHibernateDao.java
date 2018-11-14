@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.models.Sport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -32,6 +33,25 @@ public class SportHibernateDao implements SportDao {
         final Sport newSport = new Sport(sportName, playerQuantity, displayName, ((file==null)?null:file.getBytes()));
         em.persist(newSport);
         return Optional.of(newSport);
+    }
+
+    @Override
+    public Optional<Sport> modifySport(final String sportName, final String displayName,
+                                       final MultipartFile file) throws IOException {
+        Sport sport = em.find(Sport.class, sportName);
+
+        if(sport == null) {
+            return Optional.empty();
+        }
+
+        sport.setDisplayName(displayName);
+
+        if(file != null) {
+            sport.setImage(file.getBytes());
+        }
+
+        em.merge(sport);
+        return Optional.of(sport);
     }
 
     @Override
