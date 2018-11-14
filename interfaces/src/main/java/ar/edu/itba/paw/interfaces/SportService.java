@@ -17,6 +17,10 @@ public interface SportService {
                         final String displayName, final MultipartFile file) throws IOException;
 
     @Transactional
+    public Sport modifySport(final String sportName, final String displayName,
+                             final MultipartFile file) throws IOException;
+
+    @Transactional
     public boolean remove(final String sportName);
 
     @Transactional

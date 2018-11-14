@@ -40,6 +40,14 @@ public class SportServiceImpl implements SportService {
     }
 
     @Override
+    public Sport modifySport(final String sportName, final String displayName,
+                             final MultipartFile file) throws IOException {
+
+        Optional<Sport> sport = sportDao.modifySport(sportName, displayName, file);
+        return sport.orElseThrow(() -> new SportNotFoundException("can't found sport with name: " + sportName));
+    }
+
+    @Override
     public boolean remove(final String sportName) {
         return sportDao.remove(sportName);
     }

@@ -14,9 +14,13 @@ public interface SportDao {
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
                                   final MultipartFile file) throws IOException;
 
+    public Optional<Sport> modifySport(final String sportName, final String displayName,
+                                                final MultipartFile file) throws IOException;
+
     public boolean remove(final String sportName);
 
     public List<Sport> getAllSports();
 
     public Optional<byte[]> readImage(final String sportName);
+
 }
