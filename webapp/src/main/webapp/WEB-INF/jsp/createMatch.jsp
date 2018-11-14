@@ -30,7 +30,7 @@
                     <form:errors path="matchName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group">
-                    <label for="competitiveness"><spring:message code="matchCompetitivenessLabel"/><span class="text-muted">*</span><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-html="true" data-placement="right" title="<p><b>Amistoso</b> no requiere tener una cuenta para unirse. En caso de tener cuenta no impacta en el winrate</p><p><b>Competitivo</b> requiere tener una cuenta para unirse. Impacta en el winrate</p>"/></label>
+                    <label for="competitiveness"><spring:message code="matchCompetitivenessLabel"/><span class="text-muted">*</span><span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-html="true" data-placement="right" title="<spring:message code="matchModeTooltip"/>"/></label>
                     <div class="input-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
                             <label class="btn btn-green" id="friendly">
