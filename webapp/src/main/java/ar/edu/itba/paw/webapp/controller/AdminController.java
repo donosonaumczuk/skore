@@ -48,7 +48,7 @@ public class AdminController extends BaseController{
             sportService.findByName(sportName);
         }catch (SportNotFoundException e) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "sportNotFoundMessage").addObject("attributes", sportName);
+                    "sportNotFoundMessage").addObject("attribute", "");
         }
 
         //sportService.remove(sportName);
