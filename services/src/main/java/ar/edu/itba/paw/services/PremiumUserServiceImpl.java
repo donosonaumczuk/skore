@@ -224,36 +224,44 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     private double calculateWinRate(final PremiumUser user) {
-        List<Game> gamesTeam = user.getGamesInTeam1();
+        double played = 0;
         double wins = 0;
-        double gamesPlay = 0;
+        double ties = 0;
 
-        for (Game g:gamesTeam) {
+        List<Game> gamesTeam = user.getGamesInTeam1();
+
+        for(Game g : gamesTeam) {
             if(g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(Integer.parseInt(value[0]) > Integer.parseInt(value[1]) &&
-                        g.getType().split("-")[1].equals("Competitive")) {
+                if(g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
                     wins++;
                 }
-                gamesPlay++;
+                else if(g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
+                    ties++;
+                }
+                played++;
             }
-
         }
 
         gamesTeam = user.getGamesInTeam2();
-        for (Game g:gamesTeam) {
+
+        for(Game g : gamesTeam) {
             if(g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(Integer.parseInt(value[0]) < Integer.parseInt(value[1]) &&
-                        g.getType().split("-")[1].equals("Competitive")) {
+                if(g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
                     wins++;
                 }
-                gamesPlay++;
+                else if(g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
+                    ties++;
+                }
+                played++;
             }
-
         }
-        return (wins/gamesPlay) * 100;
-    }
 
-   
+        return ((wins + 0.5 * ties)/played) * 100;
+    }
 }

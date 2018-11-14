@@ -89,9 +89,9 @@ public class PremiumUserServiceImplTest {
         Team team2 = new Team(null, null, null, false,
                 null, null);
         team1.setPlayers(new LinkedHashSet<>());
-        listTeam1.add(new Game(team1, team2, null, null, null, null,
+        listTeam1.add(new Game(team1, team2, null, null, null, "Individual-Competitive",
                 "2-1", null, null, null));
-        listTeam2.add(new Game(team2, team1, null, null, null, null,
+        listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-10", null, null, null));
         listofList.add(listTeam1);
         listofList.add(listTeam2);
@@ -120,9 +120,9 @@ public class PremiumUserServiceImplTest {
         Team team2 = new Team(null, null, null, false,
                 null, null);
         team1.setPlayers(new LinkedHashSet<>());
-        listTeam1.add(new Game(team1, team2, null, null, null, null,
+        listTeam1.add(new Game(team1, team2, null, null, null, "Individual-Competitive",
                 "2-1", null, null, null));
-        listTeam2.add(new Game(team2, team1, null, null, null, null,
+        listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-0", null, null, null));
         listofList.add(listTeam1);
         listofList.add(listTeam2);
@@ -151,9 +151,9 @@ public class PremiumUserServiceImplTest {
         Team team2 = new Team(null, null, null, false,
                 null, null);
         team1.setPlayers(new LinkedHashSet<>());
-        listTeam1.add(new Game(team1, team2, null, null, null, null,
+        listTeam1.add(new Game(team1, team2, null, null, null, "Individual-Competitive",
                 "2-5", null, null, null));
-        listTeam2.add(new Game(team2, team1, null, null, null, null,
+        listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-0", null, null, null));
         listofList.add(listTeam1);
         listofList.add(listTeam2);
@@ -165,5 +165,36 @@ public class PremiumUserServiceImplTest {
 
         Assert.assertEquals(true, ans.isPresent());
         Assert.assertEquals(0, ans.get().getWinRate(), 0.00001);
+    }
+
+    @Test
+    public void findByKeyTestLoseAndTie() {
+        PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
+        account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
+        LinkedHashSet<User> playerList = new LinkedHashSet<>();
+        playerList.add(account.getUser());
+        List<List<Game>> listofList = new LinkedList<>();
+        List<Game> listTeam1 = new LinkedList<>();
+        List<Game> listTeam2 = new LinkedList<>();
+        Team team1 = new Team(null, null, null, false,
+                null, null);
+        team1.setPlayers(playerList);
+        Team team2 = new Team(null, null, null, false,
+                null, null);
+        team1.setPlayers(new LinkedHashSet<>());
+        listTeam1.add(new Game(team1, team2, null, null, null, "Individual-Competitive",
+                "0-2", null, null, null));
+        listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
+                "1-1", null, null, null));
+        listofList.add(listTeam1);
+        listofList.add(listTeam2);
+        when(premiumUserDaoMock.findByUserName(USERNAME))
+                .thenReturn(Optional.of(account));
+        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listofList);
+
+        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
+
+        Assert.assertEquals(true, ans.isPresent());
+        Assert.assertEquals(25, ans.get().getWinRate(), 0.00001);
     }
 }
