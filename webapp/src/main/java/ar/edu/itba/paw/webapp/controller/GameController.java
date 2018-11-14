@@ -25,6 +25,7 @@ import sun.java2d.pipe.SpanShapeRenderer;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -224,8 +225,11 @@ public class GameController extends BaseController{
         int team1Quantity = game.getTeam1().getPlayers().size();
         int team2Quantity = game.getTeam2().getPlayers().size();
         boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
+        boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
+        boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
+        boolean canEdit = isFull && isCreator && hasFinished;
         return new ModelAndView("match").addObject("match", game)
-                .addObject("isFull", isFull);
+                .addObject("canEdit", canEdit);
     }
 
     @RequestMapping(value = "/confirmMatch/**")
