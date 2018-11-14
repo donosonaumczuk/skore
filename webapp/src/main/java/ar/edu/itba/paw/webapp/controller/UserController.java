@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -319,6 +320,17 @@ public class UserController extends BaseController{
         if(game == null) {
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "canNotFoundGame").addObject("attribute", "");
+        }
+
+        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyFinished").addObject("attribute", "");
+        }
+
+        if(LocalDateTime.now().isAfter(game.getStartTime())) {
+            return new ModelAndView("genericPageWithMessage").addObject("message",
+                    "confirmMatchAlreadyStarted").addObject("attribute", "");
+
         }
 
         try {
