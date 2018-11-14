@@ -121,17 +121,15 @@
                                     </div>
                                     <div class="row text-center">
                                         <div class="col mt-xl-2 ml-xl-4">
-                                            <c:choose>
-                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) > Integer.parseInt(game.getResult().split(\"-\")[1])}">
-                                                    <i class="name-label fas fa-check-circle mr-2"></i><spring:message code="winLabel"/>
-                                                </c:when>
-                                                <c:when test="${Integer.parseInt(game.getResult().split(\"-\")[0]) == Integer.parseInt(game.getResult().split(\"-\")[1])}">
-                                                    <i class="name-label fas fa-minus-circle mr-2"></i><spring:message code="tieLabel"/>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="name-label fas fa-times-circle mr-2"></i><spring:message code="loseLabel"/>
-                                                </c:otherwise>
-                                            </c:choose>
+                                            <c:if test="${(game.firstScoreFromResult() > game.secondScoreFromResult())}">
+                                                <i class="name-label fas fa-check-circle mr-2"></i><spring:message code="winLabel"/>
+                                            </c:if>
+                                            <c:if test="${(game.firstScoreFromResult() == game.secondScoreFromResult())}">
+                                                <i class="name-label fas fa-minus-circle mr-2"></i><spring:message code="tieLabel"/>
+                                            </c:if>
+                                            <c:if test="${(game.firstScoreFromResult() < game.secondScoreFromResult())}">
+                                                <i class="name-label fas fa-times-circle mr-2"></i><spring:message code="loseLabel"/>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

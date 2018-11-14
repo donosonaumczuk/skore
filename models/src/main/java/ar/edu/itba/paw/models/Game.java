@@ -192,4 +192,29 @@ public class Game {
     public String getCompetitiveness() {
         return type.split("-")[1];
     }
+
+    public int getFirstScoreFromResult() {
+        String result = getResult();
+        int firstScore = 0;
+
+        for(int i = 0; i < result.length() && result.charAt(i) != '-'; i++) {
+            firstScore = firstScore * 10 + (result.charAt(i) - '0');
+        }
+
+        return firstScore;
+    }
+
+    public int getSecondScoreFromResult() {
+        String result = getResult();
+        int position = result.indexOf('-');
+        int secondScore = 0;
+
+        for(int i = position + 1; i < result.length(); i++) {
+            secondScore = secondScore * 10 + (result.charAt(i) - '0');
+        }
+
+        return secondScore;
+    }
+
+
 }

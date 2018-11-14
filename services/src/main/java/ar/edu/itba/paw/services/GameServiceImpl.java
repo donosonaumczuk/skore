@@ -317,4 +317,5 @@ public class GameServiceImpl implements GameService {
         listsOfGames.add(gameDao.gamesThatAUserPlayInTeam2(userId));
         return listsOfGames;
     }
+
 }
