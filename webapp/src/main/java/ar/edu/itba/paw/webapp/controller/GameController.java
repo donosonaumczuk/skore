@@ -236,7 +236,7 @@ public class GameController extends BaseController{
                 .addObject("matchURLKey", matchURLKey);
     }
 
-    @RequestMapping(value= "/submitMatchResult/{matchKey}", method = {RequestMethod.GET})
+    @RequestMapping(value= "/submitMatchResult/{matchKey:.+}", method = {RequestMethod.GET})
     public ModelAndView submitMatchResultForm(@ModelAttribute("submitResultForm") SubmitResultForm submitResultForm,
                                       HttpServletRequest request, @PathVariable String matchKey) {
         //String sportName = request.getServletPath().replace("/admin/editSport/", "");
@@ -269,7 +269,7 @@ public class GameController extends BaseController{
             team2Score = team2Score * 10 + (submitResultForm.getTeam2Points().charAt(i) - '0');
         }
 
-        //addResult
+
 
         Game game;
         try {
@@ -279,6 +279,10 @@ public class GameController extends BaseController{
             return new ModelAndView("genericPageWithMessage").addObject("message",
                     "canNotFindMatch").addObject("attribute", "");
         }
+
+        //addResult
+        gameService.updateResultOfGame(game.team1Name(), game.getStartTimeString(), game.getFinishTimeString(),
+        team1Score, team2Score);
 
         return new ModelAndView("match").addObject("match", game)
                 .addObject("canEdit", false)

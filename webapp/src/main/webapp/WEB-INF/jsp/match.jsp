@@ -67,6 +67,12 @@
             <c:if test="${canEdit}">
                 <a class="btn btn-green mb-2" href="<c:url value="/submitMatchResult/${matchURLKey}"/>" role="button"><i class="fas fa-plus mr-1"></i><spring:message code="addResultLabel"/></a>
             </c:if>
+            <c:if test="${match.result != null}}">
+                <div>
+                    ${match.result}
+                </div>
+            </c:if>
+
             <div class="row text-center">
                 <table class="table table-striped">
                     <thead>
