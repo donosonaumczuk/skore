@@ -36,7 +36,7 @@
                     <form:errors path="displayName" element="div" cssClass="invalid-feedback d-block"/>
                 </div>
                 <div class="form-group">
-                    <form:label path="image"><spring:message code="sportImageLabel"/><span class="text-muted">*</span></form:label>
+                    <form:label path="image"><spring:message code="sportImageLabel"/></form:label>
                     <div class="input-group">
                         <div class="custom-file">
                             <input type="file"  name="image" class="custom-file-input" id="image" value="" multiple onchange="showname()"/>
