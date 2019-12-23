@@ -3,17 +3,16 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.SimpleEncrypter;
+import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.User;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendConfirmMatchAssistance(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
-        phrase = encrypter.encriptString(phrase);
+        phrase = encrypter.encryptString(phrase);
         emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale());
     }
 
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public void sendCancelOptionMatch(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.encriptString(phrase);
+        encrypter.encryptString(phrase);
         emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale());
     }
 
