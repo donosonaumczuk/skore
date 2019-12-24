@@ -82,7 +82,6 @@ public class PremiumUser {
                        String userName, String cellphone, LocalDate birthday,
                        Place home, int reputation, String password, String code,
                        byte image[]) {
-
         this.user           = new User(firstName, lastName, email);
         this.userName       = userName;
         this.cellphone      = cellphone;
@@ -107,7 +106,6 @@ public class PremiumUser {
         likes          = new ArrayList<>();
         roles          = new HashSet<>();
         enabled        = false;
-
     }
 
     public String getUserName() {
