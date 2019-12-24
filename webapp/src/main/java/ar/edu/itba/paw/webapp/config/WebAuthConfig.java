@@ -34,7 +34,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .invalidSessionUrl("/")
                 .and().authorizeRequests()
-                    .antMatchers("/", "/lang", "/profile/**", "/img/user-default.svg", "/404UserNotFound", "/filterMatch",
+                    .antMatchers("/", "/api/**", "/lang", "/profile/**", "/img/user-default.svg", "/404UserNotFound", "/filterMatch",
                                 "/404", "/match/*", "/confirm/**", "/joinMatch/*", "/joinMatchForm/*",
                             "/confirmMatch/**", "/cancelMatch/*","/sport/**" ).permitAll()
                     .antMatchers("/create", "/login", "/joinMatchForm").anonymous()

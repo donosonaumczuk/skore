@@ -40,6 +40,7 @@
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -255,16 +256,10 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- JERSEY JSON -->
             <dependency>
-                <groupId>org.glassfish.jersey.media</groupId>
-                <artifactId>jersey-media-moxy</artifactId>
-                <version>${jersey.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.media</groupId>
-                <artifactId>jersey-media-jaxb</artifactId>
-                <version>${jersey.version}</version>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
