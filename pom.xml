@@ -41,6 +41,7 @@
         <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
+        <io.jsonwebtoken.jjwt.version>0.7.0</io.jsonwebtoken.jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -260,6 +261,11 @@
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${io.jsonwebtoken.jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
