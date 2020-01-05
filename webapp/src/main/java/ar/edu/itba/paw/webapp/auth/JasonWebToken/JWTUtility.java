@@ -13,13 +13,12 @@ import java.util.Date;
 
 @Component
 public class JWTUtility {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JWTUtility.class);
+
     private final String secret;
-
     private final long maxValidTime;
-
     private final SecureRandom secureRandom = new SecureRandom();
-
-    private Logger LOGGER = LoggerFactory.getLogger(JWTUtility.class);
 
     @Autowired
     public JWTUtility(Environment environment) {
