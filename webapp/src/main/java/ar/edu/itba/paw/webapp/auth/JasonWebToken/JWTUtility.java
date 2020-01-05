@@ -19,7 +19,7 @@ public class JWTUtility {
 
     private final SecureRandom secureRandom = new SecureRandom();
 
-    private Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private Logger LOGGER = LoggerFactory.getLogger(JWTUtility.class);
 
     @Autowired
     public JWTUtility(Environment environment) {
