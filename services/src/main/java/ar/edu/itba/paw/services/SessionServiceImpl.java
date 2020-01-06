@@ -26,18 +26,20 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PremiumUser loggedUser() {
-        final Authentication authentication = getAuth();
-        if(authentication == null || !isLogged()) {
-            return null;
+    public PremiumUser getLoggedUser() {
+        PremiumUser ans;
+        String username = getUserName();
+        if(username == null) {
+            ans = null;
         }
-        String username = authentication.getName();
-
-        if(current == null || !current.getUserName().equals(username)) {
-            current = us.findByUserName(username).orElse(null);
+        else {
+            if (current == null || !current.getUserName().equals(username)) {
+                current = us.findByUserName(username).orElse(null);
+            }
+            ans = current;
         }
 
-        return current;
+        return ans;
     }
 
     @Override
@@ -47,8 +49,17 @@ public class SessionServiceImpl implements SessionService {
         }
         else {
             Role adminRole = new Role("ROLE_ADMIN", 1);
-            return loggedUser().getRoles().contains(adminRole);
+            return getLoggedUser().getRoles().contains(adminRole);
         }
+    }
+
+    @Override
+    public String getUserName() {
+        final Authentication authentication = getAuth();
+        if(authentication == null || !isLogged()) {
+            return null;
+        }
+        return authentication.getName();
     }
 
     private Authentication getAuth() {
