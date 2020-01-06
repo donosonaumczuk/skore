@@ -20,10 +20,9 @@ public class JWTUtility {
     private final long maxValidTime;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    @Autowired
-    public JWTUtility(Environment environment) {
-        this.secret = environment.getRequiredProperty("jwt.secret");
-        this.maxValidTime = environment.getRequiredProperty("jwt.duration", Long.class);
+    public JWTUtility() {
+        this.secret = "secret"; //TODO adjust secret
+        this.maxValidTime = 86400000;//One day TODO: adjust
     }
 
     public String createToken(PremiumUser premiumUser) {

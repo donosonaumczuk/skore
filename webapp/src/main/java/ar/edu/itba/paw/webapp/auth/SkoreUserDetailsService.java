@@ -27,7 +27,6 @@ public class SkoreUserDetailsService implements UserDetailsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkoreUserDetailsService.class);
 
-
     @Autowired
     private PremiumUserService us;
 

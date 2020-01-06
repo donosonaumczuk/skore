@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUserDetailsAuthProvider;
 import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFilter;
+import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,7 +14,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.DataSource;
@@ -24,44 +31,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SkoreUserDetailsService userDetailService;
 
+    @Autowired
+    private JWTUserDetailsAuthProvider jwtUserDetailsAuthProvider;
 
     @Autowired
-    private DataSource dataSource;
+    private LoginAuthSuccessHandler loginAuthSuccessHandler;
+
+    @Autowired
+    private LoginAuthFailureHandler loginAuthFailureHandler;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailService)
+                .addFilterBefore(createLoginAuthFilter(), UsernamePasswordAuthenticationFilter.class) // Use JSON login for initial authentication
+                //TODO add filter for access endoints with account
                 .sessionManagement()
-                    .invalidSessionUrl("/")
-                .and().authorizeRequests()
-                    .antMatchers("/", "/api/**", "/lang", "/profile/**", "/img/user-default.svg", "/404UserNotFound", "/filterMatch",
-                                "/404", "/match/*", "/confirm/**", "/joinMatch/*", "/joinMatchForm/*",
-                            "/confirmMatch/**", "/cancelMatch/*","/sport/**" ).permitAll()
-                    .antMatchers("/create", "/login", "/joinMatchForm").anonymous()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/**").authenticated()
-                .and().formLogin()
-                    .usernameParameter("user_username")
-                    .passwordParameter("user_password")
-                    .defaultSuccessUrl("/", false)
-                    .loginPage("/login")
-                .and().rememberMe()
-                    .rememberMeParameter("user_rememberme")
-                    .userDetailsService(userDetailService)
-                    .key("secretKey")
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-                .and().exceptionHandling()
-                    .accessDeniedPage("/403")
-                .and().csrf().disable();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().logout().disable()
+                .rememberMe().disable()
+                .csrf().disable();
     }
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+                .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403"); //TODO: check url
     }
 
     @Bean
@@ -71,12 +65,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
-        //authManagerBuilder.userDetailsService(userDetailService).passwordEncoder(bCryptPasswordEncoder());
-        authManagerBuilder.userDetailsService(userDetailService)
-                .and().jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder())
-                .usersByUsernameQuery("select username as principal, password as credentials, enabled from accounts where username = ?")
-                .authoritiesByUsernameQuery("select username as principal, roles.roleName from userroles, roles where roles.roleId = userRoles.role AND username = ?");
+        authManagerBuilder.authenticationProvider(jwtUserDetailsAuthProvider)
+                .userDetailsService(userDetailService)
+                .passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    @Bean
+    public LoginAuthFilter createLoginAuthFilter() throws Exception {
+        LoginAuthFilter filter = new LoginAuthFilter();
+        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationSuccessHandler(loginAuthSuccessHandler);
+        filter.setAuthenticationFailureHandler(loginAuthFailureHandler);
+        return filter;
     }
 }
