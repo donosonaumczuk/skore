@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import './App.css';
 import Accounts from './components/Accounts';
 
 class App extends Component {
-
-  state = {
-    account: {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: {}
+    }
   }
 
   componentDidMount() {
-    console.log("executing");
-
     console.log(this.state);
     // fetch('http://localhost:8080/api/test/donosonaumczuk')
     fetch('/api/test/donosonaumczuk')
