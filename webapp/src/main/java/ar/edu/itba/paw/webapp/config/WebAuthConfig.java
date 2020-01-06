@@ -5,6 +5,9 @@ import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFailureHandler;
 import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFilter;
 import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthSuccessHandler;
+import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthFilter;
+import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,6 +21,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.DataSource;
@@ -44,7 +49,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailService)
                 .addFilterBefore(createLoginAuthFilter(), UsernamePasswordAuthenticationFilter.class) // Use JSON login for initial authentication
-                //TODO add filter for access endoints with account
+                .addFilterBefore(createSessionAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().logout().disable()
@@ -78,5 +83,30 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler(loginAuthSuccessHandler);
         filter.setAuthenticationFailureHandler(loginAuthFailureHandler);
         return filter;
+    }
+
+    @Bean
+    public SessionAuthFilter createSessionAuthFilter() throws Exception {
+        SessionAuthFilter filter = new SessionAuthFilter();
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setRequiresAuthenticationRequestMatcher(needAuthEndpointsMatcher());
+        filter.setAuthenticationSuccessHandler(new SessionAuthSuccessHandler());
+        filter.setAuthenticationFailureHandler(new SessionAuthFailureHandler());
+        return filter;
+    }
+
+    @Bean
+    public RequestMatcher needAuthEndpointsMatcher() {
+        return new OrRequestMatcher(//TODO make list
+                new AntPathRequestMatcher("/**", "GET"),
+                optionalAuthEndpointsMatcher()
+        );
+    }
+
+    @Bean
+    public RequestMatcher optionalAuthEndpointsMatcher() {
+        return new OrRequestMatcher( //TODO make list
+                new AntPathRequestMatcher("/**", "POST")
+        );
     }
 }
