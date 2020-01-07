@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Accounts from './components/Accounts';
-import axios from 'axios';
+import api from './services/Api';
+import NavBar from './components/NavBar';
+import getAccountByUsername from './services/AccountService';
 
 class App extends Component {
   constructor(props) {
@@ -10,18 +12,15 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    axios.get('/api/test/donosonaumczuk')
-    .then(res => {
-      const account = res.data;
-      this.setState({ account: account });
-    })
-    .catch(console.log)
+  async componentDidMount() {   
+    let account = await getAccountByUsername('donosonaumczuk')
+    this.setState({ account: account });
   }
 
   render() {
     return (
       <div>
+        <NavBar />
         <Accounts account={this.state.account} />
       </div>
     );
