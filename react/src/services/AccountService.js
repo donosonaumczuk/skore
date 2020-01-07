@@ -1,6 +1,4 @@
-import React from 'react';
-import axios from 'axios';
-import api from './Api';
+import api from './../config/Api';
 
 const getAccountByUsername = async username => {
     const res = await api.get(`test/${username}`);

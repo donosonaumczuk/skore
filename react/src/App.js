@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Accounts from './components/Accounts';
-import api from './services/Api';
 import NavBar from './components/NavBar';
 import getAccountByUsername from './services/AccountService';
 
