@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import Proptypes from 'prop-types';
 
     const Accounts = ( {account} ) => {
       return (
@@ -13,5 +14,9 @@ import React from 'react'
         </div>
       )
     };
+
+    Accounts.propTypes = {
+      account: Proptypes.object.isRequired
+    }
 
     export default Accounts;
