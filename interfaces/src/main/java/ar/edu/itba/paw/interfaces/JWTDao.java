@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.JWT;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-public interface JWTService {
+public interface JWTDao {
     boolean isInBlacklist(String jwtoken);
 
-    @Transactional
     JWT addBlacklist(String jwtoken, LocalDateTime expiry);
 }

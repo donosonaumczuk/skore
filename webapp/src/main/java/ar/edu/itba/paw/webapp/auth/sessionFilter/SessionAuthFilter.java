@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.sessionFilter;
 
 import ar.edu.itba.paw.Exceptions.NoJWTFoundException;
+import ar.edu.itba.paw.interfaces.JWTService;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUsernamePasswordAuthToken;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
 import io.jsonwebtoken.Claims;
@@ -21,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -37,6 +40,9 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
     private JWTUtility jwtUtility;
+
+    @Autowired
+    private JWTService jwtService;
 
     @Autowired
     private RequestMatcher optionalAuthEndpointsMatcher;
@@ -76,7 +82,13 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
         super.successfulAuthentication(request, response, chain, authResult);
         if(logOutEndpointMatcher.matches(request)) {
             LOGGER.trace("Going to logout user");
-            //TODO handle log out, probabily use claim to get expiration
+            String tokenString = getTokenFromRequest(request)
+                    .orElseThrow(()->new NoJWTFoundException("No JWT found in request"))
+                    .getToken();
+            Claims tokenClaims = getClaimsFromRequest(request);
+            LocalDateTime expiry = tokenClaims.getExpiration().toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            jwtService.addBlacklist(tokenString, expiry);
         }
         chain.doFilter(request, response);
     }
