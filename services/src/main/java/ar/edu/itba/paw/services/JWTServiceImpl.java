@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class JWTServiceImpl implements JWTService {
@@ -26,5 +27,15 @@ public class JWTServiceImpl implements JWTService {
     @Override
     public JWT addBlacklist(String jwtoken, LocalDateTime expiry) {
         return jwtDao.addBlacklist(jwtoken, expiry);
+    }
+
+    @Override
+    public void delete(JWT jwt) {
+        jwtDao.delete(jwt);
+    }
+
+    @Override
+    public List<JWT> getAll() {
+        return jwtDao.getAll();
     }
 }
