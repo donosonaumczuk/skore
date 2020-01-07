@@ -1,30 +1,25 @@
-import React, {Component} from 'react';
-import './App.css';
+import React, { Component } from 'react';
 import Accounts from './components/Accounts';
+import NavBar from './components/NavBar';
+import getAccountByUsername from './services/AccountService';
 
 class App extends Component {
-
-  state = {
-    account: {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: {}
+    }
   }
 
-  componentDidMount() {
-    console.log("executing");
-
-    console.log(this.state);
-    // fetch('http://localhost:8080/api/test/donosonaumczuk')
-    fetch('/api/test/donosonaumczuk')
-    .then(res => res.json())
-    .then((data) => {
-      this.setState({ account: data })
-    })
-    .catch(console.log)
-    console.log(this.state);
+  async componentDidMount() {   
+    let account = await getAccountByUsername('donosonaumczuk')
+    this.setState({ account: account });
   }
 
   render() {
     return (
       <div>
+        <NavBar />
         <Accounts account={this.state.account} />
       </div>
     );
