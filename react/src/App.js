@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar';
 import getAccountByUsername from './services/AccountService';
+import './css/test.css';
 
 class App extends Component {
   constructor(props) {
