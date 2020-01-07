@@ -28,6 +28,11 @@ public class JWT {
         this.expiry = expiry;
     }
 
+    public JWT(String tokenString, LocalDateTime expiry, int id) {
+        this(tokenString, expiry);
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
