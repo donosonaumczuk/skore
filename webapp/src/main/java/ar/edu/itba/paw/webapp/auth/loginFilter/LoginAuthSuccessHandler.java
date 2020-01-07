@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth.loginFilter;
 
+import ar.edu.itba.paw.Exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
@@ -36,7 +37,7 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
         LOGGER.info("{} has been successfully authenticate", authentication.getName());
 
         PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName())
-                .get(); //TODO: check
+                .orElseThrow(()->new UserNotFoundException("Login user does not exit")); //This exception should never happen
 
         httpServletResponse.addHeader("X-TOKEN", jwtUtility.createToken(premiumUser));
         httpServletResponse.setStatus(200);
