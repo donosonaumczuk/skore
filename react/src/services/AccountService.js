@@ -6,6 +6,4 @@ const getAccountByUsername = async username => {
     return res.data;
 }
    
-
-
 export default getAccountByUsername;
