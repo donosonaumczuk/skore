@@ -106,7 +106,7 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
     private Claims getClaimsFromRequest(HttpServletRequest request) {
         Optional<JWTUsernamePasswordAuthToken> token = getTokenFromRequest(request);
         Claims ans = null;
-        if(token.isPresent()) {
+        if (token.isPresent()) {
             ans = jwtUtility.validateTokenString(token.get().getToken());
         }
         return ans;

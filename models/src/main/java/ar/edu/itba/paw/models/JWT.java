@@ -7,6 +7,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "blacklist")
 public class JWT {
+
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "jwtseq", sequenceName = "jwtidseq", allocationSize = 1)

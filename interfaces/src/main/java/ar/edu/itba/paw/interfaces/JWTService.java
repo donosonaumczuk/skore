@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JWTService {
+
     boolean isInBlacklist(String jwtoken);
 
     @Transactional

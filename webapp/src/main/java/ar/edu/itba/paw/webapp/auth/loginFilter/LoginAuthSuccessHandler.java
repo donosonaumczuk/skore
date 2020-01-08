@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
 import ar.edu.itba.paw.webapp.dto.PremiumUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,9 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .orElseThrow(()->new UserNotFoundException("Login user does not exit")); //This exception should never happen
 
         httpServletResponse.addHeader("X-TOKEN", jwtUtility.createToken(premiumUser));
-        httpServletResponse.setStatus(200);
+        httpServletResponse.setStatus(HttpStatus.SC_OK);
         httpServletResponse.setContentType(ContentType.APPLICATION_JSON.toString());
 
-        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(),
-                new PremiumUserDto(premiumUser));
+        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), new PremiumUserDto(premiumUser));
     }
 }
