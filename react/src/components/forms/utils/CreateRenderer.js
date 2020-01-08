@@ -6,7 +6,7 @@ const createRenderer = render => ({ input, meta, label, ...rest }) =>
     {/* className={[
       meta.error && meta.touched ? 'error' : '',
       meta.active ? 'active' : ''
-    ].join(' ')} add class we want to style error*/}
+    ].join(' ')} //TODO replace class we want to style error afte meta.error && meta.touchedr*/}
     <label>
       {label}
     </label>
