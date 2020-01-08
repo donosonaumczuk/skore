@@ -42,7 +42,6 @@
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
         <io.jsonwebtoken.jjwt.version>0.7.0</io.jsonwebtoken.jjwt.version>
-        <apache-httpcomponents-core.version>4.4.6</apache-httpcomponents-core.version>
     </properties>
 
     <dependencyManagement>
@@ -267,11 +266,6 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${io.jsonwebtoken.jjwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>${apache-httpcomponents-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
