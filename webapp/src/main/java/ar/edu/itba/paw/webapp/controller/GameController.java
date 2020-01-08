@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.Exceptions.GameHasNotBeenPlayException;
-import ar.edu.itba.paw.Exceptions.GameNotFoundException;
-import ar.edu.itba.paw.Exceptions.TeamFullException;
-import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
+import ar.edu.itba.paw.exceptions.GameNotFoundException;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

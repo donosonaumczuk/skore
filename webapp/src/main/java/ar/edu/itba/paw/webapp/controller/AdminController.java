@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.Exceptions.CannotCreateSportException;
-import ar.edu.itba.paw.Exceptions.SportNotFoundException;
+import ar.edu.itba.paw.exceptions.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportService;
-import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.webapp.form.EditSportForm;
 import ar.edu.itba.paw.webapp.form.SportForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
