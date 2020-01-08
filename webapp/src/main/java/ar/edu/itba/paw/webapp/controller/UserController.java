@@ -17,8 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.Optional;
-
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -47,10 +45,8 @@ public class UserController {
     @GET
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
-        Optional<PremiumUser> premiumUser = premiumUserService.findByUserName(username);
-        if (premiumUser.isPresent()) {
-            return Response.ok(ProfileDto.from(premiumUser.get())).build();
-        }
-        throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        PremiumUser premiumUser = premiumUserService.findByUserName(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist"));
+        return Response.ok(ProfileDto.from(premiumUser)).build();
     }
 }
