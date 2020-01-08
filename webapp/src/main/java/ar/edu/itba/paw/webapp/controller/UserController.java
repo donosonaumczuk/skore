@@ -31,15 +31,22 @@ public class UserController {
     private PremiumUserService premiumUserService;
 
     public static String getProfileEndpoint(final String username) {
-        return URLConstants.API_BASE_URL_BUILDER.path(BASE_PATH).path(username).path("profile").toTemplate();
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
+    }
+
+    public static String getMatchesEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("matches").toTemplate();
+    }
+
+    public static String getSportsEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
     @GET
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
-        //TODO: if username must follow some condition, here we must put a validator! then the validator throws a 400 BAD REQUEST!
         PremiumUser premiumUser = premiumUserService.findByUserName(username)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User does not exist")); //TODO: I don't know if this exception must be thrown by the service instead returning Optional
-        return Response.ok(new ProfileDto(premiumUser)).build();
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist"));
+        return Response.ok(ProfileDto.from(premiumUser)).build();
     }
 }
