@@ -80,7 +80,7 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
                         Authentication authResult)
             throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
-        if(logOutEndpointMatcher.matches(request)) {
+        if (logOutEndpointMatcher.matches(request)) {
             LOGGER.trace("Going to logout user");
             String tokenString = getTokenFromRequest(request)
                     .orElseThrow(()->new NoJWTFoundException("No JWT found in request"))

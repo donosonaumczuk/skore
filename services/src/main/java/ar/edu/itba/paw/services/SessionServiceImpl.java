@@ -17,29 +17,31 @@ import java.util.Optional;
 public class SessionServiceImpl implements SessionService {
 
     @Autowired
-    private PremiumUserService us;
+    private PremiumUserService premiumUserService;
 
-    private PremiumUser current;
+    private PremiumUser currentPremiumUser;
+
+    private static String ADMIN = "ROLE_ADMIN";
+    private static int ADMIN_ID = 1;
 
     @Override
     public boolean isLogged() {
         Authentication auth = getAuth();
-        return auth != null && auth.isAuthenticated()
-                && !(auth instanceof AnonymousAuthenticationToken);
+        return auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
     }
 
     @Override
     public Optional<PremiumUser> getLoggedUser() {
         PremiumUser ans;
         String username = getUserName();
-        if(username == null) {
+        if (username == null) {
             ans = null;
         }
         else {
-            if (current == null || !current.getUserName().equals(username)) {
-                current = us.findByUserName(username).orElse(null);
+            if (currentPremiumUser == null || !currentPremiumUser.getUserName().equals(username)) {
+                currentPremiumUser = premiumUserService.findByUserName(username).orElse(null);
             }
-            ans = current;
+            ans = currentPremiumUser;
         }
 
         return Optional.ofNullable(ans);
@@ -47,11 +49,11 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public boolean isAdmin() {
-        if(!isLogged()) {
+        if (!isLogged()) {
             return false;
         }
         else {
-            Role adminRole = new Role("ROLE_ADMIN", 1);
+            Role adminRole = new Role(ADMIN, ADMIN_ID);
             return getLoggedUser().get().getRoles().contains(adminRole);
         }
     }
@@ -59,7 +61,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public String getUserName() {
         final Authentication authentication = getAuth();
-        if(authentication == null || !isLogged()) {
+        if (authentication == null || !isLogged()) {
             return null;
         }
         return authentication.getName();
@@ -68,7 +70,7 @@ public class SessionServiceImpl implements SessionService {
     private Authentication getAuth() {
         Authentication auth = null;
         SecurityContext secCont = SecurityContextHolder.getContext();
-        if(secCont != null) {
+        if (secCont != null) {
             auth = secCont.getAuthentication();
         }
         return auth;

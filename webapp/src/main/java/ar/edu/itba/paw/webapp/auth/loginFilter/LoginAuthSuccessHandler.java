@@ -31,6 +31,8 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     private PremiumUserService premiumUserService;
 
+    private static final String TOKEN_HEADER = "X-TOKEN";
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                     HttpServletResponse httpServletResponse, Authentication authentication)
@@ -40,7 +42,7 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
         PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName())
                 .orElseThrow(()->new UserNotFoundException("Login user does not exit")); //This exception should never happen
 
-        httpServletResponse.addHeader("X-TOKEN", jwtUtility.createToken(premiumUser));
+        httpServletResponse.addHeader(TOKEN_HEADER, jwtUtility.createToken(premiumUser));
         httpServletResponse.setStatus(HttpStatus.SC_OK);
         httpServletResponse.setContentType(ContentType.APPLICATION_JSON.toString());
 

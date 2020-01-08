@@ -30,7 +30,7 @@ public class LoginAuthFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                             HttpServletResponse response) throws AuthenticationException {
         LOGGER.trace("Attempt to auth: {}", sessionService.getUserName());
-        if(sessionService.isLogged()) {
+        if (sessionService.isLogged()) {
             throw new AlreadyLoggedException(sessionService.getUserName() + " is already logged");
         }
         LoginDto loginDto;
@@ -48,8 +48,7 @@ public class LoginAuthFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     private LoginDto getLoginDtoFromRequest(HttpServletRequest request) throws IOException {
-        String json = IOUtils.toString(request.getInputStream(),
-                request.getCharacterEncoding());
+        String json = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, LoginDto.class);
     }

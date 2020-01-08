@@ -75,6 +75,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(bCryptPasswordEncoder());
     }
 
+    //TODO: get endpoints from another class
     @Bean
     public LoginAuthFilter createLoginAuthFilter() throws Exception {
         LoginAuthFilter filter = new LoginAuthFilter();

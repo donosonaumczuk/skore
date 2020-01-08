@@ -33,10 +33,11 @@ public class JWTUserDetailsAuthProvider extends AbstractUserDetailsAuthenticatio
     protected void additionalAuthenticationChecks(UserDetails userDetails,
                       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken)
             throws AuthenticationException {
-        if(!(usernamePasswordAuthenticationToken instanceof JWTUsernamePasswordAuthToken)) {
+        if (!(usernamePasswordAuthenticationToken instanceof JWTUsernamePasswordAuthToken)) {
             throw new MalformedTokenException("It is not a JWTUsernamePasswordAuthToken: rejecting auth");
-        } else if(jwtService
-                .isInBlacklist(((JWTUsernamePasswordAuthToken)
+        }
+        else if (jwtService
+                    .isInBlacklist(((JWTUsernamePasswordAuthToken)
                         usernamePasswordAuthenticationToken).getToken())) {
             throw new BlacklistedTokenException("Token is in blacklist: rejecting auth");
         }

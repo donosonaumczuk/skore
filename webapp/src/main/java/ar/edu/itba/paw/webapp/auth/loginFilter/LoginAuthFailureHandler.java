@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.auth.loginFilter;
 import ar.edu.itba.paw.Exceptions.AlreadyLoggedException;
 import ar.edu.itba.paw.Exceptions.InvalidLoginException;
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,22 +25,23 @@ public class LoginAuthFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
                     HttpServletResponse httpServletResponse, AuthenticationException e)
             throws IOException, ServletException {
-        if(e instanceof AlreadyLoggedException) {
+        if (e instanceof AlreadyLoggedException) {
             LOGGER.warn("Attempt to log when is already log");
-            httpServletResponse.setStatus(404);
+            httpServletResponse.setStatus(HttpStatus.SC_NOT_FOUND);
         }
-        else if(e instanceof InvalidLoginException) {
+        else if (e instanceof InvalidLoginException) {
             LOGGER.info("Invalid login: {}", e.getCause().getMessage());
-            httpServletResponse.setStatus(400);
+            httpServletResponse.setStatus(HttpStatus.SC_BAD_REQUEST);
         }
-        else if(e instanceof BadCredentialsException) {
+        else if (e instanceof BadCredentialsException) {
             LoginDto loginDto = (LoginDto) httpServletRequest.getAttribute("loginRequest");
-            if(loginDto.getUsername() == null || loginDto.getPassword() == null) {
+            if (loginDto.getUsername() == null || loginDto.getPassword() == null) {
                 LOGGER.info("Invalid login JSON");
-                httpServletResponse.setStatus(422);//TODO check, maybe do more
-            } else {
+                httpServletResponse.setStatus(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+            }
+            else {
                 LOGGER.info("Invalid login JSON: invalid credentials");
-                httpServletResponse.setStatus(401);
+                httpServletResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
             }
         }
     }

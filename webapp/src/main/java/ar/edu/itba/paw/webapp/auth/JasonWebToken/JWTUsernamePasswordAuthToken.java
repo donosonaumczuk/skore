@@ -4,8 +4,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 
 public class JWTUsernamePasswordAuthToken extends UsernamePasswordAuthenticationToken {
-    private String JWTtoken;
 
+    private String JWTtoken;
 
     public JWTUsernamePasswordAuthToken(String JWTtoken) {
         super(null, null);
