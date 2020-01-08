@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.sessionFilter;
 
 import ar.edu.itba.paw.Exceptions.NoJWTFoundException;
+import ar.edu.itba.paw.Exceptions.UnauthorizedExecption;
 import ar.edu.itba.paw.interfaces.JWTService;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUsernamePasswordAuthToken;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
@@ -38,6 +39,8 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
     private static final RequestMatcher logOutEndpointMatcher
             = new AntPathRequestMatcher("/api/logout", HttpMethod.POST);
 
+    private static final String ADMIN = "ROLE_ADMIN";
+
     @Autowired
     private JWTUtility jwtUtility;
 
@@ -46,6 +49,9 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
     private RequestMatcher optionalAuthEndpointsMatcher;
+
+    @Autowired
+    private RequestMatcher adminAuthEndpointsMatcher;
 
     public SessionAuthFilter() {
         super(DEFAULT_FILTER);
@@ -70,6 +76,10 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
         else {
             LOGGER.trace("Give JWT access");
             auth = getAuthenticationManager().authenticate(token.get());
+            if(adminAuthEndpointsMatcher.matches(httpServletRequest)
+                    && !auth.getAuthorities().contains(new SimpleGrantedAuthority(ADMIN))) {
+                throw new UnauthorizedExecption("Is not admin");
+            }
         }
         return auth;
     }

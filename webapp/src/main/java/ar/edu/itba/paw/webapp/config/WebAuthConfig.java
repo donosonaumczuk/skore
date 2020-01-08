@@ -99,8 +99,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher needAuthEndpointsMatcher() {
         return new OrRequestMatcher(//TODO make list
-                new AntPathRequestMatcher("/**", "GET"),
-                optionalAuthEndpointsMatcher()
+                new AntPathRequestMatcher("/**", "POST"),
+                optionalAuthEndpointsMatcher(),
+                adminAuthEndpointsMatcher()
         );
     }
 
@@ -108,6 +109,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RequestMatcher optionalAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
                 new AntPathRequestMatcher("/**", "POST")
+        );
+    }
+
+    @Bean
+    public RequestMatcher adminAuthEndpointsMatcher() {
+        return new OrRequestMatcher( //TODO make list
+                new AntPathRequestMatcher("/**", "GET")
         );
     }
 }
