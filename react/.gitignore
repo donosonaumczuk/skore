@@ -1,20 +1,12 @@
-# IntelliJ
-*.iml
-**idea
-
-#Compiled Files
-**target
-
-# React
-# Dependencies
+# dependencies
 /react/node_modules
 /react/.pnp
 .pnp.js
 
-# Testing
+# testing
 /react/coverage
 
-# Production
+# production
 /react/build
 
 # misc
@@ -27,3 +19,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+node_modules
