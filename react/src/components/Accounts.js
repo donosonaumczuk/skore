@@ -16,7 +16,7 @@ import Proptypes from 'prop-types';
     };
 
     Accounts.propTypes = {
-      account: Proptypes.object.isRequired
+      account: Proptypes.object.isRequired //TODO replace with custom proptype
     }
 
     export default Accounts;
