@@ -98,4 +98,13 @@ public class JWTHibernateDaoTest {
             Assert.assertEquals(auxWant.getExpiry(), auxHave.getExpiry());
         }
     }
+
+    @Test
+    public void isNotInBlackListAndBlackListIsEmptyTest() {
+        removeAllData();
+
+        final boolean inBlacklist = jwtHibernateDao.isInBlacklist(jwtNotInserted.getToken());
+
+        Assert.assertFalse(inBlacklist);
+    }
 }
