@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.GameHasNotBeenPlayException;
-import ar.edu.itba.paw.Exceptions.GameNotFoundException;
-import ar.edu.itba.paw.Exceptions.TeamFullException;
+import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
+import ar.edu.itba.paw.exceptions.GameNotFoundException;
+import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;

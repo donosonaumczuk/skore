@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public  abstract class BaseController {
 
-
     @Autowired
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService us;

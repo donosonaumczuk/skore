@@ -1,6 +1,5 @@
 package ar.edu.itba.paw;
 
-import ar.edu.itba.paw.Exceptions.CannotValidateUserException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Game;
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.*;
 
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
