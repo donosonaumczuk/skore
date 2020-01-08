@@ -41,7 +41,7 @@
         <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
-        <org.springframework.hateoas.version>1.0.2.RELEASE</org.springframework.hateoas.version>
+        <org.springframework.hateoas.version>0.25.0.RELEASE</org.springframework.hateoas.version>
     </properties>
 
     <dependencyManagement>
