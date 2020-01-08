@@ -2,11 +2,11 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.controller.UserController;
+import com.google.common.collect.ImmutableList;
 import org.springframework.hateoas.Link;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ProfileDto {
@@ -19,24 +19,26 @@ public class ProfileDto {
     private final String location;
     private final List<Link> links;
 
-    public ProfileDto(PremiumUser premiumUser) {
+    private ProfileDto(PremiumUser premiumUser) {
         this.username = premiumUser.getUserName();
         this.firstName = premiumUser.getUser().getFirstName();
         this.lastName = premiumUser.getUser().getLastName();
         this.winRate = premiumUser.getWinRate();
-        this.age = Period.between(LocalDate.now(), premiumUser.getBirthday()).getYears(); //TODO: maybe the GET request of the profile can pass the UTC offset of the Locale?
+        this.age = Period.between(premiumUser.getBirthday(), LocalDate.now()).getYears(); //TODO: maybe the GET request of the profile can pass the UTC offset of the Locale?
         this.location = premiumUser.getHome().toString();
         this.links = getHateoasLinks(premiumUser);
     }
 
+    public static ProfileDto from(PremiumUser premiumUser) {
+        return new ProfileDto(premiumUser);
+    }
+
     private List<Link> getHateoasLinks(PremiumUser premiumUser) {
-        final List<Link> hateoasLinks = new LinkedList<>(); //TODO: Immutable
-        hateoasLinks.add(new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), "self"));
-//        hateoasLinks.add(new Link("/user/" + username + "/image", "image"));
-//        hateoasLinks.add(new Link("/user/" + username + "/matches", "matches"));
-//        hateoasLinks.add(new Link("/user/" + username + "/friends", "friends"));
-//        hateoasLinks.add(new Link("/user/" + username + "/sports", "liked sports"));
-        return hateoasLinks;
+        return ImmutableList.of(
+                new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), Link.REL_SELF),
+                new Link(UserController.getMatchesEndpoint(premiumUser.getUserName()), "matches"),
+                new Link(UserController.getSportsEndpoint(premiumUser.getUserName()), "sports")
+        );
     }
 
     public String getUsername() {
