@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.Exceptions.SportNotFoundException;
+import ar.edu.itba.paw.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.exceptions.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Sport;

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.TeamNotCreated;
-import ar.edu.itba.paw.Exceptions.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.TeamNotCreated;
+import ar.edu.itba.paw.exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 @Service

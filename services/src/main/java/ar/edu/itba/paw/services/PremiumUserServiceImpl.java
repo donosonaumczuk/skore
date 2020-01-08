@@ -1,26 +1,20 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.*;
+import ar.edu.itba.paw.exceptions.*;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
-import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -171,7 +165,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         LOGGER.trace("Looking for role with id: {}", roleId);
 
         Role ans = role.orElseThrow(() ->
-                new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId));
+                new ar.edu.itba.paw.exceptions.RoleNotFoundException("can't find role with id: " + roleId));
         LOGGER.trace("Looking for user with username: {}", username);
         user = premiumUserDao.findByUserName(username);
         user.orElseThrow(() -> new UserNotFoundException("Can't find user with username: " + username));
