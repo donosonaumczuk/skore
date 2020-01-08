@@ -2,10 +2,13 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PremiumUser;
 
+import java.util.Optional;
+
 public interface SessionService {
+
     boolean isLogged();
 
-    PremiumUser getLoggedUser();
+    Optional<PremiumUser> getLoggedUser();
 
     boolean isAdmin();
 

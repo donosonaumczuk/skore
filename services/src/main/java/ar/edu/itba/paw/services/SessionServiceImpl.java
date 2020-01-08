@@ -11,8 +11,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SessionServiceImpl implements SessionService {
+
     @Autowired
     private PremiumUserService us;
 
@@ -26,7 +29,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PremiumUser getLoggedUser() {
+    public Optional<PremiumUser> getLoggedUser() {
         PremiumUser ans;
         String username = getUserName();
         if(username == null) {
@@ -39,7 +42,7 @@ public class SessionServiceImpl implements SessionService {
             ans = current;
         }
 
-        return ans;
+        return Optional.ofNullable(ans);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class SessionServiceImpl implements SessionService {
         }
         else {
             Role adminRole = new Role("ROLE_ADMIN", 1);
-            return getLoggedUser().getRoles().contains(adminRole);
+            return getLoggedUser().get().getRoles().contains(adminRole);
         }
     }
 
