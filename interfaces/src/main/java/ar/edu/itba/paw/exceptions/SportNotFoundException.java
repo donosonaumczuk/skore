@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.Exceptions;
+package ar.edu.itba.paw.exceptions;
 
 public class SportNotFoundException extends RuntimeException {
 

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.JasonWebToken;
 
-import ar.edu.itba.paw.Exceptions.BlacklistedTokenException;
-import ar.edu.itba.paw.Exceptions.MalformedTokenException;
+import ar.edu.itba.paw.exceptions.BlacklistedTokenException;
+import ar.edu.itba.paw.exceptions.MalformedTokenException;
 import ar.edu.itba.paw.interfaces.JWTService;
 import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
 import io.jsonwebtoken.Claims;

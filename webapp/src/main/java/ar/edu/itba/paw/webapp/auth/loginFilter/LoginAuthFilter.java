@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.loginFilter;
 
-import ar.edu.itba.paw.Exceptions.AlreadyLoggedException;
-import ar.edu.itba.paw.Exceptions.InvalidLoginException;
+import ar.edu.itba.paw.exceptions.AlreadyLoggedException;
+import ar.edu.itba.paw.exceptions.InvalidLoginException;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.webapp.dto.LoginDto;
 import org.apache.commons.io.IOUtils;
