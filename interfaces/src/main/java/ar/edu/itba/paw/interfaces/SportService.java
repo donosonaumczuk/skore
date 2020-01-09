@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SportService {
     @Transactional
-    public Sport findByName(final String sportName);
+    public Optional<Sport> findByName(final String sportName);
 
     @Transactional
     public Sport create(final String sportName, final int playerQuantity,

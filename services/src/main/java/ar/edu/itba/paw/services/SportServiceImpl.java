@@ -24,10 +24,8 @@ public class SportServiceImpl implements SportService {
     private SportDao sportDao;
 
     @Override
-    public Sport findByName(final String sportName) {
-        Optional<Sport> sport = sportDao.findByName(sportName);
-
-        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
+    public Optional<Sport> findByName(final String sportName) {
+        return sportDao.findByName(sportName);
     }
 
 
