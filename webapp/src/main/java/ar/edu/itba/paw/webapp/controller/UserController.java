@@ -9,8 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,6 +52,14 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
+    public static String getUserImageEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
+    }
+
+    public static String getDefaultUserImageEndpoint() {
+        return URLConstants.getApiBaseUrlBuilder().path("/img/user-default.svg").toTemplate();
+    }
+
     @GET
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
@@ -58,5 +70,23 @@ public class UserController {
         }
         LOGGER.error("Can't get '{}' profile, user not found", username);
         throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+    }
+
+    @GET
+    @Path("/{username}/image")
+    public ResponseEntity<byte[]> getImage(@PathParam("username") String username) {
+        HttpHeaders headers = new HttpHeaders();
+        Optional<byte[]> media = premiumUserService.readImage(username);
+        if(!media.isPresent()) {
+            headers.add("Location", getDefaultUserImageEndpoint());
+            LOGGER.trace("Returning default image: {} does not exist", username);
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        }
+        headers.add("Content-Type","image/*");
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media.get(), headers, HttpStatus.OK);
+        LOGGER.trace("Returning image for {}", username);
+        return responseEntity;
     }
 }

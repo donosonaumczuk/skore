@@ -26,7 +26,7 @@ public interface PremiumUserService {
                               final MultipartFile file) throws IOException;
 
     @Transactional
-    public byte[] readImage(final String userName);
+    public Optional<byte[]> readImage(final String userName);
 
     @Transactional
     public boolean remove(final String userName);
