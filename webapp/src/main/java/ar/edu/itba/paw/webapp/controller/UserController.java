@@ -55,10 +55,6 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
     }
 
-    public static String getDefaultUserImageEndpoint() {
-        return URLConstants.getApiBaseUrlBuilder().path("/img/user-default.svg").toTemplate();
-    }
-
     @GET
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
@@ -75,10 +71,12 @@ public class UserController {
     @Path("/{username}/image")
     public ResponseEntity<byte[]> getImage(@PathParam("username") String username) {
         HttpHeaders headers = new HttpHeaders();
+        premiumUserService.findByUserName(username)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist"));
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
-            headers.add("Location", getDefaultUserImageEndpoint());
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
+            headers.add("Location", URLConstants.DEFAULT_USER_IMAGE_URL);
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
         headers.add("Content-Type","image/*");
