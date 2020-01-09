@@ -30,7 +30,7 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    public static final String BASE_PATH = "user";
+    public static final String BASE_PATH = "users";
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
