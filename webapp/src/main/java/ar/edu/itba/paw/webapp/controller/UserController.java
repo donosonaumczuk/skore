@@ -59,4 +59,5 @@ public class UserController {
         LOGGER.error("Can't get '{}' profile, user not found", username);
         throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
     }
+
 }
