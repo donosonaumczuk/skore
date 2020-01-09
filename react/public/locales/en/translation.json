@@ -1,0 +1,11 @@
+{
+    "navBar": {
+        "signIn": "Sign-in",
+        "createAccount": "Create Account"
+    },
+    "createUserForm": {
+        "accounts": "Accounts",
+        "username": "Username",
+        "createAccount": "Create"
+    }
+}

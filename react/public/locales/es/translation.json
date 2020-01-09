@@ -1,0 +1,11 @@
+{
+    "navBar": {
+        "signIn": "Ingresar",
+        "createAccount": "Crear Cuenta"
+    },
+    "createUserForm": {
+        "accounts": "Cuentas",
+        "username": "Nombre de Usuario",
+        "createAccount": "Crear"
+    }
+}

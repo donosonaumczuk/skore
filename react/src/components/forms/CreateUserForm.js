@@ -13,9 +13,12 @@ const validate = values => {
 }
 
 let CreateUserForm = ({ handleSubmit, submitting }) => {
+  // const usernameLabel = "" + i18next.t('createUserForm.username') + " *";
+  // const createAccountLabel = i18next.t('createUserForm.createAccount');
+  //TODO see why it does not work I think because the namespaces haven been loaded yet
   return ( 
     <form onSubmit={handleSubmit}>
-      <Field name="username" label="Username *" component={RenderInput} />
+      <Field name="username" label={"Username *"} component={RenderInput} />
       <SubmitButton label="Create" submitting={submitting} />
     </form>
   );

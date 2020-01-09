@@ -20,5 +20,4 @@ const createRenderer = render => ({ input, meta, label, ...rest }) =>
       </div>
   </div>
 
-
 export default createRenderer;
