@@ -1,4 +1,5 @@
 import React from 'react';
+import i18next from 'i18next';
 // import { Link } from 'react-router-dom';
 
 //TODO maybe use link instead of href an check that is valid to use href directly
@@ -15,9 +16,9 @@ const NavBar = () => {
                 <a className="d-sm-none login-link" href="/createUser"><i className="fas fa-user"></i></a>
             
                 <form className="d-none d-sm-block form-inline">
-                    <a className="mr-1 login-link" href="/createUser">Sign in</a>
+                    <a className="mr-1 login-link" href="/createUser">{i18next.t('navBar.signIn')}</a>
                     <span className="white-text mr-1"> or </span>
-                    <a className="login-link" href="/createUser">create</a>
+                    <a className="login-link" href="/createUser">{i18next.t('navBar.createAccount')}</a>
                 </form>   
             </nav>
         </React.Fragment>
