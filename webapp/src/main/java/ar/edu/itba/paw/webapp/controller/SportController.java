@@ -17,7 +17,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -63,12 +62,25 @@ public class SportController {
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
+        //TODO validate
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getImageSport())
                 .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
         LOGGER.trace("Successful modify the sport '{}'", sportname);
         return Response.ok(SportDtoOutput.from(newSport)).build();
     }
 
+    @POST
+    @Path("/")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createASport(final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
+        //TODO validate
+        Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
+                sportDto.getDisplayName(), sportDto.getImageSport())
+                .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
+                        sportDto.getSportName() + "' already exist"));
+        LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
+        return Response.ok(SportDtoOutput.from(newSport)).build();
+    }
 
 //
 //    @RequestMapping(value="/editSport/{sportName}",  method = {RequestMethod.GET})
