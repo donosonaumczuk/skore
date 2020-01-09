@@ -17,8 +17,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import java.util.Optional;
-
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -27,7 +25,7 @@ public class SportController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SportController.class);
 
-    public static final String BASE_PATH = "sport";
+    public static final String BASE_PATH = "sports";
 
     @Autowired
     @Qualifier("sportServiceImpl")
@@ -40,12 +38,13 @@ public class SportController {
     @GET
     @Path("/{sportname}/image")
     public ResponseEntity<byte[]> getImage(@PathParam("sportname") String sportname) {
+        LOGGER.trace("Trying to retrieve image of sport '{}'", sportname);
         HttpHeaders headers = new HttpHeaders();
         byte[] media = sportService.readImage(sportname)
                 .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
         headers.add("Content-Type","image/*");
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;
+        LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
 }

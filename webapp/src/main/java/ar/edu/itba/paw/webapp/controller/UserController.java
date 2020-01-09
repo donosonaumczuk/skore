@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -79,7 +78,7 @@ public class UserController {
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             headers.add("Location", getDefaultUserImageEndpoint());
-            LOGGER.trace("Returning default image: {} does not exist", username);
+            LOGGER.trace("Returning default image: {} has not set an image yet", username);
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
         headers.add("Content-Type","image/*");
