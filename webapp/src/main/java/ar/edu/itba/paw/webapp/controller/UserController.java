@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.Optional;
+
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
 @Path(BASE_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class UserController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public static final String BASE_PATH = "user";
 
@@ -45,8 +51,12 @@ public class UserController {
     @GET
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
-        PremiumUser premiumUser = premiumUserService.findByUserName(username)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist"));
-        return Response.ok(ProfileDto.from(premiumUser)).build();
+        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
+        if (premiumUserOptional.isPresent()) {
+            LOGGER.trace("'{}' profile successfully gotten", username);
+            return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
+        }
+        LOGGER.error("Can't get '{}' profile, user not found", username);
+        throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
     }
 }

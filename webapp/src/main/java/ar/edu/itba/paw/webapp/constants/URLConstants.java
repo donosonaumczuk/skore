@@ -14,7 +14,7 @@ public final class URLConstants {
 
     private static final UriBuilder BASE_URL_BUILDER = UriBuilder.fromUri(BASE_URL);
 
-    public static final String API_BASE_URL = BASE_URL_BUILDER.path(API_PATH).toTemplate();
+    public static final String API_BASE_URL = getBaseUrlBuilder().path(API_PATH).toTemplate();
 
     private static final UriBuilder API_BASE_URL_BUILDER = UriBuilder.fromUri(API_BASE_URL);
 
