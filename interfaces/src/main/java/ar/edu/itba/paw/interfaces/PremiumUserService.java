@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public interface PremiumUserService {
+
     @Transactional
     public  Optional<PremiumUser> findByUserName(final String userName);
 
@@ -50,7 +51,4 @@ public interface PremiumUserService {
 
     @Transactional
     public boolean confirmationPath(String path);
-
-
-
-    }
+}
