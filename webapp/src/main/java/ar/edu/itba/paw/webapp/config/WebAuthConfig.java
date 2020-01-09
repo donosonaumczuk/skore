@@ -115,7 +115,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher adminAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
-                new AntPathRequestMatcher("/admin/**", "GET")
+                new AntPathRequestMatcher("/admin/**", "GET")//TODO add also POST method
         );
     }
 }
