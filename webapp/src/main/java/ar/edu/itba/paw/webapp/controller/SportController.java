@@ -7,17 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
-import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
+import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
 @Controller
 @Path(BASE_PATH)
@@ -37,14 +35,11 @@ public class SportController {
 
     @GET
     @Path("/{sportname}/image")
-    public ResponseEntity<byte[]> getImage(@PathParam("sportname") String sportname) {
+    public Response getImageSport(@PathParam("sportname") String sportname) {
         LOGGER.trace("Trying to retrieve image of sport '{}'", sportname);
-        HttpHeaders headers = new HttpHeaders();
         byte[] media = sportService.readImage(sportname)
                 .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
-        headers.add("Content-Type","image/*");
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
-        return new ResponseEntity<>(media, headers, HttpStatus.OK);
+        return Response.ok(media).header("Content-Type", "image/*").build();
     }
 }
