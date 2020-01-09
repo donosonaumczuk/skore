@@ -30,19 +30,15 @@ public class SportServiceImpl implements SportService {
 
 
     @Override
-    public Sport create(final String sportName, final int playerQuantity, final String displayName,
+    public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
                         final MultipartFile file) throws IOException {
-        Optional<Sport> sport = sportDao.create(sportName, playerQuantity, displayName, file);
-
-        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
+        return sportDao.create(sportName, playerQuantity, displayName, file);
     }
 
     @Override
-    public Sport modifySport(final String sportName, final String displayName,
+    public Optional<Sport> modifySport(final String sportName, final String displayName,
                              final MultipartFile file) throws IOException {
-
-        Optional<Sport> sport = sportDao.modifySport(sportName, displayName, file);
-        return sport.orElseThrow(() -> new SportNotFoundException("can't found sport with name: " + sportName));
+        return sportDao.modifySport(sportName, displayName, file);
     }
 
     @Override

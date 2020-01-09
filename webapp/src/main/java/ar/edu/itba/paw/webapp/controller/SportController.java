@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SportService;
+import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.SportDtoInput;
+import ar.edu.itba.paw.webapp.dto.SportDtoOutput;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
+import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
@@ -29,21 +36,39 @@ public class SportController {
     @Qualifier("sportServiceImpl")
     private SportService sportService;
 
+    public static String getSportEndpoint(String sportname) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(sportname).toTemplate();
+    }
 
     @GET
     @Path("/")
     public Response getAllSports() {
-        return Response.ok(sportService.getAllSports()).build();
+        LOGGER.trace("Getting all sports");
+        return Response.ok(sportService.getAllSports().stream()
+                .map(SportDtoOutput::new).collect(Collectors.toList())).build();
     }
 
     @DELETE
     @Path("/{sportname}")
     public Response deleteASport(@PathParam("sportname") String sportname) {
         if (!sportService.remove(sportname)) {
+            LOGGER.trace("Sport '{}' does not exist", sportname);
             throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         }
+        LOGGER.trace("Successful delete the sport '{}'", sportname);
         return Response.noContent().build();
     }
+
+    @PUT
+    @Path("/{sportname}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
+        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getImageSport())
+                .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
+        LOGGER.trace("Successful modify the sport '{}'", sportname);
+        return Response.ok(SportDtoOutput.from(newSport)).build();
+    }
+
 
 //
 //    @RequestMapping(value="/editSport/{sportName}",  method = {RequestMethod.GET})
