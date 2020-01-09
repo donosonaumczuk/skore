@@ -22,11 +22,7 @@ class App extends Component {
   }
 
   async componentDidMount() {   
-    // let account = {};
-    // let account = await getAccountByUsername('donosonaumczuk')
-    // this.setState({ account: account });
-
-    let account = await getProfileByUsername('donosonaumczuk')
+    let account = await getProfileByUsername('donosonaumczuk');//TODO remove
     this.setState({ account: account });
   }
 
@@ -45,7 +41,7 @@ class App extends Component {
               <CreateUserForm onSubmit={showResults}/>
             </Route>
             <Route path="/user">
-              <UserProfile username="donosonaumczuk"/>
+              <UserProfile username="donosonaumczuk"/>{/* TODO obtain user from url or click event */} 
             </Route>
           </Switch>
         </Router>
