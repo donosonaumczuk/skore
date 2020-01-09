@@ -4,7 +4,7 @@ import ar.edu.itba.paw.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
-import ar.edu.itba.paw.webapp.dto.PremiumUserDto;
+import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +44,6 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), new PremiumUserDto(premiumUser));
+        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), ProfileDto.from(premiumUser)); //TODO: check if profile or entire user
     }
 }
