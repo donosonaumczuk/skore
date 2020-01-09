@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar';
-import getAccountByUsername from './services/AccountService';
+import getProfileByUsername from './services/UserService';
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import showResults from "./ShowResults";
 import './css/main.css';
+import UserProfile from './components/userProfile/UserProfile';
 
 
 
@@ -21,7 +22,11 @@ class App extends Component {
   }
 
   async componentDidMount() {   
-    let account = await getAccountByUsername('donosonaumczuk')
+    // let account = {};
+    // let account = await getAccountByUsername('donosonaumczuk')
+    // this.setState({ account: account });
+
+    let account = await getProfileByUsername('donosonaumczuk')
     this.setState({ account: account });
   }
 
@@ -38,6 +43,9 @@ class App extends Component {
             </Route>
             <Route path="/createUser">
               <CreateUserForm onSubmit={showResults}/>
+            </Route>
+            <Route path="/user">
+              <UserProfile username="donosonaumczuk"/>
             </Route>
           </Switch>
         </Router>
