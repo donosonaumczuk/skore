@@ -53,9 +53,7 @@ public class SportServiceImpl implements SportService {
     }
 
     @Override
-    public byte[] readImage(final String sportName) {
-        Optional<byte[]> imagesOpt = sportDao.readImage(sportName);
-
-        return imagesOpt.orElseThrow(() -> new ImageNotFoundException("Fail to read image from " + sportName));
+    public Optional<byte[]> readImage(final String sportName) {
+        return sportDao.readImage(sportName);
     }
 }

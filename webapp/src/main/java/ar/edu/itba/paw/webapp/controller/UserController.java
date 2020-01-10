@@ -25,12 +25,11 @@ import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
 @Path(BASE_PATH)
-@Produces({MediaType.APPLICATION_JSON})
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    public static final String BASE_PATH = "user";
+    public static final String BASE_PATH = "users";
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
@@ -48,7 +47,12 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
+    public static String getUserImageEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
+    }
+
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
@@ -58,5 +62,23 @@ public class UserController {
         }
         LOGGER.error("Can't get '{}' profile, user not found", username);
         throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+    }
+
+    @GET
+    @Path("/{username}/image")
+    public Response getImageUser(@PathParam("username") String username) {
+        premiumUserService.findByUserName(username)
+                .orElseThrow(() -> {
+            LOGGER.trace("Can't get '{}' profile, user not found", username);
+            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        });
+        Optional<byte[]> media = premiumUserService.readImage(username);
+        if(!media.isPresent()) {
+            LOGGER.trace("Returning default image: {} has not set an image yet", username);
+            return Response.status(HttpStatus.TEMPORARY_REDIRECT.value())
+                    .header("Location", URLConstants.DEFAULT_USER_IMAGE_URL).build();
+        }
+        LOGGER.trace("Returning image for {}", username);
+        return Response.ok(media.get()).header("Content-Type", "image/*").build();
     }
 }

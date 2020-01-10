@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.auth.JasonWebToken;
+package ar.edu.itba.paw.webapp.auth.token;
 
 import ar.edu.itba.paw.exceptions.BlacklistedTokenException;
 import ar.edu.itba.paw.exceptions.MalformedTokenException;

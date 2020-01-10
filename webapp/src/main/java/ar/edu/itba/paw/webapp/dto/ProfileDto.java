@@ -37,7 +37,8 @@ public class ProfileDto {
         return ImmutableList.of(
                 new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), Link.REL_SELF),
                 new Link(UserController.getMatchesEndpoint(premiumUser.getUserName()), "matches"),
-                new Link(UserController.getSportsEndpoint(premiumUser.getUserName()), "sports")
+                new Link(UserController.getSportsEndpoint(premiumUser.getUserName()), "sports"),
+                new Link(UserController.getUserImageEndpoint(premiumUser.getUserName()), "image")
         );
     }
 

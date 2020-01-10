@@ -27,5 +27,5 @@ public interface SportService {
     public List<Sport> getAllSports();
 
     @Transactional
-    public byte[] readImage(final String sportName);
+    public Optional<byte[]> readImage(final String sportName);
 }
