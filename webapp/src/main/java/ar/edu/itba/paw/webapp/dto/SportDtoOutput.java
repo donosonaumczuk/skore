@@ -27,7 +27,8 @@ public class SportDtoOutput {
 
     private List<Link> getHateoasLinks(Sport sport) {
         return ImmutableList.of(
-                new Link(SportController.getSportEndpoint(sport.getName()), Link.REL_SELF)
+                new Link(SportController.getSportEndpoint(sport.getName()), Link.REL_SELF),
+                new Link(SportController.getSportImageEndpoint(sport.getName()), "image")
         );
     }
 
@@ -41,5 +42,9 @@ public class SportDtoOutput {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public List<Link> getLinks() {
+        return links;
     }
 }

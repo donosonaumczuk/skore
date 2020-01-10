@@ -10,8 +10,18 @@ public class SportDtoInput {
     private String displayName;
     private MultipartFile imageSport;
 
-    public SportDtoInput(Sport sport) {
+    public SportDtoInput() {
 
+    }
+
+    public SportDtoInput(Sport sport) {
+        this.sportName = sport.getName();
+        this.playerQuantity = sport.getQuantity();
+        this.displayName = sport.getDisplayName();
+    }
+
+    public static SportDtoInput from(Sport sport) {
+        return new SportDtoInput(sport);
     }
 
     public String getSportName() {
@@ -28,5 +38,21 @@ public class SportDtoInput {
 
     public MultipartFile getImageSport() {
         return imageSport;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
+
+    public void setPlayerQuantity(int playerQuantity) {
+        this.playerQuantity = playerQuantity;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setImageSport(MultipartFile imageSport) {
+        this.imageSport = imageSport;
     }
 }

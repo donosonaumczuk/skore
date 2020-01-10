@@ -72,7 +72,7 @@ public class SportController {
     public Response getASport(@PathParam("sportname") String sportname) {
         Sport sport = sportService.findByName(sportname).orElseThrow(() -> {
             LOGGER.trace("Sport '{}' does not exist", sportname);
-            throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+            return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         });
         return Response.ok(SportDtoOutput.from(sport)).build();
     }
