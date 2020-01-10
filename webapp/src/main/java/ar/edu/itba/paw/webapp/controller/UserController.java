@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
@@ -27,10 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -49,6 +47,10 @@ public class UserController {
     @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
+
+    @Autowired
+    @Qualifier("teamServiceImpl")
+    private TeamService teamService;
 
     public static String getProfileEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
@@ -99,12 +101,13 @@ public class UserController {
     }
 
     private TeamDto getTeam(Team team) {
+        teamService.getAccountsList(team);
+        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
         Set<User> teamusers = team.getPlayers();
         List<TeamPlayerDto> teamPlayers = new LinkedList<>();
         teamusers.forEach(user -> {
-            Optional<PremiumUser> currentPlayer = premiumUserService.findById(user.getUserId());
-            if (currentPlayer.isPresent()) {
-                teamPlayers.add(TeamPlayerDto.from(currentPlayer.get()));
+            if(userMap.containsKey(user)) {
+                teamPlayers.add(TeamPlayerDto.from(userMap.get(user)));
             }
             else {
                 teamPlayers.add(TeamPlayerDto.from(user));
