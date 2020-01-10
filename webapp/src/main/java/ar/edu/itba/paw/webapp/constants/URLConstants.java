@@ -18,6 +18,8 @@ public final class URLConstants {
 
     private static final UriBuilder API_BASE_URL_BUILDER = UriBuilder.fromUri(API_BASE_URL);
 
+    public static final String DEFAULT_USER_IMAGE_URL = "";//TODO do it
+
     public static UriBuilder getApiBaseUrlBuilder() {
         return API_BASE_URL_BUILDER.clone();
     }
