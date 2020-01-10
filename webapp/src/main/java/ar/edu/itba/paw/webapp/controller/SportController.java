@@ -64,7 +64,17 @@ public class SportController {
     public Response getAllSports() {
         LOGGER.trace("Getting all sports");
         return Response.ok(sportService.getAllSports().stream()
-                .map(SportDtoOutput::new).collect(Collectors.toList())).build();
+                .map(SportDtoOutput::from).collect(Collectors.toList())).build();
+    }
+
+    @GET
+    @Path("/{sportname}")
+    public Response getASport(@PathParam("sportname") String sportname) {
+        Sport sport = sportService.findByName(sportname).orElseThrow(() -> {
+            LOGGER.trace("Sport '{}' does not exist", sportname);
+            throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+        });
+        return Response.ok(SportDtoOutput.from(sport)).build();
     }
 
     @DELETE
@@ -84,7 +94,10 @@ public class SportController {
     public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
         //TODO validate
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getImageSport())
-                .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
+                .orElseThrow(() -> {
+                    LOGGER.trace("Sport '{}' does not exist", sportname);
+                    return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+                });
         LOGGER.trace("Successful modify the sport '{}'", sportname);
         return Response.ok(SportDtoOutput.from(newSport)).build();
     }
@@ -96,98 +109,12 @@ public class SportController {
         //TODO validate
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
                 sportDto.getDisplayName(), sportDto.getImageSport())
-                .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
-                        sportDto.getSportName() + "' already exist"));
+                .orElseThrow(() -> {
+                    LOGGER.trace("Sport '{}' does not exist", sportDto.getSportName());
+                    return new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
+                            sportDto.getSportName() + "' already exist");
+                });
         LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
         return Response.ok(SportDtoOutput.from(newSport)).build();
     }
-
-//
-//    @RequestMapping(value="/editSport/{sportName}",  method = {RequestMethod.GET})
-//    public ModelAndView editSportForm(@ModelAttribute("editSportForm") EditSportForm editSportForm,
-//                                      HttpServletRequest request, @PathVariable String sportName) {
-//        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
-//        Sport sport = null;
-//        try {
-//            sport = sportService.findByName(sportName);
-//        }
-//        catch (SportNotFoundException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "sportNotFoundMessage").addObject("attribute", "");
-//        }
-//
-//        return new ModelAndView("admin/editSport").addObject("sport", sport);
-//    }
-//
-//    @RequestMapping(value="/editSport/*",  method = {RequestMethod.POST})
-//    public ModelAndView editSport(@Valid @ModelAttribute("editSportForm") final EditSportForm editSportForm,
-//                                  final BindingResult errors, @RequestParam(value = "file", required = false)
-//                                              MultipartFile file, HttpServletRequest request) throws IOException {
-//        if(errors.hasErrors()) {
-//            return editSportForm(editSportForm, request, editSportForm.getSportName());
-//        }
-//
-//        MultipartFile image = editSportForm.getImage();
-//
-//        if(image.getSize() == 0) {
-//            image = null;
-//        }
-//
-//        try {
-//            sportService.findByName(editSportForm.getSportName());
-//            sportService.modifySport(editSportForm.getSportName(), editSportForm.getDisplayName(),
-//                    image);
-//        }
-//        catch (Exception e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "sportNotFoundMessage").addObject("attribute", "");
-//        }
-//
-//        List<Sport> sports = sportService.getAllSports();
-//
-//        if(sports == null) {
-//            sports = new LinkedList<>();
-//        }
-//
-//        return new ModelAndView("/admin/index").addObject("sports", sports);
-//    }
-//
-//
-//    @RequestMapping(value = "/createSport", method = {RequestMethod.GET })
-//    public ModelAndView createSportForm(@ModelAttribute("createSportForm") SportForm sportForm){
-//        return new ModelAndView("admin/addSport");
-//    }
-//
-//    @RequestMapping(value = "/createSport", method = {RequestMethod.POST })
-//    public ModelAndView create(@Valid @ModelAttribute("createSportForm") final SportForm sportForm,
-//                               final BindingResult errors, @RequestParam(value = "file", required = false)
-//                                           MultipartFile file) throws IOException {
-//        if(errors.hasErrors()) {
-//            return createSportForm(sportForm);
-//        }
-//
-//        int playerQuantity= 0;
-//        for(int i = 0; i< sportForm.getPlayerQuantity().length(); i++) {
-//            playerQuantity = playerQuantity * 10 + (sportForm.getPlayerQuantity().charAt(i)-'0');
-//        }
-//
-//
-//        try {
-//            final Sport sport = sportService.create(sportForm.getSportName(), playerQuantity,
-//                    sportForm.getDisplayName(), sportForm.getImage());
-//        }
-//        catch (Exception e) {
-//            return new ModelAndView("/admin/sportDuplicated").addObject("sportName", sportForm.getSportName());
-//        }
-//
-//        List<Sport> sports = sportService.getAllSports();
-//
-//        if(sports == null) {
-//            sports = new LinkedList<>();
-//        }
-//
-//        return new ModelAndView("/admin/index").addObject("sports", sports);
-//    }
-
-
 }
