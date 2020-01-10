@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Game;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class GameDto {
 
@@ -20,23 +21,28 @@ public class GameDto {
     private boolean hasStarted;
     private boolean hasFinished;
     private String results;
+    private TeamDto team1;
+    private TeamDto team2;
     // -1 undefined, 0 for tie, 1 for team 1 and 2 for team 2
     private int winnerTeam;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
 
-    private GameDto(Game game) {
+    private GameDto(Game game, TeamDto team1, TeamDto team2) {
         title = game.getTitle();
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
-//        isCompetitive = game.getCompetitiveness(); //TODO check for string to compare
+        isCompetitive = game.getCompetitiveness().equals("Competitive");
         sport = game.getTeam1().getSport().getName();
-//        date = calculateDate(game.getStartTime()); TODO implement
-//        time = calculateTime(game.getStartTime()); TODO implement
-        totalPlayers = game.getTeam1().getSport().getQuantity();
-        currentplayers = game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size();
+        LocalDateTime startTime = game.getStartTime();
+        date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
+        time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        totalPlayers = game.getTeam1().getSport().getQuantity() * 2;//one for each team
+        currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         results = game.getResult();
+        this.team1 = team1;
+        this.team2 = team2;
         if (!hasFinished) {
             winnerTeam = -1;
         }
@@ -48,8 +54,8 @@ public class GameDto {
         }
     }
 
-    public static GameDto from(Game game) {
-        return new GameDto(game);
+    public static GameDto from(Game game, TeamDto team1, TeamDto team2) {
+        return new GameDto(game, team1, team2);
     }
 
     public String getTitle() {
@@ -98,6 +104,14 @@ public class GameDto {
 
     public String getResults() {
         return results;
+    }
+
+    public TeamDto getTeam1() {
+        return team1;
+    }
+
+    public TeamDto getTeam2() {
+        return team2;
     }
 
     public int getWinnerTeam() {
