@@ -30,8 +30,8 @@ public class GameDto {
         creator = game.getTeam1().getLeader().getUserName();
 //        isCompetitive = game.getCompetitiveness(); //TODO check for string to compare
         sport = game.getTeam1().getSport().getName();
-//        date = calculateDate(game.getStartTime());
-//        time = calculateTime(game.getStartTime());
+//        date = calculateDate(game.getStartTime()); TODO implement
+//        time = calculateTime(game.getStartTime()); TODO implement
         totalPlayers = game.getTeam1().getSport().getQuantity();
         currentplayers = game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size();
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
