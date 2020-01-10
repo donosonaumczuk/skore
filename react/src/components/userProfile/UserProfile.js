@@ -69,8 +69,8 @@ class UserProfile extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+                        <UserImage styleClass="profile-pic" imageUrl={imageUrl} />    
                         <div className="container-fluid profile-container bg-white rounded-border">
-                            <UserImage styleClass="profile-pic" imageUrl={imageUrl} />
                             <UserData styleClass="profile-name" value={currentUser.firstName + " " + currentUser.lastName} />
                             <UserData styleClass="profile-username" value={currentUser.username} />
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
