@@ -25,6 +25,7 @@ import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
 @Path(BASE_PATH)
+@Produces({MediaType.APPLICATION_JSON})
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -52,7 +53,6 @@ public class UserController {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
