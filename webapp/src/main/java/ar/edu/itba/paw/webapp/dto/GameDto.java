@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.webapp.controller.GameController;
+import ar.edu.itba.paw.webapp.controller.UserController;
+import com.google.common.collect.ImmutableList;
+import org.springframework.hateoas.Link;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,22 +13,23 @@ import java.util.List;
 
 public class GameDto {
 
-    private String title;
-    private String description;
-    private String creator;
-    private boolean isCompetitive;
-    private String sport;
-    private LocalDate date;
-    private LocalTime time;
-    private int totalPlayers;
-    private int currentplayers;
-    private boolean hasStarted;
-    private boolean hasFinished;
-    private String results;
-    private TeamDto team1;
-    private TeamDto team2;
+    private final String title;
+    private final String description;
+    private final String creator;
+    private final boolean isCompetitive;
+    private final String sport;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final int totalPlayers;
+    private final int currentplayers;
+    private final boolean hasStarted;
+    private final boolean hasFinished;
+    private final String results;
+    private final TeamDto team1;
+    private final TeamDto team2;
     // -1 undefined, 0 for tie, 1 for team 1 and 2 for team 2
-    private int winnerTeam;
+    private final int winnerTeam;
+    private final List<Link> links;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
 
     private GameDto(Game game, TeamDto team1, TeamDto team2) {
@@ -46,16 +51,27 @@ public class GameDto {
         if (!hasFinished) {
             winnerTeam = -1;
         }
-        else if(game.getSecondScoreFromResult() != game.getSecondScoreFromResult()){
+        else if(game.getSecondScoreFromResult() != game.getFirstScoreFromResult()){
             winnerTeam = game.getFirstScoreFromResult() > game.getSecondScoreFromResult() ? 1 : 2;
         }
         else {
             winnerTeam = 0;
         }
+        this.links = getHateoasLinks(game, creator);
     }
 
     public static GameDto from(Game game, TeamDto team1, TeamDto team2) {
         return new GameDto(game, team1, team2);
+    }
+
+    private List<Link> getHateoasLinks(Game game, String creator) {
+        String gameId = game.getTeam1().getName() + game.getStartTime().toString() + game.getFinishTime();
+        //TODO ver de mejorar el id, ese es el id de nuestra base, pero es re choto un endpoint asi
+        return ImmutableList.of(
+                new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
+                new Link(UserController.getProfileEndpoint(creator), "creator"));
+                //TODO add team 1 and team 2 on future
+                //TODO add sport in future
     }
 
     public String getTitle() {
@@ -116,5 +132,9 @@ public class GameDto {
 
     public int getWinnerTeam() {
         return winnerTeam;
+    }
+
+    public List<Link> getLinks() {
+        return links;
     }
 }

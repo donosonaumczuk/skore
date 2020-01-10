@@ -106,7 +106,6 @@ public class UserController {
             }
         });
 
-
         return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 

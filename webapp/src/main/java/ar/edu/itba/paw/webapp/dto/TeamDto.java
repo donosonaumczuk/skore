@@ -2,13 +2,15 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.User;
+import org.springframework.hateoas.Link;
 
 import java.util.List;
 
 public class TeamDto {
-    private String teamName;
-    private List<TeamPlayerDto> players;
-    private int playerQuantity;
+    private final String teamName;
+    private final List<TeamPlayerDto> players;
+    private final int playerQuantity;
+//    private final List<Link> links; TODO if we decide to show teams should have one
 
     private TeamDto(List<TeamPlayerDto> players, String teamName) {
         this.teamName = teamName;
