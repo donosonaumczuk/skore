@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.auth.loginFilter;
+package ar.edu.itba.paw.webapp.auth.filters.login;
 
 import ar.edu.itba.paw.exceptions.AlreadyLoggedException;
 import ar.edu.itba.paw.exceptions.InvalidLoginException;

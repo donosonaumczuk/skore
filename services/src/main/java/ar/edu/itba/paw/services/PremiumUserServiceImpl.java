@@ -110,9 +110,8 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public byte[] readImage(final String userName) {
-        Optional<byte[]> imagesOpt = premiumUserDao.readImage(userName);
-        return imagesOpt.orElseThrow(() -> new ImageNotFoundException("Fail to read image from " + userName));
+    public Optional<byte[]> readImage(final String userName) {
+        return premiumUserDao.readImage(userName);
     }
 
     @Override

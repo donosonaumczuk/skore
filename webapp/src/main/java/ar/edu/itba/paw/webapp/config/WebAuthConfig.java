@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUserDetailsAuthProvider;
+import ar.edu.itba.paw.webapp.auth.token.JWTUserDetailsAuthProvider;
 import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
-import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFailureHandler;
-import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthFilter;
-import ar.edu.itba.paw.webapp.auth.loginFilter.LoginAuthSuccessHandler;
-import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthFailureHandler;
-import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthFilter;
-import ar.edu.itba.paw.webapp.auth.sessionFilter.SessionAuthSuccessHandler;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthFilter;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthSuccessHandler;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthFilter;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,10 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.sql.DataSource;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
@@ -115,7 +111,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher adminAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
-                new AntPathRequestMatcher("/admin/**", "GET")
+                new AntPathRequestMatcher("/admin/**", "GET")//TODO add also POST method
         );
     }
 }
