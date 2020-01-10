@@ -1,10 +1,10 @@
-package ar.edu.itba.paw.webapp.auth.sessionFilter;
+package ar.edu.itba.paw.webapp.auth.filters.session;
 
 import ar.edu.itba.paw.exceptions.NoJWTFoundException;
 import ar.edu.itba.paw.exceptions.UnauthorizedExecption;
 import ar.edu.itba.paw.interfaces.JWTService;
-import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUsernamePasswordAuthToken;
-import ar.edu.itba.paw.webapp.auth.JasonWebToken.JWTUtility;
+import ar.edu.itba.paw.webapp.auth.token.JWTUsernamePasswordAuthToken;
+import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
