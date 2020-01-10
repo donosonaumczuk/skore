@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
-import getProfileByUsername from '../../services/UserService';
+import UserService from '../../services/UserService';
 import UserData from './UserData';
+import UserImage from './UserImage';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -9,13 +10,18 @@ class UserProfile extends Component {
         const { username } = this.props;
         this.state = {
             username: username,
-            currentUser: {}
+            currentUser: {},
+            imageUrl: null
         }
     }
 
     async componentDidMount() {   
-        let currentUser = await getProfileByUsername(this.state.username)
-        this.setState({ currentUser: currentUser });
+        let currentUser = await UserService.getProfileByUsername(this.state.username)
+        const imageUrl = this.getImageUrl(currentUser.links);
+        
+        this.setState({ currentUser: currentUser, 
+                        imageUrl: imageUrl 
+                    });
     }
 
     locationData = (location) => {
@@ -46,13 +52,25 @@ class UserProfile extends Component {
         );
     }
     
+    getImageUrl = links => {
+        let imageUrl;
+        links.map(link => {
+            if(link.rel === "image") {
+                imageUrl = link.href;
+            }
+        } )
+        return imageUrl;
+    }
+
     render() {
         const currentUser = this.state.currentUser;
+        const imageUrl = this.state.imageUrl;
         return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                         <div className="container-fluid profile-container bg-white rounded-border">
+                            <UserImage styleClass="profile-pic" imageUrl={imageUrl} />
                             <UserData styleClass="profile-name" value={currentUser.firstName + " " + currentUser.lastName} />
                             <UserData styleClass="profile-username" value={currentUser.username} />
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
