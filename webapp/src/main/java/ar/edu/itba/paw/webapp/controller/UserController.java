@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.GamesDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
@@ -35,6 +39,10 @@ public class UserController {
     @Autowired
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService premiumUserService;
+
+    @Autowired
+    @Qualifier("gameServiceImpl")
+    private GameService gameService;
 
     public static String getProfileEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
@@ -55,6 +63,20 @@ public class UserController {
         if (premiumUserOptional.isPresent()) {
             LOGGER.trace("'{}' profile successfully gotten", username);
             return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
+        }
+        LOGGER.error("Can't get '{}' profile, user not found", username);
+        throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+    }
+
+    @GET
+    @Path("/{username}/matches")
+    public Response getGames(@PathParam("username") String username) {
+        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
+        List<List<Game>> games;
+        if (premiumUserOptional.isPresent()) {
+            games = gameService.getGamesThatPlay(premiumUserOptional.get().getUser().getUserId());
+            LOGGER.trace("'{}' matches successfully gotten", username);
+            return Response.ok(GamesDto.from(games)).build();
         }
         LOGGER.error("Can't get '{}' profile, user not found", username);
         throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
