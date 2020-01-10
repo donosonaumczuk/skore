@@ -68,7 +68,10 @@ public class UserController {
     @Path("/{username}/image")
     public Response getImageUser(@PathParam("username") String username) {
         premiumUserService.findByUserName(username)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist"));
+                .orElseThrow(() -> {
+            LOGGER.trace("Can't get '{}' profile, user not found", username);
+            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        });
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);

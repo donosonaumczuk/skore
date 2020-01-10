@@ -38,7 +38,10 @@ public class SportController {
     public Response getImageSport(@PathParam("sportname") String sportname) {
         LOGGER.trace("Trying to retrieve image of sport '{}'", sportname);
         byte[] media = sportService.readImage(sportname)
-                .orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist"));
+                .orElseThrow(()-> {
+            LOGGER.trace("Can't get '{}' sport, sport not found", sportname);
+            return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+        });
         LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
         return Response.ok(media).header("Content-Type", "image/*").build();
     }
