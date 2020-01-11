@@ -7,7 +7,8 @@ import UserImage from './UserImage';
 class UserProfile extends Component {
     constructor(props) {
         super(props);
-        const { username } = this.props;
+        const { username } = this.props.match.params;
+
         this.state = {
             username: username,
             currentUser: {},
@@ -65,6 +66,7 @@ class UserProfile extends Component {
     render() {
         const currentUser = this.state.currentUser;
         const imageUrl = this.state.imageUrl;
+        //TODO check when winrate is negative if it is a valid value
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -85,7 +87,7 @@ class UserProfile extends Component {
 }
 
 UserProfile.propTypes = {
-    username: Proptypes.string.isRequired
+    match: Proptypes.object.isRequired
 }
 
 export default UserProfile;
