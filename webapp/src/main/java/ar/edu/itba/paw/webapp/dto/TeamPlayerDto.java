@@ -10,6 +10,7 @@ import org.springframework.hateoas.Link;
 import java.util.List;
 
 public class TeamPlayerDto {
+
     private final String username;
     private final String email;
     private final List<Link> links;
@@ -29,8 +30,7 @@ public class TeamPlayerDto {
     }
 
     private List<Link> getHateoasLinks(String username) {
-        return ImmutableList.of(
-                new Link(UserController.getProfileEndpoint(username), "player"));
+        return ImmutableList.of( new Link(UserController.getProfileEndpoint(username), "player"));
     }
 
     public String getUsername() {

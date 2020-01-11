@@ -8,11 +8,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
-import ar.edu.itba.paw.webapp.dto.GameDto;
-import ar.edu.itba.paw.webapp.dto.GamesDto;
-import ar.edu.itba.paw.webapp.dto.ProfileDto;
-import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,9 +90,9 @@ public class UserController {
                 gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))));
             });
             LOGGER.trace("'{}' matches successfully gotten", username);
-            return Response.ok(GamesDto.from(games)).build();
+            return Response.ok(GameListDto.from(games)).build();
         }
-        LOGGER.error("Can't get '{}' profile, user not found", username);
+        LOGGER.error("Can't get '{}' matches, user not found", username);
         throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
     }
 

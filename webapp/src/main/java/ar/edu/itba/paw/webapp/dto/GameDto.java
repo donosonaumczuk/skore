@@ -27,8 +27,6 @@ public class GameDto {
     private final String results;
     private final TeamDto team1;
     private final TeamDto team2;
-    // -1 undefined, 0 for tie, 1 for team 1 and 2 for team 2
-    private final int winnerTeam;
     private final List<Link> links;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
 
@@ -48,15 +46,6 @@ public class GameDto {
         results = game.getResult();
         this.team1 = team1;
         this.team2 = team2;
-        if (!hasFinished) {
-            winnerTeam = -1;
-        }
-        else if(game.getSecondScoreFromResult() != game.getFirstScoreFromResult()){
-            winnerTeam = game.getFirstScoreFromResult() > game.getSecondScoreFromResult() ? 1 : 2;
-        }
-        else {
-            winnerTeam = 0;
-        }
         this.links = getHateoasLinks(game, creator);
     }
 
@@ -128,10 +117,6 @@ public class GameDto {
 
     public TeamDto getTeam2() {
         return team2;
-    }
-
-    public int getWinnerTeam() {
-        return winnerTeam;
     }
 
     public List<Link> getLinks() {

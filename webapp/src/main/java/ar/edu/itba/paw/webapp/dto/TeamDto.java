@@ -7,6 +7,7 @@ import org.springframework.hateoas.Link;
 import java.util.List;
 
 public class TeamDto {
+
     private final String teamName;
     private final List<TeamPlayerDto> players;
     private final int playerQuantity;
