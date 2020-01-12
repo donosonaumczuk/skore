@@ -22,8 +22,8 @@ class App extends Component {
   }
 
   async componentDidMount() {   
-    let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO remove
-    this.setState({ account: account }); 
+    // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
+    // this.setState({ account: account }); TODO add when /users endpoint created
   }
 
   render() {
