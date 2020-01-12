@@ -32,14 +32,14 @@ class App extends Component {
 
   async componentDidMount() {
     this.initializeI18next();   
-    // let account = await getProfileByUsername('donosonaumczuk');//TODO remove
-    // this.setState({ account: account });
+    let account = await getProfileByUsername('donosonaumczuk');//TODO remove
+    this.setState({ account: account });
   }
 
   render() {
    
     if(!this.state.translation) {
-      //TODO return a spinner os something
+      //TODO return a spinner os something and test what happens on change language
       return (<React.Fragment></React.Fragment>);
     }
     return (
