@@ -5,7 +5,17 @@
     },
     "createUserForm": {
         "accounts": "Accounts",
-        "username": "Username",
-        "createAccount": "Create"
+        "username": "Username ",
+        "password": "Password ",
+        "repeatPassword": "Repeat Password ",
+        "firstName": "First Name ",
+        "lastName": "Last Name ",
+        "email": "Email ",
+        "profilePicture": "Profile Picture ",
+        "imageFormat": "Accepted formats: png, jpeg or jpg",
+        "cellphone": "Cellphone ",
+        "birthday": "Birthday ",
+        "dateFormat": "Date format: MM/DD/YYYY",
+        "signUp": "Sign Up"
     }
 }

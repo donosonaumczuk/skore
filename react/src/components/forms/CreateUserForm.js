@@ -4,6 +4,7 @@ import RenderInput from './utils/RenderInput';
 import ImageInput from './utils/ImageInput';
 import RenderDatePicker from './utils/RenderDatePicker';
 import SubmitButton from './utils/SubmitButton';
+import i18next from 'i18next';
 
 const validate = values => {
     const errors = {}
@@ -80,16 +81,25 @@ class CreateUserForm extends Component {
                 </div>
             </div>
             <form onSubmit={handleSubmit(this.onSubmit)}>
-              {/* TODO replace all labels with i18n */}
-              <Field name="username" label="Username " inputType="text" required={true} component={RenderInput} />
-              <Field name="password" label="Password " inputType="password" required={true} component={RenderInput} />
-              <Field name="repeatPassword" label="Repeat Password " inputType="password" required={true} component={RenderInput} />
-              <Field name="firstName" label="First Name " inputType="text" required={true} component={RenderInput} />
-              <Field name="lastName" label="Last Name " inputType="text" required={true} component={RenderInput} />
-              <Field name="email" label="Email " inputType="text" required={true} component={RenderInput} />
-              <Field name="image" label="Profile Picture" type="file" imageName={imageName} acceptedFormat="Accepted formats: png, jpeg or jpg" component={ImageInput} onChange={this.handleChange} />
-              <Field name="cellphone" label="Cellphone " inputType="text" required={false} component={RenderInput} />
-              <Field name="birthDay" label="Birthday " inputType="text" required={true} component={RenderDatePicker} />
+              <Field name="username" label={i18next.t('createUserForm.username')} 
+                        inputType="text" required={true} component={RenderInput} />
+              <Field name="password" label={i18next.t('createUserForm.password')}
+                     inputType="password" required={true} component={RenderInput} />
+              <Field name="repeatPassword" label={i18next.t('createUserForm.repeatPassword')}
+                          inputType="password" required={true} component={RenderInput} />
+              <Field name="firstName" label={i18next.t('createUserForm.firstName')}
+                           inputType="text" required={true} component={RenderInput} />
+              <Field name="lastName" label={i18next.t('createUserForm.lastName')}
+                           inputType="text" required={true} component={RenderInput} />
+              <Field name="email" label={i18next.t('createUserForm.email')} 
+                          inputType="text" required={true} component={RenderInput} />
+              <Field name="image" label={i18next.t('createUserForm.profilePicture')}
+                     type="file" imageName={imageName} acceptedFormat={i18next.t('createUserForm.imageFormat')}
+                      component={ImageInput} onChange={this.handleChange} />
+              <Field name="cellphone" label={i18next.t('createUserForm.cellphone')}
+                         inputType="text" required={false} component={RenderInput} />
+              <Field name="birthDay" label={i18next.t('createUserForm.birthday')}
+                       inputType="text" required={true} component={RenderDatePicker} />
               {/* TODO address with all of its fields and make them autoload as on deploy */}
               <SubmitButton label="Sign Up" divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
             </form>

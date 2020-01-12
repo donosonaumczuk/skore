@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar';
-// import getProfileByUsername from './services/UserService';
+import getProfileByUsername from './services/UserService';
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import './css/main.css';

@@ -6,6 +6,16 @@
     "createUserForm": {
         "accounts": "Cuentas",
         "username": "Nombre de Usuario",
-        "createAccount": "Crear"
+        "password": "Contraseña ",
+        "repeatPassword": "Repita la Contraseña ",
+        "firstName": "Nombre ",
+        "lastName": "Apellifo ",
+        "email": "Email ",
+        "profilePicture": "Imagen de Perfil ",
+        "imageFormat": "Formatos aceptados: png, jpeg or jpg",
+        "cellphone": "Celular ",
+        "birthday": "Fecha de nacimiento ",
+        "dateFormat": "Formato de fecha: MM/DD/YYYY",
+        "signUp": "Registrarse"
     }
 }
