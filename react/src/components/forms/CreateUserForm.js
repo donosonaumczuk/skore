@@ -46,14 +46,14 @@ class CreateUserForm extends Component {
 
   loadUser = (values, image) => {
     const user = {
-      username: values.username,
-      password: values.password,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      image: image,
-      cellphone: values.cellphone ? values.cellphone : null ,
-      birthday: values.birthday
+      "username": values.username,
+      "password": values.password,
+      "firstName": values.firstName,
+      "lastName": values.lastName,
+      "email": values.email,
+      "image": image,
+      "cellphone": values.cellphone ? values.cellphone : null ,
+      "birthday": values.birthday
     };
     return user;
   }
