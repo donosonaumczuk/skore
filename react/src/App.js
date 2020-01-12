@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar';
-import UserService from './services/UserService';
+// import UserService from './services/UserService'; TODO add when /users endpoint created
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import './css/main.css';
@@ -21,6 +21,7 @@ class App extends Component {
     }
   }
 
+
   initializeI18next = async () => {
     if(!this.setState.translation) {
       await i18next.init();
@@ -32,8 +33,8 @@ class App extends Component {
 
   async componentDidMount() {
     this.initializeI18next();   
-    let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO remove
-    this.setState({ account: account });
+    // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
+    // this.setState({ account: account }); TODO add when /users endpoint created
   }
 
   render() {
