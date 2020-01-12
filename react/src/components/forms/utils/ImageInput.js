@@ -15,12 +15,12 @@ class ImageInput  extends Component{
         const { input: { value } } = this.props
         const {input, label, acceptedFormat, imageName, required, meta, } = this.props
         return(
-            <div class="form-group">
+            <div className="form-group">
                 <label>{label}</label>
                 <small id="imgFormatHelp" className="form-text text-muted">{acceptedFormat}</small>
                 <div className="input-group custom-file">
                     <input type='file' className="custom-file-input" accept='.jpg, .png, .jpeg' onChange={this.onChange} />
-                    <label className="custom-file-label" for="image" aria-describedby="inputGroupFileAddon02" >{imageName}</label>
+                    <label className="custom-file-label" aria-describedby="inputGroupFileAddon02" >{imageName}</label>
                 </div>
           </div>
         )

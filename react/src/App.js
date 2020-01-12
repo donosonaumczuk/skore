@@ -38,7 +38,7 @@ class App extends Component {
               <Accounts account={this.state.account} />
             </Route>
             <Route path="/createUser">
-              <CreateUserForm onSubmit={showResults}/>
+              <CreateUserForm />
             </Route>
             <Route path="/user">
               <UserProfile username="donosonaumczuk"/>{/* TODO obtain user from url or click event */} 
