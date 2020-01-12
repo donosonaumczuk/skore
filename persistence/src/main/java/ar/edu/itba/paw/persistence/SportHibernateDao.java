@@ -25,19 +25,19 @@ public class SportHibernateDao implements SportDao {
 
     @Override
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
-                                  final MultipartFile file) throws IOException {
+                                  final byte[] file) {
         if(findByName(sportName).isPresent()) {
             return Optional.empty();
         }
 
-        final Sport newSport = new Sport(sportName, playerQuantity, displayName, ((file==null)?null:file.getBytes()));
+        final Sport newSport = new Sport(sportName, playerQuantity, displayName, file);
         em.persist(newSport);
         return Optional.of(newSport);
     }
 
     @Override
     public Optional<Sport> modifySport(final String sportName, final String displayName,
-                                       final MultipartFile file) throws IOException {
+                                       final byte[] file) {
         Sport sport = em.find(Sport.class, sportName);
 
         if(sport == null) {
@@ -47,7 +47,7 @@ public class SportHibernateDao implements SportDao {
         sport.setDisplayName(displayName);
 
         if(file != null) {
-            sport.setImage(file.getBytes());
+            sport.setImage(file);
         }
 
         em.merge(sport);

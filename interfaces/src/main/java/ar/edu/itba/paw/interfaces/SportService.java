@@ -14,11 +14,11 @@ public interface SportService {
 
     @Transactional
     public Optional<Sport> create(final String sportName, final int playerQuantity,
-                        final String displayName, final MultipartFile file) throws IOException;
+                        final String displayName, final byte[] file);
 
     @Transactional
     public Optional<Sport> modifySport(final String sportName, final String displayName,
-                             final MultipartFile file) throws IOException;
+                             final byte[] file);
 
     @Transactional
     public boolean remove(final String sportName);

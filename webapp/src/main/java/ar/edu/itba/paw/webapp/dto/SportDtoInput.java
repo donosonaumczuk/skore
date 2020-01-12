@@ -8,7 +8,7 @@ public class SportDtoInput {
     private String sportName;
     private int playerQuantity;
     private String displayName;
-    private MultipartFile imageSport;
+    private String imageSport;
 
     public SportDtoInput() {
 
@@ -36,7 +36,7 @@ public class SportDtoInput {
         return displayName;
     }
 
-    public MultipartFile getImageSport() {
+    public String getImageSport() {
         return imageSport;
     }
 
@@ -52,7 +52,7 @@ public class SportDtoInput {
         this.displayName = displayName;
     }
 
-    public void setImageSport(MultipartFile imageSport) {
+    public void setImageSport(String imageSport) {
         this.imageSport = imageSport;
     }
 }

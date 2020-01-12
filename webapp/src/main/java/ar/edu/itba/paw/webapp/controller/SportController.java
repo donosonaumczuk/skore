@@ -91,9 +91,10 @@ public class SportController {
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
-        //TODO validate
-        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getImageSport())
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) {
+        byte[] imageBytes = Validator.getValidator().validateAndProcessImage(sportDto.getImageSport());//TODO:VALIDATE
+
+        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
                     LOGGER.trace("Sport '{}' does not exist", sportname);
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
@@ -105,10 +106,11 @@ public class SportController {
     @POST
     @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createASport(final SportDtoInput sportDto) throws IOException { //TODO: see what to do with exception
-        //TODO validate
+    public Response createASport(final SportDtoInput sportDto) {
+        byte[] imageBytes = Validator.getValidator().validateAndProcessImage(sportDto.getImageSport());//TODO:VALIDATE
+
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
-                sportDto.getDisplayName(), sportDto.getImageSport())
+                sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
                     LOGGER.trace("Sport '{}' does not exist", sportDto.getSportName());
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
