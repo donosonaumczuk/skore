@@ -14,7 +14,9 @@ const removeUser = localStorage.removeItem('currentUser');
 const getUser = () => localStorage.getItem('currentUser');
 
 const logInUser = async user => {
-    const response = await api.post("/login", user);
+    const response = await api.post("login", user);
+    console.table(response);
+    console.log(response);
     //TODO get token, load token, load user add interceptor to post catch error if any
 }
 

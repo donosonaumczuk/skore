@@ -5,9 +5,17 @@ import RenderInput from './utils/RenderInput';
 import SubmitButton from './utils/SubmitButton';
 import i18next from 'i18next';
 import SuggestionText from './utils/SuggestionText';
+import AuthService from './../../services/AuthService';
 
 const onSubmit = async (values) => {
     console.table(values);
+
+    AuthService.logInUser(
+        {
+            "username": values.username,
+            "password": values.password
+        }
+    );
     //TODO make post
 }
 
