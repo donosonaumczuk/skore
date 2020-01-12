@@ -16,9 +16,14 @@
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
         "dateFormat": "Date format: MM/DD/YYYY",
-        "signUp": "Sign Up"
+        "signUp": "Sign Up",
+        "existingUser": "already have an account "
     },
     "profile": {
         "imageDescription": "Profile Picture"
+    },
+    "login": {
+        "loginButton": "Login",
+        "newUser": "are you new? "
     }
 }

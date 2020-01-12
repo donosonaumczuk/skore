@@ -12,13 +12,13 @@ const NavBar = () => {
                     <span className="fas fa-bars"></span>
                 </button>
                 <a className="d-none d-sm-block navbar-brand nav-brand-font" href="/">sk<i className="fas fa-bullseye"></i>re</a>
-                <a className="d-sm-none navbar-brand nav-brand-font" href="/createUser"><i className="fas fa-bullseye"></i>sk</a>
-                <a className="d-sm-none login-link" href="/createUser"><i className="fas fa-user"></i></a>
+                <a className="d-sm-none navbar-brand nav-brand-font" href="/"><i className="fas fa-bullseye"></i>sk</a>
+                <a className="d-sm-none login-link" href="/"><i className="fas fa-user"></i></a>
             
                 <form className="d-none d-sm-block form-inline">
-                    <a className="mr-1 login-link" href="/createUser">{i18next.t('navBar.signIn')}</a>
+                    <a className="mr-1 login-link" href="/login">{i18next.t('navBar.signIn')}</a>
                     <span className="white-text mr-1"> or </span>
-                    <a className="login-link" href="/createUser">{i18next.t('navBar.createAccount')}</a>
+                    <a className="login-link" href="/signUp">{i18next.t('navBar.createAccount')}</a>
                 </form>   
             </nav>
         </React.Fragment>

@@ -9,6 +9,7 @@ import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
+import LogInForm from './components/forms/LogInForm';
 
 
 
@@ -51,8 +52,11 @@ class App extends Component {
             <Route exact path="/">
               <Accounts account={this.state.account} />
             </Route>
-            <Route path="/createUser">
+            <Route path="/signUp">
               <CreateUserForm />
+            </Route>
+            <Route path="/login">
+              <LogInForm />
             </Route>
             <Route path="/user/:username" component={UserProfile} />
           </Switch>

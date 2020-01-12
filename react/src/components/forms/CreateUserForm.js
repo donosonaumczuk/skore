@@ -6,6 +6,7 @@ import RenderDatePicker from './utils/RenderDatePicker';
 import SubmitButton from './utils/SubmitButton';
 import i18next from 'i18next';
 import FormTitle from './utils/FormTitle';
+import SuggestionText from './utils/SuggestionText';
 
 const validate = values => {
     const errors = {}
@@ -98,7 +99,9 @@ class CreateUserForm extends Component {
               <Field name="birthDay" label={i18next.t('createUserForm.birthday')}
                        inputType="text" required={true} component={RenderDatePicker} />
               {/* TODO address with all of its fields and make them autoload as on deploy */}
-              <SubmitButton label="Sign Up" divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
+              <SubmitButton label={i18next.t('createUserForm.signUp')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
+              <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.loginButton')} />
+
             </form>
           </div>
         </div>
