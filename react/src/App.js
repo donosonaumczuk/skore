@@ -9,6 +9,7 @@ import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
+import Loader from './components/Loader';
 
 
 
@@ -38,10 +39,11 @@ class App extends Component {
   }
 
   render() {
-   
     if(!this.state.translation) {
-      //TODO return a spinner os something and test what happens on change language
-      return (<React.Fragment></React.Fragment>);
+      //TODO test what happens on change language
+      return (
+        <Loader />
+      );
     }
     return (
       <Provider store={store}>
