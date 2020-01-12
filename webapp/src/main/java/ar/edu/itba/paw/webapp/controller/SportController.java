@@ -92,7 +92,7 @@ public class SportController {
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) {
-        byte[] imageBytes = Validator.getValidator().validateAndProcessImage(sportDto.getImageSport());//TODO:VALIDATE
+        byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
@@ -107,16 +107,25 @@ public class SportController {
     @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response createASport(final SportDtoInput sportDto) {
-        byte[] imageBytes = Validator.getValidator().validateAndProcessImage(sportDto.getImageSport());//TODO:VALIDATE
+        Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");
+        byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
                 sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
-                    LOGGER.trace("Sport '{}' does not exist", sportDto.getSportName());
+                    LOGGER.trace("Sport '{}' already exist", sportDto.getSportName());
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
                             sportDto.getSportName() + "' already exist");
                 });
         LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
         return Response.ok(SportDtoOutput.from(newSport)).build();
+    }
+
+    private byte[] validateAndProcessSportDto(SportDtoInput sportDto) {
+        return Validator.getValidator()
+                .isAlphaNumericAndLessThan(sportDto.getDisplayName(), "displayName", 100)
+                .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", 100)
+                .isNumberGraterThanZero(sportDto.getPlayerQuantity(), "playerQuantity")
+                .validateAndProcessImage(sportDto.getImageSport());
     }
 }

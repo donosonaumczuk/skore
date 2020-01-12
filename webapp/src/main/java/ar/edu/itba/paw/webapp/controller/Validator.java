@@ -35,6 +35,7 @@ public class Validator {
     private static Validator validator;
 
     private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList("image/jpeg", "image/jpg", "image/png");
+    private static final int MEGABYTE = 1024 * 1024;
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
@@ -87,7 +88,30 @@ public class Validator {
             LOGGER.trace("Mismatch header mime-type with data mime-type");
             throw new ApiException(HttpStatus.BAD_REQUEST, "Mismatch header mime-type with data mime-type");
         }
+
+        if(imageBytes.length > MEGABYTE) {
+            LOGGER.trace("Image is bigger than {} bytes", MEGABYTE);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Image is bigger than " + MEGABYTE + " bytes");
+        }
         return imageBytes;
+    }
+
+    public Validator isAlphaNumericAndLessThan(String string, String fieldName, int maxsize) {
+        if (string == null || !string.matches("[a-zA-Z0-9]+") || string.length() > maxsize) {
+            LOGGER.trace("The field '{}' must be alphanumeic and less than {} characters", fieldName, maxsize);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeic and less than"
+                    + maxsize + " characters");
+        }
+        return this;
+    }
+
+    public Validator isNumberGraterThanZero(int number, String fieldName) {
+        if(number < 0) {
+            LOGGER.trace("The field '{}' must be a integer number greater than zero", fieldName);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be integer number " +
+                    "greater than zero");
+        }
+        return this;
     }
 
     private Validator isMimeTypeSupported(String mimeType) {
