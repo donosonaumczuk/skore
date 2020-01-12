@@ -1,7 +1,6 @@
 import React from 'react';
 import Proptypes from 'prop-types';
 
-
 const UserData = ({ styleClass, value, tag }) => {
     const data = !tag ? value : tag;
     return (
@@ -12,8 +11,6 @@ const UserData = ({ styleClass, value, tag }) => {
         </div>
     );
 }
-
-
  
 UserData.propTypes = {
     styleClass: Proptypes.string.isRequired,

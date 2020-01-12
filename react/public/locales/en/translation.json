@@ -17,5 +17,8 @@
         "birthday": "Birthday ",
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up"
+    },
+    "profile": {
+        "imageDescription": "Profile Picture"
     }
 }
