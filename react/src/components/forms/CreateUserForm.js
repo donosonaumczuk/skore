@@ -27,20 +27,23 @@ class CreateUserForm extends Component {
   }
  
   handleChange = (image) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(image);
-    reader.onload = (e) => {
-      const data = (e.target.result);
-      this.setState (
-        {
-          image: {
-            name: image.name,
-            type: image.type,
-            size: image.size,
-            data: data
+    if(image && image.size > 0) {
+      let reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = (e) => {
+        const data = (e.target.result);
+        console.log(data);
+        this.setState (
+          {
+            image: {
+              name: image.name,
+              type: image.type,
+              size: image.size,
+              data: data
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
 
