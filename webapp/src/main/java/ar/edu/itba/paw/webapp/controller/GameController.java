@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.form.MatchForm;
 import ar.edu.itba.paw.webapp.form.SubmitResultForm;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -34,6 +35,8 @@ public class GameController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
+    public static final String BASE_PATH = "matches";
+
     @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
@@ -45,6 +48,10 @@ public class GameController extends BaseController{
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService userService;
+
+    public static String getGameEndpoint(final String gameId) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(gameId).toTemplate();
+    }
 
     @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
