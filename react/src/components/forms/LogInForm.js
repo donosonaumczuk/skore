@@ -35,7 +35,7 @@ let LogInForm = (props) => {
 }
 
 LogInForm = reduxForm({
-    form: 'createUse',
+    form: 'login',
     destroyOnUnmount: false, // set to true to remove data on refresh
     // validate TODO
   })(LogInForm)
