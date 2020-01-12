@@ -13,6 +13,8 @@ import java.util.List;
 
 public class GameDto {
 
+    private static final int TEAMS_PER_SPORT = 2;
+
     private final String title;
     private final String description;
     private final String creator;
@@ -39,7 +41,7 @@ public class GameDto {
         LocalDateTime startTime = game.getStartTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
-        totalPlayers = game.getTeam1().getSport().getQuantity() * 2;//one for each team
+        totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
         currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
@@ -55,7 +57,7 @@ public class GameDto {
 
     private List<Link> getHateoasLinks(Game game, String creator) {
         String gameId = game.getTeam1().getName() + game.getStartTime().toString() + game.getFinishTime();
-        //TODO ver de mejorar el id, ese es el id de nuestra base, pero es re choto un endpoint asi
+        //TODO improve id so that it is more semantic
         return ImmutableList.of(
                 new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
                 new Link(UserController.getProfileEndpoint(creator), "creator"));

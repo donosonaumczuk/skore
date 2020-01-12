@@ -8,7 +8,11 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
-import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.GameListDto;
+import ar.edu.itba.paw.webapp.dto.ProfileDto;
+import ar.edu.itba.paw.webapp.dto.GameDto;
+import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +28,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
