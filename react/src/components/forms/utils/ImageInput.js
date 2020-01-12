@@ -12,8 +12,7 @@ class ImageInput  extends Component{
     }
 
     render(){
-        const { input: { value } } = this.props
-        const {input, label, acceptedFormat, imageName, required, meta, } = this.props
+        const { label, acceptedFormat, imageName } = this.props
         return(
             <div className="form-group">
                 <label>{label}</label>
