@@ -3,13 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
-import ar.edu.itba.paw.webapp.dto.SportDtoInput;
-import ar.edu.itba.paw.webapp.dto.SportDtoOutput;
+import ar.edu.itba.paw.webapp.dto.SportDto;
+import ar.edu.itba.paw.webapp.dto.SportListDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
@@ -59,15 +60,15 @@ public class SportController {
                     return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
-        return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, MediaType.ANY_IMAGE_TYPE.toString()).build();
+        return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
     }
 
     @GET
     @Path("/")
     public Response getAllSports() {
         LOGGER.trace("Getting all sports");
-        return Response.ok(sportService.getAllSports().stream()
-                .map(SportDtoOutput::from).collect(Collectors.toList())).build();
+        return Response.ok(SportListDto.from(sportService.getAllSports().stream()
+                .map(SportDto::from).collect(Collectors.toList()))).build();
     }
 
     @GET
@@ -77,7 +78,7 @@ public class SportController {
             LOGGER.trace("Sport '{}' does not exist", sportname);
             return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         });
-        return Response.ok(SportDtoOutput.from(sport)).build();
+        return Response.ok(SportDto.from(sport)).build();
     }
 
     @DELETE
@@ -94,7 +95,7 @@ public class SportController {
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) {
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) {
         byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
@@ -103,13 +104,13 @@ public class SportController {
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful modify the sport '{}'", sportname);
-        return Response.ok(SportDtoOutput.from(newSport)).build();
+        return Response.ok(SportDto.from(newSport)).build();
     }
 
     @POST
     @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createASport(final SportDtoInput sportDto) {
+    public Response createASport(final SportDto sportDto) {
         Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");
         byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
@@ -121,10 +122,10 @@ public class SportController {
                             sportDto.getSportName() + "' already exist");
                 });
         LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
-        return Response.status(HttpStatus.CREATED.value()).entity(SportDtoOutput.from(newSport)).build();
+        return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
     }
 
-    private byte[] validateAndProcessSportDto(SportDtoInput sportDto) {
+    private byte[] validateAndProcessSportDto(SportDto sportDto) {
         return Validator.getValidator()
                 .isAlphaNumericAndLessThan(sportDto.getDisplayName(), "displayName", 100)
                 .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", 100)
