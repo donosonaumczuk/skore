@@ -146,7 +146,7 @@ public class Validator {
             return javax.xml.bind.DatatypeConverter.parseBase64Binary(imageDataBase64);
         } catch (IllegalArgumentException e) {
             LOGGER.trace("Cannot process image bytes");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Cannot process image bytes");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image bytes");
         }
     }
 
