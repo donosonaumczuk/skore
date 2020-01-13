@@ -17,9 +17,11 @@ const getUserMatches = async username => {
     console.log(res)//TODO validate error
     return res.data;
 }
+
 const UserService = {
     getProfileByUsername: getProfileByUsername,
-    getUserImage: getUserImage
+    getUserImage: getUserImage,
+    getUserMatches: getUserMatches
 };
 
 export default UserService;

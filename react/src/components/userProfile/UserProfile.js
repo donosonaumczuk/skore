@@ -3,6 +3,7 @@ import Proptypes from 'prop-types';
 import UserService from '../../services/UserService';
 import UserData from './UserData';
 import UserImage from './UserImage';
+// import UserMatches from './UserMatches';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -12,14 +13,13 @@ class UserProfile extends Component {
         this.state = {
             username: username,
             currentUser: {},
-            imageUrl: null
+            imageUrl: null,
         }
     }
 
-    async componentDidMount() {   
+    async componentDidMount() { 
         let currentUser = await UserService.getProfileByUsername(this.state.username)
         const imageUrl = this.getImageUrl(currentUser.links);
-        
         this.setState({ currentUser: currentUser, 
                         imageUrl: imageUrl 
                     });
@@ -79,8 +79,8 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-username" value={currentUser.username} />
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
-                            {/* <Matches /> TODO*/}
                         </div>
+                        {/* <UserMatches username={this.state.username}/> */}
                     </div>
                 </div>
             </div>
