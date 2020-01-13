@@ -1,7 +1,5 @@
 import api from './../config/Api';
 
-let currentUser;
-
 const setToken = token => localStorage.setItem('jwt', token);
 
 const getToken = () => localStorage.getItem('jwt');
@@ -17,20 +15,21 @@ const getUser = () => localStorage.getItem('currentUser');
 const logInUser = async user => {
     const response = await api.post("login", user);
     setToken(response.headers['x-token']);
-    currentUser = user.username;
-    loadUser(currentUser);
+    loadUser(user.username);
     console.log(getToken());
     console.log(getUser());
     //TODO if error of token expiry remove token and user and catch other errors
     //TODO token expiry should be controlled on every get or post that uses authentication
 }
 
-const logOutUser = () => {
+const logOutUser = async () => {
+    const response = await api.post("logout");
     if(getToken) {
         removeToken();
-        removeUser(); 
-        //TODO disable interceptor   
+        removeUser();  
     }
+    console.log(response);
+    //TODO handle errors using response
 }
 
 const getCurrentUser = () => {

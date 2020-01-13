@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Redirect } from 'react-router-dom';
 import RenderInput from './utils/RenderInput';
 import ImageInput from './utils/ImageInput';
 import RenderDatePicker from './utils/RenderDatePicker';
@@ -7,6 +8,7 @@ import SubmitButton from './utils/SubmitButton';
 import i18next from 'i18next';
 import FormTitle from './utils/FormTitle';
 import SuggestionText from './utils/SuggestionText';
+import AuthService from './../../services/AuthService';
 
 const validate = values => {
     const errors = {}
@@ -70,6 +72,10 @@ class CreateUserForm extends Component {
   render() {
     const { handleSubmit, submitting} = this.props;
     let imageName = "";
+    const currentUser = AuthService.getCurrentUser();
+    if (currentUser) {
+      return <Redirect to={`/users/${currentUser}`} />
+    }
     if(this.state.image != null) {
       imageName = this.state.image.name;
     }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Redirect } from 'react-router-dom';
 import FormTitle from './utils/FormTitle';
 import RenderInput from './utils/RenderInput';
 import SubmitButton from './utils/SubmitButton';
@@ -22,7 +23,10 @@ const onSubmit = async (values) => {
 
 let LogInForm = (props) => {
     const { handleSubmit, submitting} = props; 
-
+    const currentUser = AuthService.getCurrentUser();
+    if (currentUser) {
+        return <Redirect to={`/users/${currentUser}`} />
+    }
     return (
         <div className="container-fluid">
             <div className="row">
