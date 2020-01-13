@@ -1,10 +1,10 @@
 import React from 'react';
 import Proptypes from 'prop-types';
 
-const SubmitButton = ({ label, submitting }) => {
+const SubmitButton = ({ label, divStyle, buttonStyle, submitting }) => {
     return (
-        <div>
-        <button type="submit" disabled={submitting}>
+        <div className={divStyle}>
+        <button type="submit" className={buttonStyle} disabled={submitting}>
           {label}
         </button>
       </div>

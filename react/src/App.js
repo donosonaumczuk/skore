@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar';
-import UserService from './services/UserService';
+// import UserService from './services/UserService'; TODO add when /users endpoint created
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
-import showResults from "./ShowResults";
 import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
+import Loader from './components/Loader';
 
 
 
@@ -17,17 +17,34 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account: {}
+      account: {},
+      translation: false
     }
   }
 
-  async componentDidMount() {   
+
+  initializeI18next = async () => {
+    if(!this.setState.translation) {
+      await i18next.init();
+      this.setState({
+        translation: true
+      });
+    }
+  }
+
+  async componentDidMount() {
+    this.initializeI18next();   
     // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
     // this.setState({ account: account }); TODO add when /users endpoint created
   }
 
   render() {
-
+    if(!this.state.translation) {
+      //TODO test what happens on change language
+      return (
+        <Loader />
+      );
+    }
     return (
       <Provider store={store}>
       <div>
@@ -38,7 +55,7 @@ class App extends Component {
               <Accounts account={this.state.account} />
             </Route>
             <Route path="/createUser">
-              <CreateUserForm onSubmit={showResults}/>
+              <CreateUserForm />
             </Route>
             <Route path="/user/:username" component={UserProfile} />
           </Switch>
