@@ -121,7 +121,7 @@ public class UserController {
         return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
-
+    @GET
     @Path("/{username}/image")
     public Response getImageUser(@PathParam("username") String username) {
         premiumUserService.findByUserName(username)

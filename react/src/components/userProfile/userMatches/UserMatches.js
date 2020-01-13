@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
-import UserService from './../../services/UserService';
-import Loader from '../Loader';
+import UserService from '../../../services/UserService';
+import Loader from '../../Loader';
+import UserMatch from './UserMatch';
 
 class UserMatches extends Component {
     constructor(props) {
@@ -13,14 +14,20 @@ class UserMatches extends Component {
 
     async componentDidMount() {
         let matches = await UserService.getUserMatches(this.props.username);
-        console.log(matches);
-
+        this.setState({
+            matches: matches
+        });
     }
 
     render() {
-        if(this.state.matches) {
+        const matches = this.state.matches;
+        if (matches) {
             return (
-                <React.Fragment></React.Fragment>
+                <div className="container-fluid mt-4 rounded-border">
+                    {
+                        matches.map( (match, i) => <UserMatch key={i} currentMatch={match} />)
+                    }    
+                </div>
             );
         }
         else {

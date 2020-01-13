@@ -3,7 +3,7 @@ import Proptypes from 'prop-types';
 import UserService from '../../services/UserService';
 import UserData from './UserData';
 import UserImage from './UserImage';
-// import UserMatches from './UserMatches';
+import UserMatches from './userMatches/UserMatches';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -80,7 +80,7 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
                         </div>
-                        {/* <UserMatches username={this.state.username}/> */}
+                        <UserMatches username={this.state.username}/>
                     </div>
                 </div>
             </div>

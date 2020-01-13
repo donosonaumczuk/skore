@@ -60,7 +60,8 @@ public class GameDto {
         //TODO improve id so that it is more semantic
         return ImmutableList.of(
                 new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
-                new Link(UserController.getProfileEndpoint(creator), "creator"));
+                new Link(UserController.getProfileEndpoint(creator), "creator"),
+                new Link(UserController.getUserImageEndpoint(creator), "creatorImage"));
                 //TODO add team 1 and team 2 on future
                 //TODO add sport in future
     }
