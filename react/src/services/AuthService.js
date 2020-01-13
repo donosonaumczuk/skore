@@ -13,7 +13,7 @@ const removeUser = () => localStorage.removeItem('currentUser');
 const getUser = () => localStorage.getItem('currentUser');
 
 const logInUser = async user => {
-    const response = await api.post("login", user);
+    const response = await api.post("auth/login", user);
     setToken(response.headers['x-token']);
     loadUser(user.username);
 
@@ -22,7 +22,8 @@ const logInUser = async user => {
 }
 
 const logOutUser = async () => {
-    const response = await api.post("logout");
+    const response = await api.post("auth/logout");
+    console.log("deslogeando");
     if(getToken) {
         removeToken();
         removeUser();  
