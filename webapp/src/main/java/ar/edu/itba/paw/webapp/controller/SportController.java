@@ -87,7 +87,7 @@ public class SportController {
             LOGGER.trace("Sport '{}' does not exist", sportname);
             throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         }
-        LOGGER.trace("Successful delete the sport '{}'", sportname);
+        LOGGER.trace("Sport '{}' deleted successfully", sportname);
         return Response.noContent().build();
     }
 
