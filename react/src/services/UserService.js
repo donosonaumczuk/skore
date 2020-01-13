@@ -12,6 +12,11 @@ const getUserImage = async username => {
     return res.data;
 }
    
+const getUserMatches = async username => {
+    const res = await api.get(`users/${username}/matches`);
+    console.log(res)//TODO validate error
+    return res.data;
+}
 const UserService = {
     getProfileByUsername: getProfileByUsername,
     getUserImage: getUserImage
