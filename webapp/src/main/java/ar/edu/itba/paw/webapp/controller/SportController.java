@@ -102,7 +102,7 @@ public class SportController {
                     LOGGER.trace("Sport '{}' does not exist", sportname);
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
                 });
-        LOGGER.trace("Successful modify the sport '{}'", sportname);
+        LOGGER.trace("Sport '{}' modified successfully", sportname);
         return Response.ok(SportDtoOutput.from(newSport)).build();
     }
 
