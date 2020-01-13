@@ -59,7 +59,7 @@ public class SportController {
                     return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
-        return Response.ok(media).header("Content-Type", "image/*").build();
+        return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, MediaType.ANY_IMAGE_TYPE.toString()).build();
     }
 
     @GET
