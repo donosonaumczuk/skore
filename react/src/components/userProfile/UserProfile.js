@@ -59,6 +59,7 @@ class UserProfile extends Component {
             if(link.rel === "image") {
                 imageUrl = link.href;
             }
+            return link;
         } )
         return imageUrl;
     }
@@ -66,6 +67,7 @@ class UserProfile extends Component {
     render() {
         const currentUser = this.state.currentUser;
         const imageUrl = this.state.imageUrl;
+        // TODO dont render until all data is loaded
         //TODO check when winrate is negative if it is a valid value
         return (
             <div className="container-fluid">
