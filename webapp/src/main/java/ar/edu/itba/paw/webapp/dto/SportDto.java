@@ -19,7 +19,7 @@ public class SportDto {
 
     }
 
-    public SportDto(Sport sport) {
+    private SportDto(Sport sport) {
         this.sportName = sport.getName();
         this.playerQuantity = sport.getQuantity();
         this.displayName = sport.getDisplayName();

@@ -138,8 +138,8 @@ public class Validator {
 
     private Validator splitimageHasBase64Format(final String[] splitImage) {
         if (splitImage.length != 2 || !splitImage[0].matches("data:image/(\\w+);base64")) {
-            LOGGER.trace("Image is in not in base64 Format");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Image is in not in base64 Format");
+            LOGGER.trace("Image is not in base64 format");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Image must be in base64 format");
         }
         return this;
     }

@@ -38,11 +38,13 @@ public class SportController {
 
     public static final String BASE_PATH = "sports";
 
+    private static final int MAX_DISPLAY_NAME_LENGTH = 100;
+
     @Autowired
     @Qualifier("sportServiceImpl")
     private SportService sportService;
 
-    public static String getSportEndpoint(String sportname) {
+    public static String getSportEndpoint(final String sportname) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(sportname).toTemplate();
     }
 
@@ -59,7 +61,7 @@ public class SportController {
                     LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
                     return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
-        LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
+        LOGGER.trace("Sport '{}' image retrieved successfully", sportname);
         return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, com.google.common.net.MediaType.ANY_IMAGE_TYPE).build();
     }
 
@@ -103,7 +105,7 @@ public class SportController {
                     LOGGER.trace("Sport '{}' does not exist", sportname);
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
                 });
-        LOGGER.trace("Successful modify the sport '{}'", sportname);
+        LOGGER.trace("Sport '{}' modified successfully", sportname);
         return Response.ok(SportDto.from(newSport)).build();
     }
 
@@ -127,8 +129,8 @@ public class SportController {
 
     private byte[] validateAndProcessSportDto(SportDto sportDto) {
         return Validator.getValidator()
-                .isAlphaNumericAndLessThan(sportDto.getDisplayName(), "displayName", 100)
-                .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", 100)
+                .isAlphaNumericAndLessThan(sportDto.getDisplayName(), "displayName", MAX_DISPLAY_NAME_LENGTH)
+                .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", MAX_DISPLAY_NAME_LENGTH)
                 .isNumberGreaterThanZero(sportDto.getPlayerQuantity(), "playerQuantity")
                 .validateAndProcessImage(sportDto.getImageSport());
     }
