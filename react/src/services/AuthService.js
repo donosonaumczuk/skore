@@ -1,4 +1,3 @@
-import React from 'react';
 import api from './../config/Api';
 
 const setToken = token => localStorage.setItem('jwt', token);
@@ -15,8 +14,10 @@ const getUser = () => localStorage.getItem('currentUser');
 
 const logInUser = async user => {
     const response = await api.post("login", user);
-    console.table(response);
-    console.log(response);
+    setToken(response.headers['x-token']);
+    loadUser(user.username);
+    console.log(getToken());
+    console.log(getUser());
     //TODO get token, load token, load user add interceptor to post catch error if any
 }
 
@@ -36,6 +37,7 @@ const getCurrentUser = () => {
 }
 
 const AuthService = {
+    getToken: getToken,
     logInUser: logInUser,
     logOutUser: logOutUser,
     getCurrentUser: getCurrentUser

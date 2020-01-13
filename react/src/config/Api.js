@@ -1,4 +1,5 @@
 import { create } from 'axios';
+import AuthService from './../services/AuthService';
 
 const api = create({ baseURL: '/api/'});
 
@@ -6,9 +7,16 @@ const api = create({ baseURL: '/api/'});
 // Intercepting requests
 api.interceptors.request.use(
     config => {
-        console.log(`${config.method.toUpperCase()} request sent to ${config.baseURL}${config.url}`);
-        console.log(config);
-        console.table(config);
+        const token = AuthService.getToken();
+        if (token) {
+            config.headers.authorization =`Bearer ${token}`;
+        }
+        else {
+            console.log("no agregar header");
+        }
+        // console.log(`${config.method.toUpperCase()} request sent to ${config.baseURL}${config.url}`);
+        // console.log(config);
+        // console.table(config);
         return config;
     },
     error => {
