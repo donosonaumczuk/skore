@@ -1,7 +1,8 @@
 {
     "navBar": {
         "signIn": "Sign-in",
-        "createAccount": "Create Account"
+        "createAccount": "Create Account",
+        "logOut": "Log out"
     },
     "createUserForm": {
         "accounts": "Accounts",

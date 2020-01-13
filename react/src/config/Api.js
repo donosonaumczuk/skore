@@ -3,7 +3,6 @@ import AuthService from './../services/AuthService';
 
 const api = create({ baseURL: '/api/'});
 
-// TODO good for debuging intercepting all requests
 // Intercepting requests
 api.interceptors.request.use(
     config => {
@@ -39,6 +38,7 @@ const errorHandler = (error) => {
   
 const successHandler = (response) => response;
 
+// Intercepting responses
 api.interceptors.response.use(response => successHandler(response),
                                 error => errorHandler(error));
 
