@@ -4,12 +4,14 @@ import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar/NavBar';
-import UserService from './services/UserService';
+// import UserService from './services/UserService'; TODO import when used on componentDidMount
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
 import LogInForm from './components/forms/LogInForm';
+import Loader from './components/Loader';
+
 
 
 
@@ -33,15 +35,16 @@ class App extends Component {
 
   async componentDidMount() {
     this.initializeI18next();   
-    let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO remove
-    this.setState({ account: account });
+    // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
+    // this.setState({ account: account }); TODO add when /users endpoint created
   }
 
   render() {
-   
     if(!this.state.translation) {
-      //TODO return a spinner os something and test what happens on change language
-      return (<React.Fragment></React.Fragment>);
+      //TODO test what happens on change language
+      return (
+        <Loader />
+      );
     }
     return (
       <Provider store={store}>
@@ -58,12 +61,11 @@ class App extends Component {
             <Route path="/login">
               <LogInForm />
             </Route>
-            <Route path="/user/:username" component={UserProfile} />
+            <Route path="/users/:username" component={UserProfile} />
           </Switch>
         </Router>
       </div>
       </Provider>
-      
     );
   }
 }

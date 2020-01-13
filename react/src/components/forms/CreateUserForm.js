@@ -57,13 +57,13 @@ class CreateUserForm extends Component {
       "image": image,
       "cellphone": values.cellphone ? values.cellphone : null ,
       "birthday": values.birthday
+
     };
     return user;
   }
 
   onSubmit = async (values) => {
     let user = this.loadUser(values, this.state.image);
-    console.table(user);
     //TODO make post
   }
 
@@ -104,7 +104,6 @@ class CreateUserForm extends Component {
               {/* TODO address with all of its fields and make them autoload as on deploy */}
               <SubmitButton label={i18next.t('createUserForm.signUp')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
               <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.loginButton')} />
-
             </form>
           </div>
         </div>
