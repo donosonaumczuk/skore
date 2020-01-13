@@ -5,12 +5,12 @@ import AuthService from './../services/AuthService';
 
 const LogOut = (props) => {
     const currentUser = AuthService.getCurrentUser();
-    if(currentUser) {
+    if (currentUser) {
         AuthService.logOutUser();
         props.updateUser(null);
     //TODO validate errors
     }
-    return(<Redirect to="/" />);
+    return (<Redirect to="/" />);
 }
 
 LogOut.propTypes = {

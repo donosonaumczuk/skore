@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   initializeI18next = async () => {
-    if(!this.setState.translation) {
+    if (!this.setState.translation) {
       await i18next.init();
       this.setState({
         translation: true
@@ -50,7 +50,7 @@ class App extends Component {
   }
 
   render() {
-    if(!this.state.translation) {
+    if (!this.state.translation) {
       //TODO test what happens on change language
       return (
         <Loader />

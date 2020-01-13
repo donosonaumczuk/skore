@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
+import i18next from 'i18next';
 import RenderInput from './utils/RenderInput';
 import ImageInput from './utils/ImageInput';
 import RenderDatePicker from './utils/RenderDatePicker';
 import SubmitButton from './utils/SubmitButton';
-import i18next from 'i18next';
 import FormTitle from './utils/FormTitle';
 import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
@@ -29,12 +29,11 @@ class CreateUserForm extends Component {
   }
  
   handleChange = (image) => {
-    if(image && image.size > 0) {
+    if (image && image.size > 0) {
       let reader = new FileReader();
       reader.readAsDataURL(image);
       reader.onload = (e) => {
         const data = (e.target.result);
-        console.log(data);
         this.setState (
           {
             image: {
@@ -76,7 +75,7 @@ class CreateUserForm extends Component {
     if (currentUser) {
       return <Redirect to={`/users/${currentUser}`} />
     }
-    if(this.state.image != null) {
+    if (this.state.image != null) {
       imageName = this.state.image.name;
     }
     // const usernameLabel = "" + i18next.t('createUserForm.username') + " *";

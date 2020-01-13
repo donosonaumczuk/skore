@@ -23,17 +23,17 @@ const logInUser = async user => {
 
 const logOutUser = async () => {
     const response = await api.post("auth/logout");
-    console.log("deslogeando");
-    if(getToken) {
+
+    if (getToken) {
         removeToken();
         removeUser();  
     }
-    console.log(response);
+    console.log(response); //TODO remove on production is here to avoid warning
     //TODO handle errors using response
 }
 
 const getCurrentUser = () => {
-    if(getToken()) {
+    if (getToken()) {
         return getUser();
     }
     return null;
