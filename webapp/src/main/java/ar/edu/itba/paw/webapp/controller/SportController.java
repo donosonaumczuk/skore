@@ -95,7 +95,7 @@ public class SportController {
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) {
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) {
         byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
@@ -104,7 +104,7 @@ public class SportController {
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful modify the sport '{}'", sportname);
-        return Response.ok(SportDtoOutput.from(newSport)).build();
+        return Response.ok(SportDto.from(newSport)).build();
     }
 
     @POST
@@ -121,7 +121,7 @@ public class SportController {
                     return new ApiException(HttpStatus.CONFLICT, "Sport '" +
                             sportDto.getSportName() + "' already exist");
                 });
-        LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
+        LOGGER.trace("Successful created the sport '{}'", sportDto.getSportName());
         return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
     }
 

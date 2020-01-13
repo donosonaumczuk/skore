@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -143,7 +144,7 @@ public class Validator {
 
     private byte[] getImageBytes(final String imageDataBase64) {
         try {
-            return javax.xml.bind.DatatypeConverter.parseBase64Binary(imageDataBase64);
+            return DatatypeConverter.parseBase64Binary(imageDataBase64);
         } catch (IllegalArgumentException e) {
             LOGGER.trace("Cannot process image bytes");
             throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image bytes");
