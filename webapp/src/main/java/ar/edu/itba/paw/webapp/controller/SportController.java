@@ -88,14 +88,14 @@ public class SportController {
             LOGGER.trace("Sport '{}' does not exist", sportname);
             throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         }
-        LOGGER.trace("Successful delete the sport '{}'", sportname);
+        LOGGER.trace("Sport '{}' deleted successfully", sportname);
         return Response.noContent().build();
     }
 
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) {
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDtoInput sportDto) {
         byte[] imageBytes = validateAndProcessSportDto(sportDto);
 
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
@@ -104,7 +104,7 @@ public class SportController {
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful modify the sport '{}'", sportname);
-        return Response.ok(SportDto.from(newSport)).build();
+        return Response.ok(SportDtoOutput.from(newSport)).build();
     }
 
     @POST
