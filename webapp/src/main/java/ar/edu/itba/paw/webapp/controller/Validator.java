@@ -52,16 +52,16 @@ public class Validator {
         return validator;
     }
 
-    public Validator userExist(String username) {
+    public Validator userExist(final String username) {
         premiumUserService.findByUserName(username)
             .orElseThrow(() -> {
-                LOGGER.trace("Can't get '{}' profile, user not found", username);
+                LOGGER.trace("Can't get '{}', user not found", username);
                 return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
             });
         return this;
     }
 
-    public Validator fieldHasData(String field, String fieldName) {
+    public Validator fieldHasData(final String field, final String fieldName) {
         if(field == null || field.isEmpty()) {
             LOGGER.trace("No data in field '{}'", fieldName);
             throw new ApiException(HttpStatus.BAD_REQUEST, "No data in field '" + fieldName + "'");
@@ -69,7 +69,7 @@ public class Validator {
         return this;
     }
 
-    public byte[] validateAndProcessImage(String imageInBase64) {
+    public byte[] validateAndProcessImage(final String imageInBase64) {
         if(imageInBase64 == null) {
             return null;
         }
@@ -96,8 +96,8 @@ public class Validator {
         return imageBytes;
     }
 
-    public Validator isAlphaNumericAndLessThan(String string, String fieldName, int maxsize) {
-        if (string == null || !string.matches("[a-zA-Z0-9]+") || string.length() > maxsize) {
+    public Validator isAlphaNumericAndLessThan(final String string, final String fieldName, final int maxsize) {
+        if (string == null || !string.matches("[a-zA-Z0-9]+") || string.length() > maxsize || string.isEmpty()) {
             LOGGER.trace("The field '{}' must be alphanumeic and less than {} characters", fieldName, maxsize);
             throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeic and less than"
                     + maxsize + " characters");
@@ -105,7 +105,7 @@ public class Validator {
         return this;
     }
 
-    public Validator isNumberGraterThanZero(int number, String fieldName) {
+    public Validator isNumberGreaterThanZero(final int number, final String fieldName) {
         if(number < 0) {
             LOGGER.trace("The field '{}' must be a integer number greater than zero", fieldName);
             throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be integer number " +
@@ -114,7 +114,7 @@ public class Validator {
         return this;
     }
 
-    private Validator isMimeTypeSupported(String mimeType) {
+    private Validator isMimeTypeSupported(final String mimeType) {
         if(mimeType == null || !SUPPORTED_MIME_TYPES.contains(mimeType)) {
             StringBuilder exceptionError = new StringBuilder("Media type not supported. The supported media types are: ");
             boolean isFirst = true;
@@ -133,7 +133,7 @@ public class Validator {
         return this;
     }
 
-    private Validator splitimageHasBase64Format(String[] splitImage) {
+    private Validator splitimageHasBase64Format(final String[] splitImage) {
         if (splitImage.length != 2 || !splitImage[0].matches("data:image/(\\w+);base64")) {
             LOGGER.trace("Image is in not in base64 Format");
             throw new ApiException(HttpStatus.BAD_REQUEST, "Image is in not in base64 Format");
@@ -141,7 +141,7 @@ public class Validator {
         return this;
     }
 
-    private byte[] getImageBytes(String imageDataBase64) {
+    private byte[] getImageBytes(final String imageDataBase64) {
         try {
             return javax.xml.bind.DatatypeConverter.parseBase64Binary(imageDataBase64);
         } catch (IllegalArgumentException e) {

@@ -13,14 +13,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import java.io.IOException;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
@@ -114,18 +117,18 @@ public class SportController {
                 sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
                     LOGGER.trace("Sport '{}' already exist", sportDto.getSportName());
-                    return new ApiException(HttpStatus.NOT_FOUND, "Sport '" +
+                    return new ApiException(HttpStatus.CONFLICT, "Sport '" +
                             sportDto.getSportName() + "' already exist");
                 });
         LOGGER.trace("Successful create the sport '{}'", sportDto.getSportName());
-        return Response.ok(SportDtoOutput.from(newSport)).build();
+        return Response.status(HttpStatus.CREATED.value()).entity(SportDtoOutput.from(newSport)).build();
     }
 
     private byte[] validateAndProcessSportDto(SportDtoInput sportDto) {
         return Validator.getValidator()
                 .isAlphaNumericAndLessThan(sportDto.getDisplayName(), "displayName", 100)
                 .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", 100)
-                .isNumberGraterThanZero(sportDto.getPlayerQuantity(), "playerQuantity")
+                .isNumberGreaterThanZero(sportDto.getPlayerQuantity(), "playerQuantity")
                 .validateAndProcessImage(sportDto.getImageSport());
     }
 }

@@ -9,9 +9,9 @@ import java.util.List;
 
 public class SportDtoOutput {
 
-    private String sportName;
-    private int playerQuantity;
-    private String displayName;
+    private final String sportName;
+    private final int playerQuantity;
+    private final String displayName;
     private final List<Link> links;
 
     public SportDtoOutput(Sport sport) {
