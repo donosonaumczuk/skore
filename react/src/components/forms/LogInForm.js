@@ -1,6 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
+import Proptypes from 'prop-types';
 import FormTitle from './utils/FormTitle';
 import RenderInput from './utils/RenderInput';
 import SubmitButton from './utils/SubmitButton';
@@ -25,6 +26,7 @@ let LogInForm = (props) => {
     const { handleSubmit, submitting} = props; 
     const currentUser = AuthService.getCurrentUser();
     if (currentUser) {
+        props.updateUser(currentUser);
         return <Redirect to={`/users/${currentUser}`} />
     }
     return (
@@ -53,4 +55,7 @@ LogInForm = reduxForm({
     // validate TODO
   })(LogInForm)
 
+LogInForm.propTypes = {
+    updateUser: Proptypes.func.isRequired
+}
 export default LogInForm;

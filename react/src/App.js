@@ -12,13 +12,15 @@ import UserProfile from './components/userProfile/UserProfile';
 import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
 import LogOut from './components/LogOut';
+import AuthService from './services/AuthService';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       account: {},
-      translation: false
+      translation: false,
+      currentUser: null
     }
   }
 
@@ -31,7 +33,17 @@ class App extends Component {
     }
   }
 
+  updateUser = currentUser => {
+    this.setState({
+      currentUser: currentUser
+    });
+  }
+
   async componentDidMount() {
+    const currentUser = AuthService.getCurrentUser();
+    if (currentUser) {
+      this.updateUser(currentUser);
+    }
     this.initializeI18next();   
     // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
     // this.setState({ account: account }); TODO add when /users endpoint created
@@ -47,7 +59,7 @@ class App extends Component {
     return (
       <Provider store={store}>
       <div>
-        <NavBar />
+        <NavBar currentUser={this.state.currentUser}/>
         <Router>
           <Switch>
             <Route exact path="/">
@@ -57,10 +69,10 @@ class App extends Component {
               <CreateUserForm />
             </Route>
             <Route path="/login">
-              <LogInForm />
+              <LogInForm updateUser={this.updateUser}/>
             </Route>
             <Route path="/logout">
-              <LogOut />
+              <LogOut updateUser={this.updateUser}/>
             </Route>
             <Route path="/users/:username" component={UserProfile} />
           </Switch>
