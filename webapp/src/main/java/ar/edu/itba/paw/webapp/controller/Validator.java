@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -35,7 +36,8 @@ public class Validator {
 
     private static Validator validator;
 
-    private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList("image/jpeg", "image/jpg", "image/png");
+    private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList(MediaType.IMAGE_JPEG_VALUE,
+            "image/jpg", MediaType.IMAGE_PNG_VALUE);
     private static final int MEGABYTE = 1024 * 1024;
 
     @Autowired
