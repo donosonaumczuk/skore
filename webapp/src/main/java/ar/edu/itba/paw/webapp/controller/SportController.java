@@ -56,7 +56,7 @@ public class SportController {
         byte[] media = sportService.readImage(sportname)
                 .orElseThrow(()-> {
                     LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
-                    return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+                    return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
         LOGGER.trace("Successful retrieve image of sport '{}'", sportname);
         return Response.ok(media).header("Content-Type", "image/*").build();
