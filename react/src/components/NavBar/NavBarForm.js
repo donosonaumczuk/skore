@@ -1,6 +1,6 @@
 import React from 'react';
 import i18next from 'i18next';
-import AuthService from './../../services/AuthService';
+import Proptypes from 'prop-types';
 
 const getAnonymousForm = () => {
     return (
@@ -22,8 +22,7 @@ const getLoggedForm = userName => {
         </form>
     )
 }
-const navBarForm = () => {
-    const currentUser = AuthService.getCurrentUser();
+const NavBarForm = ({ currentUser }) => {
     let form = getAnonymousForm();
     if (currentUser) {
         form = getLoggedForm(currentUser);
@@ -31,4 +30,9 @@ const navBarForm = () => {
     return (<React.Fragment>{form}</React.Fragment>);
 }
  
-export default navBarForm;
+
+NavBarForm.propTypes = {
+    currentUser: Proptypes.string
+}
+
+export default NavBarForm;
