@@ -11,9 +11,7 @@ import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
 import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
-
-
-
+import LogOut from './components/LogOut';
 
 class App extends Component {
   constructor(props) {
@@ -60,6 +58,9 @@ class App extends Component {
             </Route>
             <Route path="/login">
               <LogInForm />
+            </Route>
+            <Route path="/logout">
+              <LogOut />
             </Route>
             <Route path="/users/:username" component={UserProfile} />
           </Switch>

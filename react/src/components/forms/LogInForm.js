@@ -11,14 +11,14 @@ import AuthService from './../../services/AuthService';
 const onSubmit = async (values) => {
     console.table(values);
 
-    AuthService.logInUser(
+    await AuthService.logInUser(
         {
             "username": values.username,
             "password": values.password
         }
     );
-
-    //TODO make post
+    //TODO handle error and redirect if success
+   
 }
 
 let LogInForm = (props) => {

@@ -65,7 +65,7 @@ class CreateUserForm extends Component {
   }
 
   onSubmit = async (values) => {
-    let user = this.loadUser(values, this.state.image);
+    // let user = this.loadUser(values, this.state.image);
     //TODO make post
   }
 

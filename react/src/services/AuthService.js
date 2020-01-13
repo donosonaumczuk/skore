@@ -16,8 +16,7 @@ const logInUser = async user => {
     const response = await api.post("login", user);
     setToken(response.headers['x-token']);
     loadUser(user.username);
-    console.log(getToken());
-    console.log(getUser());
+
     //TODO if error of token expiry remove token and user and catch other errors
     //TODO token expiry should be controlled on every get or post that uses authentication
 }
