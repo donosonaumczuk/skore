@@ -9,7 +9,7 @@ api.interceptors.request.use(
     config => {
         const token = AuthService.getToken();
         if (token) {
-            config.headers.authorization =`Bearer ${token}`;
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
         else {
             console.log("no agregar header");
@@ -24,5 +24,22 @@ api.interceptors.request.use(
     }
 );
 
+const isHandlerEnabled = errorConfig => {
+    // TODO dispatch to specific error handler depending on config
+}
+
+const errorHandler = (error) => {
+    if (isHandlerEnabled(error.config)) {
+      //TODO implement handle errors with specific status, disable token if expiry
+      // and redirect to /login if unauthorized
+      // Handle errors
+    }
+    return Promise.reject({ ...error })
+  }
+  
+const successHandler = (response) => response;
+
+api.interceptors.response.use(response => successHandler(response),
+                                error => errorHandler(error));
 
 export default api;

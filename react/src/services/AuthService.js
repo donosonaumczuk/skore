@@ -18,7 +18,8 @@ const logInUser = async user => {
     loadUser(user.username);
     console.log(getToken());
     console.log(getUser());
-    //TODO get token, load token, load user add interceptor to post catch error if any
+    //TODO if error of token expiry remove token and user and catch other errors
+    //TODO token expiry should be controlled on every get or post that uses authentication
 }
 
 const logOutUser = () => {
