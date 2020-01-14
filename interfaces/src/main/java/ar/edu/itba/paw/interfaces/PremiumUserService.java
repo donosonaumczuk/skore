@@ -23,7 +23,7 @@ public interface PremiumUserService {
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
-                              final byte[] file) throws IOException;
+                              final byte[] file);
 
     @Transactional
     public Optional<byte[]> readImage(final String userName);
@@ -38,10 +38,10 @@ public interface PremiumUserService {
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final byte[] file, final String oldUserName) throws IOException;
+                                      final byte[] file, final String oldUserName);
 
     @Transactional
-    public Optional<PremiumUser> changePassword(final String newPassword, final String userName) throws IOException;
+    public Optional<PremiumUser> changePassword(final String newPassword, final String userName);
 
     @Transactional
     public void addRole(final String username, final int roleId);

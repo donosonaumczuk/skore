@@ -54,7 +54,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final byte[] file) throws IOException {
+                                        final byte[] file) {
         if(findByUserName(userName).isPresent()) {
             return Optional.empty();
         }
@@ -105,19 +105,24 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final byte[] file, final String oldUserName) throws IOException {
+                                                final byte[] file, final String oldUserName) {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
         if(currentUser.isPresent()) {
             final PremiumUser user = currentUser.get();
             user.getUser().setFirstName(newFirstName);
             user.getUser().setLastName(newLastName);
-            user.getUser().setEmail(newEmail);
-            user.setUserName(newUserName);
+            if(newEmail == null) {
+                user.getUser().setEmail(newEmail);
+            }
+            if(newUserName == null) {
+                user.setUserName(newUserName);
+            }
             user.setCellphone(newCellphone);
             final Place newHome = new Place(newCountry, newState, newCity, newStreet);
             user.setHome(newHome);
             user.setReputation(newReputation);
+            user.setBirthday(LocalDate.parse(newBirthday));
 
             if(newPassword != null) {
                 user.setPassword(newPassword);

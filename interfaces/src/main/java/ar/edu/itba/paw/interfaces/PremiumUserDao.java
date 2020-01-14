@@ -18,7 +18,7 @@ public interface PremiumUserDao {
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final byte[] file) throws IOException;
+                                        final byte[] file);
 
     public boolean remove(final String userName);
 
@@ -30,7 +30,7 @@ public interface PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final byte[] file, final String oldUserName) throws IOException;
+                                                final byte[] file, final String oldUserName);
 
 
     public Optional<PremiumUser> findByEmail(final String email);

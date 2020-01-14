@@ -81,7 +81,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
-                              final byte[] file) throws IOException {
+                              final byte[] file) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
@@ -121,7 +121,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final byte[] file, final String oldUserName) throws IOException{
+                                      final byte[] file, final String oldUserName) {
 
         LOGGER.trace("Looking for user with username: {} to update", oldUserName);
 
@@ -134,7 +134,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public Optional<PremiumUser> changePassword(final String newPassword, final String username) throws IOException{
+    public Optional<PremiumUser> changePassword(final String newPassword, final String username) {
         Optional <PremiumUser> premiumUser = findByUserName(username);
         PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
                 "with username:" + username));
