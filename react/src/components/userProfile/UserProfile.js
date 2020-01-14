@@ -38,7 +38,7 @@ class UserProfile extends Component {
         const winValue = winrate ? winrate : " -- ";
         let winClass = "";
         
-        if(winrate) {
+        if (winrate) {
             winClass = winrate >= 50 ? "winnerWinRate" : "loserWinRate";
         }
         
@@ -56,11 +56,11 @@ class UserProfile extends Component {
     getImageUrl = links => {
         let imageUrl;
         links.map(link => {
-            if(link.rel === "image") {
+            if (link.rel === "image") {
                 imageUrl = link.href;
             }
             return link;
-        } )
+        })
         return imageUrl;
     }
 
