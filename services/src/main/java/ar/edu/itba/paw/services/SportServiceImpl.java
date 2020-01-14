@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.exceptions.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Sport;
@@ -9,9 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,27 +20,21 @@ public class SportServiceImpl implements SportService {
     private SportDao sportDao;
 
     @Override
-    public Sport findByName(final String sportName) {
-        Optional<Sport> sport = sportDao.findByName(sportName);
-
-        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
+    public Optional<Sport> findByName(final String sportName) {
+        return sportDao.findByName(sportName);
     }
 
 
     @Override
-    public Sport create(final String sportName, final int playerQuantity, final String displayName,
-                        final MultipartFile file) throws IOException {
-        Optional<Sport> sport = sportDao.create(sportName, playerQuantity, displayName, file);
-
-        return sport.orElseThrow(() -> new SportNotFoundException("Can't find sport with name: " + sportName));
+    public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
+                        final byte[] file) {
+        return sportDao.create(sportName, playerQuantity, displayName, file);
     }
 
     @Override
-    public Sport modifySport(final String sportName, final String displayName,
-                             final MultipartFile file) throws IOException {
-
-        Optional<Sport> sport = sportDao.modifySport(sportName, displayName, file);
-        return sport.orElseThrow(() -> new SportNotFoundException("can't found sport with name: " + sportName));
+    public Optional<Sport> modifySport(final String sportName, final String displayName,
+                             final byte[] file) {
+        return sportDao.modifySport(sportName, displayName, file);
     }
 
     @Override

@@ -110,8 +110,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public RequestMatcher adminAuthEndpointsMatcher() {
-        return new OrRequestMatcher( //TODO make list
-                new AntPathRequestMatcher("/admin/**", "GET")//TODO add also POST method
+        return new OrRequestMatcher(
+                new AntPathRequestMatcher("/sports/**", "DELETE"),
+                new AntPathRequestMatcher("/sports/**", "PUT"),
+                new AntPathRequestMatcher("/sports/**", "POST")
         );
     }
 }
