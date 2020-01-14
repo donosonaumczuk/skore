@@ -13,7 +13,7 @@ class ImageInput  extends Component{
 
     render(){
         const { label, acceptedFormat, imageName } = this.props
-        return(
+        return (
             <div className="form-group">
                 <label>{label}</label>
                 <small id="imgFormatHelp" className="form-text text-muted">{acceptedFormat}</small>

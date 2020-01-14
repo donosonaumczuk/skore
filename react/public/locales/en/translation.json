@@ -1,7 +1,8 @@
 {
     "navBar": {
         "signIn": "Sign-in",
-        "createAccount": "Create Account"
+        "createAccount": "Create Account",
+        "logOut": "Log out"
     },
     "createUserForm": {
         "accounts": "Accounts",
@@ -16,9 +17,14 @@
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
         "dateFormat": "Date format: MM/DD/YYYY",
-        "signUp": "Sign Up"
+        "signUp": "Sign Up",
+        "existingUser": "already have an account "
     },
     "profile": {
         "imageDescription": "Profile Picture"
+    },
+    "login": {
+        "loginButton": "Login",
+        "newUser": "are you new? "
     }
 }

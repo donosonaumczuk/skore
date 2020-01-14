@@ -37,7 +37,7 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
     private static final String DEFAULT_FILTER   = "/**";
 
     private static final RequestMatcher logOutEndpointMatcher
-            = new AntPathRequestMatcher("/api/logout", HttpMethod.POST);
+            = new AntPathRequestMatcher("/api/auth/logout", HttpMethod.POST);
 
     private static final String ADMIN = "ROLE_ADMIN";
 
