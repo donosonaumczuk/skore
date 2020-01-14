@@ -21,7 +21,6 @@
         "existingUser": "ya tienes cuenta "
     },
     "profile": {
-<<<<<<< HEAD
         "imageDescription": "Foto de Perfil",
         "editInfo": "Editar Información",
         "changePassword": "Cambiar Contraseña",
@@ -32,10 +31,6 @@
             "friendly": "Amistoso",
             "competitive": "Competitivo"
         }
-   
-=======
-        "imageDescription": "Foto de Perfil"
->>>>>>> development
     },
     "login": {
         "loginButton": "Ingresar",
