@@ -87,6 +87,22 @@ class UserProfile extends Component {
         }
     }
 
+    async UNSAFE_componentWillReceiveProps(nextProps) {
+        const { username } = nextProps.match.params;
+        if( username !== this.state.username ) {
+            this.setState({
+                username: username,
+                currentUser: {},
+                imageUrl: null,
+            });
+        }
+        let currentUser = await UserService.getProfileByUsername(username)
+        const imageUrl = this.getImageUrl(currentUser.links);
+        this.setState({ currentUser: currentUser, 
+                        imageUrl: imageUrl 
+                    });
+    }
+
     render() {
         const currentUser = this.state.currentUser;
         const imageUrl = this.state.imageUrl;
@@ -110,7 +126,7 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
                             {editButtons}
                         </div>
-                        <UserMatches username={this.state.username} />
+                        <UserMatches username={this.state.username} history={this.props.history}/>
                     </div>
                 </div>
             </div>

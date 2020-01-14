@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
 import Accounts from './components/Accounts';
 import NavBar from './components/NavBar/NavBar';
@@ -60,7 +60,6 @@ class App extends Component {
       <Provider store={store}>
       <div>
         <NavBar currentUser={this.state.currentUser}/>
-        <Router>
           <Switch>
             <Route exact path="/">
               <Accounts account={this.state.account} />
@@ -76,7 +75,6 @@ class App extends Component {
             </Route>
             <Route path="/users/:username" component={UserProfile} />
           </Switch>
-        </Router>
       </div>
       </Provider>
     );
