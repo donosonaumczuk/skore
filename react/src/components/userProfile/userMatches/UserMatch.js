@@ -2,6 +2,7 @@ import React from 'react';
 import Proptypes from 'prop-types';
 import CreatorInfo from './CreatorInfo';
 import SportInfo from './SportInfo';
+import GameResult from './GameResult';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -21,7 +22,7 @@ const getImageUrls = links => {
     };
 }
 
-const UserMatch = ({ currentMatch }) => {
+const UserMatch = ({ currentMatch, username }) => {
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
@@ -33,7 +34,8 @@ const UserMatch = ({ currentMatch }) => {
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
                                     title={currentMatch.title}/>
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName}/>
-                    {/* <Result /> */}
+                    <GameResult gameResult={currentMatch.results} username={username}
+                         teamOne={currentMatch.team1.players} teamTwo={currentMatch.team2.players}/>
                 </div>
             </div>
         </div>

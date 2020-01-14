@@ -25,7 +25,7 @@ class UserMatches extends Component {
             return (
                 <div className="container-fluid mt-4 rounded-border">
                     {
-                        matches.map( (match, i) => <UserMatch key={i} currentMatch={match} />)
+                        matches.map( (match, i) => <UserMatch key={i} currentMatch={match} username={this.props.username}/>)
                     }    
                 </div>
             );
