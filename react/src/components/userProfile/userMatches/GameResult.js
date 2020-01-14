@@ -1,5 +1,6 @@
 import React from 'react';
 import Proptypes from 'prop-types';
+import i18next from 'i18next';
 
 const getResult = gameResult => {
     const results = gameResult.split("-");
@@ -29,22 +30,22 @@ const getUserTeam = (user, team1, team2) => {
 const getResultLabel = (userTeam, resultTeamOne, resultTeamTwo) => {
     if (resultTeamOne > resultTeamTwo) {
         if (userTeam === 1) {
-            return "WON";
+            return i18next.t('profile.match.won');
         }
         else {
-            return "LOST"
+            return i18next.t('profile.match.lost');
         }
     }
     else if (resultTeamTwo > resultTeamOne) {
         if (userTeam === 2) {
-            return "WON";
+            return i18next.t('profile.match.won');
         }
         else {
-            return "LOST"
+            return i18next.t('profile.match.lost');
         }
     }
     else {
-        return "TIE";
+        return i18next.t('profile.match.tie');
     }
 }
 

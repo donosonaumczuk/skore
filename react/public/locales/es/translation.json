@@ -21,7 +21,15 @@
         "existingUser": "ya tienes cuenta "
     },
     "profile": {
-        "imageDescription": "Foto de Perfil"
+        "imageDescription": "Foto de Perfil",
+        "match": {
+            "won": "GANÓ",
+            "lost": "PERDIÓ",
+            "tie": "EMPATÓ",
+            "friendly": "Amistoso",
+            "competitive": "Competitivo"
+        }
+   
     },
     "login": {
         "loginButton": "Ingresar",

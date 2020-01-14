@@ -1,5 +1,6 @@
 import React from 'react';
 import Proptypes from 'prop-types';
+import i18next from 'i18next';
 
 const getClassName = isCompetitive => {
     if (isCompetitive) {
@@ -11,12 +12,11 @@ const getClassName = isCompetitive => {
 }
 
 const getText = isCompetitive => {
-    //TODO update with i18n
     if (isCompetitive) {
-        return "Competitive";
+        return i18next.t('profile.match.competitive');
     }
     else {
-        return "Friendly";
+        return i18next.t('profile.match.friendly');;
     }
 }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import Proptypes from 'prop-types';
 
 const MatchLocation = ({ address }) => {
-    console.log(address)
   
     return (
          <div className="row">
