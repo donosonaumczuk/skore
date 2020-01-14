@@ -80,6 +80,7 @@ public class SportController {
             LOGGER.trace("Sport '{}' does not exist", sportname);
             return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         });
+        LOGGER.trace("Sport '{}' founded successfully", sportname);
         return Response.ok(SportDto.from(sport)).build();
     }
 
@@ -123,7 +124,7 @@ public class SportController {
                     return new ApiException(HttpStatus.CONFLICT, "Sport '" +
                             sportDto.getSportName() + "' already exist");
                 });
-        LOGGER.trace("Successful created the sport '{}'", sportDto.getSportName());
+        LOGGER.trace("Sport '{}' created successfully", sportDto.getSportName());
         return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
     }
 
