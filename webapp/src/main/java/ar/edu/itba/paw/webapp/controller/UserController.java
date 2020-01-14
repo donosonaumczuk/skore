@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -122,6 +123,7 @@ public class UserController {
     }
 
 
+    @GET
     @Path("/{username}/image")
     public Response getImageUser(@PathParam("username") String username) {
         premiumUserService.findByUserName(username)
@@ -137,5 +139,16 @@ public class UserController {
         }
         LOGGER.trace("Returning image for {}", username);
         return Response.ok(media.get()).header("Content-Type", "image/*").build();
+    }
+
+    @DELETE
+    @Path("/{username}")
+    public Response deleteAUser(@PathParam("username") String username) {
+        if (!premiumUserService.remove(username)) {
+            LOGGER.trace("User '{}' does not exist", username);
+            throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        }
+        LOGGER.trace("User '{}' deleted successfully", username);
+        return Response.noContent().build();
     }
 }
