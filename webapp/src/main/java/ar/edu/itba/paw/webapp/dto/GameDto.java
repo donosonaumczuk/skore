@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.webapp.controller.GameController;
+import ar.edu.itba.paw.webapp.controller.SportController;
 import ar.edu.itba.paw.webapp.controller.UserController;
 import com.google.common.collect.ImmutableList;
 import org.springframework.hateoas.Link;
@@ -20,6 +21,7 @@ public class GameDto {
     private final String creator;
     private final boolean isCompetitive;
     private final String sport;
+    private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
     private final int totalPlayers;
@@ -37,6 +39,7 @@ public class GameDto {
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
         isCompetitive = game.getCompetitiveness().equals("Competitive");
+        sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
@@ -61,7 +64,9 @@ public class GameDto {
         return ImmutableList.of(
                 new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
                 new Link(UserController.getProfileEndpoint(creator), "creator"),
-                new Link(UserController.getUserImageEndpoint(creator), "creatorImage"));
+                new Link(UserController.getUserImageEndpoint(creator), "creatorImage"),
+                new Link(SportController.getSportImageEndpoint(sport), "sportImage"));
+
                 //TODO add team 1 and team 2 on future
                 //TODO add sport in future
     }
@@ -84,6 +89,10 @@ public class GameDto {
 
     public String getSport() {
         return sport;
+    }
+
+    public String getSportName() {
+        return sportName;
     }
 
     public LocalDate getDate() {
