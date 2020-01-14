@@ -22,6 +22,8 @@
     },
     "profile": {
         "imageDescription": "Foto de Perfil",
+        "editInfo": "Editar Información",
+        "changePassword": "Cambiar Contraseña",
         "match": {
             "won": "GANÓ",
             "lost": "PERDIÓ",

@@ -22,6 +22,8 @@
     },
     "profile": {
         "imageDescription": "Profile Picture",
+        "editInfo": "Edit Info",
+        "changePassword": "Change Password",
         "match": {
             "won": "WON",
             "lost": "LOST",
