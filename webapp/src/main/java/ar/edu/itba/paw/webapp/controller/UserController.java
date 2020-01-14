@@ -39,6 +39,7 @@ import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
 @Path(BASE_PATH)
+@Produces({MediaType.APPLICATION_JSON})
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -74,7 +75,6 @@ public class UserController {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
@@ -126,11 +126,8 @@ public class UserController {
     @GET
     @Path("/{username}/image")
     public Response getImageUser(@PathParam("username") String username) {
-        premiumUserService.findByUserName(username)
-                .orElseThrow(() -> {
-            LOGGER.trace("Can't get '{}' profile, user not found", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
+        Validator.getValidator().userExist(username);
+
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
