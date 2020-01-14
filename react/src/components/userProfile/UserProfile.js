@@ -126,7 +126,7 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
                             {editButtons}
                         </div>
-                        <UserMatches username={this.state.username} history={this.props.history}/>
+                        <UserMatches username={this.state.username} />
                     </div>
                 </div>
             </div>

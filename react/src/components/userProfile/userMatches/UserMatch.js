@@ -25,8 +25,7 @@ const getImageUrls = links => {
     };
 }
 
-const UserMatch = ({ currentMatch, username, history }) => {
-    // console.table(history);
+const UserMatch = ({ currentMatch, username }) => {
 
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
