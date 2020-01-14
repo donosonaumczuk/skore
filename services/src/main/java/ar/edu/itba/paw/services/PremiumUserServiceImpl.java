@@ -76,12 +76,12 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public PremiumUser create(final String firstName, final String lastName,
+    public Optional<PremiumUser> create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
-                              final MultipartFile file) throws IOException {
+                              final byte[] file) throws IOException {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
@@ -89,11 +89,11 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
                 cellphone, formattedBirthday, country, state, city, street, reputation,
                 encodedPassword, file);
-        PremiumUser ans = user
-                .orElseThrow(() -> new CannotCreateUserException("Can't create user with with userName: " + userName ));
         LOGGER.trace("Sending confirmation email to {}", email);
-        sendConfirmationMail(ans);
-        return ans;
+        if(user.isPresent()) {
+            sendConfirmationMail(user.get());
+        }
+        return user;
     }
 
     @Override
@@ -115,37 +115,37 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public PremiumUser updateUserInfo(final String newFirstName, final String newLastName,
+    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                       final String newEmail,final String newUserName,
                                       final String newCellphone, final String newBirthday,
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final MultipartFile file, final String oldUserName) throws IOException{
+                                      final byte[] file, final String oldUserName) throws IOException{
 
         LOGGER.trace("Looking for user with username: {} to update", oldUserName);
 
+        final String encodedPassword = (newPassword == null)? null : bcrypt.encode(newPassword);
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, file, oldUserName);
+                newCity, newStreet, newReputation, encodedPassword, file, oldUserName);
 
-        return user.orElseThrow(() -> new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist."));
+        return user;
     }
 
     @Override
-    public PremiumUser changePassword(final String newPassword, final String username) throws IOException{
+    public Optional<PremiumUser> changePassword(final String newPassword, final String username) throws IOException{
         Optional <PremiumUser> premiumUser = findByUserName(username);
         PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
                 "with username:" + username));
-        final String encodedPassword = bcrypt.encode(newPassword);
         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(currentUser.getUser().getFirstName(),
-                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
-                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
-                currentUser.getHome().getState(),currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
-                currentUser.getReputation(), encodedPassword, null, username);
+        Optional<PremiumUser> user = updateUserInfo(currentUser.getUser().getFirstName(), currentUser.getUser()
+                        .getLastName(), currentUser.getEmail(), currentUser.getUserName(), currentUser
+                        .getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome()
+                        .getCountry(), currentUser.getHome().getState(),currentUser.getHome().getCity(),
+                currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username);
 
-        return user.orElseThrow(() -> new CannotModifyUserException("Can't modify user with username:" + username));
+        return user;
     }
 
     private static String formatDate(String birthday) {

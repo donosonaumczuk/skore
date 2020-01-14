@@ -18,12 +18,12 @@ public interface PremiumUserService {
     public  Optional<PremiumUser> findById(final long userId);
 
     @Transactional
-    public PremiumUser create(final String firstName, final String lastName,
+    public Optional<PremiumUser> create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
-                              final MultipartFile file) throws IOException;
+                              final byte[] file) throws IOException;
 
     @Transactional
     public Optional<byte[]> readImage(final String userName);
@@ -32,16 +32,16 @@ public interface PremiumUserService {
     public boolean remove(final String userName);
 
     @Transactional
-    public PremiumUser updateUserInfo(final String newFirstName, final String newLastName,
+    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                       final String newEmail,final String newUserName,
                                       final String newCellphone, final String newBirthday,
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final MultipartFile file, final String oldUserName) throws IOException;
+                                      final byte[] file, final String oldUserName) throws IOException;
 
     @Transactional
-    public PremiumUser changePassword(final String newPassword, final String userName) throws IOException;
+    public Optional<PremiumUser> changePassword(final String newPassword, final String userName) throws IOException;
 
     @Transactional
     public void addRole(final String username, final int roleId);

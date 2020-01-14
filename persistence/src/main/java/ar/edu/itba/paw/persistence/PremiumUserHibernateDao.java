@@ -54,7 +54,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final MultipartFile file) throws IOException {
+                                        final byte[] file) throws IOException {
         if(findByUserName(userName).isPresent()) {
             return Optional.empty();
         }
@@ -69,7 +69,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         final Role role = roleDao.findRoleById(userRoleId).get();//should never be empty
         final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
                 basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
-                state, city, street), reputation, password, code, ((file==null)?null:file.getBytes()));
+                state, city, street), reputation, password, code, file);
         newUser.addRole(role);
         //em.persist(basicUser.get());
         em.persist(newUser);
@@ -105,7 +105,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final MultipartFile file, final String oldUserName) throws IOException {
+                                                final byte[] file, final String oldUserName) throws IOException {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
         if(currentUser.isPresent()) {
@@ -118,10 +118,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             final Place newHome = new Place(newCountry, newState, newCity, newStreet);
             user.setHome(newHome);
             user.setReputation(newReputation);
-            user.setPassword(newPassword);
+
+            if(newPassword != null) {
+                user.setPassword(newPassword);
+            }
 
             if(file != null) {
-                user.setImage(file.getBytes());
+                user.setImage(file);
             }
 
             em.merge(user);
