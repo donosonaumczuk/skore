@@ -10,15 +10,15 @@ import java.util.Optional;
 
 public interface SportService {
     @Transactional
-    public Sport findByName(final String sportName);
+    public Optional<Sport> findByName(final String sportName);
 
     @Transactional
-    public Sport create(final String sportName, final int playerQuantity,
-                        final String displayName, final MultipartFile file) throws IOException;
+    public Optional<Sport> create(final String sportName, final int playerQuantity,
+                        final String displayName, final byte[] file);
 
     @Transactional
-    public Sport modifySport(final String sportName, final String displayName,
-                             final MultipartFile file) throws IOException;
+    public Optional<Sport> modifySport(final String sportName, final String displayName,
+                             final byte[] file);
 
     @Transactional
     public boolean remove(final String sportName);
