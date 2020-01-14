@@ -63,15 +63,10 @@ const getResultLabelClass = resultLabel => {
 
 const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
     const result = getResult(gameResult);
-    console.log("result");
-    console.table(result);
     const userTeam = getUserTeam(username, teamOne, teamTwo);
-    console.log("user team:");
-    console.table(userTeam);
     let resultLabel= getResultLabel(userTeam, result.teamOne, result.teamTwo);
-    console.log("result label");
-    console.table(resultLabel);
     let resultLabelClass = getResultLabelClass(resultLabel)
+    
     return (
         <div className="offset-1 col-4 col-sm-3">
                 <div className="row text-center">
@@ -82,9 +77,6 @@ const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
                 <div className="row text-center">
                     <div className="col mt-xl-2 ml-xl-4">
                         <i className={`name-label fas ${resultLabelClass} mr-2`} ></i>{resultLabel}
-                        {/* <i className="name-label fas fa-check-circle mr-2"></i><spring:message code="winLabel"/>
-                        <i className="name-label fas fa-minus-circle mr-2"></i><spring:message code="tieLabel"/>
-                        <i className="name-label fas fa-times-circle mr-2"></i><spring:message code="loseLabel"/> */}       
                     </div>
                 </div>
             </div>

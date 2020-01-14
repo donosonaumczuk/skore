@@ -10,9 +10,6 @@ api.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-        else {
-            console.log("no agregar header");
-        }
         // console.log(`${config.method.toUpperCase()} request sent to ${config.baseURL}${config.url}`);
         // console.log(config);
         // console.table(config);

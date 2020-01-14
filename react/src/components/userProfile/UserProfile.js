@@ -4,6 +4,7 @@ import UserService from '../../services/UserService';
 import UserData from './UserData';
 import UserImage from './UserImage';
 import UserMatches from './userMatches/UserMatches';
+import Loader from '../Loader';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -69,6 +70,11 @@ class UserProfile extends Component {
         const imageUrl = this.state.imageUrl;
         // TODO dont render until all data is loaded
         //TODO check when winrate is negative if it is a valid value
+        
+        if (imageUrl == null) {
+            return <Loader />;
+        }
+        
         return (
             <div className="container-fluid">
                 <div className="row">
