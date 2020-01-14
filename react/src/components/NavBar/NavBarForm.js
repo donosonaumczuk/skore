@@ -5,9 +5,13 @@ import Proptypes from 'prop-types';
 const getAnonymousForm = () => {
     return (
          <form className="d-none d-sm-block form-inline">
-            <a className="mr-1 login-link" href="/login">{i18next.t('navBar.signIn')}</a>
+            <a className="mr-1 login-link" href="/login">
+                {i18next.t('navBar.signIn')}
+            </a>
             <span className="white-text mr-1"> or </span>
-            <a className="login-link" href="/signUp">{i18next.t('navBar.createAccount')}</a>
+            <a className="login-link" href="/signUp">
+                {i18next.t('navBar.createAccount')}
+            </a>
         </form>
     );
 }

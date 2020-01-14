@@ -10,9 +10,6 @@ api.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-        // console.log(`${config.method.toUpperCase()} request sent to ${config.baseURL}${config.url}`);
-        // console.log(config);
-        // console.table(config);
         return config;
     },
     error => {

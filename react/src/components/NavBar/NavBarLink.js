@@ -12,9 +12,11 @@ const getItalicTag = (hasItalics, italicText, italicStyle) => {
 const NavBarLink = (linkStyle, linkReference, textBeforeItalics, hasItalics, italicText, italicStyle, textAfterItalics ) => {
     
     return (
-         <a className={linkStyle} href={linkReference}>{textBeforeItalics}
-             {getItalicTag(hasItalics, italicText, italicStyle)}{textAfterItalics}</a>
-                      
+         <a className={linkStyle} href={linkReference}>
+            {textBeforeItalics}
+            {getItalicTag(hasItalics, italicText, italicStyle)}
+            {textAfterItalics}
+        </a>          
     );
 }
 
