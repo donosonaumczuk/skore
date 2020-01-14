@@ -86,7 +86,7 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
                         </div>
-                        <UserMatches username={this.state.username}/>
+                        <UserMatches username={this.state.username} />
                     </div>
                 </div>
             </div>

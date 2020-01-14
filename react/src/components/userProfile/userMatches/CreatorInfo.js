@@ -4,9 +4,9 @@ import i18next from 'i18next';
 import Proptypes from 'prop-types';
 
 const handleClick = (creator, history) => {
-    // history.push(`/users/${creator}`);
-    history.push(`/users/dammiano98`);
+    history.push(`/users/${creator}`);
     //TODO only refreshes url and does not navigate fix it
+    // current solution is sorrounded by anchor tag
 }
 
 const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
@@ -15,8 +15,10 @@ const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
     return (
         <React.Fragment>
             <div className="col-2 col-sm-1 pl-0">
-                <img src={creatorImageUrl} onClick={() => handleClick(creator, history)} className="user-avatar"
-                 alt={i18next.t('profile.imageDescription')} />
+                <a href={`/users/${creator}`}>
+                    <img src={creatorImageUrl} onClick={() => handleClick(creator, history)} className="user-avatar"
+                    alt={i18next.t('profile.imageDescription')} />
+                </a>
             </div>
             <div className="col-3 col-sm-4">
                 <div className="row">

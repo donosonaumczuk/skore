@@ -35,10 +35,10 @@ const UserMatch = ({ currentMatch, username }) => {
             <div className="col">
                 <div className="row mb-4">
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
-                                    title={currentMatch.title}/>
-                    <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName}/>
+                                    title={currentMatch.title} />
+                    <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
                     <GameResult gameResult={currentMatch.results} username={username}
-                         teamOne={currentMatch.team1.players} teamTwo={currentMatch.team2.players}/>
+                         teamOne={currentMatch.team1.players} teamTwo={currentMatch.team2.players} />
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
