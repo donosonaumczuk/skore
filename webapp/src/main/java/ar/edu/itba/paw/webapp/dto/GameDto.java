@@ -24,6 +24,7 @@ public class GameDto {
     private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
+    private final String location;
     private final int totalPlayers;
     private final int currentplayers;
     private final boolean hasStarted;
@@ -44,6 +45,7 @@ public class GameDto {
         LocalDateTime startTime = game.getStartTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        location = game.getPlace().toString();
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
         currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
@@ -101,6 +103,10 @@ public class GameDto {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public int getTotalPlayers() {

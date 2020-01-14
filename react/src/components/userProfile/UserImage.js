@@ -2,6 +2,7 @@ import React from 'react';
 import Proptypes from 'prop-types';
 import i18next from 'i18next';
 
+//TODO maybe add loader until loads picture?
 const UserImage = ({ styleClass, imageUrl }) => {
     return (
         <div className="row text-center">
