@@ -30,7 +30,9 @@
             "lost": "LOST",
             "tie": "TIE",
             "friendly": "Friendly",
-            "competitive": "Competitive"
+            "friendlyTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.",
+            "competitive": "Competitive",
+            "competitiveTooltip": "Competitive requires an account to join the match.\nImpacts winrate."
         }
     },
     "login": {

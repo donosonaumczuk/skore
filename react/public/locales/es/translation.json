@@ -30,7 +30,9 @@
             "lost": "PERDIÓ",
             "tie": "EMPATÓ",
             "friendly": "Amistoso",
-            "competitive": "Competitivo"
+            "friendlyTooltip": "Amistoso no requiere cuenta para unirse al partido.\nNo impacta el winrate",
+            "competitive": "Competitivo",
+            "competitiveTooltip": "Competitivo requiere una cuenta para unirse al partido.\nImpacta el winrate"
         }
     },
     "login": {
