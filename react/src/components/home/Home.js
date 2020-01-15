@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import MatchService from './../../services/MatchService';
 import LeftPanel from './leftPanel/LeftPanel';
-
+import Loader from './../Loader';
+import HomeMatches from './HomeMatches';
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -9,7 +11,27 @@ class Home extends Component {
         };
     }
 
+    getMatches = matches => {
+        if (matches == null) 
+        {
+            return <Loader />
+        }
+        else {
+            return <HomeMatches matches={matches} />
+        }
+    }
+
+    async componentDidMount() {
+        console.log("executing");
+        let matches = await MatchService.getMatches();
+        this.setState({
+            matches: matches
+        });
+    }
+
     render() {
+        let matches = this.getMatches(this.state.matches);
+        
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -19,18 +41,18 @@ class Home extends Component {
                     </div>
                 
                     <div className="col-md-8 col-lg-8 col-xl-6">
-                        <div className="match-container container-fluid">
+                        
                             {/* <MatchCard />*/}
-                            {/* <div className="row p-2 mt-2" id="loader">
-                                <div className="offset-5 col-2">
-                                    <img className="img-fluid" src="<c:url value="/img/loader.gif"/>">
-                                </div>
-                            </div> */}
-                        </div>
+                            {matches}
+                    
                     </div>
                 </div>
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        //TODO stop request
     }
 }
 
