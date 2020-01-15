@@ -13,6 +13,7 @@ import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
 import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
+import ErrorPage from './components/ErrorPage';
 
 class App extends Component {
   constructor(props) {
@@ -73,7 +74,8 @@ class App extends Component {
             <Route path="/logout">
               <LogOut updateUser={this.updateUser}/>
             </Route>
-            <Route path="/users/:username" component={UserProfile} />
+            <Route exact path="/users/:username" component={UserProfile} />
+            <Route path="/" component={ErrorPage} />
           </Switch>
       </div>
       </Provider>

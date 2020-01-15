@@ -38,6 +38,10 @@ class UserMatches extends Component {
     }
 }
 
+componentWillUnmount = () => {
+    //TODO cancel fetch if still fetching matches
+}
+
 UserMatches.propTypes = {
     username: Proptypes.string.isRequired
 }
