@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const EditUserButton = ({ url, iStyle, text }) => {
     return (
-        <a className="btn btn-outline-secondary mx-1" href={url} role="button">
+        <Link className="btn btn-outline-secondary mx-1" to={url} role="button">
             <i className={iStyle}></i>
             {text}
-        </a>
+        </Link>
     );
 }
 
