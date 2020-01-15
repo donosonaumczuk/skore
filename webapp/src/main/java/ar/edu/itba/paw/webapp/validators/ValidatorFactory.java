@@ -13,21 +13,21 @@ public class ValidatorFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorFactory.class);
 
-    private static void validateAllFieldsAreKnown(final JSONObject jsonObject, final Set<String> knownFields, String log) {
+    private static void validateAllFieldsAreKnown(final JSONObject jsonObject, final Set<String> knownFields, final String log) {
         final Set<String> jsonFields = jsonObject.keySet();
         Optional<String> unknownField = jsonFields.stream().filter(field -> !knownFields.contains(field)).findFirst();
         unknownField.ifPresent(field -> logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "The field " + field + " is unknown")));
     }
 
-    public static Validator<JSONObject> knownFieldsValidatorOf(final Set<String> knownFields, String log) {
+    public static Validator<JSONObject> knownFieldsValidatorOf(final Set<String> knownFields, final String log) {
         return jsonObject -> validateAllFieldsAreKnown(jsonObject, knownFields, log);
     }
 
-    public static <T> Validator<Optional<T>> existenceValidatorOf(final String resourceType, String log) {
+    public static <T> Validator<Optional<T>> existenceValidatorOf(final String resourceType, final String log) {
         return existenceValidatorOf(resourceType, null, log);
     }
 
-    public static <T> Validator<Optional<T>> existenceValidatorOf(final String resourceType, final String resourceId, String log) {
+    public static <T> Validator<Optional<T>> existenceValidatorOf(final String resourceType, final String resourceId, final String log) {
         return optional -> {
             if (!optional.isPresent()) {
                 logAndThrowApiException(log, new ApiException(HttpStatus.NOT_FOUND, resourceType + (resourceId != null ? " '" + resourceId + "'" : "")
