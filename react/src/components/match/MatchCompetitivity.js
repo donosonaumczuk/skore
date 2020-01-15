@@ -34,6 +34,7 @@ const MatchCompetitivity = isCompetitive => {
     const text = getText(isCompetitive);
     const tooltipTitle = getTooltipTitle(isCompetitive);
     //TODO add onClick to tooltip as in deploy because as it is with white background
+
     return (
       <div className="row">
             <div className="col">
