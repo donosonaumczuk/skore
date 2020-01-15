@@ -164,27 +164,27 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public boolean enableUser(final String username, final String code) {
+    public Optional<Boolean> enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
         Optional<PremiumUser> user = findByUserName(username);
         if(!user.isPresent()) {
             LOGGER.error("Can't find user with username {}", username);
-            return false;
+            return Optional.empty();
         }
 
         PremiumUser currentUser = user.get();
 
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
-            LOGGER.error("Can't find user with username {}", username);
-            return false;
+            LOGGER.error("Can't find user with username {} and code {}", username, code);
+            return Optional.of(false);
         }
         LOGGER.trace("{} is now enabled", username);
-        return true;
+        return Optional.of(true);
     }
 
     @Override
-    public boolean confirmationPath(String path) {
+    public boolean confirmationPath(String path) { //TODO: move to front
         String dataPath = path.replace("/confirm/","");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
@@ -195,7 +195,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code);
+        return enableUser(username, code).get();
     }
 
     private String generatePath(PremiumUser user) {

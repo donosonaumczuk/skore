@@ -189,7 +189,7 @@ public class UserController {
                     return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUserName() + "' already exist");
                 });
         LOGGER.trace("User '{}' created successfully", userDto.getUserName());
-        return Response.ok(UserDto.from(newPremiumUser)).build();
+        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
     }
 
     @GET
@@ -200,6 +200,25 @@ public class UserController {
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
         });
         LOGGER.trace("User '{}' founded successfully", username);
+        return Response.ok(UserDto.from(premiumUser)).build();
+    }
+
+    @POST
+    @Path("/{username}/verify")
+    public Response verifyAUser(@PathParam("username") String username, String code) {
+        Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
+            LOGGER.trace("User '{}' does not exist", username);
+            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        });
+        if(!result) {
+            LOGGER.trace("User '{}' with code '{}' does not exist", username, code);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "The Code is invalid for the user '" + username + "'");
+        }
+        LOGGER.trace("User '{}' verified successfully", username);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.trace("User '{}' does not exist", username);
+            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        });
         return Response.ok(UserDto.from(premiumUser)).build();
     }
 }

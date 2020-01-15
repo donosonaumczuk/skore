@@ -47,7 +47,7 @@ public interface PremiumUserService {
     public void addRole(final String username, final int roleId);
 
     @Transactional
-    public boolean enableUser(final String username, final String code);
+    public Optional<Boolean> enableUser(final String username, final String code);
 
     @Transactional
     public boolean confirmationPath(String path);

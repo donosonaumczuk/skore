@@ -20,6 +20,7 @@ public class UserDto {
     private String password;
     private String image;
     private int reputation;
+    private boolean isVerify;
     private List<Link> links;
 
     public UserDto() {
@@ -37,6 +38,7 @@ public class UserDto {
         this.password   = null;
         this.image      = null;
         this.reputation = premiumUser.getReputation();
+        this.isVerify   = premiumUser.getEnabled();
         this.links      = getHateoasLinks(premiumUser);
     }
 
