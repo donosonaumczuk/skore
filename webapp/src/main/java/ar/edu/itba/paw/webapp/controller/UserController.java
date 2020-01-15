@@ -148,6 +148,7 @@ public class UserController {
     @DELETE
     @Path("/{username}")
     public Response deleteAUser(@PathParam("username") String username) {
+        /*TODO| Validate that te user to be delete is the same as the one logged*/
         if (!premiumUserService.remove(username)) {
             LOGGER.trace("User '{}' does not exist", username);
             throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
@@ -161,7 +162,7 @@ public class UserController {
     public Response modifyAUser(@PathParam("username") String username, final UserDto userDto) {
         /*TODO| Validate userDto only image and password can be null to indicate that they do
           TODO|not change. Email and userName should be null because they cant change. The rest
-          TODO|should not be null.*/
+          TODO|should not be null. Check if it the user logged is the same as the username receive*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getUserName(), userDto.getCellphone(), userDto.getBirthDay(),
@@ -204,8 +205,10 @@ public class UserController {
     }
 
     @POST
-    @Path("/{username}/verify")
+    @Path("/{username}/verification")
     public Response verifyAUser(@PathParam("username") String username, String code) {
+        /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
+        * TODO|the code is receive in the mail.*/
         Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
             LOGGER.trace("User '{}' does not exist", username);
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
