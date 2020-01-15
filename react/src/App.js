@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
-import Accounts from './components/Accounts';
+// import Accounts from './components/Accounts';
 import NavBar from './components/navBar/NavBar';
 // import UserService from './services/UserService'; TODO import when used on componentDidMount
 import CreateUserForm from './components/forms/CreateUserForm';
@@ -14,6 +14,7 @@ import Loader from './components/Loader';
 import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
+import Home from './components/home/Home';
 
 class App extends Component {
   constructor(props) {
@@ -63,7 +64,8 @@ class App extends Component {
         <NavBar currentUser={this.state.currentUser}/>
           <Switch>
             <Route exact path="/">
-              <Accounts account={this.state.account} />
+              {/* <Accounts account={this.state.account} /> */}
+              <Home />
             </Route>
             <Route path="/signUp">
               <CreateUserForm />
