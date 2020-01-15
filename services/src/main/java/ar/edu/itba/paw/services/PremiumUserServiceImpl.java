@@ -129,6 +129,10 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
                 newCity, newStreet, newReputation, encodedPassword, file, oldUserName);
 
+        if(user.isPresent() && newEmail != null) {
+            sendConfirmationMail(user.get());
+        }
+
         return user;
     }
 

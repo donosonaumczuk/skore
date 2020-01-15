@@ -114,6 +114,8 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             user.getUser().setLastName(newLastName);
             if(newEmail != null) {
                 user.getUser().setEmail(newEmail);
+                user.setEmail(newEmail);
+                user.setEnabled(false);
             }
             if(newUserName != null) {
                 user.setUserName(newUserName);

@@ -161,7 +161,7 @@ public class UserController {
     @Path("/{username}")
     public Response modifyAUser(@PathParam("username") String username, final UserDto userDto) {
         /*TODO| Validate userDto only image and password can be null to indicate that they do
-          TODO|not change. Email and userName should be null because they cant change. The rest
+          TODO|not change. UserName should be null because it cant change. The rest
           TODO|should not be null. Check if it the user logged is the same as the username receive*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
