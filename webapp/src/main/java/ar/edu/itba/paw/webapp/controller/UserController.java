@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -171,6 +172,23 @@ public class UserController {
                     return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
                 });
         LOGGER.trace("User '{}' modified successfully", username);
+        return Response.ok(UserDto.from(newPremiumUser)).build();
+    }
+
+    @POST
+    @Path("/")
+    public Response createAUser(final UserDto userDto) {
+        /*TODO| Validate*/
+        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
+        PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
+                userDto.getEmail(), userDto.getUserName(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
+                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image)
+                .orElseThrow(() -> {
+                    LOGGER.trace("User '{}' already exist", userDto.getUserName());
+                    return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUserName() + "' already exist");
+                });
+        LOGGER.trace("User '{}' created successfully", userDto.getUserName());
         return Response.ok(UserDto.from(newPremiumUser)).build();
     }
 

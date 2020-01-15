@@ -85,9 +85,8 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
-        final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
-                cellphone, formattedBirthday, country, state, city, street, reputation,
+                cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file);
         LOGGER.trace("Sending confirmation email to {}", email);
         if(user.isPresent()) {
@@ -146,15 +145,6 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                 currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username);
 
         return user;
-    }
-
-    private static String formatDate(String birthday) {
-        DateTimeFormatter toParse = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate parsed = LocalDate.parse(birthday, toParse);
-        String formattedDate = parsed.format(toFormat);
-        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
-        return formattedDate;
     }
 
     @Override
