@@ -5,6 +5,7 @@ import SportInfo from './../match/SportInfo';
 import MatchCompetitivity from './../match/MatchCompetitivity';
 import MatchDate from './../match/MatchDate';
 import MatchLocation from './../match/MatchLocation';
+import MatchDuration from '../match/MatchDuration';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -45,7 +46,7 @@ const HomeMatch = ({ currentMatch }) => {
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
-                {/* <Time /> */}
+                <MatchDuration durationInMinutes={currentMatch.durationInMinutes} />
                 <MatchLocation address={address} />
             </div>
         </div>

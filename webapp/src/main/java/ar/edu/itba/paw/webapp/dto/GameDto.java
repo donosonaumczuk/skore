@@ -10,6 +10,7 @@ import org.springframework.hateoas.Link;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class GameDto {
@@ -24,6 +25,7 @@ public class GameDto {
     private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
+    private final long durationInMinutes;
     private final String location;
     private final int totalPlayers;
     private final int currentplayers;
@@ -43,8 +45,10 @@ public class GameDto {
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
+        LocalDateTime finishTime = game.getFinishTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
         location = game.getPlace().toString();
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
         currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
@@ -103,6 +107,10 @@ public class GameDto {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public long getDurationInMinutes() {
+        return durationInMinutes;
     }
 
     public String getLocation() {
