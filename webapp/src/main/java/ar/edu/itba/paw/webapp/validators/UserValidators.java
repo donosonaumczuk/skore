@@ -12,7 +12,7 @@ public class UserValidators {
     //TODO: here we must add all fields of UserDto, maybe we will have a USER_UPDATE_KNOWN_FIELDS and USER_CREATE_KNOWN FIELDS, and two validators
     private static final Set<String> USER_KNOWN_FIELDS = ImmutableSet.of("username", "email");
 
-    public static Validator<JSONObject> knownFieldsValidatorOf(String log) {
+    public static Validator<JSONObject> knownFieldsValidatorOf(final String log) {
         return ValidatorFactory.knownFieldsValidatorOf(USER_KNOWN_FIELDS, log);
     }
 
