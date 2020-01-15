@@ -1,11 +1,11 @@
 import React from 'react';
 import Proptypes from 'prop-types';
-import CreatorInfo from './CreatorInfo';
-import SportInfo from './SportInfo';
-import GameResult from './GameResult';
-import MatchCompetitivity from './MatchCompetitivity';
-import MatchDate from './MatchDate';
-import MatchLocation from './MatchLocation';
+import CreatorInfo from '../../match/CreatorInfo';
+import SportInfo from '../../match/SportInfo';
+import GameResult from '../../match/GameResult';
+import MatchCompetitivity from '../../match/MatchCompetitivity';
+import MatchDate from '../../match/MatchDate';
+import MatchLocation from '../../match/MatchLocation';
 
 const getImageUrls = links => {
     let creatorImageUrl;
