@@ -1,11 +1,12 @@
 import React from 'react';
-import Proptypes from 'prop-types';
 import CreatorInfo from './../match/CreatorInfo'
 import SportInfo from './../match/SportInfo';
 import MatchCompetitivity from './../match/MatchCompetitivity';
 import MatchDate from './../match/MatchDate';
 import MatchLocation from './../match/MatchLocation';
 import MatchDuration from '../match/MatchDuration';
+import MatchAvailability from '../match/MatchAvailability';
+import HomeMatchPropType from '../../proptypes/HomeMatchProptype';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -35,6 +36,7 @@ const HomeMatch = ({ currentMatch }) => {
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
     const address = currentMatch.location;
+
     return (
         <div className="row p-2 mt-2 match-card rounded-border" onClick ={() => handleClick()}>
             <div className="col">
@@ -42,7 +44,7 @@ const HomeMatch = ({ currentMatch }) => {
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
                                     title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
-                    {/* <Availability /> */}
+                    <MatchAvailability currentMatch={currentMatch} />
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
@@ -54,7 +56,7 @@ const HomeMatch = ({ currentMatch }) => {
 }
 
 HomeMatch.propTypes = {
-    currentMatch: Proptypes.object.isRequired //TODO implement custom proptype
+    currentMatch: HomeMatchPropType.isRequired
 }
 
 export default HomeMatch;

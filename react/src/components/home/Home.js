@@ -22,7 +22,6 @@ class Home extends Component {
     }
 
     async componentDidMount() {
-        console.log("executing");
         let matches = await MatchService.getMatches();
         this.setState({
             matches: matches
