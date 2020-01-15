@@ -1,14 +1,18 @@
 import React from 'react';
-import CreateMatchPoster from './CreateMatchPoster';
+import i18next from 'i18next';
+import PosterWithButton from '../../panel/PosterWithButton';
+import FilterMenu from './FilterMenu';
 
-const LeftPanel = () => {
+const HomeLeftPanel = () => {
     return (
         <div className="container-fluid">
             <div className="row">
-                <CreateMatchPoster />
+                <PosterWithButton posterStyle ="create-match" message={i18next.t('home.cantFindMatch')}
+                    buttonText={i18next.t('home.createMatch')} buttonUrl="/createMatch" />
             </div>
+            <FilterMenu />
         </div>
     );
 }
 
-export default LeftPanel;
+export default HomeLeftPanel;
