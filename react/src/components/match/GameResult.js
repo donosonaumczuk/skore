@@ -11,7 +11,7 @@ const getResult = gameResult => {
 }
 
 const getUserTeam = (user, team1, team2) => {
-    let userTeam = 0
+    let userTeam;
     team1.forEach(player => {
         if (player.username && player.username === user) {
             userTeam = 1;
