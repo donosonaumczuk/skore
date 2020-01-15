@@ -20,7 +20,7 @@ public class UserDto {
     private String password;
     private String image;
     private int reputation;
-    private boolean isVerify;
+    private boolean isVerified;
     private List<Link> links;
 
     public UserDto() {
@@ -31,21 +31,22 @@ public class UserDto {
         this.userName   = premiumUser.getUserName();
         this.email      = premiumUser.getEmail();
         this.firstName  = premiumUser.getUser().getFirstName();
-        this.lastName   = premiumUser.getUser().getFirstName();
+        this.lastName   = premiumUser.getUser().getLastName();
         this.birthDay   = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.cellphone  = premiumUser.getCellphone();
         this.home       = new PlaceDto(premiumUser.getHome());
         this.password   = null;
         this.image      = null;
         this.reputation = premiumUser.getReputation();
-        this.isVerify   = premiumUser.getEnabled();
+        this.isVerified = premiumUser.getEnabled();
         this.links      = getHateoasLinks(premiumUser);
     }
 
     private List<Link> getHateoasLinks(PremiumUser premiumUser) {
         return ImmutableList.of(
                 new Link(UserController.getUserEndpoint(premiumUser.getUserName()), Link.REL_SELF),
-                new Link(UserController.getUserImageEndpoint(premiumUser.getUserName()), "image")
+                new Link(UserController.getUserImageEndpoint(premiumUser.getUserName()), "image"),
+                new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), "profile")
         );
     }
 
@@ -135,5 +136,9 @@ public class UserDto {
 
     public void setReputation(int reputation) {
         this.reputation = reputation;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 }
