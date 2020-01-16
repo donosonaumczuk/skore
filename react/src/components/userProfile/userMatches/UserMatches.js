@@ -42,8 +42,6 @@ class UserMatches extends Component {
     }
 }
 
-
-
 UserMatches.propTypes = {
     username: Proptypes.string.isRequired
 }

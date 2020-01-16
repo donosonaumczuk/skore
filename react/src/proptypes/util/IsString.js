@@ -1,8 +1,3 @@
-const isString = value => {
-    if (value && typeof value === "string") {
-        return true;
-    }
-    return false;
-}
+const isString = value => value && typeof value === "string";
 
 export default isString;

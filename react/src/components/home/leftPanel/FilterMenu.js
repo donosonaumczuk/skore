@@ -5,7 +5,7 @@ import FilterInput from '../../panel/filterMenu/FilterInput';
 import AddFilterButton from '../../panel/filterMenu/AddFilterButton';
 
 const applyFilters = () => {
-
+    //TODO make request with filters
 }
 
 const FilterMenu = () => {

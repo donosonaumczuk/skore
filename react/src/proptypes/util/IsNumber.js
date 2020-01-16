@@ -1,9 +1,3 @@
-const isNumber = value => {
-    if (value && typeof value === "number") {
-        return true;
-    }
-
-    return false;
-}
+const isNumber = value => value && typeof value === "number";
 
 export default isNumber;

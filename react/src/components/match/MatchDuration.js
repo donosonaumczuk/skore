@@ -1,14 +1,16 @@
 import React from 'react';
 import Proptypes from 'prop-types';
 
+const MINUTES_PER_HOUR = 60;
+
 const getDuration = duration => {
     let hours, minutes;
-    if (duration < 60) {
+    if (duration < MINUTES_PER_HOUR) {
         return `${duration} m`;
     } 
     else {
-        hours = duration / 60;
-        minutes = duration % 60;
+        hours = duration / MINUTES_PER_HOUR;
+        minutes = duration % MINUTES_PER_HOUR;
         return `${hours} h ${minutes} m`;
     }
 }

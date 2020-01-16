@@ -1,8 +1,3 @@
-const isBoolean = value => {
-    if (value && typeof value === "boolean") {
-        return true;
-    }
-    return false;
-}
+const isBoolean = value => value && typeof value === "boolean";
 
 export default isBoolean;

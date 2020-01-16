@@ -1,10 +1,5 @@
 import { isNumber } from "util";
 
-const isTime = value => {
-    if (value && isNumber(value.hour) && isNumber(value.minute)) {
-        return true;
-    }
-    return false;
-}
+const isTime = value => value && isNumber(value.hour) && isNumber(value.minute);
 
 export default isTime;

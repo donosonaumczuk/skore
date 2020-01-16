@@ -43,7 +43,7 @@
     "home": {
         "createMatch": "CREATE A MATCH",
         "cantFindMatch": "Can't find the match you are looking for?",
-        "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type",
+        "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type.",
         "filtersAndCategories": "Filters and Categories",
         "countryFilter": "Country",
         "stateFilter": "State / Province",
