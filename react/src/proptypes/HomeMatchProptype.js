@@ -1,5 +1,5 @@
 
-import { isString, isNumber, isBoolean } from 'util';
+import { isString, isNumber, isBoolean } from './util/TypeValidators';
 
 const requiredMatchPropType = (props, propName, componentName) => {
     const value = props[propName];
