@@ -49,6 +49,10 @@
         "stateFilter": "Estado / Provincia",
         "cityFilter": "Ciudad / Localidad",
         "sportFilter": "Deporte",
-        "addFilters": "AGREGAR FILTROS"
+        "addFilters": "AGREGAR FILTROS",
+        "joinMatch": "UNIRSE AL PARTIDO",
+        "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
+        "cancelMatch": "CANCELAR ASISTENCIA",
+        "deleteMatch": "BORRAR PARTIDO"
     }
 }

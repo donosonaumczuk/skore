@@ -49,6 +49,10 @@
         "stateFilter": "State / Province",
         "cityFilter": "City / Locality",
         "sportFilter": "Sport",
-        "addFilters": "ADD FILTERS"
+        "addFilters": "ADD FILTERS",
+        "joinMatch": "JOIN MATCH",
+        "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
+        "cancelMatch": "CANCEL ASSISTANCE",
+        "deleteMatch": "DELETE MATCH"
     }
 }
