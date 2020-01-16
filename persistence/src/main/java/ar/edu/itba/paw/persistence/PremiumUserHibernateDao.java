@@ -71,7 +71,6 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                 basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
                 state, city, street), reputation, password, code, file);
         newUser.addRole(role);
-        //em.persist(basicUser.get());
         em.persist(newUser);
         return Optional.of(newUser);
     }

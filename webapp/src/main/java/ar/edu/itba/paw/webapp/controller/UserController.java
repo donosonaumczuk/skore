@@ -165,7 +165,7 @@ public class UserController {
           TODO|should not be null. Check if it the user logged is the same as the username receive*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUserName(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username)
                 .orElseThrow(() -> {
@@ -182,14 +182,14 @@ public class UserController {
         /*TODO| Validate*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUserName(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image)
                 .orElseThrow(() -> {
-                    LOGGER.trace("User '{}' already exist", userDto.getUserName());
-                    return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUserName() + "' already exist");
+                    LOGGER.trace("User '{}' already exist", userDto.getUsername());
+                    return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
                 });
-        LOGGER.trace("User '{}' created successfully", userDto.getUserName());
+        LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
     }
 
