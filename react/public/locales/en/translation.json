@@ -21,7 +21,16 @@
         "existingUser": "already have an account "
     },
     "profile": {
-        "imageDescription": "Profile Picture"
+        "imageDescription": "Profile Picture",
+        "editInfo": "Edit Info",
+        "changePassword": "Change Password",
+        "match": {
+            "won": "WON",
+            "lost": "LOST",
+            "tie": "TIE",
+            "friendly": "Friendly",
+            "competitive": "Competitive"
+        }
     },
     "login": {
         "loginButton": "Login",
