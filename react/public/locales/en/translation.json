@@ -53,6 +53,10 @@
         "joinMatch": "JOIN MATCH",
         "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
         "cancelMatch": "CANCEL ASSISTANCE",
-        "deleteMatch": "DELETE MATCH"
+        "deleteMatch": "DELETE MATCH",
+        "matches": "Matches",
+        "toJoinTab": "TO JOIN",
+        "joinedTab": "JOINED",
+        "createdTab": "CREATED"
     }
 }

@@ -3,6 +3,7 @@ import MatchService from './../../services/MatchService';
 import LeftPanel from './leftPanel/LeftPanel';
 import Loader from './../Loader';
 import HomeMatches from './HomeMatches';
+
 class Home extends Component {
     constructor(props) {
         super(props);
