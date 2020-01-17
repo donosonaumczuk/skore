@@ -20,10 +20,21 @@ const getText = isCompetitive => {
     }
 }
 
+const getTooltipTitle = isCompetitive => {
+    if (isCompetitive) {
+        return i18next.t('profile.match.competitiveTooltip');
+    }
+    else {
+        return i18next.t('profile.match.friendlyTooltip');;
+    }
+}
+
 const MatchCompetitivity = isCompetitive => {
     const className = getClassName(isCompetitive);
     const text = getText(isCompetitive);
-    //TODO add onClick to tooltip as in deploy because as it is nothing appears
+    const tooltipTitle = getTooltipTitle(isCompetitive);
+    //TODO add onClick to tooltip as in deploy because as it is with white background
+
     return (
       <div className="row">
             <div className="col">
@@ -32,7 +43,7 @@ const MatchCompetitivity = isCompetitive => {
                     {text}
                     <span className="tooltip-icon ml-2 far fa-question-circle"
                     onClick={(e) => e.stopPropagation()} data-toggle="tooltip" 
-                    data-placement="right" data-html="true" title="" />
+                    data-placement="right" data-html="true" title={tooltipTitle} />
                 </p>
             </div>
         </div>  

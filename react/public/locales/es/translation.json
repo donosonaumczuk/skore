@@ -18,22 +18,41 @@
         "birthday": "Fecha de nacimiento ",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
+        "signUpButton": "REGISTRARSE",
         "existingUser": "ya tienes cuenta "
     },
     "profile": {
         "imageDescription": "Foto de Perfil",
-        "editInfo": "Editar Información",
-        "changePassword": "Cambiar Contraseña",
+        "editInfo": "EDITAR INFORMACION",
+        "changePassword": "CAMBIAR CONTRASEÑA",
         "match": {
             "won": "GANÓ",
             "lost": "PERDIÓ",
             "tie": "EMPATÓ",
             "friendly": "Amistoso",
-            "competitive": "Competitivo"
+            "friendlyTooltip": "Amistoso no requiere cuenta para unirse al partido.\nNo impacta el winrate.",
+            "competitive": "Competitivo",
+            "competitiveTooltip": "Competitivo requiere una cuenta para unirse al partido.\nImpacta el winrate."
         }
     },
     "login": {
-        "loginButton": "Ingresar",
+        "loginButton": "INGRESAR",
+        "login": "ingresar",
         "newUser": "eres nuevo? "
+    },
+    "home": {
+        "createMatch": "CREAR UN PARTIDO",
+        "cantFindMatch": "No encontras el partido que estas buscando?",
+        "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
+        "filtersAndCategories": "Filtros y Categorias",
+        "countryFilter": "Pais",
+        "stateFilter": "Estado / Provincia",
+        "cityFilter": "Ciudad / Localidad",
+        "sportFilter": "Deporte",
+        "addFilters": "AGREGAR FILTROS",
+        "joinMatch": "UNIRSE AL PARTIDO",
+        "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
+        "cancelMatch": "CANCELAR ASISTENCIA",
+        "deleteMatch": "BORRAR PARTIDO"
     }
 }
