@@ -38,17 +38,20 @@ class CreateUserForm extends Component {
       reader.readAsDataURL(image);
       reader.onload = (e) => {
         const data = (e.target.result);
-        this.setState (
-          {
+        this.setState ({
             image: {
               name: image.name,
               type: image.type,
               size: image.size,
               data: data
             }
-          }
-        );
+        });
       }
+    }
+    else {
+      this.setState ({
+          image: null
+      });
     }
   }
 

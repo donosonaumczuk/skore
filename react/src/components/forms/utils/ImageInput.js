@@ -20,7 +20,7 @@ class ImageInput  extends Component{
                 <div className="input-group custom-file">
                     <input type='file' className="custom-file-input" accept='.jpg, .png, .jpeg' onChange={this.onChange} />
                     <label className="custom-file-label" aria-describedby="inputGroupFileAddon02" >{imageName}</label>
-                    {meta.error && <span>{meta.error}</span>}
+                    {meta.error && <span className="invalid-feedback d-block">{meta.error}</span>}
                 </div>
                
           </div>
