@@ -18,7 +18,7 @@ const createRenderer = render => ({ input, meta, label, inputType, required, ...
         <span>
           {meta.error}
         </span>}
-      </div>
+    </div>
   </div>
 
 export default createRenderer;

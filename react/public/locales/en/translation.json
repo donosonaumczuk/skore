@@ -19,7 +19,19 @@
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
         "signUpButton": "SIGN UP",
-        "existingUser": "already have an account "
+        "existingUser": "already have an account ",
+        "errors": {
+            "username": {
+                "required": "Username is required\n",
+                "invalidSymbols": "Username can only contains alphanumeric symbols and underscore('_') or dot('.').\n",
+                "invalidLength": "Username must be between 4 and 100 characters.\n"
+            },
+            "password": {
+                "required": "Password is required\n",
+                "invalidSymbols": "Password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Password must be between 5 and 100 characters.\n"
+            }
+        }
     },
     "profile": {
         "imageDescription": "Profile Picture",

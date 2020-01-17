@@ -9,16 +9,20 @@ import SubmitButton from './utils/SubmitButton';
 import FormTitle from './utils/FormTitle';
 import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
+import CreateUserFormValidator from './validators/CreateUserValidator';
 
 const validate = values => {
     const errors = {}
-    if (!values.username) {
-      errors.username = 'Required';
-    }
-
+    errors.username = CreateUserFormValidator.validateUsername(values.username);
+    errors.password = CreateUserFormValidator.validatePassword(values.password);
+    errors.repeatPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatPassword, values.password);
+    errors.firstName = CreateUserFormValidator.validateFirstName(values.firstName);
+    errors.lastName = CreateUserFormValidator.validateLastName(values.lastName);
+    errors.email = CreateUserFormValidator.validateEmail(values.email);
+    errors.image = CreateUserFormValidator.validateImage(values.image);
+    errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
     return errors;
 }
-
 
 class CreateUserForm extends Component {
   constructor(props) {
@@ -78,9 +82,7 @@ class CreateUserForm extends Component {
     if (this.state.image != null) {
       imageName = this.state.image.name;
     }
-    // const usernameLabel = "" + i18next.t('createUserForm.username') + " *";
-    // const createAccountLabel = i18next.t('createUserForm.createAccount');
-    //TODO see why it does not work I think because the namespaces haven been loaded yet
+    
     return (
       <div className="container-fluid">
         <div className="row">
