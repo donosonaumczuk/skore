@@ -22,8 +22,7 @@ class ImageInput  extends Component{
                     <label className="custom-file-label" aria-describedby="inputGroupFileAddon02" >{imageName}</label>
                     {meta.error && <span className="invalid-feedback d-block">{meta.error}</span>}
                 </div>
-               
-          </div>
+            </div>
         )
     }
 }
