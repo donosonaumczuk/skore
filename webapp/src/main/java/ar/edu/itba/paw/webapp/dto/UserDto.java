@@ -27,14 +27,14 @@ public class UserDto {
 
     }
 
-    public UserDto(PremiumUser premiumUser) {
+    private UserDto(PremiumUser premiumUser) {
         this.username = premiumUser.getUserName();
         this.email      = premiumUser.getEmail();
         this.firstName  = premiumUser.getUser().getFirstName();
         this.lastName   = premiumUser.getUser().getLastName();
         this.birthDay   = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.cellphone  = premiumUser.getCellphone();
-        this.home       = new PlaceDto(premiumUser.getHome());
+        this.home       = PlaceDto.from(premiumUser.getHome());
         this.password   = null;
         this.image      = null;
         this.reputation = premiumUser.getReputation();

@@ -13,11 +13,15 @@ public class PlaceDto {
 
     }
 
-    public PlaceDto(Place place) {
+    private PlaceDto(Place place) {
         this.country    = place.getCountry();
         this.state      = place.getState();
         this.city       = place.getCity();
         this.street     = place.getStreet();
+    }
+
+    public static PlaceDto from(Place place) {
+        return new PlaceDto(place);
     }
 
     public void setCountry(final String country) {

@@ -214,7 +214,7 @@ public class UserController {
         });
         if(!result) {
             LOGGER.trace("User '{}' with code '{}' does not exist", username, code);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "The Code is invalid for the user '" + username + "'");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
         }
         LOGGER.trace("User '{}' verified successfully", username);
         PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
