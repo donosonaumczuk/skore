@@ -5,9 +5,16 @@ import FilterMenu from './FilterMenu';
 import AuthService from '../../../services/AuthService';
 import Tabs from './Tabs';
 
-const HomeLeftPanel = () => {
+const getTabs = (user, currentTab, handleTabChange) => {
+    if ( user ) {
+        return <Tabs currentTab={currentTab} handleTabChange={handleTabChange} />
+    }
+    return <React.Fragment></React.Fragment>;
+}
+
+const HomeLeftPanel = ({ currentTab, handleTabChange }) => {
     const user = AuthService.getCurrentUser();
-    const tabs = user ? <Tabs></Tabs> : <React.Fragment></React.Fragment>;
+    const tabs = getTabs(user, currentTab, handleTabChange);
     return (
         <div className="container-fluid">
             <div className="row">
