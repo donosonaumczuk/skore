@@ -30,6 +30,22 @@
                 "required": "Password is required\n",
                 "invalidSymbols": "Password can only contains alphanumeric symbols.\n",
                 "invalidLength": "Password must be between 5 and 100 characters.\n"
+            },
+            "repeatedPassword": {
+                "required": "Repeat Password is required.\n",
+                "invalidSymbols": "Repeat Password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Repeat Password must be between 5 and 100 characters.\n",
+                "passwordDoesNotMatch": "Repeat Password does not match password.\n"
+            },
+            "firstName": {
+                "required": "First Name is required\n",
+                "invalidSymbols": "First Name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "First Name must be between 2 and 100 characters.\n"
+            },
+            "lastName": {
+                "required": "Last Name is required\n",
+                "invalidSymbols": "Last Name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "Last Name must be between 2 and 100 characters.\n"
             }
         }
     },

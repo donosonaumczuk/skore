@@ -1,7 +1,8 @@
 import i18next from 'i18next';
 import { isStringLengthBetween, hasStringValidSymbols, 
-        isStringAlphaNumeric, isStringAlpha, isStringValidEmail,
-        isStringNumeric } from './utils/stringValidations';
+        isStringAlphaNumeric, isStringValidEmail,
+        isStringNumeric, 
+        isStringAlphaOrSpaces} from './utils/stringValidations';
 
 //username constants
 const MIN_USERNAME_LENGTH = 4;
@@ -54,10 +55,11 @@ const validateRepeatedPassword = (repeatedPassword, password) => {
     return errorMessage;
 }
 
-const validateFirstName = firstName => validateRequiredField(firstName, "firstName", isStringAlpha,
+//TODO add tildes
+const validateFirstName = firstName => validateRequiredField(firstName, "firstName", isStringAlphaOrSpaces,
                                                                     MIN_NAME_LENGTH, MAX_NAME_LENGTH);
-
-const validateLastName = lastName => validateRequiredField(lastName, "lastName", isStringAlpha,
+//TODO add tildes
+const validateLastName = lastName => validateRequiredField(lastName, "lastName", isStringAlphaOrSpaces,
                                                                     MIN_NAME_LENGTH, MAX_NAME_LENGTH);
 
 const validateEmail = email => {
