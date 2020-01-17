@@ -53,6 +53,10 @@
         "joinMatch": "UNIRSE AL PARTIDO",
         "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
         "cancelMatch": "CANCELAR ASISTENCIA",
-        "deleteMatch": "BORRAR PARTIDO"
+        "deleteMatch": "BORRAR PARTIDO",
+        "matches": "Partidos",
+        "toJoinTab": "PARA UNIRSE",
+        "joinedTab": "UNIDOS",
+        "createdTab": "CREADOS"
     }
 }
