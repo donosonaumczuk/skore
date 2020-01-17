@@ -10,6 +10,7 @@ import org.springframework.hateoas.Link;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class GameDto {
@@ -24,9 +25,10 @@ public class GameDto {
     private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
+    private final long durationInMinutes;
     private final String location;
     private final int totalPlayers;
-    private final int currentplayers;
+    private final int currentPlayers;
     private final boolean hasStarted;
     private final boolean hasFinished;
     private final String results;
@@ -43,11 +45,13 @@ public class GameDto {
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
+        LocalDateTime finishTime = game.getFinishTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
         location = game.getPlace().toString();
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
-        currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
+        currentPlayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         results = game.getResult();
@@ -105,6 +109,10 @@ public class GameDto {
         return time;
     }
 
+    public long getDurationInMinutes() {
+        return durationInMinutes;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -113,8 +121,8 @@ public class GameDto {
         return totalPlayers;
     }
 
-    public int getCurrentplayers() {
-        return currentplayers;
+    public int getCurrentPlayers() {
+        return currentPlayers;
     }
 
     public boolean isHasStarted() {

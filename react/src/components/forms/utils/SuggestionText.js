@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SuggestionText = ({ suggestion, link, linkText}) => {
     
@@ -6,7 +7,7 @@ const SuggestionText = ({ suggestion, link, linkText}) => {
     <div className="row mt-4 text-center">
         <div className="col">
                 <span className="mr-1">{suggestion}</span>
-                    <a className="link" href={link}>{linkText}</a>
+                    <Link className="link" to={link}>{linkText}</Link>
             </div>
         </div>
     );
