@@ -163,7 +163,8 @@ public class GameServiceImpl implements GameService {
                                     final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
-                                    final List<String> usernamesCreatorsNotInclude, final int pageNumber) {
+                                    final List<String> usernamesCreatorsNotInclude, final Integer limit,
+                                    final Integer offset) {
         List<Game> games = gameDao.findGames(minFinishTime == null ? null : LocalDateTime.parse(minStartTime),
                 maxStartTime == null ? null : LocalDateTime.parse(maxStartTime),
                 minFinishTime == null ? null : LocalDateTime.parse(minFinishTime),
@@ -171,8 +172,8 @@ public class GameServiceImpl implements GameService {
                 maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude,
                 usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude);
 
-        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
-        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
+        int start = (offset != null && offset < games.size()) ? offset : games.size();
+        int end = (offset != null && limit != null && offset + limit < games.size()) ? offset + limit : games.size();
         return games.subList(start, end);
     }
 
