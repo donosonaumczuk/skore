@@ -6,7 +6,7 @@ import AuthService from '../../../services/AuthService';
 import Tabs from './Tabs';
 
 const getTabs = (user, currentTab, handleTabChange) => {
-    if ( user ) {
+    if (user) {
         return <Tabs currentTab={currentTab} handleTabChange={handleTabChange} />
     }
     return <React.Fragment></React.Fragment>;
