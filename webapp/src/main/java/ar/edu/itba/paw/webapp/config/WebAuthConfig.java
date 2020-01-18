@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
@@ -75,7 +76,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LoginAuthFilter createLoginAuthFilter() throws Exception {
         LoginAuthFilter filter = new LoginAuthFilter();
-        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/auth/login", "POST"));
+        filter.setRequiresAuthenticationRequestMatcher(new RegexRequestMatcher("/api/auth/login/?", "POST"));
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(loginAuthSuccessHandler);
         filter.setAuthenticationFailureHandler(loginAuthFailureHandler);
@@ -95,7 +96,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher needAuthEndpointsMatcher() {
         return new OrRequestMatcher(//TODO make list
-                new AntPathRequestMatcher("/**", "POST"),
+                new RegexRequestMatcher("/api/auth/logout/?", "POST"),
+                new RegexRequestMatcher("/api/users/\\w+/?", "PUT"),
+                new RegexRequestMatcher("/api/users/\\w+/?", "DELETE"),
+                new RegexRequestMatcher("/api/users/\\w+/verification/?", "POST"), //TODO maybe it is not needed
                 optionalAuthEndpointsMatcher(),
                 adminAuthEndpointsMatcher()
         );
@@ -104,16 +108,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher optionalAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
-                new AntPathRequestMatcher("/**", "POST")
+                new AntPathRequestMatcher("/**", "GET")
         );
     }
 
     @Bean
     public RequestMatcher adminAuthEndpointsMatcher() {
         return new OrRequestMatcher(
-                new AntPathRequestMatcher("/sports/**", "DELETE"),
-                new AntPathRequestMatcher("/sports/**", "PUT"),
-                new AntPathRequestMatcher("/sports/**", "POST")
+                new AntPathRequestMatcher("/api/sports/**", "DELETE"),
+                new AntPathRequestMatcher("/api/sports/**", "PUT"),
+                new AntPathRequestMatcher("/api/sports/**", "POST")
         );
     }
 }
