@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.PremiumUser;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,14 +15,16 @@ public interface GameDao {
 
     public Optional<Game> findByKey(String teamName1, String startTime, String finishTime);
 
-    public List<Game> findGames(final String minStartTime, final String maxStartTime,
-                                final String minFinishTime, final String maxFinishTime,
+    public List<Game> findGames(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
+                                final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
                                 final List<String> types, final List<String> sportNames,
                                 final Integer minQuantity, final Integer maxQuantity,
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
-                                final Integer maxFreePlaces, final PremiumUser loggedUser,
-                                final boolean listOfGamesThatIsPartOf, final boolean wantCreated);
+                                final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
+                                final List<String> usernamesPlayersNotInclude,
+                                final List<String> usernamesCreatorsInclude,
+                                final List<String> usernamesCreatorsNotInclude);
 
     public List<Game> gamesThatAUserPlayInTeam1(final long userId);
 

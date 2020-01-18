@@ -66,7 +66,6 @@ public class SportController {
     }
 
     @GET
-    @Path("/")
     public Response getAllSports() {
         LOGGER.trace("Getting all sports");
         return Response.ok(SportListDto.from(sportService.getAllSports().stream()
@@ -111,7 +110,6 @@ public class SportController {
     }
 
     @POST
-    @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response createASport(final SportDto sportDto) {
         Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");

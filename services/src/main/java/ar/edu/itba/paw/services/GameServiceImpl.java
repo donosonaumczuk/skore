@@ -160,73 +160,15 @@ public class GameServiceImpl implements GameService {
                                     final Integer minQuantity, final Integer maxQuantity,
                                     final JSONArray countries, final JSONArray states,
                                     final JSONArray cities, final Integer minFreePlaces,
-                                    final Integer maxFreePlaces, final int pageNumber) {
-        List<Game> games =
-                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                    jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
-                    jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
-                    minFreePlaces, maxFreePlaces, null, false,
-                    false);
-
-        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
-        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
-        return games.subList(start, end);
-    }
-
-    @Override
-    public List<Game> findGamesPageThatIsAPartOf(final String minStartTime, final String maxStartTime,
-                                                 final String minFinishTime, final String maxFinishTime,
-                                                 final JSONArray types, final JSONArray sportNames,
-                                                 final Integer minQuantity, final Integer maxQuantity,
-                                                 final JSONArray countries, final JSONArray states,
-                                                 final JSONArray cities, final Integer minFreePlaces,
-                                                 final Integer maxFreePlaces, final int pageNumber,
-                                                 final PremiumUser user) {
-        List<Game> games =
-                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                        jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
-                        jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
-                        minFreePlaces, maxFreePlaces, user, true, false);
-
-        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
-        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
-        return games.subList(start, end);
-    }
-
-    @Override
-    public List<Game> findGamesPageThatIsNotAPartOf(final String minStartTime, final String maxStartTime,
-                                                    final String minFinishTime, final String maxFinishTime,
-                                                    final JSONArray types, final JSONArray sportNames,
-                                                    final Integer minQuantity, final Integer maxQuantity,
-                                                    final JSONArray countries, final JSONArray states,
-                                                    final JSONArray cities, final Integer minFreePlaces,
-                                                    final Integer maxFreePlaces, final int pageNumber,
-                                                    final PremiumUser user) {
-        List<Game> games =
-                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                        jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
-                        jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
-                        minFreePlaces, maxFreePlaces, user, false, false);
-
-        int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
-        int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
-        return games.subList(start, end);
-    }
-
-    @Override
-    public List<Game> findGamesPageCreateBy(final String minStartTime, final String maxStartTime,
-                                            final String minFinishTime, final String maxFinishTime,
-                                            final JSONArray types, final JSONArray sportNames,
-                                            final Integer minQuantity, final Integer maxQuantity,
-                                            final JSONArray countries, final JSONArray states,
-                                            final JSONArray cities, final Integer minFreePlaces,
-                                            final Integer maxFreePlaces, final int pageNumber,
-                                            final PremiumUser user) {
-        List<Game> games =
-                gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                        jsonArrayToList(types), jsonArrayToList(sportNames), minQuantity,  maxQuantity,
-                        jsonArrayToList(countries), jsonArrayToList(states), jsonArrayToList(cities),
-                        minFreePlaces, maxFreePlaces, user, true, true);
+                                    final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
+                                    final List<String> usernamesPlayersNotInclude,
+                                    final List<String> usernamesCreatorsInclude,
+                                    final List<String> usernamesCreatorsNotInclude, final int pageNumber) {
+        List<Game> games = gameDao.findGames(LocalDateTime.parse(minStartTime), LocalDateTime.parse(maxStartTime),
+                LocalDateTime.parse(minFinishTime), LocalDateTime.parse(maxFinishTime), jsonArrayToList(types),
+                jsonArrayToList(sportNames), minQuantity,  maxQuantity, jsonArrayToList(countries),
+                jsonArrayToList(states), jsonArrayToList(cities), minFreePlaces, maxFreePlaces, usernamesPlayersInclude,
+                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude);
 
         int start = ((pageNumber-1)*10 < games.size())?(pageNumber-1)*10:games.size();
         int end = (pageNumber*10 < games.size())?pageNumber*10:games.size();
