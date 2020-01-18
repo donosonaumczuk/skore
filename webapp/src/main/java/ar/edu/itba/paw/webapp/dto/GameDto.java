@@ -42,7 +42,7 @@ public class GameDto {
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
-        currentplayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
+        currentplayers = team1.getPlayerQuantity() + (team2 == null ? 0 : team2.getPlayerQuantity());
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         results = game.getResult();

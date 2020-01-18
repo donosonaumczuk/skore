@@ -30,10 +30,10 @@ public interface GameService {
     @Transactional
     public List<Game> findGamesPage(final String minStartTime, final String maxStartTime,
                                     final String minFinishTime, final String maxFinishTime,
-                                    final JSONArray types, final JSONArray sportNames,
+                                    final List<String> types, final List<String> sportNames,
                                     final Integer minQuantity, final Integer maxQuantity,
-                                    final JSONArray countries, final JSONArray states,
-                                    final JSONArray cities, final Integer minFreePlaces,
+                                    final List<String> countries, final List<String> states,
+                                    final List<String> cities, final Integer minFreePlaces,
                                     final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
