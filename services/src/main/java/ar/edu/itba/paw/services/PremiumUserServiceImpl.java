@@ -76,24 +76,23 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public PremiumUser create(final String firstName, final String lastName,
+    public Optional<PremiumUser> create(final String firstName, final String lastName,
                               final String email, final String userName,
                               final String cellphone, final String birthday,
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
-                              final MultipartFile file) throws IOException {
+                              final byte[] file) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
-        final String formattedBirthday = formatDate(birthday);
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
-                cellphone, formattedBirthday, country, state, city, street, reputation,
+                cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file);
-        PremiumUser ans = user
-                .orElseThrow(() -> new CannotCreateUserException("Can't create user with with userName: " + userName ));
         LOGGER.trace("Sending confirmation email to {}", email);
-        sendConfirmationMail(ans);
-        return ans;
+        if(user.isPresent()) {
+            sendConfirmationMail(user.get());
+        }
+        return user;
     }
 
     @Override
@@ -115,46 +114,41 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public PremiumUser updateUserInfo(final String newFirstName, final String newLastName,
+    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                       final String newEmail,final String newUserName,
                                       final String newCellphone, final String newBirthday,
                                       final String newCountry, final String newState,
                                       final String newCity, final String newStreet,
                                       final int newReputation, final String newPassword,
-                                      final MultipartFile file, final String oldUserName) throws IOException{
+                                      final byte[] file, final String oldUserName) {
 
         LOGGER.trace("Looking for user with username: {} to update", oldUserName);
 
+        final String encodedPassword = (newPassword == null)? null : bcrypt.encode(newPassword);
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
                 newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, file, oldUserName);
+                newCity, newStreet, newReputation, encodedPassword, file, oldUserName);
 
-        return user.orElseThrow(() -> new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist."));
+        if(user.isPresent() && newEmail != null) {
+            sendConfirmationMail(user.get());
+        }
+
+        return user;
     }
 
     @Override
-    public PremiumUser changePassword(final String newPassword, final String username) throws IOException{
+    public Optional<PremiumUser> changePassword(final String newPassword, final String username) {
         Optional <PremiumUser> premiumUser = findByUserName(username);
         PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
                 "with username:" + username));
-        final String encodedPassword = bcrypt.encode(newPassword);
         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(currentUser.getUser().getFirstName(),
-                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
-                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
-                currentUser.getHome().getState(),currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
-                currentUser.getReputation(), encodedPassword, null, username);
+        Optional<PremiumUser> user = updateUserInfo(currentUser.getUser().getFirstName(), currentUser.getUser()
+                        .getLastName(), currentUser.getEmail(), currentUser.getUserName(), currentUser
+                        .getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome()
+                        .getCountry(), currentUser.getHome().getState(),currentUser.getHome().getCity(),
+                currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username);
 
-        return user.orElseThrow(() -> new CannotModifyUserException("Can't modify user with username:" + username));
-    }
-
-    private static String formatDate(String birthday) {
-        DateTimeFormatter toParse = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate parsed = LocalDate.parse(birthday, toParse);
-        String formattedDate = parsed.format(toFormat);
-        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
-        return formattedDate;
+        return user;
     }
 
     @Override
@@ -174,27 +168,27 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public boolean enableUser(final String username, final String code) {
+    public Optional<Boolean> enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
         Optional<PremiumUser> user = findByUserName(username);
         if(!user.isPresent()) {
             LOGGER.error("Can't find user with username {}", username);
-            return false;
+            return Optional.empty();
         }
 
         PremiumUser currentUser = user.get();
 
         if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
-            LOGGER.error("Can't find user with username {}", username);
-            return false;
+            LOGGER.error("Can't find user with username {} and code {}", username, code);
+            return Optional.of(false);
         }
         LOGGER.trace("{} is now enabled", username);
-        return true;
+        return Optional.of(true);
     }
 
     @Override
-    public boolean confirmationPath(String path) {
+    public boolean confirmationPath(String path) { //TODO: move to front
         String dataPath = path.replace("/confirm/","");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
@@ -205,7 +199,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code);
+        return enableUser(username, code).get();
     }
 
     private String generatePath(PremiumUser user) {
