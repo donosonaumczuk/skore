@@ -176,7 +176,6 @@ public class UserController {
     }
 
     @POST
-    @Path("/")
     public Response createAUser(final UserDto userDto) {
         /*TODO| Validate*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
