@@ -10,10 +10,6 @@ api.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-        else {
-            console.log("no agregar header");
-        }
-
         return config;
     },
     error => {

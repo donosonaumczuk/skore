@@ -18,13 +18,41 @@
         "birthday": "Birthday ",
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
+        "signUpButton": "SIGN UP",
         "existingUser": "already have an account "
     },
     "profile": {
-        "imageDescription": "Profile Picture"
+        "imageDescription": "Profile Picture",
+        "editInfo": "EDIT INFO",
+        "changePassword": "CHANGE PASSWORD",
+        "match": {
+            "won": "WON",
+            "lost": "LOST",
+            "tie": "TIE",
+            "friendly": "Friendly",
+            "friendlyTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.",
+            "competitive": "Competitive",
+            "competitiveTooltip": "Competitive requires an account to join the match.\nImpacts winrate."
+        }
     },
     "login": {
-        "loginButton": "Login",
+        "loginButton": "LOG IN",
+        "login": "log in",
         "newUser": "are you new? "
+    },
+    "home": {
+        "createMatch": "CREATE A MATCH",
+        "cantFindMatch": "Can't find the match you are looking for?",
+        "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type.",
+        "filtersAndCategories": "Filters and Categories",
+        "countryFilter": "Country",
+        "stateFilter": "State / Province",
+        "cityFilter": "City / Locality",
+        "sportFilter": "Sport",
+        "addFilters": "ADD FILTERS",
+        "joinMatch": "JOIN MATCH",
+        "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
+        "cancelMatch": "CANCEL ASSISTANCE",
+        "deleteMatch": "DELETE MATCH"
     }
 }

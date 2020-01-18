@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
+import i18next from 'i18next';
 import UserService from '../../services/UserService';
 import UserData from './UserData';
 import UserImage from './UserImage';
+import UserMatches from './userMatches/UserMatches';
+import Loader from '../Loader';
+import AuthService from '../../services/AuthService';
+import EditUserButton from './EditUserButton';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -12,14 +17,13 @@ class UserProfile extends Component {
         this.state = {
             username: username,
             currentUser: {},
-            imageUrl: null
+            imageUrl: null,
         }
     }
 
-    async componentDidMount() {   
+    async componentDidMount() { 
         let currentUser = await UserService.getProfileByUsername(this.state.username)
         const imageUrl = this.getImageUrl(currentUser.links);
-        
         this.setState({ currentUser: currentUser, 
                         imageUrl: imageUrl 
                     });
@@ -64,11 +68,52 @@ class UserProfile extends Component {
         return imageUrl;
     }
 
+    getEditButtons = (loggedUser, username) => {
+      
+        if (loggedUser && loggedUser === username) {
+            return (
+                <div className="row text-center">
+                    <div className="col">
+                        <EditUserButton url={`/users/${username}/edit`} 
+                            iStyle="mr-1 fas fa-edit" text={i18next.t('profile.editInfo')} />
+                        <EditUserButton url={`/users/${username}/changePassword`} 
+                            iStyle="mr-1 fas fa-key" text={i18next.t('profile.changePassword')} />
+                    </div>
+                </div>
+            )
+        }
+        else {
+            return <React.Fragment></React.Fragment>
+        }
+    }
+
+    async UNSAFE_componentWillReceiveProps(nextProps) {
+        const { username } = nextProps.match.params;
+        if( username !== this.state.username ) {
+            this.setState({
+                username: username,
+                currentUser: {},
+                imageUrl: null,
+            });
+        }
+        let currentUser = await UserService.getProfileByUsername(username)
+        const imageUrl = this.getImageUrl(currentUser.links);
+        this.setState({ currentUser: currentUser, 
+                        imageUrl: imageUrl 
+                    });
+    }
+
     render() {
         const currentUser = this.state.currentUser;
         const imageUrl = this.state.imageUrl;
-        // TODO dont render until all data is loaded
+        const loggedUser = AuthService.getCurrentUser();
+        let editButtons = this.getEditButtons(loggedUser, currentUser.username);
         //TODO check when winrate is negative if it is a valid value
+
+        if (imageUrl == null) {
+            return <Loader />;
+        }
+        
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -79,8 +124,9 @@ class UserProfile extends Component {
                             <UserData styleClass="profile-username" value={currentUser.username} />
                             <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
                             <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
-                            {/* <Matches /> TODO*/}
+                            {editButtons}
                         </div>
+                        <UserMatches username={this.state.username} />
                     </div>
                 </div>
             </div>
