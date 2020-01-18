@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.dto.GameListDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -85,31 +85,23 @@ public class UserController {
     @Path("/{username}/profile")
     public Response getProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
-        if (premiumUserOptional.isPresent()) {
-            LOGGER.trace("'{}' profile successfully gotten", username);
-            return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
-        }
-        LOGGER.error("Can't get '{}' profile, user not found", username);
-        throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
+        LOGGER.trace("'{}' profile successfully gotten", username);
+        return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
     @Path("/{username}/matches")
     public Response getGames(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
+        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' matches").validate(premiumUserOptional);
+        PremiumUser premiumUser = premiumUserOptional.get();
         List<List<Game>> gamesResult;
-        if (premiumUserOptional.isPresent()) {
-            gamesResult = gameService.getGamesThatPlay(premiumUserOptional.get().getUser().getUserId());
-            List<GameDto> games = new LinkedList<>();
-            gamesResult.forEach(gameList -> {
-                gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))));
-            });
-            LOGGER.trace("'{}' matches successfully gotten", username);
-            return Response.ok(GameListDto.from(games)).build();
-        }
-        LOGGER.error("Can't get '{}' matches, user not found", username);
-        throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+        gamesResult = gameService.getGamesThatPlay(premiumUser.getUser().getUserId());
+        List<GameDto> games = new LinkedList<>();
+        gamesResult.forEach(gameList -> gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))));
+        LOGGER.trace("'{}' matches successfully gotten", username);
+        return Response.ok(GameListDto.from(games)).build();
     }
 
     private TeamDto getTeam(Team team) {
@@ -125,15 +117,13 @@ public class UserController {
                 teamPlayers.add(TeamPlayerDto.from(user));
             }
         });
-
         return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
     @GET
     @Path("/{username}/image")
     public Response getImageUser(@PathParam("username") String username) {
-        Validator.getValidator().userExist(username);
-
+        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
