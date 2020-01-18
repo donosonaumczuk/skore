@@ -3,6 +3,8 @@ import { isStringLengthBetween, hasStringValidSymbols,
         isStringAlphaNumeric, isStringValidEmail,
         isStringNumeric, 
         isStringAlphaOrSpaces} from './utils/stringValidations';
+import { isValidPastDate } from './utils/dateValidator';
+
 
 //username constants
 const MIN_USERNAME_LENGTH = 4;
@@ -22,6 +24,11 @@ const MAX_IMAGE_SIZE_IN_BYTES = 1048576;
 
 //cellphone constants
 const CELLPHONE_LENGTH = 10;
+
+//birthday constants
+const BIRTHDAY_LENGTH = 10;
+const dateInvalidSymbols= /[^0-9/]/;
+
 
 const validateRequiredField = (fieldValue, errorLabel, invalidSymbols, minLength, maxLength) => {
     //TODO make breakline appear between errors, i do not know why it is not working
@@ -55,10 +62,9 @@ const validateRepeatedPassword = (repeatedPassword, password) => {
     return errorMessage;
 }
 
-//TODO add tildes
 const validateFirstName = firstName => validateRequiredField(firstName, "firstName", isStringAlphaOrSpaces,
                                                                     MIN_NAME_LENGTH, MAX_NAME_LENGTH);
-//TODO add tildes
+
 const validateLastName = lastName => validateRequiredField(lastName, "lastName", isStringAlphaOrSpaces,
                                                                     MIN_NAME_LENGTH, MAX_NAME_LENGTH);
 
@@ -95,6 +101,33 @@ const validateCellphone = cellphone => {
     }
 }
 
+const hasStringValidDateSymbols = date => hasStringValidSymbols(date, dateInvalidSymbols);
+
+const validatePastDate = date => {
+    const dateArray = date.split("/");
+    if(dateArray.length !== 3) {
+        return false;
+    }
+    const month = parseInt(dateArray[0]);
+    const day = parseInt(dateArray[1]);
+    const year = parseInt(dateArray[2]);
+    if(!isValidPastDate(day, month, year)) {
+        return false;
+    }
+    return true;
+}
+
+const validateDate = date => {
+    let errorLabelBase = `createUserForm.errors.birthday`;
+    let errorMessage = validateRequiredField(date, "birthday", hasStringValidDateSymbols,
+                                                                BIRTHDAY_LENGTH, BIRTHDAY_LENGTH);
+    
+    if (date && !validatePastDate(date)) {
+        errorMessage =`${errorMessage} ${i18next.t(`${errorLabelBase}.invalidPastDate`)}`;
+    }
+    return errorMessage;
+}
+
 const CreateUserFormValidator = {
     validateUsername: validateUsername,
     validatePassword: validatePassword,
@@ -103,7 +136,8 @@ const CreateUserFormValidator = {
     validateLastName: validateLastName,
     validateEmail: validateEmail,
     validateImage: validateImage,
-    validateCellphone: validateCellphone
+    validateCellphone: validateCellphone,
+    validateDate: validateDate
 }
 
 export default CreateUserFormValidator; 

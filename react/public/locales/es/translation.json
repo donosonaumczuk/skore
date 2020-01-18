@@ -57,6 +57,13 @@
             },
             "cellphone": {
                 "invalidCellphone": "El Celular deben ser diez digitos o vacio.\n"
+            },
+            "birthday": {
+                "required": "La Fecha de Nacimiento es obligatorio.\n",
+                "invalidSymbols": "La Fecha de Nacimiento solo puede tener digitos y barra('/').\n",
+                "invalidLength": "La Fecha de Nacimiento debe tener exactamente diez caracteres.\n",
+                "invalidDate": "La Fecha de Nacimiento debe ser una fecha valida.\n",
+                "invalidPastDate": "La Fecha de Nacimiento debe ser una fecha valida pasada.\n"
             }
         }
     },

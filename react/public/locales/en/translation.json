@@ -57,6 +57,12 @@
             },
             "cellphone": {
                 "invalidCellphone": "Cellphone must be ten digits or empty.\n"
+            },
+            "birthday": {
+                "required": "Birthday is required.\n",
+                "invalidSymbols": "Birthday can only contains digits and slash('/').\n",
+                "invalidLength": "Birthday must have exactly ten characters.\n",
+                "invalidPastDate": "Birthday must be a valid past date.\n"
             }
         }
     },

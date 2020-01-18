@@ -21,6 +21,7 @@ const validate = values => {
     errors.email = CreateUserFormValidator.validateEmail(values.email);
     errors.image = CreateUserFormValidator.validateImage(values.image);
     errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
+    errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
     return errors;
 }
 
@@ -109,7 +110,7 @@ class CreateUserForm extends Component {
                       component={ImageInput} onChange={this.handleChange} />
               <Field name="cellphone" label={i18next.t('createUserForm.cellphone')}
                          inputType="text" required={false} component={RenderInput} />
-              <Field name="birthDay" label={i18next.t('createUserForm.birthday')}
+              <Field name="birthday" label={i18next.t('createUserForm.birthday')}
                        inputType="text" required={true} component={RenderDatePicker} />
               {/* TODO address with all of its fields and make them autoload as on deploy */}
               <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
