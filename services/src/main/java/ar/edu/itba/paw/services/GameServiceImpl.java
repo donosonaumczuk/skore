@@ -172,8 +172,10 @@ public class GameServiceImpl implements GameService {
                 maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude,
                 usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude);
 
-        int start = (offset != null && offset < games.size()) ? offset : games.size();
-        int end = (offset != null && limit != null && offset + limit < games.size()) ? offset + limit : games.size();
+        Integer offsetAux = (offset == null || offset < 0) ? 0 : offset;                       //Default value
+        Integer limitAux  = (limit == null  || offset < 0) ? 100 : limit;                      //Default value
+        int start = (offsetAux < games.size()) ? offsetAux : games.size();                     //value if it is bigger than list
+        int end = (offsetAux + limitAux < games.size()) ? offsetAux + limitAux : games.size(); //value if it is bigger than list
         return games.subList(start, end);
     }
 

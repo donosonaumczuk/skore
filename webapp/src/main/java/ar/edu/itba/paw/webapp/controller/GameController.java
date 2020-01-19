@@ -65,18 +65,18 @@ public class GameController {
                              @QueryParam("usernamesCreatorsInclude") List<String> usernamesCreatorsInclude,
                              @QueryParam("usernamesCreatorsNotInclude") List<String> usernamesCreatorsNotInclude,
                              @QueryParam("limit") Integer limit, @QueryParam("offSet" ) Integer offset) {
-        //TODO:Validate that time values has correct format and limit and offset are positive
+        //TODO:Validate that time values has correct format
         List<GameDto> gamesDto = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                 types, sports, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
                 usernamesCreatorsNotInclude, limit, offset)
                     .stream()
-                    .map(n -> GameDto.from(n, TeamDto.from(n.getTeam1().getPlayers()
+                    .map(game -> GameDto.from(game, TeamDto.from(game.getTeam1().getPlayers()
                                                 .stream()
                                                 .map(TeamPlayerDto::from)
                                                 .collect(Collectors.toList())),
-                                            n.getTeam2() == null ? null :
-                                            TeamDto.from(n.getTeam2().getPlayers()
+                                            game.getTeam2() == null ? null :
+                                            TeamDto.from(game.getTeam2().getPlayers()
                                                 .stream()
                                                 .map(TeamPlayerDto::from)
                                                 .collect(Collectors.toList()))))
