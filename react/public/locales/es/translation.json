@@ -19,7 +19,53 @@
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
         "signUpButton": "REGISTRARSE",
-        "existingUser": "ya tienes cuenta "
+        "existingUser": "ya tienes cuenta ",
+        "errors": {
+            "username": {
+                "required": "El Nombre de Usuario es obligatorio.\n",
+                "invalidSymbols": "El Nombre de Usuario solo puede contener simbolos alfanumericos, guion bajo('_') y punto(',').\n",
+                "invalidLength": "El nombre de usuario debe tener etre 4 y 100 caracteres.\n"
+            },
+            "password": {
+                "required": "La Contraseña es obligatoria.\n",
+                "invalidSymbols": "La Contraseña solo puede contener simbolos alfanumericos.\n",
+                "invalidLength": "La Contraseña debe tener entre 5 y 100 caracteres.\n"
+            },
+            "repeatedPassword": {
+                "required": "Repetir la Contraseña es obligatorio.\n",
+                "invalidSymbols": "La Contraseña repetida solo puede contener simbolos alfanumericos.\n",
+                "invalidLength": "La Contraseña repetida debe tener entre 5 y 100 caracteres.\n",
+                "passwordDoesNotMatch": "La Contraseña repetida no coincide con la contraseña .\n"
+            },
+            "firstName": {
+                "required": "El Nombre es obligatorio.\n",
+                "invalidSymbols": "El nombre solo puede contener letras y espacios.\n",
+                "invalidLength": "El nombre debe tener entre 2 y 100 caracteres.\n"
+            },
+            "lastName": {
+                "required": "El apellido es obligatorio.\n",
+                "invalidSymbols": "El apellido debe contener solo letras y espacios.\n",
+                "invalidLength": "El apellido debe tener entre 2 y 100 caracteres.\n"
+            },
+            "email": {
+                "required": "El Email es obligatorio.\n",
+                "invalidEmail": "No es un Email bien formado, debe ser un Email valido.\n"
+            },
+            "image": {
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg, jpeg.\n",
+                "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
+            },
+            "cellphone": {
+                "invalidCellphone": "El Celular deben ser diez digitos o vacio.\n"
+            },
+            "birthday": {
+                "required": "La Fecha de Nacimiento es obligatorio.\n",
+                "invalidSymbols": "La Fecha de Nacimiento solo puede tener digitos y barra('/').\n",
+                "invalidLength": "La Fecha de Nacimiento debe tener exactamente diez caracteres.\n",
+                "invalidDate": "La Fecha de Nacimiento debe ser una fecha valida.\n",
+                "invalidPastDate": "La Fecha de Nacimiento debe ser una fecha valida pasada.\n"
+            }
+        }
     },
     "profile": {
         "imageDescription": "Foto de Perfil",
@@ -53,7 +99,11 @@
         "joinMatch": "UNIRSE AL PARTIDO",
         "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
         "cancelMatch": "CANCELAR ASISTENCIA",
-        "deleteMatch": "BORRAR PARTIDO"
+        "deleteMatch": "BORRAR PARTIDO",
+        "matches": "Partidos",
+        "toJoinTab": "PARA UNIRSE",
+        "joinedTab": "UNIDOS",
+        "createdTab": "CREADOS"
     },
     "errorPage": {
         "404": "Esta no es la pagina que buscabas.\n",

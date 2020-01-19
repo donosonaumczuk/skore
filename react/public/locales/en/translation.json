@@ -19,7 +19,52 @@
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
         "signUpButton": "SIGN UP",
-        "existingUser": "already have an account "
+        "existingUser": "already have an account ",
+        "errors": {
+            "username": {
+                "required": "Username is required.\n",
+                "invalidSymbols": "Username can only contains alphanumeric symbols and underscore('_') or dot('.').\n",
+                "invalidLength": "Username must be between 4 and 100 characters.\n"
+            },
+            "password": {
+                "required": "Password is required.\n",
+                "invalidSymbols": "Password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Password must be between 5 and 100 characters.\n"
+            },
+            "repeatedPassword": {
+                "required": "Repeat Password is required.\n",
+                "invalidSymbols": "Repeat Password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Repeat Password must be between 5 and 100 characters.\n",
+                "passwordDoesNotMatch": "Repeat Password does not match password.\n"
+            },
+            "firstName": {
+                "required": "First Name is required.\n",
+                "invalidSymbols": "First Name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "First Name must be between 2 and 100 characters.\n"
+            },
+            "lastName": {
+                "required": "Last Name is required.\n",
+                "invalidSymbols": "Last Name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "Last Name must be between 2 and 100 characters.\n"
+            },
+            "email": {
+                "required": "Email is required.\n",
+                "invalidEmail": "It is not a well-formed email, should be a valid email.\n"
+            },
+            "image": {
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg, jpeg.\n",
+                "invalidImageSize": "Image can not be greater than 1MB.\n"
+            },
+            "cellphone": {
+                "invalidCellphone": "Cellphone must be ten digits or empty.\n"
+            },
+            "birthday": {
+                "required": "Birthday is required.\n",
+                "invalidSymbols": "Birthday can only contains digits and slash('/').\n",
+                "invalidLength": "Birthday must have exactly ten characters.\n",
+                "invalidPastDate": "Birthday must be a valid past date.\n"
+            }
+        }
     },
     "profile": {
         "imageDescription": "Profile Picture",
@@ -53,7 +98,11 @@
         "joinMatch": "JOIN MATCH",
         "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
         "cancelMatch": "CANCEL ASSISTANCE",
-        "deleteMatch": "DELETE MATCH"
+        "deleteMatch": "DELETE MATCH",
+        "matches": "Matches",
+        "toJoinTab": "TO JOIN",
+        "joinedTab": "JOINED",
+        "createdTab": "CREATED"
     },
     "errorPage": {
         "404": "This is not the page you are looking for.\n",
