@@ -27,7 +27,8 @@ class EditUserInfo extends Component {
 
     async componentDidMount() {
         //TODO make request to userInfo not to profile, so as to have complete info  
-        if (AuthService.getCurrentUser()) { 
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser && currentUser === this.state.username) { 
             let currentUser = await UserService.getProfileByUsername(this.state.username);
             if (this.state.mounted) {
                 this.updateStateWithUser(currentUser);
@@ -55,9 +56,11 @@ class EditUserInfo extends Component {
         const currentUser = AuthService.getCurrentUser();
         const formInitialValues = this.loadFormInitialValues();       
         if (!currentUser) {
+            //TODO maybe render error page with unauthorize instead of redirecting
             return <Redirect to="/" />
         }
         else if (currentUser !== this.state.username) {
+            //TODO maybe render error page with unauthorize instead of redirecting
             return <Redirect to={`/users/${currentUser}/editUserInfo`} />
         }
         else if (!this.state.currentUser) {

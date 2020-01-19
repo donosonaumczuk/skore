@@ -110,5 +110,8 @@
     },
     "editUserInfoForm": {
         "updateInfoButton": "UPDATE"
+    },
+    "changePasswordForm": {
+        "changePasswordButton": "CHANGE PASSWORD"
     }
 }

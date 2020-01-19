@@ -111,5 +111,8 @@
     },
     "editUserInfoForm": {
         "updateInfoButton": "ACTUALIZAR"
+    },
+    "changePasswordForm": {
+        "changePasswordButton": "CAMBIAR CONTRASEÑA"
     }
 }

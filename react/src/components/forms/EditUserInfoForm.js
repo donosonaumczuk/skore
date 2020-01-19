@@ -72,9 +72,8 @@ class EditUserInfoForm extends Component {
     
 
     render() {
-        const { handleSubmit, submitting} = this.props;
+        const { handleSubmit, submitting } = this.props;
         let imageName = "";
-       
         if (this.state.image != null) {
             imageName = this.state.image.name;
         }
