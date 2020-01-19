@@ -108,5 +108,8 @@
     "errorPage": {
         "404": "Esta no es la pagina que buscabas.\n",
         "returnToHome": "Volver a inicio."
+    },
+    "editUserInfoForm": {
+        "updateInfoButton": "ACTUALIZAR"
     }
 }

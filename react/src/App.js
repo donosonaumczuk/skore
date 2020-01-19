@@ -14,7 +14,8 @@ import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
-
+import ChangePasswordForm from './components/forms/ChangePasswordForm';
+import EditUserInfo from './components/EditUserInfo';
 
 class App extends Component {
   constructor(props) {
@@ -76,6 +77,8 @@ class App extends Component {
               <LogOut updateUser={this.updateUser}/>
             </Route>
             <Route exact path="/users/:username" component={UserProfile} />
+            <Route exact path="/users/:username/edit" component={EditUserInfo} />
+            <Route exact path="/users/:username/changePassword" component={ChangePasswordForm} />
             <Route path="/" component={ErrorPage} />
           </Switch>
       </div>

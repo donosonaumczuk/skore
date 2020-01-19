@@ -107,5 +107,8 @@
     "errorPage": {
         "404": "This is not the page you are looking for.\n",
         "returnToHome": "Return to home"
+    },
+    "editUserInfoForm": {
+        "updateInfoButton": "UPDATE"
     }
 }

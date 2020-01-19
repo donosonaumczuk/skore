@@ -28,7 +28,6 @@ class UserProfile extends Component {
             this.setState({ status: currentUser.status });
         }
         else {
-            console.log("modifying state on user profile 1");
             const imageUrl = this.getImageUrl(currentUser.links);
             this.setState({ currentUser: currentUser, 
                             imageUrl: imageUrl 
@@ -39,6 +38,7 @@ class UserProfile extends Component {
     async componentDidMount() {   
         let currentUser = await UserService.getProfileByUsername(this.state.username);
         if (this.state.mounted) {
+            console.log("modifying state on user profile 1");
             this.updateStateWithUser(currentUser);
         }
     }
@@ -142,8 +142,9 @@ class UserProfile extends Component {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
+   
 
     componentWillUnmount = () => {
         console.log("User Profile unmounted.");
