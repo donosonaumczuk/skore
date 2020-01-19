@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.GameSort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface GameDao {
                                 final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
-                                final List<String> usernamesCreatorsNotInclude);
+                                final List<String> usernamesCreatorsNotInclude, GameSort sort);
 
     public List<Game> gamesThatAUserPlayInTeam1(final long userId);
 

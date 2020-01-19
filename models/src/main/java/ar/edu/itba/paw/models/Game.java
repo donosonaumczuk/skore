@@ -146,10 +146,6 @@ public class Game {
         return Objects.hash(primaryKey);
     }
 
-//    public int getQuantityOccupiedPlaces() {
-//        return quantityOccupiedPlaces;
-//    }
-
     public String getDescription() {
         return description;
     }
@@ -215,6 +211,4 @@ public class Game {
 
         return secondScore;
     }
-
-
 }

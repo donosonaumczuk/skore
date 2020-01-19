@@ -101,7 +101,7 @@ public class UserController {
         List<GameDto> games = new LinkedList<>();
         gamesResult.forEach(gameList -> gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))));
         LOGGER.trace("'{}' matches successfully gotten", username);
-        return Response.ok(GameListDto.from(games)).build();
+        return Response.ok(GameListDto.from(games, 0, 0)).build(); //TODO
     }
 
     private TeamDto getTeam(Team team) {

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.*;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +52,13 @@ public class GameHibernateDao implements GameDao {
     private static final String USERNAME_PNI           = "usernamePNI";
     private static final String USERNAME_CI            = "usernameCI";
     private static final String USERNAME_CNI           = "usernameCNI";
-    private static final String QUERY_QUANTITY         = "games.team2.sport.playerQuantity";
+    private static final String QUERY_QUANTITY         = "games.primaryKey.team1.sport.playerQuantity";
     private static final String MIN_QUANTITY           = "minQuantity";
     private static final String MAX_QUANTITY           = "maxQuantity";
-    private static final String QUERY_FREE_QUANTITY    = "(2 * games.team2.sport.playerQuantity - " +
-                                "(games.team2.players.size + games.primaryKey.team1.players.size))";
+    private static final String QUERY_FREE_QUANTITY    = "(2 * games.primaryKey.team1.sport.playerQuantity - " +
+                                "((CASE WHEN teamName2 IS NULL THEN 0 ELSE (SELECT teams.players.size FROM Team as " +
+                                "teams WHERE teams.teamName = teamName2) END) + " +
+                                "games.primaryKey.team1.players.size))";
     private static final String MIN_FREE_PLACES        = "minFreePlaces";
     private static final String MAX_FREE_PLACES        = "maxFreePlaces";
 
@@ -109,7 +112,7 @@ public class GameHibernateDao implements GameDao {
                                 final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
-                                final List<String> usernamesCreatorsNotInclude) {
+                                final List<String> usernamesCreatorsNotInclude, GameSort sort) {
         Filters  filter = new Filters(QUERY_START);
         filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MIN, minStartTime);
         filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MAX, maxStartTime);
@@ -136,7 +139,7 @@ public class GameHibernateDao implements GameDao {
 
         filter.addFilterOnlyFinished();
 
-        final TypedQuery<Game> query = em.createQuery(filter.toString(), Game.class);
+        final TypedQuery<Game> query = em.createQuery(filter.toString() + gameSortToQuery(sort), Game.class);
         List<String> valueName = filter.getValueNames();
         List<Object> values    = filter.getValues();
 
@@ -145,6 +148,25 @@ public class GameHibernateDao implements GameDao {
         }
 
         return query.getResultList();
+    }
+
+    private String gameSortToQuery(GameSort gameSort) {
+        if(gameSort == null) {
+            return "";
+        }
+
+        boolean isFirst = true;
+        StringBuilder stringBuilder = new StringBuilder(" ORDER BY");
+        for (Pair<String, SortType> sortValue: gameSort.getSortCategories()) {
+            if(isFirst) {
+                isFirst = false;
+            }
+            else {
+                stringBuilder.append(',');
+            }
+            stringBuilder.append(' ').append(sortValue.getKey()).append(" ").append(sortValue.getValue().toString());
+        }
+        return stringBuilder.toString();
     }
 
     @Override

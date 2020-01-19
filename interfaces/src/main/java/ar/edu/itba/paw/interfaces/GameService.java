@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.json.JSONArray;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,8 @@ public interface GameService {
                                     final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
-                                    final List<String> usernamesCreatorsNotInclude, final Integer limit, final Integer offset);
+                                    final List<String> usernamesCreatorsNotInclude, final Integer limit,
+                                    final Integer offset, final GameSort sort);
 
     @Transactional
     public Game modify(final String teamName1, final String teamName2, final String startTime,

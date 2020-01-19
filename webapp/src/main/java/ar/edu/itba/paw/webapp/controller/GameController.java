@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.SessionService;
+import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GameListDto;
@@ -64,12 +65,13 @@ public class GameController {
                              @QueryParam("usernamesPlayersNotInclude") List<String> usernamesPlayersNotInclude,
                              @QueryParam("usernamesCreatorsInclude") List<String> usernamesCreatorsInclude,
                              @QueryParam("usernamesCreatorsNotInclude") List<String> usernamesCreatorsNotInclude,
-                             @QueryParam("limit") Integer limit, @QueryParam("offSet" ) Integer offset) {
-        //TODO:Validate that time values has correct format
+                             @QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
+                             @QueryParam("sort") GameSort sort) {
+        //TODO:Set in null times values that has incorrect format
         List<GameDto> gamesDto = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                 types, sports, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, limit, offset)
+                usernamesCreatorsNotInclude, limit, offset, sort)
                     .stream()
                     .map(game -> GameDto.from(game, TeamDto.from(game.getTeam1().getPlayers()
                                                 .stream()
@@ -82,7 +84,7 @@ public class GameController {
                                                 .collect(Collectors.toList()))))
                     .collect(Collectors.toList());
 
-        return Response.ok().entity(GameListDto.from(gamesDto)).build();
+        return Response.ok().entity(GameListDto.from(gamesDto, offset, limit)).build();//TODO
     }
 
 //    @RequestMapping(value="/filterMatch", method= RequestMethod.POST)

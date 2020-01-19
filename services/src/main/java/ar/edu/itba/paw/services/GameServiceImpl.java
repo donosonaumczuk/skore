@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
@@ -164,13 +165,13 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
-                                    final Integer offset) {
+                                    final Integer offset, GameSort sort) {
         List<Game> games = gameDao.findGames(minFinishTime == null ? null : LocalDateTime.parse(minStartTime),
                 maxStartTime == null ? null : LocalDateTime.parse(maxStartTime),
                 minFinishTime == null ? null : LocalDateTime.parse(minFinishTime),
                 maxFinishTime == null ? null : LocalDateTime.parse(maxFinishTime), types, sportNames, minQuantity,
                 maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude,
-                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude);
+                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort);
 
         Integer offsetAux = (offset == null || offset < 0) ? 0 : offset;                       //Default value
         Integer limitAux  = (limit == null  || offset < 0) ? 100 : limit;                      //Default value
