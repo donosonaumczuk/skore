@@ -54,5 +54,9 @@
         "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
         "cancelMatch": "CANCELAR ASISTENCIA",
         "deleteMatch": "BORRAR PARTIDO"
+    },
+    "errorPage": {
+        "404": "Esta no es la pagina que buscabas.\n",
+        "returnToHome": "Volver a inicio."
     }
 }

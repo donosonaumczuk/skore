@@ -8,15 +8,30 @@ class UserMatches extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            matches: null
+            matches: null,
+            mounted: true
         }
     }
 
+    updateMatchesState = matches => {
+        if (matches.status) {
+            this.setState({
+                status: matches.status
+            });
+        }
+        else {
+            this.setState({
+                matches: matches
+            });
+        }
+    }
     async componentDidMount() {
         let matches = await UserService.getUserMatches(this.props.username);
-        this.setState({
-            matches: matches
-        });
+        if (this.state.mounted) {
+            this.updateMatchesState(matches)
+            console.log("modifying state on user matches");
+            
+        }
     }
 
     render() {
@@ -36,10 +51,16 @@ class UserMatches extends Component {
             );
         }
     }
-    
-    componentWillUnmount() {
+
+    componentWillUnmount = () => {
+        console.log("User Matches unmounted.", this.props.username);
+        this.setState({
+            mounted: false
+        });
         //TODO cancel fetch if still fetching matches
     }
+    
+    
 }
 
 UserMatches.propTypes = {

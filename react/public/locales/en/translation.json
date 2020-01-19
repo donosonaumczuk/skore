@@ -54,5 +54,9 @@
         "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
         "cancelMatch": "CANCEL ASSISTANCE",
         "deleteMatch": "DELETE MATCH"
+    },
+    "errorPage": {
+        "404": "This is not the page you are looking for.\n",
+        "returnToHome": "Return to home"
     }
 }
