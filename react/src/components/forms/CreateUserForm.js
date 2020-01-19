@@ -9,16 +9,21 @@ import SubmitButton from './utils/SubmitButton';
 import FormTitle from './utils/FormTitle';
 import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
+import CreateUserFormValidator from './validators/CreateUserValidator';
 
 const validate = values => {
     const errors = {}
-    if (!values.username) {
-      errors.username = 'Required';
-    }
-
+    errors.username = CreateUserFormValidator.validateUsername(values.username);
+    errors.password = CreateUserFormValidator.validatePassword(values.password);
+    errors.repeatPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatPassword, values.password);
+    errors.firstName = CreateUserFormValidator.validateFirstName(values.firstName);
+    errors.lastName = CreateUserFormValidator.validateLastName(values.lastName);
+    errors.email = CreateUserFormValidator.validateEmail(values.email);
+    errors.image = CreateUserFormValidator.validateImage(values.image);
+    errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
+    errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
     return errors;
 }
-
 
 class CreateUserForm extends Component {
   constructor(props) {
@@ -34,17 +39,20 @@ class CreateUserForm extends Component {
       reader.readAsDataURL(image);
       reader.onload = (e) => {
         const data = (e.target.result);
-        this.setState (
-          {
+        this.setState ({
             image: {
               name: image.name,
               type: image.type,
               size: image.size,
               data: data
             }
-          }
-        );
+        });
       }
+    }
+    else {
+      this.setState ({
+          image: null
+      });
     }
   }
 
@@ -78,9 +86,7 @@ class CreateUserForm extends Component {
     if (this.state.image != null) {
       imageName = this.state.image.name;
     }
-    // const usernameLabel = "" + i18next.t('createUserForm.username') + " *";
-    // const createAccountLabel = i18next.t('createUserForm.createAccount');
-    //TODO see why it does not work I think because the namespaces haven been loaded yet
+    
     return (
       <div className="container-fluid">
         <div className="row">
@@ -104,7 +110,7 @@ class CreateUserForm extends Component {
                       component={ImageInput} onChange={this.handleChange} />
               <Field name="cellphone" label={i18next.t('createUserForm.cellphone')}
                          inputType="text" required={false} component={RenderInput} />
-              <Field name="birthDay" label={i18next.t('createUserForm.birthday')}
+              <Field name="birthday" label={i18next.t('createUserForm.birthday')}
                        inputType="text" required={true} component={RenderDatePicker} />
               {/* TODO address with all of its fields and make them autoload as on deploy */}
               <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
