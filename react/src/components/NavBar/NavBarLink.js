@@ -16,8 +16,7 @@ const NavBarLink = (linkStyle, linkReference, textBeforeItalics, hasItalics, ita
             {textBeforeItalics}
             {getItalicTag(hasItalics, italicText, italicStyle)}
             {textAfterItalics}
-        </a>
-                      
+        </a>          
     );
 }
 

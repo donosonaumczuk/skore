@@ -15,10 +15,10 @@ const createRenderer = render => ({ input, meta, label, inputType, required, ...
       {render(input, label, inputType, rest)}
       {meta.error &&
         meta.touched &&
-        <span>
+        <span className="invalid-feedback d-block">
           {meta.error}
         </span>}
-      </div>
+    </div>
   </div>
 
 export default createRenderer;

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import i18next from 'i18next';
-import Accounts from './components/Accounts';
-import NavBar from './components/NavBar/NavBar';
+import NavBar from './components/navBar/NavBar';
 // import UserService from './services/UserService'; TODO import when used on componentDidMount
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
@@ -13,6 +12,9 @@ import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
 import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
+import ErrorPage from './components/ErrorPage';
+import Home from './components/home/Home';
+
 
 class App extends Component {
   constructor(props) {
@@ -60,10 +62,9 @@ class App extends Component {
       <Provider store={store}>
       <div>
         <NavBar currentUser={this.state.currentUser}/>
-        <Router>
           <Switch>
             <Route exact path="/">
-              <Accounts account={this.state.account} />
+              <Home />
             </Route>
             <Route path="/signUp">
               <CreateUserForm />
@@ -74,9 +75,9 @@ class App extends Component {
             <Route path="/logout">
               <LogOut updateUser={this.updateUser}/>
             </Route>
-            <Route path="/users/:username" component={UserProfile} />
+            <Route exact path="/users/:username" component={UserProfile} />
+            <Route path="/" component={ErrorPage} />
           </Switch>
-        </Router>
       </div>
       </Provider>
     );

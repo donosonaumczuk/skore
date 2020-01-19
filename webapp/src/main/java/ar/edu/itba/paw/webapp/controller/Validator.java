@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class Validator {
+public class Validator { //TODO: remove this class later
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Validator.class);
 

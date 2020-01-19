@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.webapp.controller.GameController;
+import ar.edu.itba.paw.webapp.controller.SportController;
 import ar.edu.itba.paw.webapp.controller.UserController;
 import com.google.common.collect.ImmutableList;
 import org.springframework.hateoas.Link;
@@ -9,6 +10,7 @@ import org.springframework.hateoas.Link;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class GameDto {
@@ -20,10 +22,13 @@ public class GameDto {
     private final String creator;
     private final boolean isCompetitive;
     private final String sport;
+    private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
+    private final long durationInMinutes;
+    private final String location;
     private final int totalPlayers;
-    private final int currentplayers;
+    private final int currentPlayers;
     private final boolean hasStarted;
     private final boolean hasFinished;
     private final String results;
@@ -37,10 +42,14 @@ public class GameDto {
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
         isCompetitive = game.getCompetitiveness().equals("Competitive");
+        sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
+        LocalDateTime finishTime = game.getFinishTime();
         date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
         time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
+        location = game.getPlace().toString();
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
         currentplayers = team1.getPlayerQuantity() + (team2 == null ? 0 : team2.getPlayerQuantity());
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
@@ -60,7 +69,10 @@ public class GameDto {
         //TODO improve id so that it is more semantic
         return ImmutableList.of(
                 new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
-                new Link(UserController.getProfileEndpoint(creator), "creator"));
+                new Link(UserController.getProfileEndpoint(creator), "creator"),
+                new Link(UserController.getUserImageEndpoint(creator), "creatorImage"),
+                new Link(SportController.getSportImageEndpoint(sport), "sportImage"));
+
                 //TODO add team 1 and team 2 on future
                 //TODO add sport in future
     }
@@ -85,6 +97,10 @@ public class GameDto {
         return sport;
     }
 
+    public String getSportName() {
+        return sportName;
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -93,12 +109,20 @@ public class GameDto {
         return time;
     }
 
+    public long getDurationInMinutes() {
+        return durationInMinutes;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
     public int getTotalPlayers() {
         return totalPlayers;
     }
 
-    public int getCurrentplayers() {
-        return currentplayers;
+    public int getCurrentPlayers() {
+        return currentPlayers;
     }
 
     public boolean isHasStarted() {
