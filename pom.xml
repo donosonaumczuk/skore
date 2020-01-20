@@ -45,7 +45,7 @@
         <com.google.guava.version>28.2-jre</com.google.guava.version>
         <io.jsonwebtoken.jjwt.version>0.7.0</io.jsonwebtoken.jjwt.version>
         <apache-tika.version>1.14</apache-tika.version>
-        <javafx.version>2.2.7</javafx.version>
+        <checkerframework.version>2.3.2</checkerframework.version>
     </properties>
 
     <dependencyManagement>
@@ -284,6 +284,11 @@
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
                 <version>${apache-tika.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker</artifactId>
+                <version>${checkerframework.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
