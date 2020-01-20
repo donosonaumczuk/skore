@@ -1,21 +1,34 @@
 import api from './../config/Api';
 
 const getProfileByUsername = async username => {
-    const res = await api.get(`users/${username}/profile`);
-    // console.log(res)//TODO validate error
-    return res.data;
+    try {
+        const res = await api.get(`users/${username}/profile`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+
 }
 
 const getUserImage = async username => {
-    const res = await api.get(`users/${username}/image`);
-    // console.log(res)//TODO validate error
-    return res.data;
+    try {
+        const res = await api.get(`users/${username}/image`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
 }
    
 const getUserMatches = async username => {
-    const res = await api.get(`users/${username}/matches`);
-    // console.log(res)//TODO validate error
-    return res.data.matches;
+    try {
+        const res = await api.get(`users/${username}/matches`);
+        return res.data.matches;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
 }
 
 const UserService = {

@@ -77,7 +77,7 @@ class CreateUserForm extends Component {
   }
 
   render() {
-    const { handleSubmit, submitting} = this.props;
+    const { handleSubmit, submitting } = this.props;
     let imageName = "";
     const currentUser = AuthService.getCurrentUser();
     if (currentUser) {
