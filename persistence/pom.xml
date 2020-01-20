@@ -80,7 +80,7 @@
       <artifactId>jaxb-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.openjfx</groupId>
+      <groupId>javafx</groupId>
       <artifactId>javafx</artifactId>
     </dependency>
   </dependencies>

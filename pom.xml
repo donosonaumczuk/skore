@@ -45,7 +45,7 @@
         <com.google.guava.version>28.2-jre</com.google.guava.version>
         <io.jsonwebtoken.jjwt.version>0.7.0</io.jsonwebtoken.jjwt.version>
         <apache-tika.version>1.14</apache-tika.version>
-        <org.openjfx.version>11</org.openjfx.version>
+        <javafx.version>2.2.7</javafx.version>
     </properties>
 
     <dependencyManagement>
@@ -286,9 +286,9 @@
                 <version>${apache-tika.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openjfx</groupId>
+                <groupId>javafx</groupId>
                 <artifactId>javafx</artifactId>
-                <version>${org.openjfx.version}</version>
+                <version>${javafx.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
