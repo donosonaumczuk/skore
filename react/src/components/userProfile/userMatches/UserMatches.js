@@ -5,11 +5,11 @@ import Loader from '../../Loader';
 import UserMatch from './UserMatch';
 
 class UserMatches extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
             matches: null,
-            mounted: true
         }
     }
 
@@ -26,11 +26,10 @@ class UserMatches extends Component {
         }
     }
     async componentDidMount() {
+        this.mounted = true;
         let matches = await UserService.getUserMatches(this.props.username);
-        if (this.state.mounted) {
+        if (this.mounted) {
             this.updateMatchesState(matches)
-            console.log("modifying state on user matches");
-            
         }
     }
 
@@ -53,14 +52,9 @@ class UserMatches extends Component {
     }
 
     componentWillUnmount = () => {
-        console.log("User Matches unmounted.", this.props.username);
-        this.setState({
-            mounted: false
-        });
+        this.mounted = false;
         //TODO cancel fetch if still fetching matches
     }
-    
-    
 }
 
 UserMatches.propTypes = {

@@ -11,6 +11,7 @@ import EditUserButton from './EditUserButton';
 import ErrorPage from '../ErrorPage';
 
 class UserProfile extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         const { username } = this.props.match.params;
@@ -18,13 +19,11 @@ class UserProfile extends Component {
             username: username,
             currentUser: {},
             imageUrl: null,
-            mounted: true
         }
     }
 
     updateStateWithUser = currentUser => {
         if (currentUser.status) {
-            console.log(currentUser.status);
             this.setState({ status: currentUser.status });
         }
         else {
@@ -35,10 +34,10 @@ class UserProfile extends Component {
         }
     }
 
-    async componentDidMount() {   
+    async componentDidMount() { 
+        this.mounted = true  ;
         let currentUser = await UserService.getProfileByUsername(this.state.username);
-        if (this.state.mounted) {
-            console.log("modifying state on user profile 1");
+        if (this.mounted) {
             this.updateStateWithUser(currentUser);
         }
     }
@@ -99,16 +98,14 @@ class UserProfile extends Component {
 
     async UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = nextProps.match.params;
-        if (username !== this.state.username && this.state.mounted) {
-            console.log("modifying state on user profile 2.");
+        if (username !== this.state.username && this.mounted) {
             this.setState({ username: username,
                             currentUser: {},
                             imageUrl: null,
             });
         }
         let currentUser = await UserService.getProfileByUsername(username);
-        if (this.state.mounted) {
-            console.log("modifying state on user profile 3.");
+        if (this.mounted) {
             this.updateStateWithUser(currentUser);
         }
     }
@@ -147,10 +144,7 @@ class UserProfile extends Component {
    
 
     componentWillUnmount = () => {
-        console.log("User Profile unmounted.");
-        this.setState({
-            mounted: false
-        });
+        this.mounted = false;
     }
 }
 
