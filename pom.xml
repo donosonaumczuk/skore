@@ -285,11 +285,6 @@
                 <artifactId>tika-core</artifactId>
                 <version>${apache-tika.version}</version>
             </dependency>
-            <dependency>
-                <groupId>javafx</groupId>
-                <artifactId>javafx</artifactId>
-                <version>${javafx.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <repositories>

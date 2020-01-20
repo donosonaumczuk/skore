@@ -37,10 +37,6 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
     </dependency>
-    <dependency>
-      <groupId>javafx</groupId>
-      <artifactId>javafx</artifactId>
-    </dependency>
   </dependencies>
 
 </project>
