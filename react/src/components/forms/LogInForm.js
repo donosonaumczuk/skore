@@ -36,7 +36,7 @@ class LogInForm extends Component {
 
     getErrorMessage = () => {
         if (this.state.errorMessage) {
-            return(<span className="invalid-feedback d-block">
+            return (<span className="invalid-feedback d-block">
                         {this.state.errorMessage}
                     </span>);
         }
