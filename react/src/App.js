@@ -66,8 +66,7 @@ class App extends Component {
         <NavBar currentUser={this.state.currentUser}/>
           <Switch>
             <Route exact path="/">
-              {/* <Home /> */}
-              <Accounts />
+              <Home />
             </Route>
             <Route path="/signUp">
               <CreateUserForm />
@@ -77,6 +76,9 @@ class App extends Component {
             </Route>
             <Route path="/logout">
               <LogOut updateUser={this.updateUser}/>
+            </Route>
+            <Route path="/accounts">
+              <Accounts />
             </Route>
             <Route exact path="/users/:username" component={UserProfile} />
             <Route exact path="/users/:username/edit" component={EditUserInfo} />

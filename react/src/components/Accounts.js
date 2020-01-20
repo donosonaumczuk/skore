@@ -7,6 +7,7 @@ import Account from './Account';
 
 //TODO replace with real accounts when endpoint created
 class Accounts extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -21,8 +22,6 @@ class Accounts extends Component {
         let i;
         let index = 0;
         let accounts = [];
-        console.log(`offset: ${offset}`);
-        console.log(`limit: ${limit}`);
         for(i = offset; i < limit; i++) {
             accounts[index] = {
                 "username": account.username,
@@ -34,6 +33,7 @@ class Accounts extends Component {
     }
 
     async componentDidMount() {
+        this.mounted = true;
         const account = await UserService.getProfileByUsername("donosonaumczuk");
         const newAccounts = this.createArray(account, this.state.offset, this.state.limit);
         this.setState({
@@ -71,6 +71,10 @@ class Accounts extends Component {
                 </InfiniteScroll> 
             </div>
         )
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 
