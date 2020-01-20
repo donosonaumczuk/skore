@@ -7,12 +7,12 @@ import Loader from './Loader';
 
 
 class EditUserInfo extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         const { username } = this.props.match.params;
         this.state = {
             username: username,
-            mounted: true
         };
     }
 
@@ -26,11 +26,12 @@ class EditUserInfo extends Component {
     }
 
     async componentDidMount() {
-        //TODO make request to userInfo not to profile, so as to have complete info  
+        //TODO make request to userInfo not to profile, so as to have complete info
+        this.mounted = true;
         const currentUser = AuthService.getCurrentUser();
         if (currentUser && currentUser === this.state.username) { 
             let currentUser = await UserService.getProfileByUsername(this.state.username);
-            if (this.state.mounted) {
+            if (this.mounted) {
                 this.updateStateWithUser(currentUser);
             }
         }
@@ -50,7 +51,6 @@ class EditUserInfo extends Component {
         }
         return {};
     }
-
 
     render() {
         const currentUser = AuthService.getCurrentUser();
@@ -72,7 +72,7 @@ class EditUserInfo extends Component {
     }
 
     componentWillUnmount() {
-        this.setState({ mounted: false });
+        this.mounted = false;
     }
 }
 

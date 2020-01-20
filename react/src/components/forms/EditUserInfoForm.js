@@ -69,8 +69,6 @@ class EditUserInfoForm extends Component {
         //TODO make post
     }
     
-    
-
     render() {
         const { handleSubmit, submitting } = this.props;
         let imageName = "";
