@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.json.JSONArray;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public interface GameService {
     public Game findByKey(String teamName1, String startTime, String finishTime);
 
     @Transactional
-    public List<Game> findGamesPage(final String minStartTime, final String maxStartTime,
+    public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
                                     final String minFinishTime, final String maxFinishTime,
                                     final List<String> types, final List<String> sportNames,
                                     final Integer minQuantity, final Integer maxQuantity,

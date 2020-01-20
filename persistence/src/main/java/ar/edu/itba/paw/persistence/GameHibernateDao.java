@@ -151,7 +151,7 @@ public class GameHibernateDao implements GameDao {
     }
 
     private String gameSortToQuery(GameSort gameSort) {
-        if(gameSort == null) {
+        if(gameSort == null || gameSort.getSortCategories().size() == 0) {
             return "";
         }
 

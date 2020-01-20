@@ -23,7 +23,6 @@ public class TeamServiceImpl implements TeamService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeamServiceImpl.class);
 
-
     @Autowired
     private TeamDao teamDao;
 

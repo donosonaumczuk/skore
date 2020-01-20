@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
@@ -155,7 +156,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> findGamesPage(final String minStartTime, final String maxStartTime,
+    public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
                                     final String minFinishTime, final String maxFinishTime,
                                     final List<String> types, final List<String> sportNames,
                                     final Integer minQuantity, final Integer maxQuantity,
@@ -166,18 +167,20 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
                                     final Integer offset, GameSort sort) {
-        List<Game> games = gameDao.findGames(minFinishTime == null ? null : LocalDateTime.parse(minStartTime),
-                maxStartTime == null ? null : LocalDateTime.parse(maxStartTime),
-                minFinishTime == null ? null : LocalDateTime.parse(minFinishTime),
-                maxFinishTime == null ? null : LocalDateTime.parse(maxFinishTime), types, sportNames, minQuantity,
-                maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude,
-                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort);
+        List<Game> games = gameDao.findGames(getLocalDateTimeFromString(minStartTime),
+                getLocalDateTimeFromString(maxStartTime), getLocalDateTimeFromString(minFinishTime),
+                getLocalDateTimeFromString(maxFinishTime), types, sportNames, minQuantity, maxQuantity, countries,
+                states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude, usernamesPlayersNotInclude,
+                usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort);
 
-        Integer offsetAux = (offset == null || offset < 0) ? 0 : offset;                       //Default value
-        Integer limitAux  = (limit == null  || offset < 0) ? 100 : limit;                      //Default value
-        int start = (offsetAux < games.size()) ? offsetAux : games.size();                     //value if it is bigger than list
-        int end = (offsetAux + limitAux < games.size()) ? offsetAux + limitAux : games.size(); //value if it is bigger than list
-        return games.subList(start, end);
+        return new Page<>(games, offset, limit);
+    }
+
+    private LocalDateTime getLocalDateTimeFromString(String string) {
+        if(string == null || !string.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
+            return null;
+        }
+        return LocalDateTime.parse(string);
     }
 
     @Override

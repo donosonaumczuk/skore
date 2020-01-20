@@ -69,10 +69,6 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).toTemplate();
     }
 
-    public static String getMatchesEndpoint(final String username) {
-        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("matches").toTemplate();
-    }
-
     public static String getSportsEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
@@ -88,36 +84,6 @@ public class UserController {
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
         LOGGER.trace("'{}' profile successfully gotten", username);
         return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
-    }
-
-    @GET
-    @Path("/{username}/matches")
-    public Response getGames(@PathParam("username") String username) {
-        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' matches").validate(premiumUserOptional);
-        PremiumUser premiumUser = premiumUserOptional.get();
-        List<List<Game>> gamesResult;
-        gamesResult = gameService.getGamesThatPlay(premiumUser.getUser().getUserId());
-        List<GameDto> games = new LinkedList<>();
-        gamesResult.forEach(gameList -> gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))));
-        LOGGER.trace("'{}' matches successfully gotten", username);
-        return Response.ok(GameListDto.from(games, 0, 0)).build(); //TODO
-    }
-
-    private TeamDto getTeam(Team team) {
-        teamService.getAccountsList(team);
-        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
-        Set<User> teamusers = team.getPlayers();
-        List<TeamPlayerDto> teamPlayers = new LinkedList<>();
-        teamusers.forEach(user -> {
-            if(userMap.containsKey(user)) {
-                teamPlayers.add(TeamPlayerDto.from(userMap.get(user)));
-            }
-            else {
-                teamPlayers.add(TeamPlayerDto.from(user));
-            }
-        });
-        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
     @GET
