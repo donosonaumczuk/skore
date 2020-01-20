@@ -2,42 +2,44 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.controller.GameController;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import org.springframework.hateoas.Link;
 
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GameListDto {
 
     private final List<GameDto> games;
     private final List<Link> links;
 
-    public GameListDto(Page<Game> page, String query, List<GameDto> gameDtos) {
+    public GameListDto(Page<Game> page, UriInfo uriInfo, List<GameDto> gameDtos) {
         this.games = gameDtos;
-        this.links = getHateoasLinks(page, query);
+        this.links = getHateoasLinks(page, getQuery(uriInfo.getQueryParameters(false)),
+                uriInfo.getPath());
     }
 
     public static GameListDto from(Page<Game> page, List<GameDto> gameDtos,
-                                   MultivaluedMap<String, String> queryParameters) {
-        return new GameListDto(page, getQuery(queryParameters), gameDtos);
+                                   UriInfo uriInfo) {
+        return new GameListDto(page, uriInfo, gameDtos);
     }
 
-    private List<Link> getHateoasLinks(Page<Game> page, String query) { //TODO
+    private List<Link> getHateoasLinks(Page<Game> page, String query, String base) {
         ImmutableList.Builder<Link> builder = ImmutableList.builder();
-        builder = builder.add(new Link(GameController.getGamesEndpoint(page, query), Link.REL_SELF));
+        builder = builder.add(new Link(getEndpoint(page, query, base), Link.REL_SELF));
         Optional<Page<Game>> aux = page.getNextPage();
         if (aux.isPresent()) {
-            builder = builder.add(new Link(GameController.getGamesEndpoint(aux.get(), query), "next"));
+            builder = builder.add(new Link(getEndpoint(aux.get(), query, base), "next"));
         }
         aux = page.getPrevPage();
         if (aux.isPresent()) {
-            builder = builder.add(new Link(GameController.getGamesEndpoint(aux.get(), query), "prev"));
+            builder = builder.add(new Link(getEndpoint(aux.get(), query, base), "prev"));
         }
         return builder.build();
     }
@@ -74,5 +76,10 @@ public class GameListDto {
             }
         }
         return ans.toString();
+    }
+
+    private String getEndpoint(Page<Game> page, String query, String base) {
+        return URLConstants.getApiBaseUrlBuilder().path(base).toTemplate() + "?offset=" + page.getOffSet()
+                + "&limit=" + page.getLimit() + ((query != null && !query.isEmpty()) ? "&" : "" ) + query;
     }
 }

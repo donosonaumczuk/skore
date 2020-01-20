@@ -50,18 +50,8 @@ public class GameController {
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
-    @Autowired
-    @Qualifier("teamServiceImpl")
-    private TeamService teamService;
-
     public static String getGameEndpoint(final String gameId) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(gameId).toTemplate();
-    }
-
-    public static String getGamesEndpoint(Page<Game> page, String query) {
-        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).toTemplate() + "?offset=" +
-                page.getOffSet() + "&limit=" + page.getLimit() +
-                ((query != null && !query.isEmpty()) ? "&" : "" ) + query;
     }
 
     @GET
@@ -93,26 +83,16 @@ public class GameController {
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
                 .collect(Collectors.toList());
 
-        return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo.getQueryParameters(false))).build();
+        LOGGER.trace("Matches successfully gotten");
+        return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo)).build();
     }
 
     private TeamDto getTeam(Team team) {
         if (team == null) {
             return null;
         }
-        teamService.getAccountsList(team);
-        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
-        Set<User> teamusers = team.getPlayers();
-        List<TeamPlayerDto> teamPlayers = new LinkedList<>();
-        teamusers.forEach(user -> {
-            PremiumUser premiumUser = userMap.get(user);
-            if(premiumUser != null) {
-                teamPlayers.add(TeamPlayerDto.from(premiumUser));
-            }
-            else {
-                teamPlayers.add(TeamPlayerDto.from(user));
-            }
-        });
+        List<TeamPlayerDto> teamPlayers = team.getPlayers().stream()
+                .map(TeamPlayerDto::from).collect(Collectors.toList());
         return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 

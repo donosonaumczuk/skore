@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.GameSort;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
@@ -30,13 +32,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -69,12 +75,53 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).toTemplate();
     }
 
+    public static String getMatchesEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("matches").toTemplate();
+    }
+
     public static String getSportsEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
     public static String getUserImageEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
+    }
+
+    @GET
+    @Path("/{username}/matches")
+    public Response getGames(@PathParam("username") String username, @QueryParam("limit") Integer limit,
+                             @QueryParam("offSet") Integer offset, @Context UriInfo uriInfo) {
+        Page<Game> page = gameService.findGamesPage(null, null,null, null,
+            null, null, null,null, null, null, null,
+                null, null, null, null, null,
+                null, limit, offset, null);
+
+        List<GameDto> gameDtos = page.getPageData().stream()
+                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
+                .collect(Collectors.toList());
+
+        LOGGER.trace("Matches successfully gotten");
+        return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo)).build();
+    }
+
+    private TeamDto getTeam(Team team) {
+        if (team == null) {
+            return null;
+        }
+        teamService.getAccountsList(team);
+        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
+        Set<User> teamusers = team.getPlayers();
+        List<TeamPlayerDto> teamPlayers = new LinkedList<>();
+        teamusers.forEach(user -> {
+            PremiumUser premiumUser = userMap.get(user);
+            if(premiumUser != null) {
+                teamPlayers.add(TeamPlayerDto.from(premiumUser));
+            }
+            else {
+                teamPlayers.add(TeamPlayerDto.from(user));
+            }
+        });
+        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
     @GET
