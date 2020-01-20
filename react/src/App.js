@@ -14,6 +14,7 @@ import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
+import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 
@@ -65,7 +66,8 @@ class App extends Component {
         <NavBar currentUser={this.state.currentUser}/>
           <Switch>
             <Route exact path="/">
-              <Home />
+              {/* <Home /> */}
+              <Accounts />
             </Route>
             <Route path="/signUp">
               <CreateUserForm />
