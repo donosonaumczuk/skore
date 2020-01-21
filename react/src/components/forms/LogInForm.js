@@ -10,22 +10,44 @@ import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
 
 class LogInForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            errorMessage: null,
+        };
+    }
 
     onSubmit = async (values) => {
-        // console.table(values); TODO remove on production very usefull for typos
-        await AuthService.logInUser(
+        const response = await AuthService.logInUser(
             {
                 "username": values.username,
                 "password": values.password
             }
         );
-        //TODO handle error and redirect if success
-       this.props.updateUser(values.username);
+        if (response.status === 401) {
+            const errorMessage = i18next.t('login.invalidUsernameOrPassword')
+            this.setState({ errorMessage: errorMessage })
+        }
+        else {
+            //TODO handle other error status maybe?
+            this.props.updateUser(values.username);
+        }
+    }
+
+    getErrorMessage = () => {
+        if (this.state.errorMessage) {
+            return (<span className="invalid-feedback d-block">
+                        {this.state.errorMessage}
+                    </span>);
+        }
+        return <React.Fragment></React.Fragment>;
+
     }
 
     render() {
         const { handleSubmit, submitting} = this.props; 
         const currentUser = AuthService.getCurrentUser();
+        const errorMessage = this.getErrorMessage();
         if (currentUser) {
             return <Redirect to={`/users/${currentUser}`} />
         }
@@ -35,6 +57,7 @@ class LogInForm extends Component {
                     <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                     <FormTitle />
                         <form onSubmit={handleSubmit(this.onSubmit)}>
+                            {errorMessage}
                             <Field name="username" label={i18next.t('createUserForm.username')} 
                                     inputType="text" required={true} component={RenderInput} />
                             <Field name="password" label={i18next.t('createUserForm.password')}
@@ -53,7 +76,6 @@ class LogInForm extends Component {
 LogInForm = reduxForm({
     form: 'login',
     destroyOnUnmount: false, // set to true to remove data on refresh
-    // validate TODO
 })(LogInForm)
 
 LogInForm.propTypes = {

@@ -5,6 +5,7 @@ import Loader from './../Loader';
 import HomeMatches from './HomeMatches';
 
 class Home extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -30,10 +31,13 @@ class Home extends Component {
     }
 
     async componentDidMount() {
+        this.mounted = true;
         let matches = await MatchService.getMatches();
-        this.setState({
-            matches: matches
-        });
+        if (this.mounted) {
+            this.setState({
+                matches: matches
+            });
+        }
     }
 
     render() {
@@ -57,6 +61,7 @@ class Home extends Component {
 
     componentWillUnmount() {
         //TODO stop request
+        this.mounted = false;
     }
 }
 

@@ -13,9 +13,15 @@ const removeUser = () => localStorage.removeItem('currentUser');
 const getUser = () => localStorage.getItem('currentUser');
 
 const logInUser = async user => {
-    const response = await api.post("auth/login", user);
-    setToken(response.headers['x-token']);
-    loadUser(user.username);
+    try {
+        const response = await api.post("auth/login", user);
+        setToken(response.headers['x-token']);
+        loadUser(user.username);
+        return { "status": 200 };
+    }
+    catch(err) {
+        return { "status": err.response.status }
+    }
 
     //TODO if error of token expiry remove token and user and catch other errors
     //TODO token expiry should be controlled on every get or post that uses authentication
