@@ -112,19 +112,7 @@ public class UserController {
             return null;
         }
         teamService.getAccountsList(team);
-        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
-        Set<User> teamusers = team.getPlayers();
-        List<TeamPlayerDto> teamPlayers = new LinkedList<>();
-        teamusers.forEach(user -> {
-            PremiumUser premiumUser = userMap.get(user);
-            if(premiumUser != null) {
-                teamPlayers.add(TeamPlayerDto.from(premiumUser));
-            }
-            else {
-                teamPlayers.add(TeamPlayerDto.from(user));
-            }
-        });
-        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
+        return HelperController.mapTeamToDto(team);
     }
 
     @GET

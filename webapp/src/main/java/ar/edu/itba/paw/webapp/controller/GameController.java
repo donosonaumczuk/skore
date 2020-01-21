@@ -50,6 +50,10 @@ public class GameController {
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
+    @Autowired
+    @Qualifier("teamServiceImpl")
+    private TeamService teamService;
+
     public static String getGameEndpoint(final String gameId) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(gameId).toTemplate();
     }
@@ -91,75 +95,10 @@ public class GameController {
         if (team == null) {
             return null;
         }
-        List<TeamPlayerDto> teamPlayers = team.getPlayers().stream()
-                .map(TeamPlayerDto::from).collect(Collectors.toList());
-        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
+        teamService.getAccountsList(team);
+        return HelperController.mapTeamToDto(team);
     }
 
-//    @RequestMapping(value="/filterMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String filterGames(@RequestParam final String body) throws IOException {
-//        JSONObject json = new JSONObject(body);
-//        LOGGER.trace("Asking the service for the games by a criteria");
-//        List<Game> games = gameService.findGamesPage(json.getString("minStartTime"),
-//                json.getString("maxStartTime"), json.getString("minFinishTime"),
-//                json.getString("maxFinishTime"), json.getJSONArray("types"),
-//                json.getJSONArray("sports"), json.getInt("minQuantity"),
-//                (json.getInt("maxQuantity")==0)?null:json.getInt("maxQuantity"),
-//                json.getJSONArray("countries"),
-//                json.getJSONArray("states"), json.getJSONArray("cities"),
-//                json.getInt("minFreePlaces"),
-//                (json.getInt("maxFreePlaces")==0)?null:json.getInt("maxFreePlaces"),
-//                json.getInt("pageNumber"));
-//        LOGGER.trace("Returning {} games that match the criteria", games.size());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        setUpGame(games);
-//        return objectMapper.writeValueAsString(games);
-//    }
-//
-//
-//    @RequestMapping(value="/joinedMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String filterGamesLoggedIsPart(@RequestParam final String body) throws IOException {
-//        JSONObject json = new JSONObject(body);
-//        LOGGER.trace("Asking the service for the games by a criteria");
-//        List<Game> games = gameService.findGamesPageThatIsAPartOf(json.getString("minStartTime"),
-//                json.getString("maxStartTime"), json.getString("minFinishTime"),
-//                json.getString("maxFinishTime"), json.getJSONArray("types"),
-//                json.getJSONArray("sports"), json.getInt("minQuantity"),
-//                (json.getInt("maxQuantity")==0)?null:json.getInt("maxQuantity"),
-//                json.getJSONArray("countries"),
-//                json.getJSONArray("states"), json.getJSONArray("cities"),
-//                json.getInt("minFreePlaces"),
-//                (json.getInt("maxFreePlaces")==0)?null:json.getInt("maxFreePlaces"),
-//                json.getInt("pageNumber"), loggedUser());
-//        LOGGER.trace("Returning {} games that match the criteria", games.size());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        setUpGame(games);
-//        return objectMapper.writeValueAsString(games);
-//    }
-//
-//    @RequestMapping(value="/toJoinMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String filterGamesLoggedIsNotPart(@RequestParam final String body) throws IOException {
-//        JSONObject json = new JSONObject(body);
-//        LOGGER.trace("Asking the service for the games by a criteria");
-//        List<Game> games = gameService.findGamesPageThatIsNotAPartOf(json.getString("minStartTime"),
-//                json.getString("maxStartTime"), json.getString("minFinishTime"),
-//                json.getString("maxFinishTime"), json.getJSONArray("types"),
-//                json.getJSONArray("sports"), json.getInt("minQuantity"),
-//                (json.getInt("maxQuantity")==0)?null:json.getInt("maxQuantity"),
-//                json.getJSONArray("countries"),
-//                json.getJSONArray("states"), json.getJSONArray("cities"),
-//                json.getInt("minFreePlaces"),
-//                (json.getInt("maxFreePlaces")==0)?null:json.getInt("maxFreePlaces"),
-//                json.getInt("pageNumber"), loggedUser());
-//        LOGGER.trace("Returning {} games that match the criteria",games.size());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        setUpGame(games);
-//        return objectMapper.writeValueAsString(games);
-//    }
-//
 //    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
 //    @ResponseStatus(HttpStatus.OK)
 //    public @ResponseBody String addPlayerToMatch(@RequestParam final String teamName1,
@@ -210,27 +149,6 @@ public class GameController {
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        LOGGER.trace("The result for delete a match is {}", ans);
 //        return objectMapper.writeValueAsString(ans);
-//    }
-//
-//    @RequestMapping(value="/createdMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String filterGamesLoggedCreateBy(@RequestParam final String body) throws IOException {
-//        JSONObject json = new JSONObject(body);
-//        LOGGER.trace("Asking the service for the games by a criteria");
-//        List<Game> games = gameService.findGamesPageCreateBy(json.getString("minStartTime"),
-//                json.getString("maxStartTime"), json.getString("minFinishTime"),
-//                json.getString("maxFinishTime"), json.getJSONArray("types"),
-//                json.getJSONArray("sports"), json.getInt("minQuantity"),
-//                (json.getInt("maxQuantity")==0)?null:json.getInt("maxQuantity"),
-//                json.getJSONArray("countries"),
-//                json.getJSONArray("states"), json.getJSONArray("cities"),
-//                json.getInt("minFreePlaces"),
-//                (json.getInt("maxFreePlaces")==0)?null:json.getInt("maxFreePlaces"),
-//                json.getInt("pageNumber"), loggedUser());
-//        LOGGER.trace("Returning {} games that match the criteria",games.size());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        setUpGame(games);
-//        return objectMapper.writeValueAsString(games);
 //    }
 //
 //    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
