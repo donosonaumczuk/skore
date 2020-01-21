@@ -5,14 +5,19 @@ import java.util.Optional;
 
 public class Page<T> {
 
+    private static final int MAX_LIMIT      = 200;
+    private static final int DEFAULT_LIMIT  = 100;
+    private static final int DEFAULT_OFFSET = 0;
+
     final private List<T> pageData;
     final private int offSet;
     final private int limit;
     final private int max;
 
     public Page(List<T> allTheData, Integer offSet, Integer limit) {
-        offSet = (offSet == null || offSet < 0) ? 0 : offSet;                      //Default value
-        limit  = (limit == null  || limit < 0) ? 100 : limit;                      //Default value
+        offSet = (offSet == null || offSet < 0) ? DEFAULT_OFFSET : offSet;  //Default value
+        limit  = (limit == null  || limit < 0) ? DEFAULT_LIMIT : limit;     //Default value
+        limit  = (limit > MAX_LIMIT) ? MAX_LIMIT : limit;                   //Max value
         offSet = (offSet < allTheData.size()) ? offSet : allTheData.size();                  //value if it is bigger than list
         int end = (offSet + limit < allTheData.size()) ? offSet + limit : allTheData.size(); //value if it is bigger than list
 

@@ -37,6 +37,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -91,16 +92,18 @@ public class UserController {
     @Path("/{username}/matches")
     public Response getGames(@PathParam("username") String username, @QueryParam("limit") Integer limit,
                              @QueryParam("offSet") Integer offset, @Context UriInfo uriInfo) {
+        List<String> usernames = new ArrayList<>();
+        usernames.add(username);
         Page<Game> page = gameService.findGamesPage(null, null,null, null,
             null, null, null,null, null, null, null,
-                null, null, null, null, null,
+                null, null, usernames, null, null,
                 null, limit, offset, null);
 
         List<GameDto> gameDtos = page.getPageData().stream()
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
                 .collect(Collectors.toList());
 
-        LOGGER.trace("Matches successfully gotten");
+        LOGGER.trace("'{}' matches successfully gotten", username);
         return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo)).build();
     }
 
