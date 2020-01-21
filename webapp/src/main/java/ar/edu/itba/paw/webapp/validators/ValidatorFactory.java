@@ -66,6 +66,29 @@ public class ValidatorFactory {
     }
 
     /**
+     * Validates that a JSON Object field is a JSON Object and is valid through a given validator
+     *
+     * @param field the name of the field to validate
+     * @param fieldObjectValidator a validator that validates the object
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> fieldIsValidObjectValidatorOf(final String field,
+                                                                      final Validator<JSONObject> fieldObjectValidator,
+                                                                      final String log) {
+        return jsonObject -> {
+            JSONObject fieldObject = null;
+            try {
+                fieldObject = jsonObject.getJSONObject(field);
+            } catch (JSONException e) {
+                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                        + field + "' must be a JSON object"));
+            }
+            fieldObjectValidator.validate(fieldObject);
+        };
+    }
+
+    /**
      * Validate that a JSON Object contains all required fields
      *
      * @param requiredFields the required fields
