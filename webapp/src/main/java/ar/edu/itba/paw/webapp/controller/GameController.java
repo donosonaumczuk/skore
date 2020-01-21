@@ -1,19 +1,14 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
-import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
-import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
-import ar.edu.itba.paw.webapp.dto.GameListDto;
+import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
@@ -78,17 +69,14 @@ public class GameController {
                              @QueryParam("usernamesCreatorsNotInclude") List<String> usernamesCreatorsNotInclude,
                              @QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
                              @QueryParam("sort") GameSort sort, @Context UriInfo uriInfo) {
-        Page<Game> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+        Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                 types, sports, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, limit, offset, sort);
-
-        List<GameDto> gameDtos = page.getPageData().stream()
-                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
-                .collect(Collectors.toList());
+                usernamesCreatorsNotInclude, limit, offset, sort)
+                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
-        return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo)).build();
+        return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
     }
 
     private TeamDto getTeam(Team team) {
@@ -153,7 +141,7 @@ public class GameController {
 //
 //    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
 //    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-//        return new ModelAndView("createMatch").addObject("sports", sportService.getAllSports());
+//        return new ModelAndView("createMatch").addObject("sports", sportService.getAllSportsPage());
 //    }
 //
 //    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })

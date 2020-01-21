@@ -4,17 +4,14 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
-import ar.edu.itba.paw.webapp.dto.GameListDto;
+import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -38,11 +35,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
@@ -94,17 +88,14 @@ public class UserController {
                              @QueryParam("offSet") Integer offset, @Context UriInfo uriInfo) {
         List<String> usernames = new ArrayList<>();
         usernames.add(username);
-        Page<Game> page = gameService.findGamesPage(null, null,null, null,
+        Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
             null, null, null,null, null, null, null,
                 null, null, usernames, null, null,
-                null, limit, offset, null);
-
-        List<GameDto> gameDtos = page.getPageData().stream()
-                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
-                .collect(Collectors.toList());
+                null, limit, offset, null)
+                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
-        return Response.ok().entity(GameListDto.from(page, gameDtos, uriInfo)).build();
+        return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
     }
 
     private TeamDto getTeam(Team team) {

@@ -2,6 +2,8 @@ package ar.edu.itba.paw.models;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Page<T> {
 
@@ -34,6 +36,13 @@ public class Page<T> {
         this.pageData = null;
     }
 
+    private Page(List<T> pageDate, Integer offSet, Integer limit, Integer max) {
+        this.offSet   = offSet;
+        this.limit    = limit;
+        this.max      = max;
+        this.pageData = pageDate;
+    }
+
     public List<T> getPageData() {
         return pageData;
     }
@@ -59,5 +68,10 @@ public class Page<T> {
 
     public int getLimit() {
         return limit;
+    }
+
+    public <R> Page<R> map(Function<T,R> mapper) {
+        List<R> newPageData = pageData.stream().map(mapper).collect(Collectors.toList());
+        return new Page<>(newPageData, offSet, limit, max);
     }
 }

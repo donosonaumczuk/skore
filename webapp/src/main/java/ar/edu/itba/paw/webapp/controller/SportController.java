@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SportService;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.SportDto;
-import ar.edu.itba.paw.webapp.dto.SportListDto;
+import ar.edu.itba.paw.webapp.dto.SportPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,14 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-
-import java.util.stream.Collectors;
+import javax.ws.rs.core.UriInfo;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
@@ -66,10 +68,11 @@ public class SportController {
     }
 
     @GET
-    public Response getAllSports() {
-        LOGGER.trace("Getting all sports");
-        return Response.ok(SportListDto.from(sportService.getAllSports().stream()
-                .map(SportDto::from).collect(Collectors.toList()))).build();
+    public Response getAllSports(@QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
+                                 @Context UriInfo uriInfo) {
+        Page<SportDto> page = sportService.getAllSportsPage(limit, offset).map(SportDto::from);
+        LOGGER.trace("Sports successfully gotten");
+        return Response.ok(SportPageDto.from(page, uriInfo)).build();
     }
 
     @GET

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public interface SportService {
     public boolean remove(final String sportName);
 
     @Transactional
-    public List<Sport> getAllSports();
+    public Page<Sport> getAllSportsPage(Integer limit, Integer offset);
 
     @Transactional
     public Optional<byte[]> readImage(final String sportName);

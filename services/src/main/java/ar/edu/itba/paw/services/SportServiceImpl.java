@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,8 @@ public class SportServiceImpl implements SportService {
 
 
     @Override
-    public List<Sport> getAllSports() {
-        return sportDao.getAllSports();
+    public Page<Sport> getAllSportsPage(Integer limit, Integer offset) {
+        return new Page<>(sportDao.getAllSports(), offset, limit);
     }
 
     @Override
