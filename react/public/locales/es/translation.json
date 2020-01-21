@@ -89,7 +89,7 @@
         "loginButton": "INGRESAR",
         "login": "ingresar",
         "newUser": "eres nuevo? ",
-        "invalidUsernameOrPassword": "Usuario o Contraseña incorrectos"
+        "invalidUsernameOrPassword": "Usuario o contraseña incorrecto"
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",
@@ -111,7 +111,7 @@
         "createdTab": "CREADOS"
     },
     "errorPage": {
-        "404": "Esta no es la pagina que buscabas.\n",
+        "404": "Esta no es la página que buscabas.\n",
         "returnToHome": "Volver a inicio."
     },
     "editUserInfoForm": {

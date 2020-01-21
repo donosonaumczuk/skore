@@ -39,6 +39,7 @@ const createUser = async user => {
     catch (err) {
         return { status: err.response.status };
     }
+
 }
 
 const UserService = {
