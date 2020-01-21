@@ -2,17 +2,17 @@
     "navBar": {
         "signIn": "Ingresar",
         "createAccount": "Crear Cuenta",
-        "logOut": "Log out"
+        "logOut": "Cerrar Sesión"
     },
     "createUserForm": {
         "accounts": "Cuentas",
-        "username": "Nombre de Usuario",
+        "username": "Nombre de usuario",
         "password": "Contraseña ",
-        "repeatPassword": "Repita la Contraseña ",
+        "repeatPassword": "Repita la contraseña ",
         "firstName": "Nombre ",
         "lastName": "Apellido ",
         "email": "Email ",
-        "profilePicture": "Imagen de Perfil ",
+        "profilePicture": "Imagen de perfil ",
         "imageFormat": "Formatos aceptados: png, jpeg or jpg",
         "cellphone": "Celular ",
         "birthday": "Fecha de nacimiento ",
@@ -26,23 +26,23 @@
         "existingUser": "ya tienes cuenta ",
         "errors": {
             "username": {
-                "required": "El Nombre de Usuario es obligatorio.\n",
-                "invalidSymbols": "El Nombre de Usuario solo puede contener simbolos alfanumericos, guion bajo('_') y punto(',').\n",
+                "required": "El nombre de usuario es obligatorio.\n",
+                "invalidSymbols": "El nombre de usuario solo puede contener simbolos alfanumericos, guion bajo('_') y punto(',').\n",
                 "invalidLength": "El nombre de usuario debe tener etre 4 y 100 caracteres.\n"
             },
             "password": {
-                "required": "La Contraseña es obligatoria.\n",
-                "invalidSymbols": "La Contraseña solo puede contener simbolos alfanumericos.\n",
-                "invalidLength": "La Contraseña debe tener entre 5 y 100 caracteres.\n"
+                "required": "La contraseña es obligatoria.\n",
+                "invalidSymbols": "La contraseña solo puede contener simbolos alfanumericos.\n",
+                "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
             },
             "repeatedPassword": {
-                "required": "Repetir la Contraseña es obligatorio.\n",
-                "invalidSymbols": "La Contraseña repetida solo puede contener simbolos alfanumericos.\n",
-                "invalidLength": "La Contraseña repetida debe tener entre 5 y 100 caracteres.\n",
-                "passwordDoesNotMatch": "La Contraseña repetida no coincide con la contraseña .\n"
+                "required": "Repetir la contraseña es obligatorio.\n",
+                "invalidSymbols": "La contraseña repetida solo puede contener simbolos alfanumericos.\n",
+                "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
+                "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
             },
             "firstName": {
-                "required": "El Nombre es obligatorio.\n",
+                "required": "El nombre es obligatorio.\n",
                 "invalidSymbols": "El nombre solo puede contener letras y espacios.\n",
                 "invalidLength": "El nombre debe tener entre 2 y 100 caracteres.\n"
             },
@@ -52,8 +52,8 @@
                 "invalidLength": "El apellido debe tener entre 2 y 100 caracteres.\n"
             },
             "email": {
-                "required": "El Email es obligatorio.\n",
-                "invalidEmail": "No es un Email bien formado, debe ser un Email valido.\n"
+                "required": "El email es obligatorio.\n",
+                "invalidEmail": "No es un email bien formado, debe ser un email valido.\n"
             },
             "image": {
                 "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg, jpeg.\n",
@@ -63,16 +63,16 @@
                 "invalidCellphone": "El Celular deben ser diez digitos o vacio.\n"
             },
             "birthday": {
-                "required": "La Fecha de Nacimiento es obligatorio.\n",
-                "invalidSymbols": "La Fecha de Nacimiento solo puede tener digitos y barra('/').\n",
-                "invalidLength": "La Fecha de Nacimiento debe tener exactamente diez caracteres.\n",
-                "invalidDate": "La Fecha de Nacimiento debe ser una fecha valida.\n",
-                "invalidPastDate": "La Fecha de Nacimiento debe ser una fecha valida pasada.\n"
+                "required": "La fecha de nacimiento es obligatorio.\n",
+                "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
+                "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
+                "invalidDate": "La fecha de nacimiento debe ser una fecha valida.\n",
+                "invalidPastDate": "La fecha de nacimiento debe ser una fecha valida pasada.\n"
             }
         }
     },
     "profile": {
-        "imageDescription": "Foto de Perfil",
+        "imageDescription": "Foto de perfil",
         "editInfo": "EDITAR INFORMACION",
         "changePassword": "CAMBIAR CONTRASEÑA",
         "match": {
@@ -119,8 +119,8 @@
     },
     "changePasswordForm": {
         "changePasswordButton": "CAMBIAR CONTRASEÑA",
-        "oldPassword": "Contraseña Vieja",
-        "newPassword": "Contraseña Nueva",
-        "repeatNewPassword": "Repita la Contraseña Nueva"
+        "oldPassword": "Contraseña vieja",
+        "newPassword": "Contraseña nueva",
+        "repeatNewPassword": "Repita la contraseña nueva"
     }
 }

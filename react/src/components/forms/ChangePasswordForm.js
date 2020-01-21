@@ -9,8 +9,9 @@ import CreateUserFormValidator from './validators/CreateUserValidator';
 const validate = values => {
     const errors = {}
     errors.username = CreateUserFormValidator.validateUsername(values.username);
-    errors.password = CreateUserFormValidator.validatePassword(values.password);
-    errors.repeatPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatPassword, values.password);
+    errors.oldPassword = CreateUserFormValidator.validatePassword(values.oldPassword);
+    errors.newPassword = CreateUserFormValidator.validatePassword(values.newPassword);
+    errors.repeatNewPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatNewPassword, values.newPassword);
     return errors;
 }
 

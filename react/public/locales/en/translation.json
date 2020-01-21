@@ -8,11 +8,11 @@
         "accounts": "Accounts",
         "username": "Username ",
         "password": "Password ",
-        "repeatPassword": "Repeat Password ",
-        "firstName": "First Name ",
-        "lastName": "Last Name ",
+        "repeatPassword": "Repeat password ",
+        "firstName": "First name ",
+        "lastName": "Last name ",
         "email": "Email ",
-        "profilePicture": "Profile Picture ",
+        "profilePicture": "Profile picture ",
         "imageFormat": "Accepted formats: png, jpeg or jpg",
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
@@ -36,20 +36,20 @@
                 "invalidLength": "Password must be between 5 and 100 characters.\n"
             },
             "repeatedPassword": {
-                "required": "Repeat Password is required.\n",
-                "invalidSymbols": "Repeat Password can only contains alphanumeric symbols.\n",
-                "invalidLength": "Repeat Password must be between 5 and 100 characters.\n",
-                "passwordDoesNotMatch": "Repeat Password does not match password.\n"
+                "required": "Repeat password is required.\n",
+                "invalidSymbols": "Repeat password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Repeat password must be between 5 and 100 characters.\n",
+                "passwordDoesNotMatch": "Repeat password does not match password.\n"
             },
             "firstName": {
-                "required": "First Name is required.\n",
-                "invalidSymbols": "First Name can only contains alphabetic characters and spaces.\n",
-                "invalidLength": "First Name must be between 2 and 100 characters.\n"
+                "required": "First name is required.\n",
+                "invalidSymbols": "First name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "First name must be between 2 and 100 characters.\n"
             },
             "lastName": {
-                "required": "Last Name is required.\n",
-                "invalidSymbols": "Last Name can only contains alphabetic characters and spaces.\n",
-                "invalidLength": "Last Name must be between 2 and 100 characters.\n"
+                "required": "Last name is required.\n",
+                "invalidSymbols": "Last name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "Last name must be between 2 and 100 characters.\n"
             },
             "email": {
                 "required": "Email is required.\n",
@@ -71,7 +71,7 @@
         }
     },
     "profile": {
-        "imageDescription": "Profile Picture",
+        "imageDescription": "Profile picture",
         "editInfo": "EDIT INFO",
         "changePassword": "CHANGE PASSWORD",
         "match": {
@@ -118,8 +118,8 @@
     },
     "changePasswordForm": {
         "changePasswordButton": "CHANGE PASSWORD",
-        "oldPassword": "Old Password",
-        "newPassword": "New Password",
-        "repeatNewPassword": "Repeat New Password"
+        "oldPassword": "Old password",
+        "newPassword": "New assword",
+        "repeatNewPassword": "Repeat new password"
     }
 }
