@@ -31,9 +31,13 @@ let ChangePasswordForm = (props) => {
                 <Field name="username" label={i18next.t('createUserForm.username')} 
                         inputType="text" required={true} isDisabled={true}
                         component={RenderInput} />
-                <Field name="password" label={i18next.t('createUserForm.password')}
+                <Field name="oldPassword" label={i18next.t('changePasswordForm.oldPassword')}
                      inputType="password" required={true} component={RenderInput} />
-                <Field name="repeatPassword" label={i18next.t('createUserForm.repeatPassword')}
+                <Field name="newPassword" label={i18next.t('changePasswordForm.newPassword')}
+                          inputType="password" required={true} component={RenderInput} />
+                <Field name="newPassword" label={i18next.t('changePasswordForm.newPassword')}
+                          inputType="password" required={true} component={RenderInput} />
+                <Field name="repeatNewPassword" label={i18next.t('changePasswordForm.repeatNewPassword')}
                           inputType="password" required={true} component={RenderInput} />
                 {/* TODO address with all of its fields and make them autoload as on deploy */}
                 <SubmitButton label={i18next.t('changePasswordForm.changePasswordButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
