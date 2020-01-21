@@ -45,7 +45,7 @@ class LogInForm extends Component {
     }
 
     render() {
-        const { handleSubmit, submitting} = this.props; 
+        const { handleSubmit, submitting } = this.props; 
         const currentUser = AuthService.getCurrentUser();
         const errorMessage = this.getErrorMessage();
         if (currentUser) {

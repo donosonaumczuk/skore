@@ -10,6 +10,7 @@ import FormTitle from './utils/FormTitle';
 import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
 import CreateUserFormValidator from './validators/CreateUserValidator';
+import UserService from '../../services/UserService';
 // import LocationInput from './utils/LocationInput'; TODO add when auto completes fields
 
 const validate = values => {
@@ -26,13 +27,15 @@ const validate = values => {
     return errors;
 }
 
-    class CreateUserForm extends Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                image: null
-            };
-        }
+class CreateUserForm extends Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
+        this.state = {
+            image: null,
+            created: false
+        };
+    }
  
     handleChange = (image) => {
         if (image && image.size > 0) {
@@ -57,24 +60,42 @@ const validate = values => {
         }
     }
 
+    getBirthdayWithCorrectFormat = birthday => {
+        const birthdayInfo = birthday.split("/");
+        let newBirthday = `${birthdayInfo[2]}-${birthdayInfo[0]}-${birthdayInfo[1]}`;
+        return newBirthday;
+    }
+
     loadUser = (values, image) => {
+        const birthday = this.getBirthdayWithCorrectFormat(values.birthday);
         const user = {
             "username": values.username,
             "password": values.password,
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email,
-            "image": image,
+            "image": image ? image.data : null,
             "cellphone": values.cellphone ? values.cellphone : null ,
-            "birthday": values.birthday
-
+            "birthday": birthday,
+            "home": {
+                "country": values.country ? values.country : null,
+                "state": values.state ? values.state : null,
+                "city": values.city ? values.city : null,
+                "street": values.street ? values.street: null
+            }
         };
         return user;
     }
 
     onSubmit = async (values) => {
-    // let user = this.loadUser(values, this.state.image);
-    //TODO make post
+        let user = this.loadUser(values, this.state.image);
+        const res = await UserService.createUser(user);
+        if (res.status) {
+           //TODO handle error
+        }
+        else {
+            this.props.history.push(`/confirmAccount`);
+        }
     }
 
     render() {
