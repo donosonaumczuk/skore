@@ -85,7 +85,7 @@
         "loginButton": "INGRESAR",
         "login": "ingresar",
         "newUser": "eres nuevo? ",
-        "invalidUsernameOrPassword": "Usuario o Contraseña incorrectos"
+        "invalidUsernameOrPassword": "Usuario o contraseña incorrectos"
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",
