@@ -35,9 +35,9 @@ public class ProfileDto {
 
     private List<Link> getHateoasLinks(PremiumUser premiumUser) {
         return ImmutableList.of(
-                new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), Link.REL_SELF),
-                new Link(UserController.getMatchesEndpoint(premiumUser.getUserName()), "matches"),
-                new Link(UserController.getSportsEndpoint(premiumUser.getUserName()), "sports"),
+                new Link(UserController.getUserProfileEndpoint(premiumUser.getUserName()), Link.REL_SELF),
+                new Link(UserController.getUserGamesEndpoint(premiumUser.getUserName()), "matches"),
+                new Link(UserController.getUserSportsEndpoint(premiumUser.getUserName()), "sports"),
                 new Link(UserController.getUserImageEndpoint(premiumUser.getUserName()), "image")
         );
     }
