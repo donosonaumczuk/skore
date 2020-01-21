@@ -118,6 +118,9 @@
         "updateInfoButton": "ACTUALIZAR"
     },
     "changePasswordForm": {
-        "changePasswordButton": "CAMBIAR CONTRASEÑA"
+        "changePasswordButton": "CAMBIAR CONTRASEÑA",
+        "oldPassword": "Contraseña Vieja",
+        "newPassword": "Contraseña Nueva",
+        "repeatNewPassword": "Repita la Contraseña Nueva"
     }
 }

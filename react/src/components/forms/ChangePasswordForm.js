@@ -29,12 +29,10 @@ let ChangePasswordForm = (props) => {
             <FormTitle />
             <form onSubmit={handleSubmit(onSubmit)} >
                 <Field name="username" label={i18next.t('createUserForm.username')} 
-                        inputType="text" required={true} isDisabled={true}
+                        inputType="text" required={false} isDisabled={true}
                         component={RenderInput} />
                 <Field name="oldPassword" label={i18next.t('changePasswordForm.oldPassword')}
                      inputType="password" required={true} component={RenderInput} />
-                <Field name="newPassword" label={i18next.t('changePasswordForm.newPassword')}
-                          inputType="password" required={true} component={RenderInput} />
                 <Field name="newPassword" label={i18next.t('changePasswordForm.newPassword')}
                           inputType="password" required={true} component={RenderInput} />
                 <Field name="repeatNewPassword" label={i18next.t('changePasswordForm.repeatNewPassword')}

@@ -117,6 +117,9 @@
         "updateInfoButton": "UPDATE"
     },
     "changePasswordForm": {
-        "changePasswordButton": "CHANGE PASSWORD"
+        "changePasswordButton": "CHANGE PASSWORD",
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "repeatNewPassword": "Repeat New Password"
     }
 }
