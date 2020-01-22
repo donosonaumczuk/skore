@@ -7,11 +7,13 @@ import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.UserPageDto;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -80,6 +82,23 @@ public class UserController {
 
     public static String getUserImageEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
+    }
+
+    @GET
+    public Response getUsers(@QueryParam("minReputation") Integer minReputation,
+                             @QueryParam("maxReputation") Integer maxReputation,
+                             @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
+                             @QueryParam("friends") List<String> friendsUsernames,
+                             @QueryParam("sports") List<String> sportsLiked,
+                             @QueryParam("usernames") List<String> usernames,
+                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                             @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
+        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames, sportsLiked, friendsUsernames,
+                minReputation, maxReputation, null, null, sort, offset, limit)
+                .map(UserDto::from);
+
+        LOGGER.trace("Users successfully gotten");
+        return Response.ok().entity(UserPageDto.from(userPage, uriInfo)).build();
     }
 
     @GET

@@ -2,8 +2,10 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.UserSort;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,5 +43,9 @@ public interface PremiumUserDao {
 
     public Set<Role> getRoles(final String username);
 
+    public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
+                                       final List<String> friendUsernames, final Integer minReputation,
+                                       final Integer maxReputation, final Integer minWinRate,
+                                       final Integer maxWinRate, final UserSort sort);
 }
 
