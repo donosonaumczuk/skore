@@ -59,12 +59,12 @@ public class UserValidators {
 
     private static ImmutableMap.Builder<String, Validator<JSONObject>> baseFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(EMAIL, ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern.compile(".*@.*"),
+                .put(EMAIL, ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern.compile(".\\*@.\\*"),
                         "an email", log)) //TODO: find an standard email pattern
                 .put(FIRST_NAME, ValidatorFactory.fieldIsStringValidatorOf(FIRST_NAME, log))
                 .put(LAST_NAME,  ValidatorFactory.fieldIsStringValidatorOf(LAST_NAME, log))
                 .put(CELLPHONE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(CELLPHONE,
-                        Pattern.compile("([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( *)"), //TODO: add a better regex
+                        Pattern.compile("([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( \\*)"), //TODO: add a better regex
                         "a cellphone number", log)) //TODO: maybe exists an standard pattern for cellphone
                 .put(BIRTHDAY, ValidatorFactory.fieldIsStringAndMatchesRegexOf(BIRTHDAY,
                         Pattern.compile("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"), "a date", log)) //TODO: maybe exists an standard pattern for this date format
