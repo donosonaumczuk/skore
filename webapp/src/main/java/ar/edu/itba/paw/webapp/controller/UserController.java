@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -154,7 +155,7 @@ public class UserController {
           TODO|should not be null. Check if it the user logged is the same as the username receive*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username)
                 .orElseThrow(() -> {
@@ -166,11 +167,12 @@ public class UserController {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createAUser(final UserDto userDto) {
         /*TODO| Validate*/
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image)
                 .orElseThrow(() -> {

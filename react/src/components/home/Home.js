@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import MatchService from './../../services/MatchService';
 import LeftPanel from './leftPanel/LeftPanel';
-import Loader from './../Loader';
 import HomeMatches from './HomeMatches';
 
 class Home extends Component {
@@ -9,18 +7,8 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            matches: null,
             currentTab: 1
         };
-    }
-
-    getMatches = matches => {
-        if (matches == null) {
-            return <Loader />
-        }
-        else {
-            return <HomeMatches matches={matches} />
-        }
     }
 
     handleTabChange = tabNumber => {
@@ -30,18 +18,7 @@ class Home extends Component {
         //TODO do corresponding post to request matches according to tab
     }
 
-    async componentDidMount() {
-        this.mounted = true;
-        let matches = await MatchService.getMatches();
-        if (this.mounted) {
-            this.setState({
-                matches: matches
-            });
-        }
-    }
-
     render() {
-        let matches = this.getMatches(this.state.matches);
         let { currentTab } = this.state;
         return (
             <div className="container-fluid">
@@ -52,7 +29,8 @@ class Home extends Component {
                     </div>
                 
                     <div className="col-md-8 col-lg-8 col-xl-6">
-                            {matches}
+                            {/* TODO pass down filters when implemented filter search */}
+                            <HomeMatches />
                     </div>
                 </div>
             </div>

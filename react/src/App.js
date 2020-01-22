@@ -14,8 +14,11 @@ import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
+import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
+import ConfirmAccount from './components/ConfirmAccount';
+
 
 class App extends Component {
   constructor(props) {
@@ -62,19 +65,23 @@ class App extends Component {
     return (
       <Provider store={store}>
       <div>
-        <NavBar currentUser={this.state.currentUser}/>
+        <NavBar currentUser={this.state.currentUser} />
           <Switch>
             <Route exact path="/">
               <Home />
             </Route>
-            <Route path="/signUp">
-              <CreateUserForm />
+            <Route path="/signUp" component={CreateUserForm} />
+            <Route path="/confirmAccount">
+              <ConfirmAccount />
             </Route>
             <Route path="/login">
-              <LogInForm updateUser={this.updateUser}/>
+              <LogInForm updateUser={this.updateUser} />
             </Route>
             <Route path="/logout">
-              <LogOut updateUser={this.updateUser}/>
+              <LogOut updateUser={this.updateUser} />
+            </Route>
+            <Route path="/accounts">
+              <Accounts />
             </Route>
             <Route exact path="/users/:username" component={UserProfile} />
             <Route exact path="/users/:username/edit" component={EditUserInfo} />

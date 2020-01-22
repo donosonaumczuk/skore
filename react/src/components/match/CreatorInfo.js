@@ -5,10 +5,6 @@ import Proptypes from 'prop-types';
 
 const handleClick = (creator, history) => {
     history.push(`/users/${creator}`);
-
-
-    //TODO only refreshes url and does not navigate fix it
-    // current solution is sorrounded by anchor tag
 }
 
 const CreatorInfo = ({ creatorImageUrl, creator, title }) => {

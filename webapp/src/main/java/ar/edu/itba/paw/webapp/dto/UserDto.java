@@ -14,7 +14,7 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
-    private String birthDay;
+    private String birthday;
     private String cellphone;
     private PlaceDto home;
     private String password;
@@ -32,7 +32,7 @@ public class UserDto {
         this.email      = premiumUser.getEmail();
         this.firstName  = premiumUser.getUser().getFirstName();
         this.lastName   = premiumUser.getUser().getLastName();
-        this.birthDay   = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.birthday   = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.cellphone  = premiumUser.getCellphone();
         this.home       = PlaceDto.from(premiumUser.getHome());
         this.password   = null;
@@ -70,8 +70,8 @@ public class UserDto {
         return lastName;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getCellphone() {
@@ -114,8 +114,8 @@ public class UserDto {
         this.lastName = lastName;
     }
 
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
+    public void setBirthday(String birthDay) {
+        this.birthday = birthDay;
     }
 
     public void setCellphone(String cellphone) {
