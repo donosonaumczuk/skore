@@ -38,11 +38,34 @@ public class Filters {
     }
 
     public void addFilter(String objectRepresentation, String operator, String valueName, Object value) {
+        addFilter(objectRepresentation, operator, valueName, value, true);
+    }
+
+    private void addFilter(String objectRepresentation, String operator, String valueName, Object value, boolean putAnd) {
         if (value != null && (value.getClass() != String.class || ((String)value).compareTo("") != 0)) {
             valueNames.add(valueName);
             values.add(value);
-            start = start.append(AND).append(objectRepresentation).append(ESPACE).append(operator).append(ESPACE)
-                    .append(DOUBLE_DOT).append(valueName);
+            if (putAnd) {
+                start = start.append(AND);
+            }
+            start = start.append(DOUBLE_DOT).append(valueName).append(ESPACE).append(operator).append(ESPACE)
+                    .append(objectRepresentation);
+        }
+    }
+    public void addFilter(String objectRepresentation, String operator, String valueName, List<String> values) {
+        if (values != null && !values.isEmpty()) {
+            start = start.append(AND).append(OPEN_PARENTHESE);
+            int i = 0;
+            for (String value: values) {
+                if(i != 0) {
+                    start = start.append(ESPACE).append(OR).append(ESPACE);
+                }
+                start = start.append(OPEN_PARENTHESE);
+                addFilter(objectRepresentation, operator, valueName + i, value, false);
+                i++;
+                start = start.append(CLOSE_PARENTHESE);
+            }
+            start = start.append(CLOSE_PARENTHESE);
         }
     }
 
@@ -126,6 +149,8 @@ public class Filters {
             start = start.append(CLOSE_PARENTHESE);
         }
     }
+
+//    public void addLisFilters()
 
     public String toString() {
         return start.toString();

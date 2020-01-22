@@ -43,7 +43,7 @@ public class GameHibernateDao implements GameDao {
     private static final String START_TIME_MIN         = "startTimeMin";
     private static final String SPORT_NAME             = "sportName";
     private static final String TYPE                   = "type";
-    private static final String QUERY_SPORT_NAME       = "t.sport.displayName";
+    private static final String QUERY_SPORT_NAME       = "t.sport.sportName";
     private static final String COUNTRY                = "country";
     private static final String STATE                  = "state";
     private static final String CITY                   = "city";
@@ -112,24 +112,24 @@ public class GameHibernateDao implements GameDao {
                                 final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
-                                final List<String> usernamesCreatorsNotInclude, GameSort sort) {
+                                final List<String> usernamesCreatorsNotInclude, final GameSort sort) {
         Filters  filter = new Filters(QUERY_START);
-        filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MIN, minStartTime);
-        filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MAX, maxStartTime);
-        filter.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MIN, minFinishTime);
-        filter.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MAX, maxFinishTime);
+        filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
+        filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
+        filter.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MIN, minFinishTime);
+        filter.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MAX, maxFinishTime);
 
         filter.addListFilters(true, false, TYPE, TYPE, types);
-        filter.addFilter(QUERY_QUANTITY, GREATER_THAN, MIN_QUANTITY, minQuantity);
-        filter.addFilter(QUERY_QUANTITY, LESS_THAN, MAX_QUANTITY, maxQuantity);
+        filter.addFilter(QUERY_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
+        filter.addFilter(QUERY_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
 
         filter.addListFilters(false, false, QUERY_SPORT_NAME, SPORT_NAME, sportNames);
         filter.addListFilters(false, false, COUNTRY, COUNTRY, countries);
         filter.addListFilters(false, false, STATE, STATE, states);
         filter.addListFilters(false, false, CITY, CITY, cities);
 
-        filter.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MIN_FREE_PLACES, minFreePlaces);
-        filter.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MAX_FREE_PLACES, maxFreePlaces);
+        filter.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MIN_FREE_PLACES, minFreePlaces);
+        filter.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MAX_FREE_PLACES, maxFreePlaces);
 
         filter.addListFilters(true, USERNAME_PI, usernamesPlayersInclude);
         filter.addListFilters(false, USERNAME_PNI, usernamesPlayersNotInclude);
@@ -139,7 +139,8 @@ public class GameHibernateDao implements GameDao {
 
         filter.addFilterOnlyFinished();
 
-        final TypedQuery<Game> query = em.createQuery(filter.toString() + gameSortToQuery(sort), Game.class);
+        final TypedQuery<Game> query = em.createQuery(filter.toString() +
+                (sort != null ? sort.toQuery() : ""), Game.class);
         List<String> valueName = filter.getValueNames();
         List<Object> values    = filter.getValues();
 
@@ -148,25 +149,6 @@ public class GameHibernateDao implements GameDao {
         }
 
         return query.getResultList();
-    }
-
-    private String gameSortToQuery(GameSort gameSort) {
-        if(gameSort == null || gameSort.getSortCategories().size() == 0) {
-            return "";
-        }
-
-        boolean isFirst = true;
-        StringBuilder stringBuilder = new StringBuilder(" ORDER BY");
-        for (Pair<String, SortType> sortValue: gameSort.getSortCategories()) {
-            if(isFirst) {
-                isFirst = false;
-            }
-            else {
-                stringBuilder.append(',');
-            }
-            stringBuilder.append(' ').append(sortValue.first).append(" ").append(sortValue.second.toString());
-        }
-        return stringBuilder.toString();
     }
 
     @Override

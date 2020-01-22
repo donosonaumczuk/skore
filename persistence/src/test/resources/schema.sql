@@ -117,3 +117,11 @@ CREATE TABLE IF NOT EXISTS likes (
   PRIMARY Key (userName, sportName)
 );
 
+CREATE TABLE IF NOT EXISTS friendOf(
+  userName        VARCHAR(100) NOT NULL,
+  friendsUserName VARCHAR(100) NOT NULL,
+  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  FOREIGN KEY (friendsUserName) REFERENCES accounts(userName),
+  PRIMARY KEY (userName, friendsUserName)
+);
+

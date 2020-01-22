@@ -45,4 +45,23 @@ public class Sort {
         }
         return Optional.empty();
     }
+
+    public String toQuery() {
+        if(getSortCategories().size() == 0) {
+            return "";
+        }
+
+        boolean isFirst = true;
+        StringBuilder stringBuilder = new StringBuilder(" ORDER BY");
+        for (Pair<String, SortType> sortValue: getSortCategories()) {
+            if(isFirst) {
+                isFirst = false;
+            }
+            else {
+                stringBuilder.append(',');
+            }
+            stringBuilder.append(' ').append(sortValue.first).append(" ").append(sortValue.second.toString());
+        }
+        return stringBuilder.toString();
+    }
 }
