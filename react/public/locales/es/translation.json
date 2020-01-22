@@ -122,5 +122,8 @@
         "oldPassword": "Contraseña vieja",
         "newPassword": "Contraseña nueva",
         "repeatNewPassword": "Repita la contraseña nueva"
+    },
+    "sports": {
+        "playersPerTeam": "Jugadores por equipo: "
     }
 }

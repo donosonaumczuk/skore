@@ -121,5 +121,8 @@
         "oldPassword": "Old password",
         "newPassword": "New assword",
         "repeatNewPassword": "Repeat new password"
+    },
+    "sports": {
+        "playersPerTeam": "Players per team: "
     }
 }

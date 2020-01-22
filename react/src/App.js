@@ -18,6 +18,7 @@ import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 import ConfirmAccount from './components/ConfirmAccount';
+import Sports from './components/Sports/Sports';
 
 
 class App extends Component {
@@ -69,6 +70,9 @@ class App extends Component {
           <Switch>
             <Route exact path="/">
               <Home />
+            </Route>
+            <Route exact path="/sports">
+              <Sports />
             </Route>
             <Route path="/signUp" component={CreateUserForm} />
             <Route path="/confirmAccount">
