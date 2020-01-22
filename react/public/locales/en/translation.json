@@ -84,7 +84,7 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
-        "invalidUsernameOrPassword": "Invalid Username Or Password"
+        "invalidUsernameOrPassword": "Invalid username or password"
     },
     "home": {
         "createMatch": "CREATE A MATCH",
