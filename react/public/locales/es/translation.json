@@ -84,7 +84,8 @@
     "login": {
         "loginButton": "INGRESAR",
         "login": "ingresar",
-        "newUser": "eres nuevo? "
+        "newUser": "eres nuevo? ",
+        "invalidUsernameOrPassword": "Usuario o contraseña incorrecto"
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",
@@ -104,5 +105,15 @@
         "toJoinTab": "PARA UNIRSE",
         "joinedTab": "UNIDOS",
         "createdTab": "CREADOS"
+    },
+    "errorPage": {
+        "404": "Esta no es la página que buscabas.\n",
+        "returnToHome": "Volver a inicio."
+    },
+    "editUserInfoForm": {
+        "updateInfoButton": "ACTUALIZAR"
+    },
+    "changePasswordForm": {
+        "changePasswordButton": "CAMBIAR CONTRASEÑA"
     }
 }
