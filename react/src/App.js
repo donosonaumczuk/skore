@@ -65,7 +65,7 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/">
-                        <Home />
+                        <Home currentUser={this.state.currentUser} />
                         </Route>
                         <Route exact path="/sports">
                         <Sports />

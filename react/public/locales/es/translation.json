@@ -2,7 +2,8 @@
     "navBar": {
         "signIn": "Ingresar",
         "createAccount": "Crear Cuenta",
-        "logOut": "Cerrar Sesión"
+        "logOut": "Cerrar Sesión",
+        "or": "ó"
     },
     "createUserForm": {
         "accounts": "Cuentas",
@@ -94,6 +95,7 @@
     "home": {
         "createMatch": "CREAR UN PARTIDO",
         "cantFindMatch": "No encontras el partido que estas buscando?",
+        "wantToCreateMatch": "Queres crear tu propio partido?\n",
         "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
         "filtersAndCategories": "Filtros y Categorias",
         "countryFilter": "Pais",

@@ -2,7 +2,8 @@
     "navBar": {
         "signIn": "Sign-in",
         "createAccount": "Create Account",
-        "logOut": "Log out"
+        "logOut": "Log out",
+        "or": "o"
     },
     "createUserForm": {
         "accounts": "Accounts",
@@ -93,6 +94,7 @@
     "home": {
         "createMatch": "CREATE A MATCH",
         "cantFindMatch": "Can't find the match you are looking for?",
+        "wantToCreateMatch": "Want to create your own match?\n",
         "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type.",
         "filtersAndCategories": "Filters and Categories",
         "countryFilter": "Country",
