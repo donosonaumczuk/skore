@@ -57,7 +57,7 @@ public class ValidatorFactory {
     public static Validator<JSONObject> fieldIsStringAndMatchesRegexOf(final String field, final Pattern regex,
                                                                        final String regexDescription, final String log) {
         return fieldIsStringValidatorOf(field, log).and(jsonObject -> {
-                    if (!regex.asPredicate().test(jsonObject.getString(field))) {
+                    if (!regex.matcher(jsonObject.getString(field)).matches()) {
                         logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
                                 + "' must be " + regexDescription));
                     }
