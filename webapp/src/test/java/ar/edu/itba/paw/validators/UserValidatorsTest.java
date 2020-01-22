@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class UserValidatorsTest {
 
@@ -30,82 +29,83 @@ public class UserValidatorsTest {
 
     @Test
     public void whenValidatingAuthorizationIfIsTheSameUsernameThenSuccessByDoingNothing() {
-        UserValidators.isAuthorizedForUpgradeValidatorOf("username", "log").validate(Optional.of(
-                new PremiumUser("firstName", "lastName", "e@mail.com", "username")));
+        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.of(
+                new PremiumUser("firstName", "lastName", "an@email.com", "username")));
     }
 
     @Test
     public void whenValidatingAuthorizationIfOptionalIsEmptyThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Only 'username' can update his own user");
-        UserValidators.isAuthorizedForUpgradeValidatorOf("username", "log").validate(Optional.empty());
+        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.empty());
     }
 
     @Test
     public void whenValidatingAuthorizationIfOptionalIsPresentButDifferentUsernameThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Only 'username' can update his own user");
-        UserValidators.isAuthorizedForUpgradeValidatorOf("username", "log").validate(Optional.of(
-                new PremiumUser("firstName", "lastName", "e@mail.com", "otherUsername")
+        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.of(
+                new PremiumUser("firstName", "lastName", "an@email.com", "otherUsername")
         ));
     }
 
     @Test
-    public void whenValidatingUpgradeIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
-        UserValidators.upgradeValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+    public void whenValidatingUpdateIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
+        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"email\" : \"an@email.com\",\n" +
-                        "\t\"home\" : {\n" +
-                        "\t\t\"state\" : \"a state\",\n" +
-                        "\t\t\"city\" : \"a city\",\n" +
-                        "\t\t\"country\" : \"a country\",\n" +
-                        "\t\t\"street\" : \"a street\"\n" +
-                        "\t}\n" +
-                        "}"
+                    "\t\"email\" : \"an@email.com\",\n" +
+                    "\t\"home\" : {\n" +
+                    "\t\t\"state\" : \"a state\",\n" +
+                    "\t\t\"city\" : \"a city\",\n" +
+                    "\t\t\"country\" : \"a country\",\n" +
+                    "\t\t\"street\" : \"a street\"\n" +
+                    "\t}\n" +
+                "}"
                 )
         );
     }
 
     @Test
-    public void whenValidatingUpgradeIfHasAnUnknownUpgradeFieldThenThrowApiExceptionWithExpectedValues() {
+    public void whenValidatingUpdateIfHasAnUnknownUpdateFieldThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Field 'unknown' is unknown or unaccepted");
-        UserValidators.upgradeValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"email\" : \"a@email.com\",\n" +
-                        "\t\"home\" : {\n" +
-                        "\t\t\"state\" : \"a state\",\n" +
-                        "\t\t\"city\" : \"a city\",\n" +
-                        "\t\t\"country\" : \"a country\",\n" +
-                        "\t\t\"street\" : \"a street\"\n" +
-                        "\t},\n" +
-                        "\t\"unknown\" : \"whatever value\"\n" +
-                        "}"
+                    "\t\"email\" : \"an@email.com\",\n" +
+                    "\t\"home\" : {\n" +
+                    "\t\t\"state\" : \"a state\",\n" +
+                    "\t\t\"city\" : \"a city\",\n" +
+                    "\t\t\"country\" : \"a country\",\n" +
+                    "\t\t\"street\" : \"a street\"\n" +
+                    "\t},\n" +
+                    "\t\"unknown\" : \"whatever value\"\n" +
+                "}"
                 )
         );
     }
 
     @Test
-    public void whenValidatingUpgradeIfHasNoFieldsThenSuccessByDoingNothingBecauseOfNoRequiredFieldsSetUp() {
-        UserValidators.upgradeValidatorOf("log").validate(JSONUtils.jsonObjectFrom("{ }"));
+    public void whenValidatingUpdateIfHasNoFieldsThenSuccessByDoingNothingBecauseOfNoRequiredFieldsSetUp() {
+        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom("{ }"));
     }
 
     @Test
     public void whenValidatingCreationIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"firstName\" : \"a first name\",\n" +
-                        "\t\"lastName\" : \"a last name\",\n" +
-                        "\t\"cellphone\" : \"1512345678\",\n" +
-                        "\t\"birthday\" : \"06/06/1969\",\n" +
-                        "\t\"email\" : \"a@email.com\",\n" +
-                        "\t\"home\" : {\n" +
-                        "\t\t\"state\" : \"a state\",\n" +
-                        "\t\t\"city\" : \"a city\",\n" +
-                        "\t\t\"country\" : \"a country\",\n" +
-                        "\t\t\"street\" : \"a street\"\n" +
-                        "\t}\n" +
-                        "}"
+                    "\t\"username\" : \"a_Username_69\",\n" +
+                    "\t\"firstName\" : \"a first name\",\n" +
+                    "\t\"lastName\" : \"a last name\",\n" +
+                    "\t\"cellphone\" : \"1512345678\",\n" +
+                    "\t\"birthday\" : \"06/06/1969\",\n" +
+                    "\t\"email\" : \"an@email.com\",\n" +
+                    "\t\"home\" : {\n" +
+                    "\t\t\"state\" : \"a state\",\n" +
+                    "\t\t\"city\" : \"a city\",\n" +
+                    "\t\t\"country\" : \"a country\",\n" +
+                    "\t\t\"street\" : \"a street\"\n" +
+                    "\t}\n" +
+                    "}"
                 )
         );
     }
@@ -116,15 +116,15 @@ public class UserValidatorsTest {
         exceptionRule.expectMessage("Field 'unknown' is unknown or unaccepted");
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"email\" : \"a@email.com\",\n" +
-                        "\t\"home\" : {\n" +
-                        "\t\t\"state\" : \"a state\",\n" +
-                        "\t\t\"city\" : \"a city\",\n" +
-                        "\t\t\"country\" : \"a country\",\n" +
-                        "\t\t\"street\" : \"a street\"\n" +
-                        "\t},\n" +
-                        "\t\"unknown\" : \"whatever value\"\n" +
-                        "}"
+                    "\t\"email\" : \"an@email.com\",\n" +
+                    "\t\"home\" : {\n" +
+                    "\t\t\"state\" : \"a state\",\n" +
+                    "\t\t\"city\" : \"a city\",\n" +
+                    "\t\t\"country\" : \"a country\",\n" +
+                    "\t\t\"street\" : \"a street\"\n" +
+                    "\t},\n" +
+                    "\t\"unknown\" : \"whatever value\"\n" +
+                "}"
                 )
         );
     }
@@ -132,15 +132,14 @@ public class UserValidatorsTest {
     @Test
     public void whenValidatingCreationIfARequiredCreationFieldIsMissingThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Missing required 'home' field");
+        exceptionRule.expectMessage("Missing required 'username' field");
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"firstName\" : \"a first name\",\n" +
-                        "\t\"lastName\" : \"a last name\",\n" +
-                        "\t\"cellphone\" : \"1512345678\",\n" +
-                        "\t\"birthday\" : \"06/06/1969\",\n" +
-                        "\t\"email\" : \"a@email.com\"\n" +
-                        "}"
+                    "\t\"firstName\" : \"a first name\",\n" +
+                    "\t\"lastName\" : \"a last name\",\n" +
+                    "\t\"birthday\" : \"06/06/1969\",\n" +
+                    "\t\"email\" : \"an@email.com\"\n" +
+                "}"
                 )
         );
     }
@@ -151,18 +150,19 @@ public class UserValidatorsTest {
         exceptionRule.expectMessage("Field 'birthday' must be a date");
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"firstName\" : \"a first name\",\n" +
-                        "\t\"lastName\" : \"a last name\",\n" +
-                        "\t\"cellphone\" : \"1512345678\",\n" +
-                        "\t\"birthday\" : \"this is not a date!\",\n" +
-                        "\t\"email\" : \"a@email.com\",\n" +
-                        "\t\"home\" : {\n" +
-                        "\t\t\"state\" : \"a state\",\n" +
-                        "\t\t\"city\" : \"a city\",\n" +
-                        "\t\t\"country\" : \"a country\",\n" +
-                        "\t\t\"street\" : \"a street\"\n" +
-                        "\t}\n" +
-                        "}"
+                    "\t\"username\" : \"a_Username_69\",\n" +
+                    "\t\"firstName\" : \"a first name\",\n" +
+                    "\t\"lastName\" : \"a last name\",\n" +
+                    "\t\"cellphone\" : \"1512345678\",\n" +
+                    "\t\"birthday\" : \"this is not a date!\",\n" +
+                    "\t\"email\" : \"an@email.com\",\n" +
+                    "\t\"home\" : {\n" +
+                    "\t\t\"state\" : \"a state\",\n" +
+                    "\t\t\"city\" : \"a city\",\n" +
+                    "\t\t\"country\" : \"a country\",\n" +
+                    "\t\t\"street\" : \"a street\"\n" +
+                    "\t}\n" +
+                "}"
                 )
         );
     }

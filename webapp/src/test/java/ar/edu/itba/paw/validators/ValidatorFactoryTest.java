@@ -62,8 +62,8 @@ public class ValidatorFactoryTest {
     @Test
     public void whenValidatingFieldIsStringAndMatchesRegexIfFieldIsAStringAndMatchesRegexThenSuccessByDoingNothing() {
         JSONObject jsonObject = JSONUtils.jsonObjectFrom("{ \"field\" : \"lowercase\" }");
-        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[ab]"),
-                "a string containing 'a' or 'b'", "log").validate(jsonObject);
+        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[a-z]+"),
+                "a lowercase non empty string", "log").validate(jsonObject);
     }
 
     @Test
@@ -71,16 +71,16 @@ public class ValidatorFactoryTest {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Field 'field' must be a string");
         JSONObject jsonObject = JSONUtils.jsonObjectFrom("{ \"field\" : 1234 }");
-        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[ab]"),
-                "a string containing 'a' or 'b'", "log").validate(jsonObject);
+        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[a-z]+"),
+                "a lowercase non empty string", "log").validate(jsonObject);
     }
 
     @Test
     public void whenValidatingFieldIsStringAndMatchesRegexIfFieldIsAStringButNotMatchesTheRegexThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'field' must be a string containing 'a' or 'b'");
-        JSONObject jsonObject = JSONUtils.jsonObjectFrom("{ \"field\" : \"c\" }");
-        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[ab]"),
-                "a string containing 'a' or 'b'", "log").validate(jsonObject);
+        exceptionRule.expectMessage("Field 'field' must be a lowercase non empty string");
+        JSONObject jsonObject = JSONUtils.jsonObjectFrom("{ \"field\" : \"NOT ONLY lowercase\" }");
+        ValidatorFactory.fieldIsStringAndMatchesRegexOf("field", Pattern.compile("[a-z]+"),
+                "a lowercase non empty string", "log").validate(jsonObject);
     }
 }
