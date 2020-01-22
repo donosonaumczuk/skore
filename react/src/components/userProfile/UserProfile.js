@@ -8,12 +8,13 @@ import UserMatches from './userMatches/UserMatches';
 import Loader from '../Loader';
 import AuthService from '../../services/AuthService';
 import EditUserButton from './EditUserButton';
+import ErrorPage from '../ErrorPage';
 
 class UserProfile extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         const { username } = this.props.match.params;
-
         this.state = {
             username: username,
             currentUser: {},
@@ -21,12 +22,24 @@ class UserProfile extends Component {
         }
     }
 
+    updateStateWithUser = currentUser => {
+        if (currentUser.status) {
+            this.setState({ status: currentUser.status });
+        }
+        else {
+            const imageUrl = this.getImageUrl(currentUser.links);
+            this.setState({ currentUser: currentUser, 
+                            imageUrl: imageUrl 
+            });
+        }
+    }
+
     async componentDidMount() { 
-        let currentUser = await UserService.getProfileByUsername(this.state.username)
-        const imageUrl = this.getImageUrl(currentUser.links);
-        this.setState({ currentUser: currentUser, 
-                        imageUrl: imageUrl 
-                    });
+        this.mounted = true  ;
+        let currentUser = await UserService.getProfileByUsername(this.state.username);
+        if (this.mounted) {
+            this.updateStateWithUser(currentUser);
+        }
     }
 
     locationData = (location) => {
@@ -41,19 +54,16 @@ class UserProfile extends Component {
     winRateAndAge = (winrate, age) => {
         const winValue = winrate ? winrate : " -- ";
         let winClass = "";
-        
         if (winrate) {
             winClass = winrate >= 50 ? "winnerWinRate" : "loserWinRate";
-        }
-        
+        } 
         return (
             <span>
                     <i className="fas mr-1 fa-percentage"></i>
                     <span className={winClass}>{" " + winValue + " "}</span>
                     <i className="fas ml-4 mr-1 fa-birthday-cake"></i>
                     {" " + age}
-            </span>
-              
+            </span>      
         );
     }
     
@@ -69,7 +79,6 @@ class UserProfile extends Component {
     }
 
     getEditButtons = (loggedUser, username) => {
-      
         if (loggedUser && loggedUser === username) {
             return (
                 <div className="row text-center">
@@ -89,28 +98,28 @@ class UserProfile extends Component {
 
     async UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = nextProps.match.params;
-        if( username !== this.state.username ) {
-            this.setState({
-                username: username,
-                currentUser: {},
-                imageUrl: null,
+        if (username !== this.state.username && this.mounted) {
+            this.setState({ username: username,
+                            currentUser: {},
+                            imageUrl: null,
             });
         }
-        let currentUser = await UserService.getProfileByUsername(username)
-        const imageUrl = this.getImageUrl(currentUser.links);
-        this.setState({ currentUser: currentUser, 
-                        imageUrl: imageUrl 
-                    });
+        let currentUser = await UserService.getProfileByUsername(username);
+        if (this.mounted) {
+            this.updateStateWithUser(currentUser);
+        }
     }
 
     render() {
         const currentUser = this.state.currentUser;
         const imageUrl = this.state.imageUrl;
         const loggedUser = AuthService.getCurrentUser();
-        let editButtons = this.getEditButtons(loggedUser, currentUser.username);
+        let editButtons = this.getEditButtons(loggedUser, this.state.username);
         //TODO check when winrate is negative if it is a valid value
-
-        if (imageUrl == null) {
+        if (this.state.status && this.state.staus !== 200) {
+            return <ErrorPage status={this.state.status} />
+        }
+        else if (imageUrl == null) {
             return <Loader />;
         }
         
@@ -130,7 +139,12 @@ class UserProfile extends Component {
                     </div>
                 </div>
             </div>
-        )
+        );
+    }
+   
+
+    componentWillUnmount = () => {
+        this.mounted = false;
     }
 }
 

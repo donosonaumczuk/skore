@@ -5,18 +5,32 @@ import Loader from '../../Loader';
 import UserMatch from './UserMatch';
 
 class UserMatches extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
-            matches: null
+            matches: null,
         }
     }
 
+    updateMatchesState = matches => {
+        if (matches.status) {
+            this.setState({
+                status: matches.status
+            });
+        }
+        else {
+            this.setState({
+                matches: matches
+            });
+        }
+    }
     async componentDidMount() {
+        this.mounted = true;
         let matches = await UserService.getUserMatches(this.props.username);
-        this.setState({
-            matches: matches
-        });
+        if (this.mounted) {
+            this.updateMatchesState(matches)
+        }
     }
 
     render() {
@@ -36,8 +50,9 @@ class UserMatches extends Component {
             );
         }
     }
-    
-    componentWillUnmount() {
+
+    componentWillUnmount = () => {
+        this.mounted = false;
         //TODO cancel fetch if still fetching matches
     }
 }
