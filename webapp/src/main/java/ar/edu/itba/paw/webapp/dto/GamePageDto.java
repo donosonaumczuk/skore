@@ -13,7 +13,7 @@ public class GamePageDto {
     private final List<GameDto> games;
     private final List<Link> links;
 
-    public GamePageDto(Page<GameDto> page, UriInfo uriInfo) {
+    private GamePageDto(Page<GameDto> page, UriInfo uriInfo) {
         this.games = page.getData();
         this.links = HateoasUtils.getHateoasForPageLinks(page, HateoasUtils.getQuery(uriInfo.getQueryParameters(false)),
                 uriInfo.getPath());

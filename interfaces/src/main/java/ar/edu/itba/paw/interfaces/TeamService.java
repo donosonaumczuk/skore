@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface TeamService {
     @Transactional
@@ -35,5 +35,5 @@ public interface TeamService {
                                final String oldTeamName);
 
     @Transactional
-    public HashMap<User, PremiumUser> getAccountsMap(Team team);
+    public Map<User, PremiumUser> getAccountsMap(Team team);
 }

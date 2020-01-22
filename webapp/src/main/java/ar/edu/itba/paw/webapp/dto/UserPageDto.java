@@ -22,7 +22,6 @@ public class UserPageDto {
         return new UserPageDto(userPage, uriInfo);
     }
 
-
     public List<UserDto> getUsers() {
         return users;
     }

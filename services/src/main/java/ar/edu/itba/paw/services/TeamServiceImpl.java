@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -121,8 +122,8 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Override
-    public HashMap<User, PremiumUser> getAccountsMap(Team team) {
-        HashMap<User, PremiumUser> accountsList = new HashMap<>();
+    public Map<User, PremiumUser> getAccountsMap(Team team) {
+        Map<User, PremiumUser> accountsList = new HashMap<>();
         if(team != null) {
             for (User u:team.getPlayers()) {
                 Optional<PremiumUser> account = premiumUserService.findById(u.getUserId());
