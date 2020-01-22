@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -54,7 +55,7 @@ public class TeamServiceImplTest {
         when(premiumUserServiceMock.findById(ID_1)).thenReturn(Optional.of(account1));
         when(premiumUserServiceMock.findById(ID_2)).thenReturn(Optional.empty());
 
-        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
+        Map<User, PremiumUser> map = teamService.getAccountsMap(team);
 
         Assert.assertNotNull(map);
         Assert.assertEquals(3, map.size());
@@ -70,7 +71,7 @@ public class TeamServiceImplTest {
     public void getAccountsListWithOutPlayerTest() {
         Team team  = new Team(null, null, null, true, null, null);
 
-        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
+        Map<User, PremiumUser> map = teamService.getAccountsMap(team);
 
         Assert.assertNotNull(map);
         Assert.assertEquals(0, map.size());
@@ -80,7 +81,7 @@ public class TeamServiceImplTest {
     public void getAccountsListTeamNullTest() {
         Team team  = null;
 
-        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
+        Map<User, PremiumUser> map = teamService.getAccountsMap(team);
 
         Assert.assertNull(team);
         Assert.assertEquals(0, map.size());
