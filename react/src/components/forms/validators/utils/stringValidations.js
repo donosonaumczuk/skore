@@ -17,7 +17,7 @@ const isStringNumeric = string => !/[^0-9]/.test(string);
 const isStringAlphaNumeric = string => !/[^0-9a-zA-ZáéíóúñÁÉÍÓÚÑ]/.test(string);
 
 //TODO consider if adding tildes 
-const isStringValidEmail = string => /^[a-zA-ZñÑ0-9]+@[a-zA-Z0-9]+(\.[A-Za-z]+)+$/.test(string);
+const isStringValidEmail = string => /^[a-zA-ZñÑ0-9_.-]+@[a-zA-Z0-9]+(\.[A-Za-z]+)+$/.test(string);
 
 export {
     hasStringInvalidSymbols, 
