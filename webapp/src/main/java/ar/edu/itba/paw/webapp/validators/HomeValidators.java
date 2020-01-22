@@ -13,18 +13,18 @@ public class HomeValidators {
     private static final String STATE = "state";
     private static final String CITY = "city";
     private static final String STREET = "street";
-    private static final Set<String> UPGRADE_REQUIRED_FIELDS = ImmutableSet.of();
-    private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(COUNTRY, STATE, CITY, STREET); //TODO: I'm not sure if we always can obtain all of these fields from the form textbox
-    private static final Set<String> UPGRADE_KNOWN_FIELDS = ImmutableSet.of(COUNTRY, STATE, CITY, STREET);
     private static final Set<String> CREATION_KNOWN_FIELDS = ImmutableSet.of(COUNTRY, STATE, CITY, STREET);
+    private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of();
+    private static final Set<String> UPDATE_KNOWN_FIELDS = ImmutableSet.of(COUNTRY, STATE, CITY, STREET);
+    private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
                 fieldValidatorMapOf(log), log);
     }
 
-    public static Validator<JSONObject> upgradeValidatorOf(final String log) {
-        return ValidatorFactory.jsonInputValidator(UPGRADE_KNOWN_FIELDS, UPGRADE_REQUIRED_FIELDS,
+    public static Validator<JSONObject> updateValidatorOf(final String log) {
+        return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS, UPDATE_REQUIRED_FIELDS,
                 fieldValidatorMapOf(log), log);
     }
 

@@ -153,7 +153,7 @@ public class UserController {
     @Path("/{username}")
     public Response deleteUser(@PathParam("username") String username) {
         /*TODO| Validate that te user to be delete is the same as the one logged*/
-        UserValidators.isAuthorizedForUpgradeValidatorOf(username, "User '" + username
+        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
         if (!premiumUserService.remove(username)) {
             LOGGER.trace("User '{}' does not exist", username);
@@ -167,11 +167,11 @@ public class UserController {
     @Path("/{username}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody) {
-        UserValidators.isAuthorizedForUpgradeValidatorOf(username, "User '" + username
-                + "' upgrade failed, unauthorized").validate(sessionService.getLoggedUser());
-        UserValidators.existenceValidatorOf(username,"User upgrade fails, user '" + username + "' does not exist")
+        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
+                + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
+        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(premiumUserService.findByUserName(username));
-        UserValidators.upgradeValidatorOf("User '" + username + "' upgrade failed, invalid upgrade JSON")
+        UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
