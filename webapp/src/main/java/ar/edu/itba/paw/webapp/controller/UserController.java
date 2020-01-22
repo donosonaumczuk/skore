@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -85,16 +86,18 @@ public class UserController {
     }
 
     @GET
-    public Response getUsers(@QueryParam("minReputation") Integer minReputation,
-                             @QueryParam("maxReputation") Integer maxReputation,
+    public Response getUsers(@QueryParam("minReputation") String minReputation,
+                             @QueryParam("maxReputation") String maxReputation,
                              @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
                              @QueryParam("friends") List<String> friendsUsernames,
                              @QueryParam("sports") List<String> sportsLiked,
                              @QueryParam("usernames") List<String> usernames,
-                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                             @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
         Page<UserDto> userPage = premiumUserService.findUsersPage(usernames, sportsLiked, friendsUsernames,
-                minReputation, maxReputation, null, null, sort, offset, limit)
+                QueryParamsUtils.positiveIntegerOrNull(minReputation),
+                QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
                 .map(UserDto::from);
 
         LOGGER.trace("Users successfully gotten");
@@ -103,14 +106,15 @@ public class UserController {
 
     @GET
     @Path("/{username}/matches")
-    public Response getGames(@PathParam("username") String username, @QueryParam("limit") Integer limit,
-                             @QueryParam("offSet") Integer offset, @Context UriInfo uriInfo) {
+    public Response getGames(@PathParam("username") String username, @QueryParam("limit") String limit,
+                             @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
         List<String> usernames = new ArrayList<>();
         usernames.add(username);
         Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
             null, null, null,null, null, null, null,
                 null, null, usernames, null, null,
-                null, limit, offset, null)
+                null, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), null)
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);

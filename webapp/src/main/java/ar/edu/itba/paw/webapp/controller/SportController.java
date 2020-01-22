@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.SportDto;
 import ar.edu.itba.paw.webapp.dto.SportPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +73,14 @@ public class SportController {
 
     @GET
     public Response getAllSports(@QueryParam("sportName") List<String> sportNames,
-                                 @QueryParam("minQuantity") Integer minQuantity,
-                                 @QueryParam("maxQuantity") Integer maxQuantity,
-                                 @QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
+                                 @QueryParam("minQuantity") String minQuantity,
+                                 @QueryParam("maxQuantity") String maxQuantity,
+                                 @QueryParam("limit") String limit, @QueryParam("offSet") String offset,
                                  @QueryParam("sortBy") SportSort sort, @Context UriInfo uriInfo) {
-        Page<SportDto> page = sportService.findSportsPage(sportNames, minQuantity, maxQuantity, sort, limit, offset)
+        Page<SportDto> page = sportService.findSportsPage(sportNames,
+                QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), sort, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset))
                 .map(SportDto::from);
         LOGGER.trace("Sports successfully gotten");
         return Response.ok(SportPageDto.from(page, uriInfo)).build();

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,10 @@ public class GameController {
                              @QueryParam("maxStartTime") String maxStartTime,
                              @QueryParam("minFinishTime") String minFinishTime,
                              @QueryParam("maxFinishTime") String maxFinishTime,
-                             @QueryParam("minQuantity") Integer minQuantity,
-                             @QueryParam("maxQuantity") Integer maxQuantity,
-                             @QueryParam("minFreePlaces") Integer minFreePlaces,
-                             @QueryParam("maxFreePlaces") Integer maxFreePlaces,
+                             @QueryParam("minQuantity") String minQuantity,
+                             @QueryParam("maxQuantity") String maxQuantity,
+                             @QueryParam("minFreePlaces") String minFreePlaces,
+                             @QueryParam("maxFreePlaces") String maxFreePlaces,
                              @QueryParam("country") List<String> countries,
                              @QueryParam("state") List<String> states,
                              @QueryParam("city") List<String> cities,
@@ -67,12 +68,16 @@ public class GameController {
                              @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
                              @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
                              @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
-                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                             @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo) {
         Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                types, sports, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
+                types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, limit, offset, sort)
+                usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), sort)
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
