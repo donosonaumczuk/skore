@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { Switch, Route} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import i18next from 'i18next';
 import NavBar from './components/navBar/NavBar';
-// import UserService from './services/UserService'; TODO import when used on componentDidMount
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
-import './css/main.css';
 import UserProfile from './components/userProfile/UserProfile';
 import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
@@ -19,83 +17,81 @@ import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 import ConfirmAccount from './components/ConfirmAccount';
 import Sports from './components/Sports/Sports';
-
+import './css/main.css';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      account: {},
-      translation: false,
-      currentUser: null
+    constructor(props) {
+        super(props);
+        this.state = {
+        account: {},
+        translation: false,
+        currentUser: null
+        }
     }
-  }
 
-  initializeI18next = async () => {
-    if (!this.setState.translation) {
-      await i18next.init();
-      this.setState({
-        translation: true
-      });
+    initializeI18next = async () => {
+        if (!this.setState.translation) {
+        await i18next.init();
+        this.setState({
+            translation: true
+        });
+        }
     }
-  }
 
-  updateUser = currentUser => {
-    this.setState({
-      currentUser: currentUser
-    });
-  }
-
-  async componentDidMount() {
-    const currentUser = AuthService.getCurrentUser();
-    if (currentUser) {
-      this.updateUser(currentUser);
+    updateUser = currentUser => {
+        this.setState({
+        currentUser: currentUser
+        });
     }
-    this.initializeI18next();   
-    // let account = await UserService.getProfileByUsername('donosonaumczuk');//TODO add when /users enadpoint created
-    // this.setState({ account: account }); TODO add when /users endpoint created
-  }
 
-  render() {
-    if (!this.state.translation) {
-      //TODO test what happens on change language
-      return (
-        <Loader />
-      );
+    async componentDidMount() {
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser) {
+            this.updateUser(currentUser);
+        }
+        this.initializeI18next();   
     }
-    return (
-      <Provider store={store}>
-      <div>
-        <NavBar currentUser={this.state.currentUser} />
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route exact path="/sports">
-              <Sports />
-            </Route>
-            <Route path="/signUp" component={CreateUserForm} />
-            <Route path="/confirmAccount">
-              <ConfirmAccount />
-            </Route>
-            <Route path="/login">
-              <LogInForm updateUser={this.updateUser} />
-            </Route>
-            <Route path="/logout">
-              <LogOut updateUser={this.updateUser} />
-            </Route>
-            <Route path="/accounts">
-              <Accounts />
-            </Route>
-            <Route exact path="/users/:username" component={UserProfile} />
-            <Route exact path="/users/:username/edit" component={EditUserInfo} />
-            <Route exact path="/users/:username/changePassword" component={ChangePassword} />
-            <Route path="/" component={ErrorPage} />
-          </Switch>
-      </div>
-      </Provider>
-    );
-  }
+
+    render() {
+        if (!this.state.translation) {
+            //TODO test what happens on change language
+            return (
+                <Loader />
+            );
+        }
+        return (
+            <Provider store={store}>
+                <div>
+                    <NavBar currentUser={this.state.currentUser} />
+                    <Switch>
+                        <Route exact path="/">
+                        <Home />
+                        </Route>
+                        <Route exact path="/sports">
+                        <Sports />
+                        </Route>
+                        <Route path="/signUp" component={CreateUserForm} />
+                        <Route path="/confirmAccount">
+                        <ConfirmAccount />
+                        </Route>
+                        <Route path="/login">
+                        <LogInForm updateUser={this.updateUser} />
+                        </Route>
+                        <Route path="/logout">
+                        <LogOut updateUser={this.updateUser} />
+                        </Route>
+                        <Route path="/accounts">
+                        <Accounts />
+                        </Route>
+                        <Route exact path="/users/:username" component={UserProfile} />
+                        <Route exact path="/users/:username/edit" component={EditUserInfo} />
+                        <Route exact path="/users/:username/changePassword" component={ChangePassword} />
+                        <Route path="/" component={ErrorPage} />
+                    </Switch>
+                </div>
+            </Provider>
+        );
+    }
 }
 
 export default App;
