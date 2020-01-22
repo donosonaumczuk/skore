@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.models.SportSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.SportDto;
 import ar.edu.itba.paw.webapp.dto.SportPageDto;
@@ -28,6 +29,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriInfo;
+
+import java.util.List;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
@@ -68,9 +71,13 @@ public class SportController {
     }
 
     @GET
-    public Response getAllSports(@QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
-                                 @Context UriInfo uriInfo) {
-        Page<SportDto> page = sportService.getAllSportsPage(limit, offset).map(SportDto::from);
+    public Response getAllSports(@QueryParam("sportName") List<String> sportNames,
+                                 @QueryParam("minQuantity") Integer minQuantity,
+                                 @QueryParam("maxQuantity") Integer maxQuantity,
+                                 @QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
+                                 @QueryParam("sortBy") SportSort sort, @Context UriInfo uriInfo) {
+        Page<SportDto> page = sportService.findSportsPage(sportNames, minQuantity, maxQuantity, sort, limit, offset)
+                .map(SportDto::from);
         LOGGER.trace("Sports successfully gotten");
         return Response.ok(SportPageDto.from(page, uriInfo)).build();
     }

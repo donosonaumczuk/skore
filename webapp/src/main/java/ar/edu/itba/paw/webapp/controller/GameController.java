@@ -140,7 +140,7 @@ public class GameController {
 //
 //    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
 //    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-//        return new ModelAndView("createMatch").addObject("sports", sportService.getAllSportsPage());
+//        return new ModelAndView("createMatch").addObject("sports", sportService.findSportsPage());
 //    }
 //
 //    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })

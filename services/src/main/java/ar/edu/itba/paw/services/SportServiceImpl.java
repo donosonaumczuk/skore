@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.models.SportSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,10 @@ public class SportServiceImpl implements SportService {
 
 
     @Override
-    public Page<Sport> getAllSportsPage(Integer limit, Integer offset) {
-        return new Page<>(sportDao.getAllSports(), offset, limit);
+    public Page<Sport> findSportsPage(final List<String> sportNames, final Integer minQuantity,
+                                      final Integer maxQuantity, final SportSort sort,
+                                      final Integer limit, final Integer offset) {
+        return new Page<>(sportDao.findSports(sportNames, minQuantity, maxQuantity, sort), offset, limit);
     }
 
     @Override
