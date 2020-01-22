@@ -16,7 +16,7 @@ const Sport = ({ sport }) => {
     //TODO maybe make image bigger and name bigger, add more staff to sport
     const sportImageUrl = getSportImageUrl(sport.links);
     return (
-        <div className="row p-2 mt-2 match-card rounded-border">
+        <div className="row p-2 mt-2 ml-5 mr-5 match-card rounded-border">
             <div className="col">
                 <div className="row mb-4">
                     <SportInfo sportImageUrl={sportImageUrl} sport={sport.displayName} />
