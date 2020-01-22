@@ -48,7 +48,6 @@ public class Team {
         this.sport           = sport;
         this.image           = image;
         this.players         = new LinkedHashSet<>();
-        this.accountsPlayers = new HashMap<>();
     }
 
     public Sport getSport() {
