@@ -4,7 +4,6 @@ import HomeMatch from './HomeMatch';
 import MatchService from './../../services/MatchService';
 import Loader from '../Loader';
 
-
 class HomeMatches extends Component { 
     mounted = false;
     constructor(props) {

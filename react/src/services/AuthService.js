@@ -31,7 +31,6 @@ const logOutUser = async () => {
     try {
         await api.post("auth/logout");
         if (getToken) {
-            console.log("entro");
             removeToken();
             removeUser();  
         }

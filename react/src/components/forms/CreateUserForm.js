@@ -30,7 +30,6 @@ const validate = values => {
 class CreateUserForm extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             image: null,
             created: false
