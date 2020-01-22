@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class UserValidatorsTest {
 
@@ -53,7 +54,7 @@ public class UserValidatorsTest {
     public void whenValidatingUpgradeIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.upgradeValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"email\" : \"a@email.com\",\n" +
+                        "\t\"email\" : \"an@email.com\",\n" +
                         "\t\"home\" : {\n" +
                         "\t\t\"state\" : \"a state\",\n" +
                         "\t\t\"city\" : \"a city\",\n" +
