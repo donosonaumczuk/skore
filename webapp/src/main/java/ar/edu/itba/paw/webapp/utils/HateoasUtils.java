@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.utils;
 
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class DtoHelper {
+public class HateoasUtils {
 
     public static List<Link> getHateoasForPageLinks(Page page, String query, String base) {
         ImmutableList.Builder<Link> builder = ImmutableList.builder();
@@ -27,7 +27,7 @@ public class DtoHelper {
     }
 
     private static String getEndpoint(Page page, String query, String base) {
-        return URLConstants.getApiBaseUrlBuilder().path(base).toTemplate() + "?offset=" + page.getOffSet()
+        return URLConstants.getApiBaseUrlBuilder().path(base).toTemplate() + "?offset=" + page.getOffset()
                 + "&limit=" + page.getLimit() + ((query != null && !query.isEmpty()) ? "&" : "" ) + query;
     }
 
@@ -35,7 +35,7 @@ public class DtoHelper {
         StringBuilder ans = new StringBuilder();
         boolean isFirstValue, isFirstKey = true;
         for (Map.Entry<String, List<String>> entry: queryParameters.entrySet()) {
-            if (!entry.getKey().equals("limit") && !entry.getKey().equals("offSet")) {
+            if (!entry.getKey().equals("limit") && !entry.getKey().equals("offset")) {
                 if (isFirstKey) {
                     isFirstKey = false;
                 } else {

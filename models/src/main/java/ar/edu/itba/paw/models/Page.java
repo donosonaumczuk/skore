@@ -7,63 +7,63 @@ import java.util.stream.Collectors;
 
 public class Page<T> {
 
-    private static final int MAX_LIMIT      = 200;
-    private static final int DEFAULT_LIMIT  = 100;
+    private static final int MAX_LIMIT      = 100;
+    private static final int DEFAULT_LIMIT  = 10;
     private static final int DEFAULT_OFFSET = 0;
 
-    final private List<T> pageData;
-    final private int offSet;
+    final private List<T> data;
+    final private int offset;
     final private int limit;
-    final private int max;
+    final private int total;
 
-    public Page(List<T> allTheData, Integer offSet, Integer limit) {
-        offSet = (offSet == null || offSet < 0) ? DEFAULT_OFFSET : offSet;  //Default value
+    public Page(List<T> allTheData, Integer offset, Integer limit) {
+        offset = (offset == null || offset < 0) ? DEFAULT_OFFSET : offset;  //Default value
         limit  = (limit == null  || limit < 0) ? DEFAULT_LIMIT : limit;     //Default value
         limit  = (limit > MAX_LIMIT) ? MAX_LIMIT : limit;                   //Max value
-        offSet = (offSet < allTheData.size()) ? offSet : allTheData.size();                  //value if it is bigger than list
-        int end = (offSet + limit < allTheData.size()) ? offSet + limit : allTheData.size(); //value if it is bigger than list
+        offset = (offset < allTheData.size()) ? offset : allTheData.size();                  //value if it is bigger than list
+        int end = (offset + limit < allTheData.size()) ? offset + limit : allTheData.size(); //value if it is bigger than list
 
-        this.offSet = offSet;
+        this.offset = offset;
         this.limit  = limit;
-        this.max    = allTheData.size();
-        this.pageData = allTheData.subList(offSet, end);
+        this.total = allTheData.size();
+        this.data = allTheData.subList(offset, end);
     }
 
-    private Page(Integer offSet, Integer limit, Integer max) {
-        this.offSet = offSet;
+    private Page(Integer offset, Integer limit, Integer total) {
+        this.offset = offset;
         this.limit  = limit;
-        this.max    = max;
-        this.pageData = null;
+        this.total = total;
+        this.data = null;
     }
 
-    private Page(List<T> pageDate, Integer offSet, Integer limit, Integer max) {
-        this.offSet   = offSet;
+    private Page(List<T> pageDate, Integer offset, Integer limit, Integer total) {
+        this.offset = offset;
         this.limit    = limit;
-        this.max      = max;
-        this.pageData = pageDate;
+        this.total = total;
+        this.data = pageDate;
     }
 
-    public List<T> getPageData() {
-        return pageData;
+    public List<T> getData() {
+        return data;
     }
 
     public Optional<Page<T>> getNextPage() {
-        if(offSet + limit < max) {
-            return Optional.of(new Page<T>(offSet + limit, limit, max));
+        if(offset + limit < total) {
+            return Optional.of(new Page<T>(offset + limit, limit, total));
         }
         return Optional.empty();
     }
 
     public Optional<Page<T>> getPrevPage() {
-        if(offSet - limit >= 0) {
-            return Optional.of(new Page<T>(offSet - limit, limit, max));
+        if(offset - limit >= 0) {
+            return Optional.of(new Page<T>(offset - limit, limit, total));
         }
         return Optional.empty();
     }
 
 
-    public int getOffSet() {
-        return offSet;
+    public int getOffset() {
+        return offset;
     }
 
     public int getLimit() {
@@ -71,7 +71,7 @@ public class Page<T> {
     }
 
     public <R> Page<R> map(Function<T,R> mapper) {
-        List<R> newPageData = pageData.stream().map(mapper).collect(Collectors.toList());
-        return new Page<>(newPageData, offSet, limit, max);
+        List<R> newPageData = data.stream().map(mapper).collect(Collectors.toList());
+        return new Page<>(newPageData, offset, limit, total);
     }
 }

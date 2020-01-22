@@ -36,9 +36,6 @@ public class Team {
     @Column
     private byte[] image;
 
-    @Transient
-    private Map<User, PremiumUser> accountsPlayers;
-
     /* package */public Team() {
         // For Hibernate
     }
@@ -125,13 +122,5 @@ public class Team {
     @Override
     public int hashCode() {
         return Objects.hash(teamName);
-    }
-
-    public Map<User, PremiumUser> getAccountsPlayers() {
-        return accountsPlayers;
-    }
-
-    public void setAccountsPlayers(Map<User, PremiumUser> accountsPlayers) {
-        this.accountsPlayers = accountsPlayers;
     }
 }

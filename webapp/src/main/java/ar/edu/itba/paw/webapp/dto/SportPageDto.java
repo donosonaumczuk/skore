@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.webapp.utils.HateoasUtils;
 import org.springframework.hateoas.Link;
 
 import javax.ws.rs.core.UriInfo;
@@ -12,8 +13,8 @@ public class SportPageDto {
     private final List<Link> links;
 
     public SportPageDto(Page<SportDto> page, UriInfo uriInfo) {
-        this.sports = page.getPageData();
-        this.links = DtoHelper.getHateoasForPageLinks(page, DtoHelper.getQuery(uriInfo.getQueryParameters(false)),
+        this.sports = page.getData();
+        this.links = HateoasUtils.getHateoasForPageLinks(page, HateoasUtils.getQuery(uriInfo.getQueryParameters(false)),
                 uriInfo.getPath());
     }
 

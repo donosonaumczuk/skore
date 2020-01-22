@@ -63,12 +63,12 @@ public class GameController {
                              @QueryParam("city") List<String> cities,
                              @QueryParam("sport") List<String> sports,
                              @QueryParam("type") List<String> types,
-                             @QueryParam("usernamesPlayersInclude") List<String> usernamesPlayersInclude,
-                             @QueryParam("usernamesPlayersNotInclude") List<String> usernamesPlayersNotInclude,
-                             @QueryParam("usernamesCreatorsInclude") List<String> usernamesCreatorsInclude,
-                             @QueryParam("usernamesCreatorsNotInclude") List<String> usernamesCreatorsNotInclude,
-                             @QueryParam("limit") Integer limit, @QueryParam("offSet") Integer offset,
-                             @QueryParam("sort") GameSort sort, @Context UriInfo uriInfo) {
+                             @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
+                             @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
+                             @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
+                             @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
+                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                             @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo) {
         Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                 types, sports, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
@@ -83,8 +83,7 @@ public class GameController {
         if (team == null) {
             return null;
         }
-        teamService.getAccountsList(team);
-        return HelperController.mapTeamToDto(team);
+        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
 //    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)

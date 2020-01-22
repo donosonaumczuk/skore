@@ -102,8 +102,7 @@ public class UserController {
         if (team == null) {
             return null;
         }
-        teamService.getAccountsList(team);
-        return HelperController.mapTeamToDto(team);
+        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
     @GET

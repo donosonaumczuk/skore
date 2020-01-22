@@ -121,14 +121,14 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Override
-    public void getAccountsList(Team team) {
+    public HashMap<User, PremiumUser> getAccountsMap(Team team) {
+        HashMap<User, PremiumUser> accountsList = new HashMap<>();
         if(team != null) {
-            HashMap<User, PremiumUser> accountsList = new HashMap<>();
             for (User u:team.getPlayers()) {
                 Optional<PremiumUser> account = premiumUserService.findById(u.getUserId());
-                accountsList.put(u, (account.isPresent())?account.get():null);
+                accountsList.put(u, account.orElse(null));
             }
-            team.setAccountsPlayers(accountsList);
         }
+        return accountsList;
     }
 }

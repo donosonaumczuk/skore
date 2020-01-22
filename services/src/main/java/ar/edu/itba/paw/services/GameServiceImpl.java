@@ -230,8 +230,7 @@ public class GameServiceImpl implements GameService {
         String finishTime = urlDateToKeyDate(matchURLKey.substring(length - URL_DATE_LENGTH));
 
         Game game = findByKey(teamName1, startTime, finishTime);
-        teamService.getAccountsList(game.getTeam1());
-        teamService.getAccountsList(game.getTeam2());
+//        teamService.getAccountsList(game.getTeam1()); TODO: if we ar going to use this method check this
         return game;
     }
 

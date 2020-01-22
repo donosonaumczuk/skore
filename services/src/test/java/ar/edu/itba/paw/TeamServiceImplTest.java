@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -39,7 +40,7 @@ public class TeamServiceImplTest {
     private TeamServiceImpl teamService;
 
     @Test
-    public void getAccountsListTest() {
+    public void getAccountsMapTest() {
         Team team  = new Team(null, null, null, true, null, null);
         User user0 = new User(FIRSTNAME+ID_0, LASTNAME+ID_0, EMAIL+ID_0, ID_0);
         User user1 = new User(FIRSTNAME+ID_1, LASTNAME+ID_1, EMAIL+ID_1, ID_1);
@@ -53,34 +54,35 @@ public class TeamServiceImplTest {
         when(premiumUserServiceMock.findById(ID_1)).thenReturn(Optional.of(account1));
         when(premiumUserServiceMock.findById(ID_2)).thenReturn(Optional.empty());
 
-        teamService.getAccountsList(team);
+        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
 
-        Assert.assertNotNull(team.getAccountsPlayers());
-        Assert.assertEquals(3, team.getAccountsPlayers().size());
-        Assert.assertEquals(true , team.getAccountsPlayers().containsKey(user0));
-        Assert.assertEquals(null, team.getAccountsPlayers().get(user0));
-        Assert.assertEquals(true , team.getAccountsPlayers().containsKey(user1));
-        Assert.assertEquals(account1, team.getAccountsPlayers().get(user1));
-        Assert.assertEquals(true , team.getAccountsPlayers().containsKey(user2));
-        Assert.assertEquals(null, team.getAccountsPlayers().get(user2));
+        Assert.assertNotNull(map);
+        Assert.assertEquals(3, map.size());
+        Assert.assertEquals(true , map.containsKey(user0));
+        Assert.assertEquals(null, map.get(user0));
+        Assert.assertEquals(true , map.containsKey(user1));
+        Assert.assertEquals(account1, map.get(user1));
+        Assert.assertEquals(true , map.containsKey(user2));
+        Assert.assertEquals(null, map.get(user2));
     }
 
     @Test
     public void getAccountsListWithOutPlayerTest() {
         Team team  = new Team(null, null, null, true, null, null);
 
-        teamService.getAccountsList(team);
+        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
 
-        Assert.assertNotNull(team.getAccountsPlayers());
-        Assert.assertEquals(0, team.getAccountsPlayers().size());
+        Assert.assertNotNull(map);
+        Assert.assertEquals(0, map.size());
     }
 
     @Test
     public void getAccountsListTeamNullTest() {
         Team team  = null;
 
-        teamService.getAccountsList(team);
+        HashMap<User, PremiumUser> map = teamService.getAccountsMap(team);
 
         Assert.assertNull(team);
+        Assert.assertEquals(0, map.size());
     }
 }

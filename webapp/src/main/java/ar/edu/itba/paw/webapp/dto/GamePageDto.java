@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.webapp.utils.HateoasUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.Link;
 
@@ -13,8 +14,8 @@ public class GamePageDto {
     private final List<Link> links;
 
     public GamePageDto(Page<GameDto> page, UriInfo uriInfo) {
-        this.games = page.getPageData();
-        this.links = DtoHelper.getHateoasForPageLinks(page, DtoHelper.getQuery(uriInfo.getQueryParameters(false)),
+        this.games = page.getData();
+        this.links = HateoasUtils.getHateoasForPageLinks(page, HateoasUtils.getQuery(uriInfo.getQueryParameters(false)),
                 uriInfo.getPath());
     }
 
