@@ -152,7 +152,6 @@ public class UserController {
     @DELETE
     @Path("/{username}")
     public Response deleteUser(@PathParam("username") String username) {
-        /*TODO| Validate that te user to be delete is the same as the one logged*/
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
         if (!premiumUserService.remove(username)) {
@@ -169,29 +168,24 @@ public class UserController {
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody) {
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
-        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
-                .validate(premiumUserService.findByUserName(username));
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         //TODO: check what to do with UserDto and nullable fields, userDto.getHome().getCountry() -> NPE if getHome() returns null!
-        PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
+        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
-                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username)
-                .orElseThrow(() -> { //FIXME: We must remove this? validate existence again here? Validate only here and remove the previous? Discuss!
-                    LOGGER.trace("User '{}' does not exist", username);
-                    return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-                });
+                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username);
+        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
+                .validate(newPremiumUser);
         LOGGER.trace("User '{}' modified successfully", username);
-        return Response.ok(UserDto.from(newPremiumUser)).build();
+        return Response.ok(UserDto.from(newPremiumUser.get())).build();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response createUser(@RequestBody final String requestBody) {
-        //TODO: validate
         UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
