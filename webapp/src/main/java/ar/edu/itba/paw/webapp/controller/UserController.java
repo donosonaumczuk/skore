@@ -273,7 +273,7 @@ public class UserController {
         return Response.ok(UserDto.from(premiumUser)).build();
     }
 
-    public byte[] getDefaultImage() {
+    private byte[] getDefaultImage() {
         ByteArrayOutputStream bos;
         try {
             BufferedImage bImage = ImageIO.read(defaultImage.getFile());
