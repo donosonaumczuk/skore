@@ -4,20 +4,21 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
-import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
-import ar.edu.itba.paw.webapp.dto.GameListDto;
+import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
+import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
-import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,15 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.LinkedList;
+import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -89,50 +92,55 @@ public class UserController {
     }
 
     @GET
+    public Response getUsers(@QueryParam("minReputation") String minReputation,
+                             @QueryParam("maxReputation") String maxReputation,
+                             @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
+                             @QueryParam("friends") List<String> friendsUsernames,
+                             @QueryParam("sports") List<String> sportsLiked,
+                             @QueryParam("usernames") List<String> usernames,
+                             @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+                             @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
+        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames, sportsLiked, friendsUsernames,
+                QueryParamsUtils.positiveIntegerOrNull(minReputation),
+                QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
+                .map(UserDto::from);
+
+        LOGGER.trace("Users successfully gotten");
+        return Response.ok().entity(UserPageDto.from(userPage, uriInfo)).build();
+    }
+
+    @GET
+    @Path("/{username}/matches")
+    public Response getUserGames(@PathParam("username") String username, @QueryParam("limit") String limit,
+                                 @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
+        List<String> usernames = new ArrayList<>();
+        usernames.add(username);
+        Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
+            null, null, null,null, null, null, null,
+                null, null, usernames, null, null,
+                null, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), null)
+                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+
+        LOGGER.trace("'{}' matches successfully gotten", username);
+        return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
+    }
+
+    private TeamDto getTeam(Team team) {
+        if (team == null) {
+            return null;
+        }
+        return TeamDto.from(teamService.getAccountsMap(team), team);
+    }
+
+    @GET
     @Path("/{username}/profile")
     public Response getUserProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
         LOGGER.trace("'{}' profile successfully gotten", username);
         return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
-    }
-
-    @GET
-    @Path("/{username}/matches")
-    public Response getUserGames(@PathParam("username") String username) {
-        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' matches").validate(premiumUserOptional);
-        PremiumUser premiumUser = premiumUserOptional.get();
-        List<List<Game>> gamesResult;
-        gamesResult = gameService.getGamesThatPlay(premiumUser.getUser().getUserId());
-        List<GameDto> games = new LinkedList<>();
-        gamesResult.forEach(gameList -> gameList.forEach(game -> games.add(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))));
-        LOGGER.trace("'{}' matches successfully gotten", username);
-        return Response.ok(GameListDto.from(games)).build();
-    }
-
-    /*
-        TODO: this method must not exist!
-          - FIXME Option 1: Team have already the AccountsPlayers map, always
-          - FIXME Option 2: Remove the AccountsPlayers Map from the Team model, then teamService.getAccountsList(team)
-             returns the AccountsPlayers Map from the given Team. And TeamDto has a from(Team, Map<User, PremiumUser)
-             method that do the rest of the logic to obtain the TeamDto, so we call it:
-             TeamDto.from(team, teamService.getAccountsList(team)) or something like that
-     */
-    private TeamDto getTeam(Team team) {
-        teamService.getAccountsList(team);
-        Map<User, PremiumUser> userMap = team.getAccountsPlayers();
-        Set<User> teamusers = team.getPlayers();
-        List<TeamPlayerDto> teamPlayers = new LinkedList<>();
-        teamusers.forEach(user -> {
-            if (userMap.containsKey(user)) {
-                teamPlayers.add(TeamPlayerDto.from(userMap.get(user)));
-            }
-            else {
-                teamPlayers.add(TeamPlayerDto.from(user));
-            }
-        });
-        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
     @GET

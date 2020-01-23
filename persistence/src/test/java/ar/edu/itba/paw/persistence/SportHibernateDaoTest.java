@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.models.SportSort;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -123,11 +125,39 @@ public class SportHibernateDaoTest {
     }
 
     @Test
-    public void testgetAllSports() {
+    public void testGetAllSportsSorted() {
         //exercise class
-        List<Sport> sports = sportDao.getAllSports();
+        List<Sport> sportsResult = sportDao.findSports(null, null, null,
+                new SportSort("quantity desc"));
 
         //postconditions
-        Assert.assertEquals(sports.size(), 2);
+        Assert.assertEquals(2, sportsResult.size());
+        Assert.assertEquals(sports.get(1), sportsResult.get(0));
+        Assert.assertEquals(sports.get(0), sportsResult.get(1));
+    }
+
+    @Test
+    public void testGetAllSportsBySportName() {
+        //Set up
+        List<String> sportnames = new ArrayList<>();
+        sportnames.add(sport.getName());
+
+        //exercise class
+        List<Sport> sportsResult = sportDao.findSports(sportnames, null, null, null);
+
+        //postconditions
+        Assert.assertEquals(1, sportsResult.size());
+        Assert.assertEquals(sport, sportsResult.get(0));
+    }
+
+    @Test
+    public void testGetAllSportsByQuantity() {
+
+        //exercise class
+        List<Sport> sportsResult = sportDao.findSports(null, 1, 7, null);
+
+        //postconditions
+        Assert.assertEquals(1, sportsResult.size());
+        Assert.assertEquals(sport, sportsResult.get(0));
     }
 }

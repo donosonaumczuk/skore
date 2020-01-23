@@ -1,18 +1,34 @@
 package ar.edu.itba.paw.models;
 
-import javax.print.DocFlavor;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Filters {
     private StringBuilder start;
-    private List<String>  valueNames;
+    private List<String> valueNames;
     private List<Object>  values;
     private boolean isFirst;
 
-    static private String AND       = " AND ";
-    static private String OR        = " OR ";
-    static private char ESPACE      = ' ';
-    static private char DOUBLE_DOT  = ':';
+    static private String AND            = " AND ";
+    static private String OR             = " OR ";
+    static private char ESPACE           = ' ';
+    static private char DOUBLE_DOT       = ':';
+    static private char OPEN_PARENTHESE  = '(';
+    static private char CLOSE_PARENTHESE = ')';
+    static private String LOWER          = "lower";
+    static private String NOT            = " NOT";
+    static private String LIKE           = " LIKE ";
+    static private String IN             = " IN ";
+    static private String NOT_IN         = " NOT IN ";
+    static private String NESTED_QUERY_1 =
+            "(SELECT pu.userName " +
+            "FROM Game g, Team t JOIN t.players p, PremiumUser pu " +
+            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName AND pu.user.userId = p.userId)";
+    static private String NESTED_QUERY_2 =
+            "(SELECT pu.userName " +
+            "FROM Game g, Team t JOIN t.players p, PremiumUser pu " +
+            "WHERE games = g AND g.team2.teamName = t.teamName AND pu.user.userId = p.userId)";
+    static private String FINISH_CONDITION = "(games.result IS NULL)";
 
     public Filters(String start) {
         this.start      = new StringBuilder(start);
@@ -22,38 +38,119 @@ public class Filters {
     }
 
     public void addFilter(String objectRepresentation, String operator, String valueName, Object value) {
-        if(value != null && (value.getClass() != String.class || ((String)value).compareTo("") != 0)) {
+        addFilter(objectRepresentation, operator, valueName, value, true);
+    }
+
+    private void addFilter(String objectRepresentation, String operator, String valueName, Object value, boolean putAnd) {
+        if (value != null && (value.getClass() != String.class || ((String)value).compareTo("") != 0)) {
             valueNames.add(valueName);
             values.add(value);
-            start = start.append(AND);
-            start = start.append(objectRepresentation).append(ESPACE)
-                    .append(operator).append(ESPACE).append(DOUBLE_DOT).append(valueName);
+            if (putAnd) {
+                start = start.append(AND);
+            }
+            start = start.append(DOUBLE_DOT).append(valueName).append(ESPACE).append(operator).append(ESPACE)
+                    .append(objectRepresentation);
+        }
+    }
+    public void addFilter(String objectRepresentation, String operator, String valueName, List<String> values) {
+        if (values != null && !values.isEmpty()) {
+            start = start.append(AND).append(OPEN_PARENTHESE);
+            int i = 0;
+            for (String value: values) {
+                if(i != 0) {
+                    start = start.append(ESPACE).append(OR).append(ESPACE);
+                }
+                start = start.append(OPEN_PARENTHESE);
+                addFilter(objectRepresentation, operator, valueName + i, value, false);
+                i++;
+                start = start.append(CLOSE_PARENTHESE);
+            }
+            start = start.append(CLOSE_PARENTHESE);
         }
     }
 
-    public void addListFilters(String objectRepresentation, String operator, String valueName,
-                               List<String> listOfValues) {
-        if(listOfValues != null && listOfValues.size() != 0) {
-            start = start.append(AND);
+    private void addFilter(boolean isCaseSensitive, boolean isDifferent,
+                           String objectRepresentation, int index, String valueName, String value) {
+        if (value != null && !value.isEmpty()) {
+            valueNames.add(valueName + index);
+            if (!isCaseSensitive) {
+                values.add(value);
+            }
+            else {
+                values.add('%' + value + '%');
+            }
 
-            start = start.append('(');
+            if (!isCaseSensitive) {
+                start = start.append(LOWER).append(OPEN_PARENTHESE);
+            }
+            start = start.append(objectRepresentation);
+            if (!isCaseSensitive) {
+                start = start.append(CLOSE_PARENTHESE);
+            }
+            if (isDifferent) {
+                start = start.append(NOT);
+            }
+            start = start.append(LIKE);
+            if (!isCaseSensitive) {
+                start = start.append(LOWER).append(OPEN_PARENTHESE);
+            }
+            start = start.append(DOUBLE_DOT).append(valueName).append(index);
+            if (!isCaseSensitive) {
+                start = start.append(CLOSE_PARENTHESE);
+            }
+        }
+    }
+
+    private void addFilter(boolean isInclude, String valueName, int index, String username) {
+        if (username != null && !username.isEmpty()) {
+            start = start.append(DOUBLE_DOT).append(valueName).append(index).append((isInclude) ? IN : NOT_IN)
+                    .append(NESTED_QUERY_1).append((isInclude) ? OR : AND).append(ESPACE).append(DOUBLE_DOT)
+                    .append(valueName).append(index + 1).append((isInclude) ? IN : NOT_IN).append(NESTED_QUERY_2);
+            valueNames.add(valueName + index);
+            values.add(username);
+            valueNames.add(valueName + (index + 1));
+            values.add(username);
+        }
+    }
+
+    public void addListFilters(boolean isInclude, String valueName, List<String> players) {
+        if(players != null && players.size() != 0) {
+            start = start.append(AND).append(OPEN_PARENTHESE);
+
+            int i = 0;
+            for (String player: players) {
+                if (i != 0) {
+                    start = start.append((isInclude) ? OR : AND);
+                }
+
+                addFilter(isInclude, valueName, i, player);
+                i = i + 2;
+            }
+
+            start = start.append(CLOSE_PARENTHESE);
+        }
+    }
+
+    public void addListFilters(boolean isCaseSensitive, boolean isDifferent,
+                               String objectRepresentation, String valueName, List<String> listOfValues) {
+        if(listOfValues != null && listOfValues.size() != 0) {
+            start = start.append(AND).append(OPEN_PARENTHESE);
 
             int i = 0;
             for(String o:listOfValues) {
-                valueNames.add(valueName + i);
-                values.add('%' + o + '%');
                 if(i != 0) {
                     start = start.append(OR);
                 }
-                start = start.append(objectRepresentation).append(ESPACE)
-                        .append(operator).append(ESPACE).append("lower(")
-                        .append(DOUBLE_DOT).append(valueName + i).append(")");
+
+                addFilter(isCaseSensitive, isDifferent, objectRepresentation, i, valueName, o);
                 i++;
             }
 
-            start = start.append(')');
+            start = start.append(CLOSE_PARENTHESE);
         }
     }
+
+//    public void addLisFilters()
 
     public String toString() {
         return start.toString();
@@ -66,145 +163,8 @@ public class Filters {
     public List<Object> getValues() {
         return values;
     }
-//    private Map<String, Object> min;
-//    private Map<String, Object> max;
-//    private Map<String, List<String>> same;
-//    private Map<String, Object> minHaving;
-//    private Map<String, Object> maxHaving;
-//
-//    public Filters() {
-//        min         = new HashMap<>();
-//        max         = new HashMap<>();
-//        minHaving   = new HashMap<>();
-//        maxHaving   = new HashMap<>();
-//        same        = new HashMap<>();
-//    }
-//
-//    public void addMinFilter(String column, Object value) {
-//        if(value != null && column != null &&
-//            (value.getClass() != String.class || ((String)value).compareTo("")!=0)) {
-//            min.put(column, value);
-//        }
-//    }
-//
-//    public void addMaxFilter(String column, Object value) {
-//        if(value != null && column != null &&
-//            (value.getClass() != String.class || ((String)value).compareTo("")!=0)) {
-//            max.put(column, value);
-//        }
-//    }
-//
-//    public void addSameFilter(String column, List<String> values) {
-//        if(values != null && values.size() !=0 && column != null) {
-//            same.put(column, values);
-//        }
-//    }
-//
-//    public void addMinHavingFilter(String column, Object value) {
-//        if(value != null && column != null) {
-//            minHaving.put(column, value);
-//        }
-//    }
-//
-//    public void addMaxHavingFilter(String column, Object value) {
-//        if(value != null && column != null) {
-//            maxHaving.put(column, value);
-//        }
-//    }
-//
-//    public String generateQueryWhereMin(final List<Object> list) {
-//        String query = "";
-//        boolean isFirst = true;
-//        for(String key: min.keySet()) {
-//            list.add(min.get(key));
-//            query = (isFirst)? query: query + " AND";
-//            query = query + " ? <= " + key;
-//            isFirst = false;
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryWhereMax(final List<Object> list) {
-//        String query = "";
-//        boolean isFirst = true;
-//        for(String key: max.keySet()) {
-//            list.add(max.get(key));
-//            query = (isFirst)? query: query + " AND";
-//            query = query + " " + key + " <= ?";
-//            isFirst = false;
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryWhereSame(final List<Object> list) {
-//        String query = "";
-//        boolean isFirst = true;
-//        for (String key: same.keySet()) {
-//            Iterator iterator = same.get(key).iterator();
-//            list.add("%"+iterator.next()+"%");
-//            query = (isFirst)? query: query + " AND";
-//            query = query + " (lower(" + key + ") LIKE lower(?)";
-//
-//            while(iterator.hasNext()) {
-//                list.add("%"+iterator.next()+"%");
-//                query = query + " OR lower(" + key + ") LIKE lower(?)";
-//            }
-//            query = query + ")";
-//            isFirst = false;
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryHavingMin(List<Object> list) {
-//        String query = "";
-//        boolean isFirst = true;
-//        for (String key: minHaving.keySet()) {
-//            list.add(minHaving.get(key));
-//            query = (isFirst)?" " : query + " AND ";
-//            query = query + "? <= " + key;
-//            isFirst = false;
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryHavingMax(List<Object> list) {
-//        String query = "";
-//        boolean isFirst = true;
-//        for (String key: maxHaving.keySet()) {
-//            list.add(maxHaving.get(key));
-//            query = (isFirst)? " " : query + " AND ";
-//            query = query + key + " <= ?";
-//            isFirst = false;
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryHaving(final List<Object> list) {
-//        String query;
-//        if((!minHaving.isEmpty() && maxHaving.isEmpty()) ||
-//                (minHaving.isEmpty() && !maxHaving.isEmpty())) {
-//            query = " HAVING" + generateQueryHavingMin(list) + generateQueryHavingMax(list);
-//        } else if(!minHaving.isEmpty() && !maxHaving.isEmpty()) {
-//            query = " HAVING" + generateQueryHavingMin(list) + " AND" + generateQueryHavingMax(list);
-//        } else {
-//            query = "";
-//        }
-//        return query;
-//    }
-//
-//    public String generateQueryWhere(final List<Object> list) {
-//        String query = generateQueryWhereMin(list);
-//        String query2 = generateQueryWhereMax(list);
-//        if(!query.equals("") && !query2.equals("")) {
-//            query = query + " AND";
-//        }
-//        query = query + query2;
-//        query2 = generateQueryWhereSame(list);
-//        if(!query.equals("") && !query2.equals("")) {
-//            query = query + " AND";
-//        }
-//        query = query + query2;
-//        return query;
-//    }
 
+    public void addFilterOnlyFinished() {
+        start = start.append(AND).append(FINISH_CONDITION);
+    }
 }
