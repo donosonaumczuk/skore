@@ -14,6 +14,7 @@ import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
+import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 
@@ -75,6 +76,9 @@ class App extends Component {
             </Route>
             <Route path="/logout">
               <LogOut updateUser={this.updateUser}/>
+            </Route>
+            <Route path="/accounts">
+              <Accounts />
             </Route>
             <Route exact path="/users/:username" component={UserProfile} />
             <Route exact path="/users/:username/edit" component={EditUserInfo} />
