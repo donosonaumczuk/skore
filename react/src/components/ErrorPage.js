@@ -6,6 +6,10 @@ const getErrorMessage = (status) => {
     if (status === 404) {
         return i18next.t('errorPage.404');
     }
+    else {
+        return "";
+        //TODO make more default messages for diferent errors
+    }
 }
 
 

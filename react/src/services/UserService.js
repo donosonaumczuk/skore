@@ -1,5 +1,15 @@
 import api from './../config/Api';
 
+const getUsers = async (offset, limit) => {
+    try {
+        const res = await api.get(`users?offset=${offset}&limit=${limit}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const getProfileByUsername = async username => {
     try {
         const res = await api.get(`users/${username}/profile`);
@@ -8,7 +18,6 @@ const getProfileByUsername = async username => {
     catch (err) {
         return { status: err.response.status }
     }
-
 }
 
 const getUserImage = async username => {
@@ -21,10 +30,10 @@ const getUserImage = async username => {
     }
 }
    
-const getUserMatches = async username => {
+const getUserMatches = async (username, offset, limit) => {
     try {
-        const res = await api.get(`users/${username}/matches`);
-        return res.data.matches;
+        const res = await api.get(`users/${username}/matches?offset=${offset}&limit=${limit}`);
+        return res.data;
     }
     catch (err) {
         return { status: err.response.status }
@@ -43,6 +52,7 @@ const createUser = async user => {
 }
 
 const UserService = {
+    getUsers: getUsers,
     getProfileByUsername: getProfileByUsername,
     getUserImage: getUserImage,
     getUserMatches: getUserMatches,
