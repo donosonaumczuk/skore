@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class UserDto {
+    //TODO: remove public constructor
+    //TODO: remove setters
+    //TODO: maybe we must use Optionals in getters for nullable fields, discuss and check if jackson maps using getters or reflection
 
     private String username;
     private String email;
@@ -46,7 +49,7 @@ public class UserDto {
         return ImmutableList.of(
                 new Link(UserController.getUserEndpoint(premiumUser.getUserName()), Link.REL_SELF),
                 new Link(UserController.getUserImageEndpoint(premiumUser.getUserName()), "image"),
-                new Link(UserController.getProfileEndpoint(premiumUser.getUserName()), "profile")
+                new Link(UserController.getUserProfileEndpoint(premiumUser.getUserName()), "profile")
         );
     }
 
