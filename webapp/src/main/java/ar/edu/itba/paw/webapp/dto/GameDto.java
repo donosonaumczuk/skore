@@ -51,7 +51,7 @@ public class GameDto {
         durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
         location = game.getPlace().toString();
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
-        currentPlayers = team1.getPlayerQuantity() + team2.getPlayerQuantity();
+        currentPlayers = team1.getPlayerQuantity() + (team2 == null ? 0 : team2.getPlayerQuantity());
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         results = game.getResult();
@@ -69,7 +69,7 @@ public class GameDto {
         //TODO improve id so that it is more semantic
         return ImmutableList.of(
                 new Link(GameController.getGameEndpoint(gameId), Link.REL_SELF),
-                new Link(UserController.getProfileEndpoint(creator), "creator"),
+                new Link(UserController.getUserProfileEndpoint(creator), "creator"),
                 new Link(UserController.getUserImageEndpoint(creator), "creatorImage"),
                 new Link(SportController.getSportImageEndpoint(sport), "sportImage"));
 

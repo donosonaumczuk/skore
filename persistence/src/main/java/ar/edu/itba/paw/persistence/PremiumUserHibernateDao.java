@@ -1,21 +1,22 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.models.*;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
+import ar.edu.itba.paw.models.Filters;
+import ar.edu.itba.paw.models.Place;
+import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,8 +35,26 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     @Autowired
     RoleDao roleDao;
 
-    private static final String userRole = "ROLE_USER";
-    private static final int userRoleId = 0;
+    private static final String QUERY_PART_1          = "Select u From PremiumUser as u";
+    private static final String QUERY_PART_2          = ", PremiumUser as u2";
+    private static final String QUERY_PART_3          = ", Sport s";
+    private static final String QUERY_PART_4          = " WHERE u.userName = u.userName";
+    private static final String QUERY_REPUTATION_NAME = "u.reputation";
+    private static final String LESS_THAN             = "<";
+    private static final String GREATER_THAN          = ">";
+    private static final String MIN_REPUTATION        = "minReputation";
+    private static final String MAX_REPUTATION        = "maxReputation";
+    private static final String EQUALS                = "=";
+    private static final String QUERY_USERNAME_NAME   = "u.userName";
+    private static final String QUERY_LIKES_NAME      = "elements(u.likes)";
+    private static final String QUERY_FRIENDS_NAME    = "elements(u.friends)";
+    private static final String LIKES_OPERATOR        = "= s.sportName AND s IN";
+    private static final String FRIENDS_OPERATOR      = "= u2.userName AND u2 IN";
+    private static final String USERNAME              = "username";
+    private static final String SPORT                 = "sport";
+    private static final String USERNAME_FRIENDS      = "usernameFriends";
+    private static final String userRole              = "ROLE_USER";
+    private static final int userRoleId               = 0;
 
     public Optional<PremiumUser> findByUserName(final String userName) {
         PremiumUser premiumUser = em.find(PremiumUser.class, userName);
@@ -278,4 +297,36 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     }
 
+    public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
+                                       final List<String> friendUsernames, final Integer minReputation,
+                                       final Integer maxReputation, final Integer minWinRate,
+                                       final Integer maxWinRate, final UserSort sort) {
+        StringBuilder queryStart = new StringBuilder(QUERY_PART_1);
+        if (friendUsernames != null && !friendUsernames.isEmpty()) {
+            queryStart = queryStart.append(QUERY_PART_2);
+        }
+        if (sportLiked != null && !sportLiked.isEmpty()) {
+            queryStart = queryStart.append(QUERY_PART_3);
+        }
+        queryStart = queryStart.append(QUERY_PART_4);
+
+        Filters  filter = new Filters(queryStart.toString());
+        filter.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
+        filter.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
+        //TODO: winrate filter and Sort, need base migration
+        filter.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        filter.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
+        filter.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
+
+        final TypedQuery<PremiumUser> query = em.createQuery(filter.toString() +
+                (sort != null ? sort.toQuery() : ""), PremiumUser.class);
+        List<String> valueName = filter.getValueNames();
+        List<Object> values    = filter.getValues();
+
+        for(int i = 0; i < valueName.size(); i++) {
+            query.setParameter(valueName.get(i), values.get(i));
+        }
+
+        return query.getResultList();
+    }
 }

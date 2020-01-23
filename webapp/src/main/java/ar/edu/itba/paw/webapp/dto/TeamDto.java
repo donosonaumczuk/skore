@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
 import org.springframework.hateoas.Link;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TeamDto {
 
@@ -21,6 +25,20 @@ public class TeamDto {
 
     public static TeamDto from(List<TeamPlayerDto> players) {
         return new TeamDto(players, null);
+    }
+
+    public static TeamDto from(Map<User, PremiumUser> userMap, Team team) {
+        Set<User> teamusers = team.getPlayers();
+        List<TeamPlayerDto> teamPlayers = teamusers.stream().map(user -> {
+            PremiumUser premiumUser = userMap.get(user);
+            if(premiumUser != null) {
+                return TeamPlayerDto.from(premiumUser);
+            }
+            else {
+                return TeamPlayerDto.from(user);
+            }
+        }).collect(Collectors.toList());
+        return TeamDto.from(teamPlayers, team.getName());//TODO add a check to see if name is created by user or autoasigned
     }
 
     public static TeamDto from(List<TeamPlayerDto> players, String teamName) {
