@@ -93,13 +93,15 @@ public class GameHibernateDaoTest {
             }
             em.persist(g.getTeam1());
 
-            em.persist(g.getTeam2().getSport());
-            em.persist(g.getTeam2().getLeader().getUser());
-            em.persist(g.getTeam2().getLeader());
-            for (User p: g.getTeam2().getPlayers()) {
-                em.persist(p);
+            if(g.getTeam2() != null) {
+                em.persist(g.getTeam2().getSport());
+                em.persist(g.getTeam2().getLeader().getUser());
+                em.persist(g.getTeam2().getLeader());
+                for (User p : g.getTeam2().getPlayers()) {
+                    em.persist(p);
+                }
+                em.persist(g.getTeam2());
             }
-            em.persist(g.getTeam2());
             em.persist(g);
         }
         em.flush();
@@ -134,6 +136,20 @@ public class GameHibernateDaoTest {
     }
 
     @Test
+    public void findGamesTestFilterTime() {
+
+        final List<Game> games = gameDao.findGames(LocalDateTime.parse("2018-11-11T12:00:00"),
+                LocalDateTime.parse("2018-12-11T18:00:00"), LocalDateTime.parse("2018-11-11T12:00:00"),
+                LocalDateTime.parse("2018-12-11T18:00:00"), null, null, 0,
+                null, null, null, null, null,
+                null, null, null,
+                null, null, null);
+
+        Assert.assertEquals(1,games.size());
+        Assert.assertEquals(game1, games.get(0));
+    }
+
+    @Test
     public void findGamesTestFilterMultipleCountries() {
 
         List<String> type = new ArrayList<>();
@@ -150,11 +166,12 @@ public class GameHibernateDaoTest {
 
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, type, sportnames, 0,
-                20, countries, states, cities, 0,
-                10, null, false, false);
+                10, countries, states, cities, 0,
+                10, null, null,
+                null, null, null);
 
         Assert.assertEquals(1,games.size());
-        Assert.assertEquals(game1,games.get(0));
+        Assert.assertEquals(game1, games.get(0));
     }
 
     @Test
@@ -163,35 +180,90 @@ public class GameHibernateDaoTest {
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, null, false, false);
+                null, null, null,
+                null, null, null);
 
         Assert.assertEquals(2,games.size());
-        Assert.assertEquals(games.get(0),games.get(0));
-        Assert.assertEquals(games.get(1),games.get(1));
+        Assert.assertEquals(game2,games.get(0));
+        Assert.assertEquals(game1,games.get(1));
+    }
+
+    @Test
+    public void findGamesTestSort() {
+
+        final List<Game> games = gameDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null,
+                null, null, new GameSort("country asc,state asc"));
+
+        Assert.assertEquals(2,games.size());
+        Assert.assertEquals(game1,games.get(0));
+        Assert.assertEquals(game2,games.get(1));
     }
 
     @Test
     public void findGamesTestGamesAUserIsNotPartOf() {
 
+        List<String> usernamesNotInclude = new ArrayList<>();
+        usernamesNotInclude.add(account.getUserName());
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, account, false, false);
+                null, null, usernamesNotInclude,
+                null, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game1, games.get(0));
     }
 
     @Test
-    public void findGamesTestGamesAUserIsPartOf() {
+    public void findGamesTestGamesAUserIsPartOfButIsNotCreator() {
+        em.persist(gameNotInserted);
 
+        List<String> usernames = new ArrayList<>();
+        usernames.add(account.getUserName());
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,
-                null, account, true, true);
+                null, usernames, null,
+                null, usernames, null);
+
+        Assert.assertEquals(1,games.size());
+        Assert.assertEquals(gameNotInserted, games.get(0));
+    }
+
+    @Test
+    public void findGamesTestGamesAUserCreate() {
+        em.persist(gameNotInserted);
+
+        List<String> usernames = new ArrayList<>();
+        usernames.add(account.getUserName());
+        final List<Game> games = gameDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null,
+                usernames, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game2, games.get(0));
+    }
+
+    @Test
+    public void findGamesTestIsApartOf() {
+        em.persist(gameNotInserted);
+
+        List<String> usernamesInclude = new ArrayList<>();
+        usernamesInclude.add(account.getUserName());
+        final List<Game> games = gameDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, usernamesInclude, null,
+                null, null, null);
+
+        Assert.assertEquals(2,games.size());
+        Assert.assertEquals(game2, games.get(0));
+        Assert.assertEquals(gameNotInserted, games.get(1));
     }
 
     @Test

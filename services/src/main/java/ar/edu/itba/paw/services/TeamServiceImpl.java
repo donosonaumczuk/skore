@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class TeamServiceImpl implements TeamService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeamServiceImpl.class);
-
 
     @Autowired
     private TeamDao teamDao;
@@ -122,14 +122,14 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Override
-    public void getAccountsList(Team team) {
+    public Map<User, PremiumUser> getAccountsMap(Team team) {
+        Map<User, PremiumUser> accountsList = new HashMap<>();
         if(team != null) {
-            HashMap<User, PremiumUser> accountsList = new HashMap<>();
             for (User u:team.getPlayers()) {
                 Optional<PremiumUser> account = premiumUserService.findById(u.getUserId());
-                accountsList.put(u, (account.isPresent())?account.get():null);
+                accountsList.put(u, account.orElse(null));
             }
-            team.setAccountsPlayers(accountsList);
         }
+        return accountsList;
     }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Sport;
+import ar.edu.itba.paw.models.SportSort;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,8 +20,8 @@ public interface SportDao {
 
     public boolean remove(final String sportName);
 
-    public List<Sport> getAllSports();
-
     public Optional<byte[]> readImage(final String sportName);
 
+    public List<Sport> findSports(final List<String> sportNames, final Integer minQuantity,
+                                  final Integer maxQuantity, final SportSort sort);
 }

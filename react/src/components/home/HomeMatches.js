@@ -4,14 +4,17 @@ import HomeMatch from './HomeMatch';
 import MatchService from './../../services/MatchService';
 import Loader from '../Loader';
 
+const INITIAL_OFFSET = 0;
+const QUERY_QUANTITY = 5;
+
 class HomeMatches extends Component { 
     mounted = false;
     constructor(props) {
         super(props);
         this.state = {
                 matches: [],
-                offset: 0,
-                total: 5,
+                offset: INITIAL_OFFSET,
+                total: QUERY_QUANTITY,
                 hasMore: true
         }
     }

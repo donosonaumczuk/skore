@@ -3,8 +3,10 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.*;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,5 +256,16 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         return -1;
+    }
+
+    @Override
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit) {
+        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
+                maxReputation, minWinRate, maxWinRate, sort);
+        return new Page<>(users, offset, limit);
     }
 }

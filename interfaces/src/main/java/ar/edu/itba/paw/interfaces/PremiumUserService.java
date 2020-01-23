@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.UserSort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public interface PremiumUserService {
@@ -51,4 +54,11 @@ public interface PremiumUserService {
 
     @Transactional
     public boolean confirmationPath(String path);
+
+    @Transactional
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit);
 }

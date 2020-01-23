@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 public interface TeamService {
     @Transactional
@@ -31,5 +35,5 @@ public interface TeamService {
                                final String oldTeamName);
 
     @Transactional
-    public void getAccountsList(Team team);
+    public Map<User, PremiumUser> getAccountsMap(Team team);
 }

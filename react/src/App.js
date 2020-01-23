@@ -83,6 +83,9 @@ class App extends Component {
             <Route path="/accounts">
               <Accounts />
             </Route>
+            <Route path="/accounts">
+              <Accounts />
+            </Route>
             <Route exact path="/users/:username" component={UserProfile} />
             <Route exact path="/users/:username/edit" component={EditUserInfo} />
             <Route exact path="/users/:username/changePassword" component={ChangePassword} />
