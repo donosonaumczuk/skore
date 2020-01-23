@@ -18,6 +18,7 @@ import ChangePassword from './components/ChangePassword';
 import ConfirmAccount from './components/ConfirmAccount';
 import Sports from './components/Sports/Sports';
 import './css/main.css';
+import CreateMatchForm from './components/forms/CreateMatchForm';
 
 class App extends Component {
     constructor(props) {
@@ -65,23 +66,26 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/">
-                        <Home currentUser={this.state.currentUser} />
+                            <Home currentUser={this.state.currentUser} />
                         </Route>
                         <Route exact path="/sports">
-                        <Sports />
+                            <Sports />
                         </Route>
                         <Route path="/signUp" component={CreateUserForm} />
                         <Route path="/confirmAccount">
-                        <ConfirmAccount />
+                            <ConfirmAccount />
                         </Route>
                         <Route path="/login">
-                        <LogInForm updateUser={this.updateUser} />
+                            <LogInForm updateUser={this.updateUser} />
                         </Route>
                         <Route path="/logout">
-                        <LogOut updateUser={this.updateUser} />
+                            <LogOut updateUser={this.updateUser} />
                         </Route>
                         <Route path="/accounts">
-                        <Accounts />
+                            <Accounts />
+                        </Route>
+                        <Route path="/createMatch">
+                            <CreateMatchForm />
                         </Route>
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />

@@ -127,5 +127,9 @@
     },
     "sports": {
         "playersPerTeam": "Jugadores por equipo: "
+    },
+    "createMatchForm": {
+        "matchName": "Nombre del partido ",
+        "createMatch": "CREAR PARTIDO"
     }
 }

@@ -29,7 +29,6 @@ class Home extends Component {
                         <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange}
                                     currentUser={currentUser} />
                     </div>
-                
                     <div className="col-md-8 col-lg-8 col-xl-6">
                             {/* TODO pass down filters when implemented filter search */}
                             <HomeMatches />
