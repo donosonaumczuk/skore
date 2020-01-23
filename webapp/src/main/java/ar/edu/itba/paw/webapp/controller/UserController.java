@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
-import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
@@ -18,13 +18,16 @@ import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -65,7 +68,10 @@ public class UserController {
     @Qualifier("teamServiceImpl")
     private TeamService teamService;
 
-    public static String getProfileEndpoint(final String username) {
+    @Autowired
+    private SessionService sessionService;
+
+    public static String getUserProfileEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
     }
 
@@ -73,11 +79,11 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).toTemplate();
     }
 
-    public static String getMatchesEndpoint(final String username) {
+    public static String getUserGamesEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("matches").toTemplate();
     }
 
-    public static String getSportsEndpoint(final String username) {
+    public static String getUserSportsEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
@@ -106,8 +112,8 @@ public class UserController {
 
     @GET
     @Path("/{username}/matches")
-    public Response getGames(@PathParam("username") String username, @QueryParam("limit") String limit,
-                             @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
+    public Response getUserGames(@PathParam("username") String username, @QueryParam("limit") String limit,
+                                 @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
         List<String> usernames = new ArrayList<>();
         usernames.add(username);
         Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
@@ -130,7 +136,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/profile")
-    public Response getProfile(@PathParam("username") String username) {
+    public Response getUserProfile(@PathParam("username") String username) {
         Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
         LOGGER.trace("'{}' profile successfully gotten", username);
@@ -139,7 +145,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/image")
-    public Response getImageUser(@PathParam("username") String username) {
+    public Response getUserImage(@PathParam("username") String username) {
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
@@ -153,8 +159,9 @@ public class UserController {
 
     @DELETE
     @Path("/{username}")
-    public Response deleteAUser(@PathParam("username") String username) {
-        /*TODO| Validate that te user to be delete is the same as the one logged*/
+    public Response deleteUser(@PathParam("username") String username) {
+        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
+                + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
         if (!premiumUserService.remove(username)) {
             LOGGER.trace("User '{}' does not exist", username);
             throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
@@ -165,26 +172,31 @@ public class UserController {
 
     @PUT
     @Path("/{username}")
-    public Response modifyAUser(@PathParam("username") String username, final UserDto userDto) {
-        /*TODO| Validate userDto only image and password can be null to indicate that they do
-          TODO|not change. UserName should be null because it cant change. The rest
-          TODO|should not be null. Check if it the user logged is the same as the username receive*/
-        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
-        PremiumUser newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody) {
+        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
+                + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
+        UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
+        //TODO: check what to do with UserDto and nullable fields, userDto.getHome().getCountry() -> NPE if getHome() returns null!
+        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
-                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username)
-                .orElseThrow(() -> {
-                    LOGGER.trace("User '{}' does not exist", username);
-                    return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-                });
+                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username);
+        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
+                .validate(newPremiumUser);
         LOGGER.trace("User '{}' modified successfully", username);
-        return Response.ok(UserDto.from(newPremiumUser)).build();
+        return Response.ok(UserDto.from(newPremiumUser.get())).build();
     }
 
     @POST
-    public Response createAUser(final UserDto userDto) {
-        /*TODO| Validate*/
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createUser(@RequestBody final String requestBody) {
+        UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
@@ -200,7 +212,7 @@ public class UserController {
 
     @GET
     @Path("/{username}")
-    public Response getAUser(@PathParam("username") String username) {
+    public Response getUser(@PathParam("username") String username) {
         PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
             LOGGER.trace("User '{}' does not exist", username);
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
@@ -211,7 +223,7 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyAUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, String code) {
         /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
         * TODO|the code is receive in the mail.*/
         Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
