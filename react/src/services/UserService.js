@@ -31,10 +31,22 @@ const getUserMatches = async username => {
     }
 }
 
+const createUser = async user => {
+    try {
+        const res = await api.post("users", user);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status };
+    }
+
+}
+
 const UserService = {
     getProfileByUsername: getProfileByUsername,
     getUserImage: getUserImage,
-    getUserMatches: getUserMatches
+    getUserMatches: getUserMatches,
+    createUser: createUser
 };
 
 export default UserService;

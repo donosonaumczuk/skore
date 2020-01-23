@@ -28,13 +28,24 @@ const logInUser = async user => {
 }
 
 const logOutUser = async () => {
-    const response = await api.post("auth/logout");
-
-    if (getToken) {
-        removeToken();
-        removeUser();  
+    try {
+        await api.post("auth/logout");
+        if (getToken) {
+            removeToken();
+            removeUser();  
+        }
     }
-    console.log(response); //TODO remove on production is here to avoid warning
+    catch(err) {
+        if (err.response.status === 401) {
+            removeToken();
+            removeUser();
+        }
+        else {
+            return { "status": err.response.status };
+        }
+    }
+    
+    // console.log(response); //TODO remove on production is here to avoid warning
     //TODO handle errors using response
 }
 

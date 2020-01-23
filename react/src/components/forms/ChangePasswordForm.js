@@ -9,8 +9,9 @@ import CreateUserFormValidator from './validators/CreateUserValidator';
 const validate = values => {
     const errors = {}
     errors.username = CreateUserFormValidator.validateUsername(values.username);
-    errors.password = CreateUserFormValidator.validatePassword(values.password);
-    errors.repeatPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatPassword, values.password);
+    errors.oldPassword = CreateUserFormValidator.validatePassword(values.oldPassword);
+    errors.newPassword = CreateUserFormValidator.validatePassword(values.newPassword);
+    errors.repeatNewPassword = CreateUserFormValidator.validateRepeatedPassword(values.repeatNewPassword, values.newPassword);
     return errors;
 }
 
@@ -29,11 +30,13 @@ let ChangePasswordForm = (props) => {
             <FormTitle />
             <form onSubmit={handleSubmit(onSubmit)} >
                 <Field name="username" label={i18next.t('createUserForm.username')} 
-                        inputType="text" required={true} isDisabled={true}
+                        inputType="text" required={false} isDisabled={true}
                         component={RenderInput} />
-                <Field name="password" label={i18next.t('createUserForm.password')}
+                <Field name="oldPassword" label={i18next.t('changePasswordForm.oldPassword')}
                      inputType="password" required={true} component={RenderInput} />
-                <Field name="repeatPassword" label={i18next.t('createUserForm.repeatPassword')}
+                <Field name="newPassword" label={i18next.t('changePasswordForm.newPassword')}
+                          inputType="password" required={true} component={RenderInput} />
+                <Field name="repeatNewPassword" label={i18next.t('changePasswordForm.repeatNewPassword')}
                           inputType="password" required={true} component={RenderInput} />
                 {/* TODO address with all of its fields and make them autoload as on deploy */}
                 <SubmitButton label={i18next.t('changePasswordForm.changePasswordButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />

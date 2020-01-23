@@ -1,12 +1,14 @@
 import React from 'react';
 import createRenderer from './CreateRenderer';
 
-const RenderInput = createRenderer((input, label, inputType, isDisabled, meta) => {
+const RenderInput = createRenderer((input, label, inputType, id, isDisabled, meta) => {
   if (isDisabled) {
-    return (<input {...input} type={inputType} placeholder={label} className="form-control" disabled/>);
+    return (<input {...input} type={inputType} placeholder={label} id= {id}
+                                         className="form-control" disabled/>);
   }
   else {
-    return (<input {...input} type={inputType} placeholder={label} className="form-control" />);
+    return (<input {...input} type={inputType} placeholder={label} id={id}
+                                                 className="form-control" />);
   }
 });
 

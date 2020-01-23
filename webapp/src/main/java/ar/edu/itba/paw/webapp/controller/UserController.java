@@ -182,7 +182,7 @@ public class UserController {
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         //TODO: check what to do with UserDto and nullable fields, userDto.getHome().getCountry() -> NPE if getHome() returns null!
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username);
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
@@ -199,7 +199,7 @@ public class UserController {
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
         PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthDay(),
+                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
                 userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image)
                 .orElseThrow(() -> {
