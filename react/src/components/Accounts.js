@@ -5,6 +5,7 @@ import UserService from '../services/UserService';
 import Loader from './Loader';
 import Account from './Account';
 import Utils from './utils/Utils';
+import ErrorPage from './ErrorPage';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 7;
@@ -52,8 +53,11 @@ class Accounts extends Component {
     }
 
     render() {
-        if (this.state.accounts.length === 0) {
-            return <Loader />
+        if (this.state.status) {
+            return <ErrorPage status={this.state.status} />;
+        }
+        else if (this.state.accounts.length === 0 && this.state.hasMore) {
+            return <Loader />;
         }
         return (
             <div>
@@ -62,10 +66,12 @@ class Accounts extends Component {
                         {i18next.t('createUserForm.accounts')}
                     </h1>
                 </center>
-                <InfiniteScroll dataLength={this.state.accounts.length} next={this.getUsers}
-                                hasMore={this.state.hasMore} loader={<Loader />} >
-                    {this.state.accounts.map((account, i) => <Account key={i} account={account} />)}
-                </InfiniteScroll> 
+                <div className="container">
+                    <InfiniteScroll dataLength={this.state.accounts.length} next={this.getUsers}
+                                    hasMore={this.state.hasMore} loader={<Loader />} >
+                        {this.state.accounts.map((account, i) => <Account key={i} account={account} />)}
+                    </InfiniteScroll> 
+                </div>
             </div>
         )
     }

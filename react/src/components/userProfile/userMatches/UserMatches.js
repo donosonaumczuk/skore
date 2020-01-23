@@ -5,6 +5,7 @@ import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
 import UserMatch from './UserMatch';
 import ErrorPage from '../../ErrorPage';
+import Utils from '../../utils/Utils';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 1;
@@ -21,16 +22,6 @@ class UserMatches extends Component {
         }
     }
 
-    hasMoreMatches = links => {
-        let hasMore = false;
-        links.forEach(link => {
-            if (link.rel === "next") {
-                hasMore = true;
-            }
-        });
-        return hasMore;
-    }
-
     updateMatchesState = response => {
         if (response.status) {
             this.setState({
@@ -38,9 +29,8 @@ class UserMatches extends Component {
             });
         }
         else {
-            const hasMore = this.hasMoreMatches(response.links);
+            const hasMore = Utils.hasMorePages(response.links);
             const matches = response.matches;
-            console.log("hasMore: ", hasMore);
             this.setState({
                 matches: [...this.state.matches, ...matches],
                 offset: this.state.offset + matches.length,
