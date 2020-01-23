@@ -19,36 +19,31 @@ class HomeMatches extends Component {
         }
     }
    
-    async componentDidMount() {
-        this.mounted = true;
-        let matches = await MatchService.getMatches();
-        if (this.mounted) {
-            this.setState({
-                matches: [...this.state.matches, ...matches]
-            });
-        }
+    hasMoreMatches = links => {
+        let hasMore = false;
+        links.forEach(link => {
+            if (link.rel === "next") {
+                hasMore = true;
+            }
+        })
+        return hasMore;
     }
 
-    //TODO remove this function when we have more matches on data base
-    //this is just to generate more matches
-    getNewMatches = (matches, total) => {
-        let newMatches = [];
-        let i;
-        for (i = 0; i < total; i++) {
-            newMatches[i] = matches[0];
-        }
-        return newMatches;
-    } 
+    async componentDidMount() {
+        this.mounted = true;
+        this.getMatches();
+    }
 
-    getMoreMatches = async () => {
-        let matches = await MatchService.getMatches();
+    getMatches = async () => {
+        let response = await MatchService.getMatches(this.state.offset, this.state.total);
         if (this.mounted) {
-            const newMatches = this.getNewMatches(matches, this.state.total);
+            const matches = response.matches;
+            const hasMore = this.hasMoreMatches(response.links);
             this.setState({
-                matches: [...this.state.matches, ...newMatches],
-                offset: this.state.offset + this.state.total,
-                hasMore: true
-            });
+                matches: [...this.state.matches, ...matches],
+                offset: this.state.offset + matches.length,
+                hasMore: hasMore
+            });  
         }
     }
 
@@ -58,7 +53,7 @@ class HomeMatches extends Component {
         }
         return (
             <div className="match-container container-fluid">
-                <InfiniteScroll dataLength={this.state.matches.length} next={this.getMoreMatches}
+                <InfiniteScroll dataLength={this.state.matches.length} next={this.getMatches}
                                 loader={<Loader />} hasMore={this.state.hasMore}>
                     { this.state.matches.map( (match, i) => <HomeMatch key={i} currentMatch={match} />)}
                 </InfiniteScroll>

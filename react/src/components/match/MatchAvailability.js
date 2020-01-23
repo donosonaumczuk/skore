@@ -40,6 +40,7 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
 }
 
 const getButton = (currentMatch, currentUser) => {
+    //TODO if finishtime is before date return <React.Fragment></React.Fragment>
     if (currentUser && currentUser === currentMatch.creator) {
         return <MatchButton buttonStyle="btn btn-negative join-button" handleClick={deleteMatch} 
                             buttonText={i18next.t('home.deleteMatch')} fontAwesome="fas fa-trash-alt mr-1" />

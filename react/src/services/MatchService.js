@@ -1,10 +1,9 @@
 import api from './../config/Api';
 
-const getMatches = async () => {
-    //TODO replace endpoint with /matches when endpoint is created
-    const res = await api.get(`users/donosonaumczuk/matches`);
+const getMatches = async (offset, limit) => {
+    const res = await api.get(`matches?offset=${offset}&limit=${limit}`);
     // console.log(res)//TODO validate error
-    return res.data.matches;
+    return res.data;
 }
 
 const MatchService = {
