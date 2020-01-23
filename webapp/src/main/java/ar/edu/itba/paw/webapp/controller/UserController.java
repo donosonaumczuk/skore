@@ -24,10 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -41,10 +44,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -71,6 +76,8 @@ public class UserController {
 
     @Autowired
     private SessionService sessionService;
+
+    private static Resource defaultImage = new ClassPathResource("user-default.png");
 
     public static String getUserProfileEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
@@ -175,8 +182,7 @@ public class UserController {
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
-            return Response.status(HttpStatus.TEMPORARY_REDIRECT.value())
-                    .header("Location", URLConstants.DEFAULT_USER_IMAGE_URL).build();
+            return Response.ok(getDefaultImage()).header("Content-Type", "image/*").build();
         }
         LOGGER.trace("Returning image for {}", username);
         return Response.ok(media.get()).header("Content-Type", "image/*").build();
@@ -265,5 +271,18 @@ public class UserController {
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
         });
         return Response.ok(UserDto.from(premiumUser)).build();
+    }
+
+    public byte[] getDefaultImage() {
+        ByteArrayOutputStream bos;
+        try {
+            BufferedImage bImage = ImageIO.read(defaultImage.getFile());
+            bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, "png", bos);
+        }
+        catch (IOException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
+        }
+        return bos.toByteArray();
     }
 }
