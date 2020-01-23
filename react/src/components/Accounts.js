@@ -10,7 +10,6 @@ import ErrorPage from './ErrorPage';
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 7;
 
-//TODO replace with real accounts when endpoint created
 class Accounts extends Component {
     mounted = false;
     constructor(props) {

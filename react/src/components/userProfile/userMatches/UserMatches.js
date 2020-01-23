@@ -3,7 +3,7 @@ import Proptypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
-import UserMatch from './UserMatch';
+import UserMatchWithResult from './UserMatchWithResult';
 import ErrorPage from '../../ErrorPage';
 import Utils from '../../utils/Utils';
 
@@ -54,6 +54,7 @@ class UserMatches extends Component {
     }
 
     render() {
+        //TODO depending on users choice change between mach with result and only finished, and created not played
         const matches = this.state.matches;
         if (matches.length > 0 || !this.state.hasMore) {
             return (
@@ -61,7 +62,7 @@ class UserMatches extends Component {
                     <InfiniteScroll dataLength={this.state.matches.length} next={this.getUserMatches}
                                     loader={<Loader />} hasMore={this.state.hasMore}>
                     {
-                        matches.map( (match, i) => <UserMatch key={i} currentMatch={match} username={this.props.username} />)
+                        matches.map( (match, i) => <UserMatchWithResult key={i} currentMatch={match} username={this.props.username} />)
                     }
                     </InfiniteScroll>    
                 </div>

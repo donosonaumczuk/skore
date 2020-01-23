@@ -25,7 +25,7 @@ const getImageUrls = links => {
     };
 }
 
-const UserMatch = ({ currentMatch, username }) => {
+const UserMatchWithResult = ({ currentMatch, username }) => {
 
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
@@ -49,8 +49,8 @@ const UserMatch = ({ currentMatch, username }) => {
     );
 }
 
-UserMatch.propTypes = {
+UserMatchWithResult.propTypes = {
     currentMatch: Proptypes.object.isRequired //TODO implement custom proptype
 }
 
-export default UserMatch;
+export default UserMatchWithResult;

@@ -148,7 +148,6 @@ class UserProfile extends Component {
     }
 }
 
-//TODO update with custom proptype
 UserProfile.propTypes = {
     match: Proptypes.object.isRequired
 }
