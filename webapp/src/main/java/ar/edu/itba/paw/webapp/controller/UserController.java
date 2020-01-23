@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
@@ -112,15 +113,39 @@ public class UserController {
 
     @GET
     @Path("/{username}/matches")
-    public Response getUserGames(@PathParam("username") String username, @QueryParam("limit") String limit,
-                                 @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
-        List<String> usernames = new ArrayList<>();
-        usernames.add(username);
-        Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
-            null, null, null,null, null, null, null,
-                null, null, usernames, null, null,
-                null, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), null)
+    public Response getUserGames(@PathParam("username") String username,
+                                 @QueryParam("minStartTime") String minStartTime,
+                                 @QueryParam("maxStartTime") String maxStartTime,
+                                 @QueryParam("minFinishTime") String minFinishTime,
+                                 @QueryParam("maxFinishTime") String maxFinishTime,
+                                 @QueryParam("minQuantity") String minQuantity,
+                                 @QueryParam("maxQuantity") String maxQuantity,
+                                 @QueryParam("minFreePlaces") String minFreePlaces,
+                                 @QueryParam("maxFreePlaces") String maxFreePlaces,
+                                 @QueryParam("country") List<String> countries,
+                                 @QueryParam("state") List<String> states,
+                                 @QueryParam("city") List<String> cities,
+                                 @QueryParam("sport") List<String> sports,
+                                 @QueryParam("type") List<String> types,
+                                 @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
+                                 @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
+                                 @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
+                                 @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
+                                 @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+                                 @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
+                                 @QueryParam("hasResult") String hasResult) {
+        if (usernamesPlayersInclude == null) {
+            usernamesPlayersInclude = new ArrayList<>();
+        }
+        usernamesPlayersInclude.add(username);
+        Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+                types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
+                usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
