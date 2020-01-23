@@ -121,7 +121,7 @@
     "changePasswordForm": {
         "changePasswordButton": "CHANGE PASSWORD",
         "oldPassword": "Old password",
-        "newPassword": "New assword",
+        "newPassword": "New password",
         "repeatNewPassword": "Repeat new password"
     },
     "sports": {

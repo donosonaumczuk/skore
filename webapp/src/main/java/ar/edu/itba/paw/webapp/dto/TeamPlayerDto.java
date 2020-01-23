@@ -29,7 +29,7 @@ public class TeamPlayerDto {
     }
 
     private List<Link> getHateoasLinks(String username) {
-        return ImmutableList.of( new Link(UserController.getProfileEndpoint(username), "player"));
+        return ImmutableList.of( new Link(UserController.getUserProfileEndpoint(username), "player"));
     }
 
     public String getUsername() {

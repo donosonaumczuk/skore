@@ -28,6 +28,39 @@ public class GameHibernateDao implements GameDao {
     @Autowired
     private TeamDao teamDao;
 
+    private static final String QUERY_START =
+            "SELECT games " +
+            "FROM Game as games, Team t " +
+            "WHERE teamName1 = t.teamName";
+    private static final String GREATER_THAN           = ">";
+    private static final String LESS_THAN              = "<";
+    private static final String START_TIME_MAX         = "startTimeMax";
+    private static final String FINISH_TIME_MIN        = "finishTimeMin";
+    private static final String FINISH_TIME_MAX        = "finishTimeMax";
+    private static final String QUERY_START_TIME_NAME  = "games.primaryKey.startTime";
+    private static final String QUERY_FINISH_TIME_NAME = "games.primaryKey.finishTime";
+    private static final String START_TIME_MIN         = "startTimeMin";
+    private static final String SPORT_NAME             = "sportName";
+    private static final String TYPE                   = "type";
+    private static final String QUERY_SPORT_NAME       = "t.sport.sportName";
+    private static final String COUNTRY                = "country";
+    private static final String STATE                  = "state";
+    private static final String CITY                   = "city";
+    private static final String QUERY_USER_NAME        = "games.primaryKey.team1.leader.userName";
+    private static final String USERNAME_PI            = "usernamePI";
+    private static final String USERNAME_PNI           = "usernamePNI";
+    private static final String USERNAME_CI            = "usernameCI";
+    private static final String USERNAME_CNI           = "usernameCNI";
+    private static final String QUERY_QUANTITY         = "games.primaryKey.team1.sport.playerQuantity";
+    private static final String MIN_QUANTITY           = "minQuantity";
+    private static final String MAX_QUANTITY           = "maxQuantity";
+    private static final String QUERY_FREE_QUANTITY    = "(2 * games.primaryKey.team1.sport.playerQuantity - " +
+                                "((CASE WHEN teamName2 IS NULL THEN 0 ELSE (SELECT teams.players.size FROM Team as " +
+                                "teams WHERE teams.teamName = teamName2) END) + " +
+                                "games.primaryKey.team1.players.size))";
+    private static final String MIN_FREE_PLACES        = "minFreePlaces";
+    private static final String MAX_FREE_PLACES        = "maxFreePlaces";
+
     @Override
     public Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
                                  final String finishTime, final String type, final String result,
@@ -69,84 +102,51 @@ public class GameHibernateDao implements GameDao {
     }
 
     @Override
-    public List<Game> findGames(final String minStartTime, final String maxStartTime,
-                                final String minFinishTime, final String maxFinishTime,
+    public List<Game> findGames(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
+                                final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
                                 final List<String> types, final List<String> sportNames,
                                 final Integer minQuantity, final Integer maxQuantity,
                                 final List<String> countries, final List<String> states,
                                 final List<String> cities, final Integer minFreePlaces,
-                                final Integer maxFreePlaces, final PremiumUser loggedUser,
-                                final boolean listOfGamesThatIsPartOf, final boolean wantCreated) {
-        Filters  filter = new Filters("SELECT games FROM Game as games, " +
-                "Team t WHERE teamName1 = t.teamName");
-        filter.addFilter("games.primaryKey.startTime", ">",
-                "startTimeMin", minStartTime);
-        filter.addFilter("games.primaryKey.startTime", "<",
-                "startTimeMax", maxStartTime);
-        filter.addFilter("games.primaryKey.finishTime", ">",
-                "finishTimeMin", minFinishTime);
-        filter.addFilter("games.primaryKey.finishTime", "<",
-                "finishTimeMax", maxFinishTime);
-//TODO        final List<String> types,
-//TODO        final Integer minQuantity,
-//TODO        final Integer maxQuantity,
-        filter.addListFilters("t.sport.sportName", "like",
-                "sportName", sportNames);
-        filter.addListFilters("lower(country)", "like",
-                "country", countries);
-        filter.addListFilters("lower(state)", "like",
-                "state", states);
-        filter.addListFilters("lower(city)", "like",
-                "city", cities);
-//TODO        final Integer minFreePlaces,
-//TODO        final Integer maxFreePlaces,
-//TODO        final PremiumUser loggedUser,
-//TODO        final boolean listOfGamesThatIsPartOf,
-//TODO        final boolean wantCreated
+                                final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
+                                final List<String> usernamesPlayersNotInclude,
+                                final List<String> usernamesCreatorsInclude,
+                                final List<String> usernamesCreatorsNotInclude, final GameSort sort) {
+        Filters  filter = new Filters(QUERY_START);
+        filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
+        filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
+        filter.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MIN, minFinishTime);
+        filter.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MAX, maxFinishTime);
 
-        String queryString = filter.toString();
-        if(loggedUser != null) {
-            String start;
-            String logicalOperator;
-            if (listOfGamesThatIsPartOf) {
-                start = "IN";
-                logicalOperator = "OR";
-            } else {
-                start = "NOT IN";
-                logicalOperator = "AND";
-            }
-            String nestedQuery1 =
-                    "SELECT p.userId " +
-                            "FROM Game g, Team t JOIN t.players p " +
-                            "WHERE games = g AND g.primaryKey.team1.teamName = t.teamName";
-            String nestedQuery2 =
-                    "SELECT p.userId " +
-                            "FROM Game g, Team t JOIN t.players p " +
-                            "WHERE games = g AND g.team2.teamName = t.teamName";
-            queryString = queryString + " AND" +
-                    " (:userId1 " + start + " (" + nestedQuery1 + ") " +
-                            logicalOperator + " :userId2 " + start + " (" + nestedQuery2 + "))";
+        filter.addListFilters(true, false, TYPE, TYPE, types);
+        filter.addFilter(QUERY_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
+        filter.addFilter(QUERY_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
 
-            if (wantCreated) {
-                queryString = queryString + " AND (games.primaryKey.team1.leader.userName = :user)";
-            } else {
-                queryString = queryString + " AND (games.primaryKey.team1.leader.userName != :user)";
-            }
-        }
-        queryString = queryString + " AND (games.result IS NULL)";
+        filter.addListFilters(false, false, QUERY_SPORT_NAME, SPORT_NAME, sportNames);
+        filter.addListFilters(false, false, COUNTRY, COUNTRY, countries);
+        filter.addListFilters(false, false, STATE, STATE, states);
+        filter.addListFilters(false, false, CITY, CITY, cities);
 
-        final TypedQuery<Game> query = em.createQuery(queryString, Game.class);
+        filter.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MIN_FREE_PLACES, minFreePlaces);
+        filter.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MAX_FREE_PLACES, maxFreePlaces);
+
+        filter.addListFilters(true, USERNAME_PI, usernamesPlayersInclude);
+        filter.addListFilters(false, USERNAME_PNI, usernamesPlayersNotInclude);
+
+        filter.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
+        filter.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
+
+        filter.addFilterOnlyFinished();
+
+        final TypedQuery<Game> query = em.createQuery(filter.toString() +
+                (sort != null ? sort.toQuery() : ""), Game.class);
         List<String> valueName = filter.getValueNames();
         List<Object> values    = filter.getValues();
 
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));
         }
-        if(loggedUser != null) {
-            query.setParameter("userId1", loggedUser.getUser().getUserId());
-            query.setParameter("userId2", loggedUser.getUser().getUserId());
-            query.setParameter("user", loggedUser.getUserName());
-        }
+
         return query.getResultList();
     }
 

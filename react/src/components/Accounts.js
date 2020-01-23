@@ -5,6 +5,9 @@ import UserService from '../services/UserService';
 import Loader from './Loader';
 import Account from './Account';
 
+const INITIAL_OFFSET = 0;
+const QUERY_QUANTITY = 10;
+
 //TODO replace with real accounts when endpoint created
 class Accounts extends Component {
     mounted = false;
@@ -12,8 +15,8 @@ class Accounts extends Component {
         super(props);
         this.state = {
             accounts: [],
-            offset: 0,
-            limit: 10,
+            offset: INITIAL_OFFSET,
+            limit: QUERY_QUANTITY,
             hasMore: true
         }
     }

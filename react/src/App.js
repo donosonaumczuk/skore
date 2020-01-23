@@ -17,8 +17,8 @@ import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 import ConfirmAccount from './components/ConfirmAccount';
 import Sports from './components/Sports/Sports';
-import './css/main.css';
 import CreateMatchForm from './components/forms/CreateMatchForm';
+import './css/main.css';
 
 class App extends Component {
     constructor(props) {
