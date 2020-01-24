@@ -69,7 +69,8 @@ public class GameController {
                              @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
                              @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
-                             @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo) {
+                             @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
+                             @QueryParam("hasResult") String hasResult) {
         Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
                 types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
                 QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
@@ -77,7 +78,7 @@ public class GameController {
                 QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
                 usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), sort)
+                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");

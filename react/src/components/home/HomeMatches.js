@@ -58,6 +58,7 @@ class HomeMatches extends Component {
         return (
             <div className="match-container container-fluid">
                 <InfiniteScroll dataLength={this.state.matches.length} next={this.getMatches}
+
                                 loader={<Loader />} hasMore={this.state.hasMore}>
                     { this.state.matches.map( (match, i) => <HomeMatch key={i} currentMatch={match} />)}
                 </InfiniteScroll>

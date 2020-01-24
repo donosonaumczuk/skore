@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
-import RenderInput from './utils/RenderInput';
-import ImageInput from './utils/ImageInput';
-import RenderDatePicker from './utils/RenderDatePicker';
-import SubmitButton from './utils/SubmitButton';
-import FormTitle from './utils/FormTitle';
+import RenderInput from './inputs/RenderInput';
+import ImageInput from './inputs/ImageInput';
+import RenderDatePicker from './inputs/RenderDatePicker';
+import SubmitButton from './inputs/SubmitButton';
+import FormTitle from './inputs/FormTitle';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 
 

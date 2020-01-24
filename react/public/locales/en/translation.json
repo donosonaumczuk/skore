@@ -89,7 +89,11 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
-        "invalidUsernameOrPassword": "Invalid username or password"
+        "errors": {
+            "invalidUsernameOrPassword": "Invalid username or password",
+            "requiredUsername": "Username is required.",
+            "requiredPassword":"Password is required."
+        }
     },
     "home": {
         "createMatch": "CREATE A MATCH",
@@ -130,5 +134,8 @@
     "createMatchForm": {
         "matchName": "Match name ",
         "createMatch": "CREATE MATCH"
+    },
+    "forms": {
+        "requiredFields":"Fields containing (*) are required"
     }
 }

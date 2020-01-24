@@ -4,7 +4,7 @@ import SubLocationInput from './SubLocationInput';
 import i18next from 'i18next';
 
 const geolocate = () => {
-   //TODO implement
+    //TODO implement to complete other inputs
 }
 
 const LocationInput = createRenderer((input, label, inputType) => {

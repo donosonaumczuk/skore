@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import i18next from 'i18next';
-import FormTitle from './utils/FormTitle';
-import RenderInput from './utils/RenderInput';
-import SubmitButton from './utils/SubmitButton';
+import FormTitle from './inputs/FormTitle';
+import RenderInput from './inputs/RenderInput';
+import SubmitButton from './inputs/SubmitButton';
 import AuthService from '../../services/AuthService';
 import FormComment from './inputs/FormComment';
 
@@ -34,7 +34,7 @@ class CreateMatchForm extends Component {
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             <Field name="username" label={i18next.t('createMatchForm.matchName')} 
                                     inputType="text" required={true} component={RenderInput} />
-                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text="Fields containing (*) are required" />
+                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>
 

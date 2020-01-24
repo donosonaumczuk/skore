@@ -90,7 +90,11 @@
         "loginButton": "INGRESAR",
         "login": "ingresar",
         "newUser": "eres nuevo? ",
-        "invalidUsernameOrPassword": "Usuario o contraseña incorrecto"
+        "errors": {
+            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto.",
+            "requiredUsername": "El nombre de usuario es obligatorio.",
+            "requiredPassword": "La contraseña es obligatoria."
+        }
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",

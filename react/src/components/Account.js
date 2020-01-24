@@ -1,6 +1,7 @@
 import React from 'react';
 import AccountPropType from '../proptypes/AccountPropType';
 
+
 const Account = ({ account }) => {
     return (
         <div className="card">

@@ -1,7 +1,6 @@
 import React from 'react';
 
 const createRenderer = render => ({ input, meta, label, inputType, id, required,
-
                                     isDisabled, ...rest }) => {
 return (
     <div className="form-group" >
@@ -25,6 +24,4 @@ return (
     </div>
 );}
                                     
-                                
-
 export default createRenderer;

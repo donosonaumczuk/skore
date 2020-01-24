@@ -47,8 +47,7 @@ class Accounts extends Component {
 
     async componentDidMount() {
         this.mounted = true;
-        this.getUsers();
-        
+        this.getUsers();        
     }
 
     render() {

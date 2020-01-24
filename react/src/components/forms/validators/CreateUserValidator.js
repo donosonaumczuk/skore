@@ -2,9 +2,8 @@ import i18next from 'i18next';
 import { isStringLengthBetween, hasStringValidSymbols, 
         isStringAlphaNumeric, isStringValidEmail,
         isStringNumeric, 
-        isStringAlphaOrSpaces} from './utils/stringValidations';
-import { isValidPastDate } from './utils/dateValidator';
-
+        isStringAlphaOrSpaces} from './utils/StringValidators';
+import { isValidPastDate } from './utils/DateValidators';
 
 //username constants
 const MIN_USERNAME_LENGTH = 4;
