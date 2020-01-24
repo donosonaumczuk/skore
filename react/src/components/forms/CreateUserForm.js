@@ -11,7 +11,7 @@ import SuggestionText from './utils/SuggestionText';
 import AuthService from './../../services/AuthService';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 import UserService from '../../services/UserService';
-// import LocationInput from './utils/LocationInput'; TODO add when auto completes fields
+// import LocationInput from './inputs/LocationInput'; //TODO add when auto completes fields
 
 const validate = values => {
     const errors = {}
@@ -142,7 +142,7 @@ class CreateUserForm extends Component {
                                 inputType="text" required={false} component={RenderInput} />
                     <Field name="street" label={i18next.t('createUserForm.street')} id="street"
                                 inputType="text" required={false} component={RenderInput} />
-                    {/*<Field name="location" label="Address" inputType="text" component={LocationInput} />
+                     {/* <Field name="location" label="Address" inputType="text" component={LocationInput} />
                     //TODO make this tag work with autoComplete */}
                     <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                     <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.login')} />

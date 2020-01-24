@@ -6,6 +6,7 @@ import FormTitle from './utils/FormTitle';
 import RenderInput from './utils/RenderInput';
 import SubmitButton from './utils/SubmitButton';
 import AuthService from '../../services/AuthService';
+import FormComment from './inputs/FormComment';
 
 class CreateMatchForm extends Component {
     constructor(props) {
@@ -28,13 +29,15 @@ class CreateMatchForm extends Component {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+                    <div className="container-fluid create-match-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                         <FormTitle />
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             <Field name="username" label={i18next.t('createMatchForm.matchName')} 
                                     inputType="text" required={true} component={RenderInput} />
+                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text="Fields containing (*) are required" />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>
+
                     </div>
                 </div>
             </div>
