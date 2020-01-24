@@ -111,7 +111,8 @@ public class GameHibernateDao implements GameDao {
                                 final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
-                                final List<String> usernamesCreatorsNotInclude, final GameSort sort) {
+                                final List<String> usernamesCreatorsNotInclude, final GameSort sort,
+                                final Boolean onlyWithResults) {
         Filters  filter = new Filters(QUERY_START);
         filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
         filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
@@ -136,7 +137,7 @@ public class GameHibernateDao implements GameDao {
         filter.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
         filter.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
 
-        filter.addFilterOnlyFinished();
+        filter.addFilterOnlyFinished(onlyWithResults);
 
         final TypedQuery<Game> query = em.createQuery(filter.toString() +
                 (sort != null ? sort.toQuery() : ""), Game.class);

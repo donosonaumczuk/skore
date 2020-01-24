@@ -28,7 +28,8 @@ public class Filters {
             "(SELECT pu.userName " +
             "FROM Game g, Team t JOIN t.players p, PremiumUser pu " +
             "WHERE games = g AND g.team2.teamName = t.teamName AND pu.user.userId = p.userId)";
-    static private String FINISH_CONDITION = "(games.result IS NULL)";
+    static private String FINISH_CONDITION_1 = "(games.result IS NOT NULL)";
+    static private String FINISH_CONDITION_2 = "(games.result IS NULL)";
 
     public Filters(String start) {
         this.start      = new StringBuilder(start);
@@ -150,8 +151,6 @@ public class Filters {
         }
     }
 
-//    public void addLisFilters()
-
     public String toString() {
         return start.toString();
     }
@@ -164,7 +163,15 @@ public class Filters {
         return values;
     }
 
-    public void addFilterOnlyFinished() {
-        start = start.append(AND).append(FINISH_CONDITION);
+    public void addFilterOnlyFinished(Boolean onlyWithResults) {
+        if (onlyWithResults != null) {
+            start = start.append(AND);
+            if (onlyWithResults) {
+                start = start.append(FINISH_CONDITION_1);
+            }
+            else {
+                start = start.append(FINISH_CONDITION_2);
+            }
+        }
     }
 }
