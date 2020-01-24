@@ -57,7 +57,7 @@
                 "invalidEmail": "It is not a well-formed email, should be a valid email.\n"
             },
             "image": {
-                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg, jpeg.\n",
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg or jpeg.\n",
                 "invalidImageSize": "Image can not be greater than 1MB.\n"
             },
             "cellphone": {
@@ -136,6 +136,36 @@
         "createMatch": "CREATE MATCH"
     },
     "forms": {
-        "requiredFields":"Fields containing (*) are required"
+        "requiredFields":"Fields containing (*) are required."
+    },
+    "createSportForm": {
+        "sportName": "Sport name ",
+        "displayName": "Display name ",
+        "playersPerTeam": "Players per team ",
+        "sportImage": "Sport image ",
+        "createSportButton": "CREATE SPORT",
+        "errors": {
+            "sportName": {
+                "required": "Sport name is required.\n",
+                "invalidSymbols": "Sport name can only contains alphanumeric.\n",
+                "invalidLength": "Sport name must be between 4 and 100 characters.\n"
+            },
+            "displayName": {
+                "required": "Display name is required.\n",
+                "invalidSymbols": "Display name can only contains alphanumeric symbols or spaces.\n",
+                "invalidLength": "Display name must be between 4 and 100 characters.\n"
+            },
+            "playersPerTeam": {
+                "required": "Players per team is required.\n",
+                "invalidSymbols": "Players per team must contain only digits.\n",
+                "invalidLength": "Players per team must be between 1 and 3 digits long.\n",
+                "invalidValue": "Player per teams must have a value between 1 and 100.\n"
+            },
+            "image": {
+                "required": "Sport image is required.\n",
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg or jpeg.\n",
+                "invalidImageSize": "Image can not be greater than 1MB.\n"
+            }
+        }
     }
 }

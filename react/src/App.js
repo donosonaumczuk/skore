@@ -19,6 +19,7 @@ import ConfirmAccount from './components/ConfirmAccount';
 import Sports from './components/Sports/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
 import './css/main.css';
+import CreateSportForm from './components/forms/CreateSportForm';
 
 
 class App extends Component {
@@ -87,6 +88,9 @@ class App extends Component {
                         </Route>
                         <Route path="/createMatch">
                             <CreateMatchForm />
+                        </Route>
+                        <Route path="/createSport">
+                            <CreateSportForm />
                         </Route>
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />

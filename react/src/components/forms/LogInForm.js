@@ -12,7 +12,6 @@ import LogInValidator from './validators/LogInValidator';
 import FormComment from './inputs/FormComment';
 
 const validate = values => {
-    //TODO see why this is not called
     const errors = {}
     errors.username = LogInValidator.validateUsername(values.username);
     errors.password =  LogInValidator.validatePassword(values.password);
@@ -64,7 +63,7 @@ class LogInForm extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
-                    <FormTitle />
+                        <FormTitle />
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             {errorMessage}
                             <Field name="username" label={i18next.t('createUserForm.username')}

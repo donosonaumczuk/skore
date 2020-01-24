@@ -1,9 +1,10 @@
 import i18next from 'i18next';
-import { isStringLengthBetween, hasStringValidSymbols, 
-        isStringAlphaNumeric, isStringValidEmail,
-        isStringNumeric, 
-        isStringAlphaOrSpaces} from './utils/StringValidators';
+import { hasStringValidSymbols, isStringAlphaNumeric,
+         isStringValidEmail, isStringNumeric, 
+         isStringAlphaOrSpaces} from './utils/StringValidators';
 import { isValidPastDate } from './utils/DateValidators';
+import { validateRequiredField } from './utils/RequiredFieldValidators';
+import { validImageFormats } from './utils/ImageValidators';
 
 //username constants
 const MIN_USERNAME_LENGTH = 4;
@@ -28,44 +29,33 @@ const CELLPHONE_LENGTH = 10;
 const BIRTHDAY_LENGTH = 10;
 const dateInvalidSymbols= /[^0-9/]/;
 
-
-const validateRequiredField = (fieldValue, errorLabel, invalidSymbols, minLength, maxLength) => {
-    //TODO make breakline appear between errors, i do not know why it is not working
-    let errorLabelBase = `createUserForm.errors.${errorLabel}`;
-    let errorMessage = ``;
-    if (!fieldValue) {
-        errorMessage = i18next.t(`${errorLabelBase}.required`);
-    }
-    if (fieldValue && !invalidSymbols(fieldValue)) {
-        errorMessage = `${errorMessage} ${i18next.t(`${errorLabelBase}.invalidSymbols`)}`;
-    }
-    if (fieldValue && !isStringLengthBetween(fieldValue, minLength, maxLength)) {
-        errorMessage =`${errorMessage} ${i18next.t(`${errorLabelBase}.invalidLength`)}`;
-    }
-    return errorMessage;
-}
-
 const hasUsernameValidSymbols = username => hasStringValidSymbols(username, usernameInvalidSymbols);
 
-const validateUsername = username => validateRequiredField(username, "username", hasUsernameValidSymbols,
-                                                                MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH);
-const validatePassword = password => validateRequiredField(password, "password", isStringAlphaNumeric,
-                                                                MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH);
+const validateUsername = username => validateRequiredField(username, "createUserForm.errors.username",
+                                                                hasUsernameValidSymbols, MIN_USERNAME_LENGTH,
+                                                                MAX_USERNAME_LENGTH);
+
+const validatePassword = password => validateRequiredField(password, "createUserForm.errors.password",
+                                                                isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
+                                                                MAX_PASSWORD_LENGTH);
 
 const validateRepeatedPassword = (repeatedPassword, password) => {
-    let errorMessage = validateRequiredField(repeatedPassword, "repeatedPassword", isStringAlphaNumeric,
-                                                                MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH);
+    let errorMessage = validateRequiredField(repeatedPassword, "createUserForm.errors.repeatedPassword",
+                                                isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
+                                                MAX_PASSWORD_LENGTH);
     if (repeatedPassword !== password) {
         errorMessage =`${errorMessage} ${i18next.t('createUserForm.errors.repeatedPassword.passwordDoesNotMatch')}`;
     }
     return errorMessage;
 }
 
-const validateFirstName = firstName => validateRequiredField(firstName, "firstName", isStringAlphaOrSpaces,
-                                                                    MIN_NAME_LENGTH, MAX_NAME_LENGTH);
+const validateFirstName = firstName => validateRequiredField(firstName, "createUserForm.errors.firstName",
+                                                                isStringAlphaOrSpaces, MIN_NAME_LENGTH,
+                                                                MAX_NAME_LENGTH);
 
-const validateLastName = lastName => validateRequiredField(lastName, "lastName", isStringAlphaOrSpaces,
-                                                                    MIN_NAME_LENGTH, MAX_NAME_LENGTH);
+const validateLastName = lastName => validateRequiredField(lastName, "createUserForm.errors.lastName",
+                                                                isStringAlphaOrSpaces, MIN_NAME_LENGTH,
+                                                                MAX_NAME_LENGTH);
 
 const validateEmail = email => {
     let errorLabelBase = `createUserForm.errors.email`;
@@ -79,13 +69,10 @@ const validateEmail = email => {
     return errorMessage;
 }
 
-const validImageFormats = imageFormat => imageFormat !== "image/png" && imageFormat !== "image/jpeg"
-                                                 && imageFormat !== "image/jpg";
-
 const validateImage = image => {
     let errorLabelBase = `createUserForm.errors.image`;
     let errorMessage = ``;
-    if (image && !validImageFormats) {
+    if (image && !validImageFormats(image.type)) {
         errorMessage = i18next.t(`${errorLabelBase}.invalidImageFormat`);
     }
     if (image && image.size > MAX_IMAGE_SIZE_IN_BYTES) {
@@ -118,8 +105,9 @@ const validatePastDate = date => {
 
 const validateDate = date => {
     let errorLabelBase = `createUserForm.errors.birthday`;
-    let errorMessage = validateRequiredField(date, "birthday", hasStringValidDateSymbols,
-                                                                BIRTHDAY_LENGTH, BIRTHDAY_LENGTH);
+    let errorMessage = validateRequiredField(date, "createUserForm.errors.birthday",
+                                                hasStringValidDateSymbols, BIRTHDAY_LENGTH,
+                                                BIRTHDAY_LENGTH);
     
     if (date && !validatePastDate(date)) {
         errorMessage =`${errorMessage} ${i18next.t(`${errorLabelBase}.invalidPastDate`)}`;

@@ -41,7 +41,7 @@ class UserMatches extends Component {
 
     getUserMatches = async (username) => {
         const { offset, limit } = this.state;
-        const response = await UserService.getUserMatches(username, offset, limit);
+        const response = await UserService.getUserMatchesWithResults(username, offset, limit);
         if (this.mounted) {
             this.updateMatchesState(response)
         }

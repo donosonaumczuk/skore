@@ -40,6 +40,16 @@ const getUserMatches = async (username, offset, limit) => {
     }
 }
 
+const getUserMatchesWithResults = async (username, offset, limit) => {
+    try {
+        const res = await api.get(`users/${username}/matches?hasResult=${true}&offset=${offset}&limit=${limit}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const createUser = async user => {
     try {
         const res = await api.post("users", user);
@@ -56,6 +66,7 @@ const UserService = {
     getProfileByUsername: getProfileByUsername,
     getUserImage: getUserImage,
     getUserMatches: getUserMatches,
+    getUserMatchesWithResults: getUserMatchesWithResults,
     createUser: createUser
 };
 

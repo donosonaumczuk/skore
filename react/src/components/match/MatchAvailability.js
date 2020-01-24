@@ -16,7 +16,7 @@ const deleteMatch = () => {
     // TODO implement when we have endpoint
 }
 const isUserInTeam = (currentUser, team) => {
-    if (! currentUser) {
+    if (!currentUser || !team) {
         return false;
     }
     let userFound = false;
