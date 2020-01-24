@@ -144,6 +144,7 @@
         "playersPerTeam": "Players per team ",
         "sportImage": "Sport image ",
         "createSportButton": "CREATE SPORT",
+        "updateInfoButton": "UPDATE INFO",
         "errors": {
             "sportName": {
                 "required": "Sport name is required.\n",

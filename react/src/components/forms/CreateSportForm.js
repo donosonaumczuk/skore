@@ -48,8 +48,23 @@ class CreateSportForm extends Component {
         }
     }
 
+    loadSport = (values, image) => {
+        const sport = {
+            "sportName": values.sportName,
+            "displayName": values.displayName,
+            "playerQuantity": values.playersPerTeam,
+            "imageSport": image.data
+        };
+        return sport;
+    }
+
     onSubmit = async (values) => {
-        //TODO implement
+        let sport = this.loadSport(values, this.state.image);
+        console.log(sport);//TODO remove is here just to prevent warning
+        // const res = await SportService.createSport(user); //TODO uncomment when admin is received
+        // if (res.status) {
+        //    //TODO handle error
+        // }
     } 
 
     render() {

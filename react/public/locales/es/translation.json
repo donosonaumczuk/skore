@@ -143,7 +143,8 @@
         "displayName": "Nombre a mostrar del deporte ",
         "playersPerTeam": "Jugadores por equipo ",
         "sportImage": "Imagen del deporte ",
-        "createSportButton": "CREAT DEPORTE",
+        "createSportButton": "CREAR DEPORTE",
+        "updateInfoButton": "ACTUALIZAR",
         "errors": {
             "sportName": {
                 "required": "El nombre del deporte es obligatorio.\n",

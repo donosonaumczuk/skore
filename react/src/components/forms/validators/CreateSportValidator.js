@@ -40,7 +40,7 @@ const validatePlayersPerTeam = playersPerTeam => {
     let errorMessage = validateRequiredField(playersPerTeam, `${ERROR_BASE_LABEL}playersPerTeam`,
                                                 isStringNumeric, MIN_PLAYER_PER_TEAM_LENGTH,
                                                 MAX_PLAYER_PER_TEAM_LENGTH);
-    if (isStringBetweenValues(playersPerTeam, MIN_PLAYER_PER_TEAM_VALUE, MAX_PLAYER_PER_TEAM_VALUE)) {
+    if (!isStringBetweenValues(playersPerTeam, MIN_PLAYER_PER_TEAM_VALUE, MAX_PLAYER_PER_TEAM_VALUE)) {
         errorMessage =`${errorMessage} ${i18next.t(`${ERROR_BASE_LABEL}playersPerTeam.invalidValue`)}`;
     }
     return errorMessage;

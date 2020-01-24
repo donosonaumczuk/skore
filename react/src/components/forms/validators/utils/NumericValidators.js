@@ -4,7 +4,7 @@ const isNumberBetweenValues = (number, minValue, maxValue) => {
     return number >= minValue && number <= maxValue;
 }
 
-const isStringBetweenValues = ( numberString, minValue, maxValue) => {
+const isStringBetweenValues = (numberString, minValue, maxValue) => {
     if (!isStringNumeric(numberString)) {
         return false;
     }
