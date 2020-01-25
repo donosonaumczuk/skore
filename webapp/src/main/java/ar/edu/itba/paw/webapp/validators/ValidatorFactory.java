@@ -66,7 +66,7 @@ public class ValidatorFactory {
     }
 
     /**
-     * Validates that a JSON Object field is an boolean
+     * Validates that a JSON Object field is a boolean
      *
      * @param field the name of the field to validate
      * @param log a String to log if something is invalid
@@ -84,7 +84,7 @@ public class ValidatorFactory {
     }
 
     /**
-     * Validates that a JSON Object field is an int and in an interval
+     * Validates that a JSON Object field is an integer and belongs to an interval
      *
      * @param field the name of the field to validate
      * @param min the minimum of the interval
@@ -92,13 +92,13 @@ public class ValidatorFactory {
      * @param log a String to log if something is invalid
      * @return the validator which performs the described validation
      */
-    public static Validator<JSONObject> fieldIsIntegerAndInRangeValidatorOf(final String field, final Integer min,
-                                                                            final Integer max, final String log) {
+    public static Validator<JSONObject> fieldIsIntegerInRangeValidatorOf(final String field, final Integer min,
+                                                                         final Integer max, final String log) {
         return fieldIsIntegerValidatorOf(field, log).and(jsonObject -> {
                     if ((max != null && jsonObject.getInt(field) > max) ||
                             (min != null && jsonObject.getInt(field) < min)) {
                         logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
-                                + "' must exist in [" + (min == null ? "-Inf" : min) + "," +
+                                + "' must belong to [" + (min == null ? "-Inf" : min) + "," +
                                 (max == null ? "Inf" : max) + "]"));
                     }
                 }
@@ -106,7 +106,7 @@ public class ValidatorFactory {
     }
 
     /**
-     * Validates that a JSON Object field is an String and it's size exist in an interval
+     * Validates that a JSON Object field is an String and it's length belongs to an interval
      *
      * @param field the name of the field to validate
      * @param min the minimum of the interval
@@ -114,13 +114,13 @@ public class ValidatorFactory {
      * @param log a String to log if something is invalid
      * @return the validator which performs the described validation
      */
-    public static Validator<JSONObject> fieldIsStringValidatorAndSizeInRangeOf(final String field, final Integer min,
-                                                                               final Integer max, final String log) {
+    public static Validator<JSONObject> fieldIsStringWithLengthInRangeValidatorOf(final String field, final Integer min,
+                                                                                  final Integer max, final String log) {
         return fieldIsStringValidatorOf(field, log).and(jsonObject -> {
                     if ((max != null && jsonObject.getString(field).length() > max) ||
                             (min != null && jsonObject.getString(field).length() < min)) {
-                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field length '" + field
-                                + "' must exist in [" + (min == null ? "-Inf" : min) + "," +
+                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                                + "' length must belong to [" + (min == null ? "-Inf" : min) + "," +
                                 (max == null ? "Inf" : max) + "]"));
                     }
                 }
@@ -182,7 +182,7 @@ public class ValidatorFactory {
     }
 
     /**
-     * Validate that a JSON Object does not contains all forbidden fields
+     * Validate that a JSON Object does not contain any of the forbidden fields
      *
      * @param forbiddenFields the forbidden fields
      * @param log a String to log if something is invalid
@@ -191,11 +191,12 @@ public class ValidatorFactory {
     public static Validator<JSONObject> forbiddenFieldsValidatorOf(final Set<String> forbiddenFields, final String log) {
         return jsonObject -> {
             final Set<String> jsonFields = jsonObject.keySet();
-            Optional<String> forbiddenInFields = jsonFields.stream()
+            Optional<String> forbiddenField = jsonFields.stream()
                     .filter(forbiddenFields::contains)
                     .findFirst();
-            forbiddenInFields.ifPresent(field -> logAndThrowApiException(log,
-                    new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field + "' is unknown or unaccepted")));
+            forbiddenField.ifPresent(field -> logAndThrowApiException(log,
+                    new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field + "' known but other field values " +
+                            "turn it unaccepted")));
         };
     }
 
@@ -304,7 +305,7 @@ public class ValidatorFactory {
     }
 
     private static void validateAllRequiredFieldsArePresent(final JSONObject jsonObject,
-                                                           final Set<String> requiredFields, final String log) {
+                                                            final Set<String> requiredFields, final String log) {
         final Set<String> jsonFields = jsonObject.keySet();
         Optional<String> missingField = requiredFields.stream()
                 .filter(field -> !jsonFields.contains(field))

@@ -8,9 +8,10 @@ public class TimeDto {
     private int minute;
     private int second;
 
-    public TimeDto() {
-
+    private TimeDto() {
+        /* Required by JSON object mapper */
     }
+
 
     private TimeDto(LocalTime time) {
         this.hour   = time.getHour();

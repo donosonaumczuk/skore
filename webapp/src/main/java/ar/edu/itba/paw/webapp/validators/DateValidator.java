@@ -21,19 +21,19 @@ public class DateValidator {
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
-                fieldValidatorMapOf(log), log);
+                fieldValidatorListOf(log), log);
     }
 
     public static Validator<JSONObject> updateValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS, UPDATE_REQUIRED_FIELDS,
-                fieldValidatorMapOf(log), log);
+                fieldValidatorListOf(log), log);
     }
 
-    private static List<Pair<String, Validator<JSONObject>>> fieldValidatorMapOf(final String log) {
+    private static List<Pair<String, Validator<JSONObject>>> fieldValidatorListOf(final String log) {
         return new ImmutableList.Builder<Pair<String, Validator<JSONObject>>>()
-                .add(Pair.of(YEAR, ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(YEAR, 0, null, log)))
-                .add(Pair.of(MONTH,  ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(MONTH, 1, 12, log)))
-                .add(Pair.of(DAY, jsonObject -> ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(DAY, 1,
+                .add(Pair.of(YEAR, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(YEAR, 0, null, log)))
+                .add(Pair.of(MONTH,  ValidatorFactory.fieldIsIntegerInRangeValidatorOf(MONTH, 1, 12, log)))
+                .add(Pair.of(DAY, jsonObject -> ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DAY, 1,
                         getMaxDay(jsonObject.getInt(YEAR), jsonObject.getInt(MONTH)), log)
                         .validate(jsonObject)))
                 .build();

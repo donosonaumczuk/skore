@@ -40,7 +40,7 @@ public class GameDto {
 //    private ResultDto results; TODO maybe dto with specific results according to sport
 
     private GameDto() {
-
+        /* Required by JSON object mapper */
     }
 
     private GameDto(Game game, TeamDto team1, TeamDto team2) {

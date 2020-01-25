@@ -30,24 +30,26 @@ public class GameValidator {
     private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(TITLE, SPORT, DURATION, INDIVIDUAL,
             COMPETITIVE, DATE, TIME, LOCATION);
 
-    private static final String PATTERN = "[a-zA-Z0-9¿?¡!ÁÉÍÓÚáéíñóöúü ]+";
+    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!ÁÉÍÓÚáéíñóöúü ]+";
     private static final String PATTER_DESCRIPTION = "a string containing english alphabetic characters, digits, " +
-                                                    "spaces or any of these characters: [¿?¡!ÁÉÍÓÚáéíñóöúü]";
+                                                    "spaces or any of these characters: ¿?¡!ÁÉÍÓÚáéíñóöúü";
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
-                creationFieldValidatorMapOf(log), log);
+                creationFieldValidatorListOf(log), log);
     }
 
-    private static List<Pair<String, Validator<JSONObject>>> creationFieldValidatorMapOf(final String log) {
+    private static List<Pair<String, Validator<JSONObject>>> creationFieldValidatorListOf(final String log) {
         return new ImmutableList.Builder<Pair<String, Validator<JSONObject>>>()
-                .add(Pair.of(TITLE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TITLE, Pattern.compile(PATTERN),
-                        PATTER_DESCRIPTION, log).and(ValidatorFactory.fieldIsStringValidatorAndSizeInRangeOf(TITLE,
+                .add(Pair.of(TITLE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TITLE, Pattern.compile(TITLE_REGEX),
+                        PATTER_DESCRIPTION, log).and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(TITLE,
                         4, 140, log))))
-                .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringValidatorAndSizeInRangeOf(DESCRIPTION, 0, 140, log)))
-                .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringValidatorAndSizeInRangeOf(DESCRIPTION, 0, 140, log)))
+                .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DESCRIPTION,
+                        0, 140, log)))
+                .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DESCRIPTION,
+                        0, 140, log)))
                 .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringValidatorOf(SPORT, log)))
-                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(DURATION, 1, null, log)))
+                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, 1, null, log)))
                 .add(Pair.of(INDIVIDUAL, individualValidation(log)))
                 .add(Pair.of(COMPETITIVE, ValidatorFactory.fieldIsBooleanValidatorOf(COMPETITIVE, log)))
                 .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
@@ -57,9 +59,9 @@ public class GameValidator {
                 .add(Pair.of(TIME, ValidatorFactory.fieldIsValidObjectValidatorOf(TIME,
                         TimeValidator.creationValidatorOf(log), log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,
-                        Pattern.compile(PATTERN), PATTER_DESCRIPTION, log)))//TODO check team name pattern, it must not have '.'
+                        Pattern.compile(TITLE_REGEX), PATTER_DESCRIPTION, log)))//TODO check team name pattern, it must not have '.'
                 .add(Pair.of(TEAM_NAME_2, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_2,
-                        Pattern.compile(PATTERN), PATTER_DESCRIPTION, log)))
+                        Pattern.compile(TITLE_REGEX), PATTER_DESCRIPTION, log)))
                 .build();
     }
 

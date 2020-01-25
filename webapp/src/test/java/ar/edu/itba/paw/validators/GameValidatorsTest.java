@@ -109,7 +109,7 @@ public class GameValidatorsTest {
     @Test
     public void whenValidatingCreationIfYearHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'year' must exist in [0,Inf]");
+        exceptionRule.expectMessage("Field 'year' must belong to [0,Inf]");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                         "\t\"title\": \"El juego del siglo\",\n" +
@@ -142,7 +142,7 @@ public class GameValidatorsTest {
     @Test
     public void whenValidatingCreationIfMonthHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'monthNumber' must exist in [1,12]");
+        exceptionRule.expectMessage("Field 'monthNumber' must belong to [1,12]");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                         "\t\"title\": \"El juego del siglo\",\n" +
@@ -175,7 +175,7 @@ public class GameValidatorsTest {
     @Test
     public void whenValidatingCreationIfDayHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'dayOfMonth' must exist in [1,29]");
+        exceptionRule.expectMessage("Field 'dayOfMonth' must belong to [1,29]");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                             "\t\"title\": \"El juego del siglo\",\n" +
@@ -208,7 +208,7 @@ public class GameValidatorsTest {
     @Test
     public void whenValidatingCreationIfTeamName1IsPresentAndIsIndividualThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'teamName1' is unknown or unaccepted");
+        exceptionRule.expectMessage("Field 'teamName1' known but other field values turn it unaccepted");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                             "\t\"title\": \"El juego del siglo\",\n" +
@@ -242,7 +242,7 @@ public class GameValidatorsTest {
     @Test
     public void whenValidatingCreationIfTeamName2IsPresentAndIsIndividualThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'teamName2' is unknown or unaccepted");
+        exceptionRule.expectMessage("Field 'teamName2' known but other field values turn it unaccepted");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                             "\t\"title\": \"El juego del siglo\",\n" +
@@ -310,7 +310,7 @@ public class GameValidatorsTest {
     public void whenValidatingCreationIfTeamName1IsInvalidAndIsNotIndividualThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Field 'teamName1' must be a string containing english alphabetic " +
-                "characters, digits, spaces or any of these characters: [¿?¡!ÁÉÍÓÚáéíñóöúü]");
+                "characters, digits, spaces or any of these characters: ¿?¡!ÁÉÍÓÚáéíñóöúü");
         GameValidator.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                             "\t\"title\": \"El juego del siglo\",\n" +

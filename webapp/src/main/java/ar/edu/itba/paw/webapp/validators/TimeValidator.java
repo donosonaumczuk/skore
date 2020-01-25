@@ -29,9 +29,9 @@ public class TimeValidator {
 
     private static Map<String, Validator<JSONObject>> fieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(HOUR, ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(HOUR, 0, 23,log))
-                .put(MINUTE,  ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(MINUTE, 0, 59, log))
-                .put(SECOND,  ValidatorFactory.fieldIsIntegerAndInRangeValidatorOf(SECOND, 0, 59, log))
+                .put(HOUR, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(HOUR, 0, 23,log))
+                .put(MINUTE,  ValidatorFactory.fieldIsIntegerInRangeValidatorOf(MINUTE, 0, 59, log))
+                .put(SECOND,  ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SECOND, 0, 59, log))
                 .build();
     }
 }

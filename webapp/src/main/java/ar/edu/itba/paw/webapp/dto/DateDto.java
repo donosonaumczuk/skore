@@ -8,8 +8,8 @@ public class DateDto {
     private int monthNumber;
     private int dayOfMonth;
 
-    public DateDto() {
-
+    private DateDto() {
+        /* Required by JSON object mapper */
     }
 
     private DateDto(LocalDate date) {
