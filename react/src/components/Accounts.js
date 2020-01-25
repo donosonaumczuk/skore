@@ -8,7 +8,7 @@ import Utils from './utils/Utils';
 import ErrorPage from './ErrorPage';
 
 const INITIAL_OFFSET = 0;
-const QUERY_QUANTITY = 7;
+const QUERY_QUANTITY = 10;
 
 class Accounts extends Component {
     mounted = false;

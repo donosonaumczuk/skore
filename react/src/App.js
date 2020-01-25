@@ -26,24 +26,24 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-        account: {},
-        translation: false,
-        currentUser: null
+            account: {},
+            translation: false,
+            currentUser: null
         }
     }
 
     initializeI18next = async () => {
         if (!this.setState.translation) {
-        await i18next.init();
-        this.setState({
-            translation: true
-        });
+            await i18next.init();
+            this.setState({
+                translation: true
+            });
         }
     }
 
     updateUser = currentUser => {
         this.setState({
-        currentUser: currentUser
+            currentUser: currentUser
         });
     }
 

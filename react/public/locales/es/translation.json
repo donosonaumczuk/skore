@@ -57,7 +57,7 @@
                 "invalidEmail": "No es un email bien formado, debe ser un email valido.\n"
             },
             "image": {
-                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg o jpeg.\n",
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             },
             "cellphone": {
@@ -164,7 +164,7 @@
             },
             "image": {
                 "required": "La imagen del deporte es obligatoria.\n",
-                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg o jpeg.\n",
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             }
         }

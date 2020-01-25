@@ -4,14 +4,16 @@ import Sport from './Sport';
 import SportService from '../../services/SportService';
 import Loader from '../Loader';
 
+const INITIAL_OFFSET = 0;
+const QUERY_QUANTITY = 10;
 class Sports extends Component {
     mounted = false;
     constructor(props) {
         super(props);
         this.state = {
             sports: [],
-            offset: 0,
-            total: 5,
+            offset: INITIAL_OFFSET,
+            total: QUERY_QUANTITY,
             hasMore: true
         }
     }
@@ -20,7 +22,7 @@ class Sports extends Component {
         this.setState({
             sports: [...this.state.sports, ...sports],
             offset: this.state.offset + sports.length,
-            total: 5,
+            total: QUERY_QUANTITY,
             hasMore: true
         })
     }

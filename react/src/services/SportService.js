@@ -1,8 +1,10 @@
 import api from './../config/Api';
+import { SPORTS_ENDPOINT } from './constants/EndpointConstants';
+
 
 const getSports = async () => {
     try {
-        const res = await api.get("/sports");
+        const res = await api.get(`${SPORTS_ENDPOINT}`);
         return res.data.sports;
     }
     catch(err) {

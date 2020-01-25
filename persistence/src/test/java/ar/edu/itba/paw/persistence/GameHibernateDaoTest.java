@@ -283,9 +283,6 @@ public class GameHibernateDaoTest {
 
     @Test
     public void findGamesTestHasNotResult() {
-
-        List<String> usernames = new ArrayList<>();
-        usernames.add(account.getUserName());
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,

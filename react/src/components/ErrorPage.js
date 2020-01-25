@@ -1,9 +1,10 @@
 import React from 'react';
 import i18next from 'i18next';
 import { Link } from 'react-router-dom';
+import { NOT_FOUND } from './../services/constants/StatusCodesConstants';
 
 const getErrorMessage = (status) => {
-    if (status === 404) {
+    if (status === NOT_FOUND) {
         return i18next.t('errorPage.404');
     }
     else {
@@ -14,7 +15,7 @@ const getErrorMessage = (status) => {
 
 
 const ErrorPage = ({ status }) => {
-    const errorStatus = status ? status : 404;
+    const errorStatus = status ? status : NOT_FOUND;
     const errorMessage = getErrorMessage(status);
     return (
         <div >
