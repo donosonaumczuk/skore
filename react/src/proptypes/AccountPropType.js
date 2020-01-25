@@ -1,2 +1,9 @@
+import PropTypes from 'prop-types';
 
-//   https://medium.com/@jaebradley/custom-react-prop-type-validation-8b48dc3a156 TODO
+const AccountPropType = PropTypes.shape(
+    {
+        username: PropTypes.string.isRequired
+    }
+);
+
+export default AccountPropType;
