@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
@@ -23,10 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,10 +44,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -70,6 +76,8 @@ public class UserController {
 
     @Autowired
     private SessionService sessionService;
+
+    private static Resource defaultImage = new ClassPathResource("user-default.png");
 
     public static String getUserProfileEndpoint(final String username) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
@@ -112,15 +120,39 @@ public class UserController {
 
     @GET
     @Path("/{username}/matches")
-    public Response getUserGames(@PathParam("username") String username, @QueryParam("limit") String limit,
-                                 @QueryParam("offSet") String offset, @Context UriInfo uriInfo) {
-        List<String> usernames = new ArrayList<>();
-        usernames.add(username);
-        Page<GameDto> page = gameService.findGamesPage(null, null,null, null,
-            null, null, null,null, null, null, null,
-                null, null, usernames, null, null,
-                null, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), null)
+    public Response getUserGames(@PathParam("username") String username,
+                                 @QueryParam("minStartTime") String minStartTime,
+                                 @QueryParam("maxStartTime") String maxStartTime,
+                                 @QueryParam("minFinishTime") String minFinishTime,
+                                 @QueryParam("maxFinishTime") String maxFinishTime,
+                                 @QueryParam("minQuantity") String minQuantity,
+                                 @QueryParam("maxQuantity") String maxQuantity,
+                                 @QueryParam("minFreePlaces") String minFreePlaces,
+                                 @QueryParam("maxFreePlaces") String maxFreePlaces,
+                                 @QueryParam("country") List<String> countries,
+                                 @QueryParam("state") List<String> states,
+                                 @QueryParam("city") List<String> cities,
+                                 @QueryParam("sport") List<String> sports,
+                                 @QueryParam("type") List<String> types,
+                                 @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
+                                 @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
+                                 @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
+                                 @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
+                                 @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+                                 @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
+                                 @QueryParam("hasResult") String hasResult) {
+        if (usernamesPlayersInclude == null) {
+            usernamesPlayersInclude = new ArrayList<>();
+        }
+        usernamesPlayersInclude.add(username);
+        Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
+                types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
+                usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
@@ -150,8 +182,7 @@ public class UserController {
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
-            return Response.status(HttpStatus.TEMPORARY_REDIRECT.value())
-                    .header("Location", URLConstants.DEFAULT_USER_IMAGE_URL).build();
+            return Response.ok(getDefaultImage()).header("Content-Type", "image/*").build();
         }
         LOGGER.trace("Returning image for {}", username);
         return Response.ok(media.get()).header("Content-Type", "image/*").build();
@@ -240,5 +271,18 @@ public class UserController {
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
         });
         return Response.ok(UserDto.from(premiumUser)).build();
+    }
+
+    private byte[] getDefaultImage() {
+        ByteArrayOutputStream bos;
+        try {
+            BufferedImage bImage = ImageIO.read(defaultImage.getFile());
+            bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, "png", bos);
+        }
+        catch (IOException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
+        }
+        return bos.toByteArray();
     }
 }

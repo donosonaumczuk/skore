@@ -64,6 +64,7 @@ public class GameHibernateDaoTest {
                             LocalDateTime.parse("2018-11-11T19:00:00"), "competitive", null,
                             "Alan prefiere verlo y recursar", "La final de la libertadores",
                             null);
+        game1.setResult("5-1");
         Team team3          = new Team(account, "C.A.I.", "Club Atletico Independiente", false,
                             sport, null);
         team3.addPlayer(account.getUser());
@@ -112,7 +113,6 @@ public class GameHibernateDaoTest {
         em.createNativeQuery("delete from sports");
         em.createNativeQuery("delete from accounts");
         em.createNativeQuery("delete from users");
-//        em.flush();
     }
 
     @Test
@@ -141,7 +141,7 @@ public class GameHibernateDaoTest {
                 LocalDateTime.parse("2018-12-11T18:00:00"), null, null, 0,
                 null, null, null, null, null,
                 null, null, null,
-                null, null, null);
+                null, null, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game1, games.get(0));
@@ -166,7 +166,7 @@ public class GameHibernateDaoTest {
                 null, null, type, sportnames, 0,
                 10, countries, states, cities, 0,
                 10, null, null,
-                null, null, null);
+                null, null, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game1, games.get(0));
@@ -179,7 +179,7 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, null,
-                null, null, null);
+                null, null, null, null);
 
         Assert.assertEquals(2,games.size());
         Assert.assertEquals(game2,games.get(0));
@@ -193,7 +193,8 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, null,
-                null, null, new GameSort("country asc,state asc"));
+                null, null, new GameSort("country asc,state asc"),
+                null);
 
         Assert.assertEquals(2,games.size());
         Assert.assertEquals(game1,games.get(0));
@@ -209,7 +210,7 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, usernamesNotInclude,
-                null, null, null);
+                null, null, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game1, games.get(0));
@@ -225,7 +226,7 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, usernames, null,
-                null, usernames, null);
+                null, usernames, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(gameNotInserted, games.get(0));
@@ -241,7 +242,7 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, null,
-                usernames, null, null);
+                usernames, null, null, null);
 
         Assert.assertEquals(1,games.size());
         Assert.assertEquals(game2, games.get(0));
@@ -257,11 +258,37 @@ public class GameHibernateDaoTest {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, usernamesInclude, null,
-                null, null, null);
+                null, null, null, null);
 
         Assert.assertEquals(2,games.size());
         Assert.assertEquals(game2, games.get(0));
         Assert.assertEquals(gameNotInserted, games.get(1));
+    }
+
+    @Test
+    public void findGamesTestHasResult() {
+
+        final List<Game> games = gameDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null,
+                null, null, null, true);
+
+        Assert.assertEquals(1,games.size());
+        Assert.assertEquals(game1, games.get(0));
+    }
+
+    @Test
+    public void findGamesTestHasNotResult() {
+
+        final List<Game> games = gameDao.findGames(null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null,
+                null, null, null, false);
+
+        Assert.assertEquals(1,games.size());
+        Assert.assertEquals(game2, games.get(0));
     }
 
     @Test

@@ -151,12 +151,12 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
-                                    final Integer offset, GameSort sort) {
+                                    final Integer offset, final GameSort sort, final Boolean onlyWithResults) {
         List<Game> games = gameDao.findGames(getLocalDateTimeFromString(minStartTime),
                 getLocalDateTimeFromString(maxStartTime), getLocalDateTimeFromString(minFinishTime),
                 getLocalDateTimeFromString(maxFinishTime), types, sportNames, minQuantity, maxQuantity, countries,
                 states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude, usernamesPlayersNotInclude,
-                usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort);
+                usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort, onlyWithResults);
 
         return new Page<>(games, offset, limit);
     }

@@ -25,7 +25,8 @@ public interface GameDao {
                                 final Integer maxFreePlaces, final List<String> usernamesPlayersInclude,
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
-                                final List<String> usernamesCreatorsNotInclude, final GameSort sort);
+                                final List<String> usernamesCreatorsNotInclude, final GameSort sort,
+                                final Boolean onlyWithResults);
 
     public List<Game> gamesThatAUserPlayInTeam1(final long userId);
 
