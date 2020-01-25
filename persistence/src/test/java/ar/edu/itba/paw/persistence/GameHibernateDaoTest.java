@@ -45,8 +45,6 @@ public class GameHibernateDaoTest {
 
     private final PremiumUser account;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public GameHibernateDaoTest() {
         Sport sport         = new Sport("baloncesto", 5, "Baloncesto", null);
         account             = new PremiumUser("Agustin", "Dammiano", "dammiano98@itba.edu.ar",
@@ -121,8 +119,8 @@ public class GameHibernateDaoTest {
     public void createTest() {
 
         final Optional<Game> gameOpt = gameDao.create(gameNotInserted.getTeam1().getName(),
-                gameNotInserted.getTeam2().getName(), gameNotInserted.getStartTime().format(formatter),
-                gameNotInserted.getFinishTime().format(formatter), gameNotInserted.getType(),
+                gameNotInserted.getTeam2().getName(), gameNotInserted.getStartTime().toString(),
+                gameNotInserted.getFinishTime().toString(), gameNotInserted.getType(),
                 gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(),
                 gameNotInserted.getPlace().getState(), gameNotInserted.getPlace().getCity(),
                 gameNotInserted.getPlace().getStreet(), gameNotInserted.getTornament(),
@@ -270,12 +268,12 @@ public class GameHibernateDaoTest {
     public void modifyTest() {
 
         final Game gameReturned = gameDao.modify(gameNotInserted.getTeam1().getName(), gameNotInserted.getTeam2().getName(),
-                gameNotInserted.getStartTime().format(formatter), gameNotInserted.getFinishTime().format(formatter),
+                gameNotInserted.getStartTime().toString(), gameNotInserted.getFinishTime().toString(),
                 gameNotInserted.getType(), gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(),
                 gameNotInserted.getPlace().getState(), gameNotInserted.getPlace().getCity(),
                 gameNotInserted.getPlace().getStreet(), gameNotInserted.getTornament(), gameNotInserted.getDescription(),
-                game1.getTeam1().getName(), game1.getStartTime().format(formatter),
-                game1.getFinishTime().format(formatter)).get();
+                game1.getTeam1().getName(), game1.getStartTime().toString(),
+                game1.getFinishTime().toString()).get();
 
         Assert.assertEquals(game1, gameReturned);
     }
@@ -283,8 +281,8 @@ public class GameHibernateDaoTest {
     @Test
     public void deleteTest() {
 
-        boolean ans = gameDao.remove(game1.getTeam1().getName(), game1.getStartTime().format(formatter),
-                            game1.getFinishTime().format(formatter));
+        boolean ans = gameDao.remove(game1.getTeam1().getName(), game1.getStartTime().toString(),
+                            game1.getFinishTime().toString());
 
         Assert.assertEquals(true, ans);
         Assert.assertNull(em.find(Game.class, new GamePK(game1.getTeam1(), game1.getStartTime(),
