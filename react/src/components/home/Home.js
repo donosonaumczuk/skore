@@ -20,14 +20,15 @@ class Home extends Component {
 
     render() {
         let { currentTab } = this.state;
+        const { currentUser } = this.props;
         return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="sidepanel col-md-4 col-lg-4 offset-xl-1 
                         col-xl-3 navbar-collapse" id="navbarSupportedContent">
-                        <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange} />
+                        <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange}
+                                    currentUser={currentUser} />
                     </div>
-                
                     <div className="col-md-8 col-lg-8 col-xl-6">
                             {/* TODO pass down filters when implemented filter search */}
                             <HomeMatches />

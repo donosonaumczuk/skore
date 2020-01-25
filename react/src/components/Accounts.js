@@ -4,11 +4,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import UserService from '../services/UserService';
 import Loader from './Loader';
 import Account from './Account';
+import Utils from './utils/Utils';
+import ErrorPage from './ErrorPage';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
 
-//TODO replace with real accounts when endpoint created
 class Accounts extends Component {
     mounted = false;
     constructor(props) {
@@ -20,46 +21,41 @@ class Accounts extends Component {
             hasMore: true
         }
     }
-    
-    createArray = (account, offset, limit) => {
-        let i;
-        let index = 0;
-        let accounts = [];
-        for(i = offset; i < limit; i++) {
-            accounts[index] = {
-                "username": account.username,
-                "index": i
-            };
-            index++;
+
+    updateUsers = response => {
+        if (response.status) {
+            this.setState({ status: response.status });
         }
-        return accounts;
+        else {
+            const hasMore = Utils.hasMorePages(response.links);
+            const accounts = response.users;
+            this.setState({
+                accounts: [...this.state.accounts, ...accounts],
+                offset: this.state.offset + accounts.length,
+                hasMore: hasMore
+            });
+        }
+    }
+
+    getUsers = async () => {
+        const { offset, limit } = this.state;
+        const response = await UserService.getUsers(offset, limit);
+        if (this.mounted) {
+            this.updateUsers(response);
+        }
     }
 
     async componentDidMount() {
         this.mounted = true;
-        const account = await UserService.getProfileByUsername("donosonaumczuk");
-        const newAccounts = this.createArray(account, this.state.offset, this.state.limit);
-        this.setState({
-            accounts: [...this.state.accounts, ...newAccounts],
-            offset: this.state.offset + this.state.limit,
-            hasMore: true
-        });
-    }
-
-    getMoreAccounts = async () => {
-        //TODO replace with real endpoint when endpoint created
-        const account = await UserService.getProfileByUsername("donosonaumczuk");
-        const newAccounts = this.createArray(account, this.state.offset, this.state.limit + this.state.offset);
-        this.setState({
-            accounts: [...this.state.accounts, ...newAccounts],
-            offset: this.state.offset + this.state.limit,
-            hasMore: true
-        });
+        this.getUsers();        
     }
 
     render() {
-        if (this.state.accounts.length === 0) {
-            return <Loader />
+        if (this.state.status) {
+            return <ErrorPage status={this.state.status} />;
+        }
+        else if (this.state.accounts.length === 0 && this.state.hasMore) {
+            return <Loader />;
         }
         return (
             <div>
@@ -68,10 +64,12 @@ class Accounts extends Component {
                         {i18next.t('createUserForm.accounts')}
                     </h1>
                 </center>
-                <InfiniteScroll dataLength={this.state.accounts.length} next={this.getMoreAccounts}
-                                hasMore={this.state.hasMore} loader={<Loader />} >
-                    {this.state.accounts.map((account, i) => <Account key={i} account={account} />)}
-                </InfiniteScroll> 
+                <div className="container">
+                    <InfiniteScroll dataLength={this.state.accounts.length} next={this.getUsers}
+                                    hasMore={this.state.hasMore} loader={<Loader />} >
+                        {this.state.accounts.map((account, i) => <Account key={i} account={account} />)}
+                    </InfiniteScroll> 
+                </div>
             </div>
         )
     }

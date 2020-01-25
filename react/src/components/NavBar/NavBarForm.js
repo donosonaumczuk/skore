@@ -9,7 +9,7 @@ const getAnonymousForm = () => {
             <Link className="mr-1 login-link" to="/login">
                 {i18next.t('navBar.signIn')}
             </Link>
-            <span className="white-text mr-1"> or </span>
+            <span className="white-text mr-1">{i18next.t('navBar.or')}</span>
             <Link className="login-link" to="/signUp">
                 {i18next.t('navBar.createAccount')}
             </Link>

@@ -2,7 +2,8 @@
     "navBar": {
         "signIn": "Sign-in",
         "createAccount": "Create Account",
-        "logOut": "Log out"
+        "logOut": "Log out",
+        "or": "or"
     },
     "createUserForm": {
         "accounts": "Accounts",
@@ -56,7 +57,7 @@
                 "invalidEmail": "It is not a well-formed email, should be a valid email.\n"
             },
             "image": {
-                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg, jpeg.\n",
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg and jpeg.\n",
                 "invalidImageSize": "Image can not be greater than 1MB.\n"
             },
             "cellphone": {
@@ -88,11 +89,16 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
-        "invalidUsernameOrPassword": "Invalid username or password"
+        "errors": {
+            "invalidUsernameOrPassword": "Invalid username or password",
+            "requiredUsername": "Username is required.",
+            "requiredPassword":"Password is required."
+        }
     },
     "home": {
         "createMatch": "CREATE A MATCH",
         "cantFindMatch": "Can't find the match you are looking for?",
+        "wantToCreateMatch": "Want to create your own match?\n",
         "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type.",
         "filtersAndCategories": "Filters and Categories",
         "countryFilter": "Country",
@@ -121,5 +127,46 @@
         "oldPassword": "Old password",
         "newPassword": "New password",
         "repeatNewPassword": "Repeat new password"
+    },
+    "sports": {
+        "playersPerTeam": "Players per team: "
+    },
+    "createMatchForm": {
+        "matchName": "Match name ",
+        "createMatch": "CREATE MATCH"
+    },
+    "forms": {
+        "requiredFields":"Fields containing (*) are required."
+    },
+    "createSportForm": {
+        "sportName": "Sport name ",
+        "displayName": "Display name ",
+        "playersPerTeam": "Players per team ",
+        "sportImage": "Sport image ",
+        "createSportButton": "CREATE SPORT",
+        "updateInfoButton": "UPDATE INFO",
+        "errors": {
+            "sportName": {
+                "required": "Sport name is required.\n",
+                "invalidSymbols": "Sport name can only contains alphanumeric.\n",
+                "invalidLength": "Sport name must be between 4 and 100 characters.\n"
+            },
+            "displayName": {
+                "required": "Display name is required.\n",
+                "invalidSymbols": "Display name can only contains alphanumeric symbols or spaces.\n",
+                "invalidLength": "Display name must be between 4 and 100 characters.\n"
+            },
+            "playersPerTeam": {
+                "required": "Players per team is required.\n",
+                "invalidSymbols": "Players per team must contain only digits.\n",
+                "invalidLength": "Players per team must be between 1 and 3 digits long.\n",
+                "invalidValue": "Player per teams must have a value between 1 and 100.\n"
+            },
+            "image": {
+                "required": "Sport image is required.\n",
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg and jpeg.\n",
+                "invalidImageSize": "Image can not be greater than 1MB.\n"
+            }
+        }
     }
 }

@@ -220,8 +220,17 @@ body {
     font-weight: bold;
 }
 
+.poster-link {
+    color: rgba(245, 238, 250, 0.8);
+    font-weight: bold;
+}
+
 .login-link:hover {
     color: var(--secondary-color);
+}
+
+.poster-link:hover {
+    color: var(--dark-secondary-color);
 }
 
 .location-icon {
