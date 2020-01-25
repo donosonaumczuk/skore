@@ -1,22 +1,30 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.GameValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -25,7 +33,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
@@ -45,6 +55,10 @@ public class GameController {
     @Autowired
     @Qualifier("teamServiceImpl")
     private TeamService teamService;
+
+    @Autowired
+    @Qualifier("sessionServiceImpl")
+    private SessionService sessionService;
 
     public static String getGameEndpoint(final String gameId) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(gameId).toTemplate();
@@ -90,6 +104,57 @@ public class GameController {
         }
         return TeamDto.from(teamService.getAccountsMap(team), team);
     }
+
+    @POST
+    public Response createGame(@RequestBody final String requestBody) {
+        GameValidator.creationValidatorOf("Match creation fails, invalid creation JSON");
+        final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
+        Optional<Game> game;
+        if (!gameDto.isIndividual()) {
+            //TODO: validate that teams exist and maybe that logged user has permissions
+            game = gameService.create(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
+                    getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
+                    gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
+                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
+                    gameDto.getDescription(), gameDto.getTitle());
+        } else {
+            PremiumUser creator = sessionService.getLoggedUser().get();
+            game = gameService.createNoTeamGame(getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(),
+                    gameDto.isCompetitive(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
+                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
+                    gameDto.getDescription(), creator.getUserName(), creator.getUser().getUserId(), gameDto.getSport(),
+                    gameDto.getTitle());
+        }
+
+        return Response.status(HttpStatus.CREATED.value())
+                .entity(GameDto.from(game.get(), getTeam(game.get().getTeam1()), getTeam(game.get().getTeam2())))
+                .build();
+    }
+
+    private LocalDateTime getStartTimeFrom(GameDto gameDto) {
+        return LocalDateTime.of(gameDto.getDate().getYear(), gameDto.getDate().getMonthNumber(),
+                gameDto.getDate().getDayOfMonth(), gameDto.getTime().getHour(), gameDto.getTime().getMinute(),
+                gameDto.getTime().getSecond());
+    }
+
+//    private String getStartTimeFrom(GameDto gameDto) {
+//        StringBuilder stringBuilder = new StringBuilder(gameDto.getDate().getYear());
+//        return stringBuilder.append('-').append(gameDto.getDate().getMonth()).append('-')
+//                .append(gameDto.getDate().getDayOfMonth()).append('T').append(gameDto.getTime().getHour())
+//                .append(':').append(gameDto.getTime().getMinute()).append(':').append(gameDto.getTime().getSecond())
+//                .toString();
+//    }
+//
+//    private String getFinishTimeFrom(GameDto gameDto) {
+//        LocalDateTime finishTime = LocalDateTime.of(gameDto.getDate().getYear(), gameDto.getDate().getMonth().getValue(),
+//                gameDto.getDate().getDayOfMonth(), gameDto.getTime().getHour(), gameDto.getTime().getMinute(),
+//                gameDto.getTime().getSecond()).plusMinutes(gameDto.getMinutesOfDuration());
+//        StringBuilder stringBuilder = new StringBuilder(finishTime.getYear());
+//        return stringBuilder.append('-').append(finishTime.getMonth()).append('-')
+//                .append(finishTime.getDayOfMonth()).append('T').append(finishTime.getHour())
+//                .append(':').append(finishTime.getMinute()).append(':').append(finishTime.getSecond())
+//                .toString();
+//    }
 
 //    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
 //    @ResponseStatus(HttpStatus.OK)

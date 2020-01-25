@@ -100,6 +100,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RegexRequestMatcher("/api/users/\\w+/?", "PUT"),
                 new RegexRequestMatcher("/api/users/\\w+/?", "DELETE"),
                 new RegexRequestMatcher("/api/users/\\w+/verification/?", "POST"), //TODO maybe it is not needed
+                new RegexRequestMatcher("/api/matches/?", "POST"),
                 optionalAuthEndpointsMatcher(),
                 adminAuthEndpointsMatcher()
         );

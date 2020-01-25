@@ -37,59 +37,48 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private TeamService teamService;
 
+    public static final String GROUP       = "Group";
+    public static final String INDIVIDUAL  = "Individual";
+    public static final String COMPETITIVE = "Competitive";
+    public static final String FRIENDLY    = "Friendly";
+
     public GameServiceImpl() {
 
     }
 
-    private static String getFinishTime(final String startTime, String duration) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime durationTime = LocalTime.parse(duration, timeFormatter);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime startDateTime = LocalDateTime.parse(startTime, dateTimeFormatter);
-        String finishTime = startDateTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute())
-                .format(dateTimeFormatter);
-        return finishTime;
-    }
-
-    private static String formatDate(String date) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse(date, timeFormatter);
-        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String formattedDate = localDateTime.format(timeFormatter);
-        return formattedDate;
-    }
-
     @Override
-    public Game create(final String teamName1, final String teamName2, final String startTime,
-                       final String duration, final String type, final String result,
-                       final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description,
-                       final String title) {
-        final String newStartTime = formatDate(startTime);
-        String finishTime = getFinishTime(newStartTime, duration);
+    public Optional<Game> create(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description,
+                                 final String title) {
+        StringBuilder typeBuilder = new StringBuilder();
+        typeBuilder.append(isIndividual ? INDIVIDUAL : GROUP).append('-')
+                .append(isCompetitive ? COMPETITIVE : FRIENDLY);
 
-        Optional<Game> game = gameDao.create(teamName1, teamName2, newStartTime + ":00", finishTime + ":00", type, result,
+        Optional<Game> game = gameDao.create(teamName1, teamName2, startTime.toString(),
+                startTime.plusMinutes(durationInMinutes).toString(), typeBuilder.toString(), null,
                 country, state, city, street, tornamentName, description, title);
 
-        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1 + " vs " + teamName2
-                + " starting at " + newStartTime + "and finishing at " + finishTime));
+        return game;
     }
 
     @Override
-    public Game createNoTeamGame(final String startTime, final String duration,
-                                 final String type, final String country,
-                                 final String state, final String city,
-                                 final String street, final String tornamentName,
-                                 final String description, final String creatorName,
-                                 final long creatorId, final String sportName, final String title) {
+    public Optional<Game> createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
+                                           final boolean isCompetitive, final String country,
+                                           final String state, final String city,
+                                           final String street, final String tornamentName,
+                                           final String description, final String creatorName,
+                                           final long creatorId, final String sportName, final String title) {
         Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
         Team team2 = teamService.createTempTeam2(creatorName, creatorId, sportName);
 
-        Game game = create(team1.getName(), team2.getName(), startTime, duration, type, null,
-                      country, state, city, street, tornamentName, description, title);
-        final String newStartTime = formatDate(startTime);
-        String finishTime = getFinishTime(newStartTime, duration);
-        insertUserInGame(game.getTeam1().getName(), newStartTime + ":00", finishTime + ":00", creatorId);
+        Optional<Game> game = create(team1.getName(), team2.getName(), startTime, durationInMinutes, isCompetitive,
+                true, country, state, city, street, tornamentName, description, title);
+        if (game.isPresent()) {
+            insertUserInGame(game.get().getTeam1().getName(), startTime.toString(),
+                    startTime.plusMinutes(durationInMinutes).toString(), creatorId);
+        }
         return game;
     }
 
@@ -111,17 +100,13 @@ public class GameServiceImpl implements GameService {
                                       final boolean toTeam1) {
         Game game = findByKey(teamName1, startTime, finishTime);
         Game gameAns;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(!toTeam1) {
             teamService.addPlayer(game.team2Name(), userId);
-            gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
-                        formatter.format(game.getFinishTime()));
         }
         else {
             teamService.addPlayer(game.team1Name(), userId);
-            gameAns = findByKey(game.team1Name(), formatter.format(game.getStartTime()),
-                        formatter.format(game.getFinishTime()));
         }
+        gameAns = findByKey(game.team1Name(), game.getStartTime().toString(), game.getFinishTime().toString());
         return gameAns;
     }
 

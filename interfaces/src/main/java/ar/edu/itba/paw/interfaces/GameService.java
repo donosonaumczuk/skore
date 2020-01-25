@@ -5,26 +5,29 @@ import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import org.json.JSONArray;
+import org.springframework.cglib.core.Local;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface GameService {
     @Transactional
-    public Game create(final String teamName1, final String teamName2, final String startTime,
-                       final String finishTime, final String type, final String result,
-                       final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description,
-                       final String title);
+    public Optional<Game> create(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description,
+                                 final String title);
 
     @Transactional
-    public Game createNoTeamGame( final String startTime, final String finishTime,
-                                  final String type, final String country,
-                                  final String state, final String city,
-                                  final String street, final String tornamentName,
-                                  final String description, final String creatorName,
-                                  final long creatorId, final String sportName, final String title);
+    public  Optional<Game> createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
+                                            final boolean isCompetitive, final String country,
+                                            final String state, final String city,
+                                            final String street, final String tornamentName,
+                                            final String description, final String creatorName,
+                                            final long creatorId, final String sportName, final String title);
 
     @Transactional
     public Game findByKey(String teamName1, String startTime, String finishTime);

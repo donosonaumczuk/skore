@@ -189,6 +189,10 @@ public class Game {
         return type.split("-")[1];
     }
 
+    public String getGroupType() {
+        return type.split("-")[0];
+    }
+
     public int getFirstScoreFromResult() {
         String result = getResult();
         int firstScore = 0;

@@ -13,7 +13,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,9 +78,8 @@ public class GameHibernateDao implements GameDao {
         else {
             team2 = null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Game game = new Game(team1, team2, new Place(country, state, city, street),
-                LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(finishTime, formatter),
+                LocalDateTime.parse(startTime), LocalDateTime.parse(finishTime),
                 type, result, description, title, tornamentName);
         em.persist(game);
         LOGGER.trace("Successfully create game: {} vs {} |starting at {} |finishing at {}",
@@ -94,9 +92,8 @@ public class GameHibernateDao implements GameDao {
         LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime, finishTime);
         Team team1 = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Game game = em.find(Game.class, new GamePK(team1, LocalDateTime.parse(startTime, formatter),
-                LocalDateTime.parse(finishTime, formatter)));
+        Game game = em.find(Game.class, new GamePK(team1, LocalDateTime.parse(startTime),
+                LocalDateTime.parse(finishTime)));
         LOGGER.trace("Returning what was find");
         return (game == null)?Optional.empty():Optional.of(game);
     }
@@ -186,11 +183,10 @@ public class GameHibernateDao implements GameDao {
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
                                  final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Team team1Old = teamDao.findByTeamName(teamName1Old)
                 .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        Game game = em.find(Game.class, new GamePK(team1Old, LocalDateTime.parse(startTimeOld, formatter),
-                LocalDateTime.parse(finishTimeOld, formatter)));
+        Game game = em.find(Game.class, new GamePK(team1Old, LocalDateTime.parse(startTimeOld),
+                LocalDateTime.parse(finishTimeOld)));
         LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
         if(game == null) {
@@ -204,8 +200,8 @@ public class GameHibernateDao implements GameDao {
         team = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
         game.setTeam2(team);
-        game.setStartTime(LocalDateTime.parse(startTime, formatter));
-        game.setFinishTime(LocalDateTime.parse(finishTime, formatter));
+        game.setStartTime(LocalDateTime.parse(startTime));
+        game.setFinishTime(LocalDateTime.parse(finishTime));
         game.setType(type);
         game.setResult(result);
         game.setPlace(new Place(country, state, city, street));
