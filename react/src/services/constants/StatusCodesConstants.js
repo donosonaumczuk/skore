@@ -1,24 +1,24 @@
 //status constants
-const OK_STATUS = 200;
+const SC_OK = 200;
 
-const CREATED_STATUS = 201;
+const SC_CREATED = 201;
 
-const NO_CONTENT = 204;
+const SC_NO_CONTENT = 204;
 
-const BAD_REQUEST = 400;
+const SC_BAD_REQUEST = 400;
 
-const UNAUTHORIZED = 401;
+const SC_UNAUTHORIZED = 401;
 
-const FORBIDDEN = 403;
+const SC_FORBIDDEN = 403;
 
-const NOT_FOUND = 404;
+const SC_NOT_FOUND = 404;
 
 export {
-    OK_STATUS,
-    CREATED_STATUS,
-    NO_CONTENT,
-    BAD_REQUEST,
-    UNAUTHORIZED,
-    FORBIDDEN,
-    NOT_FOUND
+    SC_OK,
+    SC_CREATED,
+    SC_NO_CONTENT,
+    SC_BAD_REQUEST,
+    SC_UNAUTHORIZED,
+    SC_FORBIDDEN,
+    SC_NOT_FOUND
 };

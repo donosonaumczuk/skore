@@ -1,6 +1,6 @@
 import api from './../config/Api';
 import { AUTH_ENDPOINT } from './constants/EndpointConstants';
-import { OK_STATUS, UNAUTHORIZED } from './constants/StatusCodesConstants';
+import { SC_OK, SC_UNAUTHORIZED } from './constants/StatusCodesConstants';
 
 const setToken = token => localStorage.setItem('jwt', token);
 
@@ -19,7 +19,7 @@ const logInUser = async user => {
         const response = await api.post(`${AUTH_ENDPOINT}/login`, user);
         setToken(response.headers['x-token']);
         loadUser(user.username);
-        return { "status": OK_STATUS };
+        return { "status": SC_OK };
     }
     catch(err) {
         return { "status": err.response.status }
@@ -36,10 +36,10 @@ const logOutUser = async () => {
             removeToken();
             removeUser();  
         }
-        return { "status": OK_STATUS };
+        return { "status": SC_OK };
     }
     catch(err) {
-        if (err.response.status === UNAUTHORIZED) {
+        if (err.response.status === SC_UNAUTHORIZED) {
             removeToken();
             removeUser();
         }

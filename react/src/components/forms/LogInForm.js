@@ -10,7 +10,7 @@ import SuggestionText from './inputs/SuggestionText';
 import AuthService from './../../services/AuthService';
 import LogInValidator from './validators/LogInValidator';
 import FormComment from './inputs/FormComment';
-import { UNAUTHORIZED } from './../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -34,7 +34,7 @@ class LogInForm extends Component {
                 "password": values.password
             }
         );
-        if (response.status === UNAUTHORIZED) {
+        if (response.status === SC_UNAUTHORIZED) {
             const errorMessage = i18next.t('login.errors.invalidUsernameOrPassword')
             this.setState({ errorMessage: errorMessage })
         }
