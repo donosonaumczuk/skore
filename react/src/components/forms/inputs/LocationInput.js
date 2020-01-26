@@ -81,7 +81,7 @@ class LocationInput extends Component {
                         </div>
                         <input {...getInputProps({ placeholder: i18next.t('createUserForm.address'),
                                                     className: 'location-search-input', 
-                                                    id: 'address', autocomplete: 'new-password' })} />
+                                                    id: 'address', autoComplete: 'new-password' })} />
                         <div className="autocomplete-dropdown-container">
                         {loading && <Loader />}
                         {suggestions.map(suggestion => {

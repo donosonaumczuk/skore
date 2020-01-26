@@ -6,7 +6,7 @@ import MatchDate from './../match/MatchDate';
 import MatchLocation from './../match/MatchLocation';
 import MatchDuration from '../match/MatchDuration';
 import MatchAvailability from '../match/MatchAvailability';
-import HomeMatchPropType from '../../proptypes/HomeMatchProptype';
+import HomeMatchPropType from '../../proptypes/HomeMatchPropType2';
 
 const getImageUrls = links => {
     let creatorImageUrl;

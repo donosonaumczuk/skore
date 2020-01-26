@@ -165,14 +165,6 @@ class CreateUserForm extends Component {
                                                 value={this.state.city ? this.state.city : ""} />
                             <SubLocationInput label={i18next.t('createUserForm.state')} id="administrative_area_level_1"
                                                 path="state" value={this.state.state ? this.state.state : ""} /> 
-                            {/* <Field name="country" label={i18next.t('createUserForm.country')} id="country"
-                                        inputType="text" required={false} component={RenderInput} />
-                            <Field name="state" label={i18next.t('createUserForm.state')} id="state"
-                                        inputType="text" required={false} component={RenderInput} />
-                            <Field name="city" label={i18next.t('createUserForm.city')} id="city"
-                                        inputType="text" required={false} component={RenderInput} />
-                            <Field name="street" label={i18next.t('createUserForm.street')} id="street"
-                                        inputType="text" required={false} component={RenderInput} /> */}
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                             <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.login')} />
