@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.filters.session;
 
 import ar.edu.itba.paw.exceptions.NoJWTFoundException;
-import ar.edu.itba.paw.exceptions.UnauthorizedExecption;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.interfaces.JWTService;
 import ar.edu.itba.paw.webapp.auth.token.JWTUsernamePasswordAuthToken;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
@@ -78,7 +78,7 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
             auth = getAuthenticationManager().authenticate(token.get());
             if(adminAuthEndpointsMatcher.matches(httpServletRequest)
                     && !auth.getAuthorities().contains(new SimpleGrantedAuthority(ADMIN))) {
-                throw new UnauthorizedExecption("Is not admin");
+                throw new UnauthorizedException("Is not admin");
             }
         }
         return auth;
