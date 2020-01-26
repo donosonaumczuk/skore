@@ -7,11 +7,9 @@ import org.springframework.hateoas.Link;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDto {
-    //TODO: remove public constructor
-    //TODO: remove setters
-    //TODO: maybe we must use Optionals in getters for nullable fields, discuss and check if jackson maps using getters or reflection
 
     private String username;
     private String email;
@@ -22,12 +20,12 @@ public class UserDto {
     private PlaceDto home;
     private String password;
     private String image;
-    private int reputation;
-    private boolean isVerified;
+    private Integer reputation;
+    private Boolean isVerified;
     private List<Link> links;
 
-    public UserDto() {
-
+    private UserDto() {
+        /* Required by JSON object mapper */
     }
 
     private UserDto(PremiumUser premiumUser) {
@@ -81,8 +79,8 @@ public class UserDto {
         return cellphone;
     }
 
-    public PlaceDto getHome() {
-        return home;
+    public Optional<PlaceDto> getHome() {
+        return Optional.ofNullable(home);
     }
 
     public String getPassword() {
@@ -101,47 +99,7 @@ public class UserDto {
         return links;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setBirthday(String birthDay) {
-        this.birthday = birthDay;
-    }
-
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
-    }
-
-    public void setHome(PlaceDto home) {
-        this.home = home;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
-    }
-
-    public boolean isVerified() {
+    public Boolean isVerified() {
         return isVerified;
     }
 }

@@ -9,8 +9,8 @@ public class PlaceDto {
     private String city;
     private String street;
 
-    public PlaceDto() {
-
+    private PlaceDto() {
+        /* Required by JSON object mapper */
     }
 
     private PlaceDto(Place place) {
@@ -22,22 +22,6 @@ public class PlaceDto {
 
     public static PlaceDto from(Place place) {
         return new PlaceDto(place);
-    }
-
-    public void setCountry(final String country) {
-        this.country = country;
-    }
-
-    public void setState(final String state) {
-        this.state = state;
-    }
-
-    public void setCity(final String city) {
-        this.city = city;
-    }
-
-    public void setStreet(final String street) {
-        this.street = street;
     }
 
     public String getState() {

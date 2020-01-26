@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class UserValidators {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserValidators.class);
+    private static final String USERNAME = "username";
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String EMAIL = "email";
@@ -24,13 +25,14 @@ public class UserValidators {
     private static final String BIRTHDAY = "birthday";
     private static final String HOME = "home";
     private static final String PASSWORD = "password";
+    private static final String OLD_PASSWORD = "oldPassword";
     private static final String IMAGE = "image";
-    private static final String USERNAME = "username";
     private static final Set<String> CREATION_KNOWN_FIELDS = ImmutableSet.of(USERNAME, FIRST_NAME, LAST_NAME, EMAIL,
-            CELLPHONE, BIRTHDAY, HOME);
-    private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(USERNAME, FIRST_NAME, LAST_NAME, EMAIL, BIRTHDAY);
-    private static final Set<String> UPDATE_KNOWN_FIELDS = ImmutableSet.of(FIRST_NAME, LAST_NAME, EMAIL,
             CELLPHONE, BIRTHDAY, HOME, PASSWORD, IMAGE);
+    private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(USERNAME, FIRST_NAME, LAST_NAME, EMAIL,
+            BIRTHDAY, PASSWORD);
+    private static final Set<String> UPDATE_KNOWN_FIELDS = ImmutableSet.of(FIRST_NAME, LAST_NAME, EMAIL,
+            CELLPHONE, BIRTHDAY, HOME, PASSWORD, OLD_PASSWORD, IMAGE);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
     public static Validator<Optional<PremiumUser>> existenceValidatorOf(final String username, final String log) {
@@ -44,7 +46,7 @@ public class UserValidators {
 
     public static Validator<JSONObject> updateValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS, UPDATE_REQUIRED_FIELDS,
-                updateFieldValidatorMapOf(log), log);
+                updateFieldValidatorMapOf(log), log).and(passwordUpdateValidatorOf(log));
     }
 
     public static Validator<Optional<PremiumUser>> isAuthorizedForUpdateValidatorOf(final String username,
@@ -53,6 +55,20 @@ public class UserValidators {
             if (!loggedUserOptional.isPresent() || !loggedUserOptional.get().getUserName().equals(username)) {
                 LOGGER.error(log);
                 throw new ApiException(HttpStatus.FORBIDDEN, "Only '" + username + "' can update his own user");
+            }
+        };
+    }
+
+    private static Validator<JSONObject> passwordUpdateValidatorOf(final String log) {
+        return jsonObject -> {
+            if (jsonObject.has(PASSWORD) && !jsonObject.has(OLD_PASSWORD)) {
+                LOGGER.error(log);
+                throw new ApiException(HttpStatus.BAD_REQUEST, "To update '" + PASSWORD + "' field you must " +
+                        "provide an '" + OLD_PASSWORD + "' field with the old password");
+            }
+            else if (!jsonObject.has(PASSWORD)) {
+                //TODO: replace the following line with a call to ValidatorFactory::forbiddenValidatorOf over OLD_PASSWORD
+                if (jsonObject.has(OLD_PASSWORD)) throw new ApiException(HttpStatus.BAD_REQUEST, "This is for testing!");
             }
         };
     }
@@ -75,6 +91,7 @@ public class UserValidators {
     private static Map<String, Validator<JSONObject>> updateFieldValidatorMapOf(final String log) {
         return baseFieldValidatorMapOf(log).put(HOME,
                 ValidatorFactory.fieldIsValidObjectValidatorOf(HOME, HomeValidators.updateValidatorOf(log), log))
+                .put(OLD_PASSWORD, ValidatorFactory.fieldIsStringValidatorOf(OLD_PASSWORD, log))
                 .build();
     }
 

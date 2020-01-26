@@ -111,8 +111,8 @@ public class SportController {
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) {
-        byte[] imageBytes = validateAndProcessSportDto(sportDto);
+    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
+        byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
 
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
                 .orElseThrow(() -> {
@@ -125,9 +125,9 @@ public class SportController {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createASport(final SportDto sportDto) {
+    public Response createASport(final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
         Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");
-        byte[] imageBytes = validateAndProcessSportDto(sportDto);
+        byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
 
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
                 sportDto.getDisplayName(), imageBytes)
@@ -140,6 +140,7 @@ public class SportController {
         return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
     }
 
+    //TODO: remove this, create SportValidators class and migrate the logic to the new request validation style
     private byte[] validateAndProcessSportDto(SportDto sportDto) {
         return Validator.getValidator()
                 .isAlphaNumericorSpacesAndLessThan(sportDto.getDisplayName(), "displayName", MAX_DISPLAY_NAME_LENGTH)
