@@ -68,7 +68,7 @@ const getCurrentUser = () => {
 
 const isAdmin = () => {
     if (getToken()) {
-        return getIsAdmin();
+        return getIsAdmin() === "true" ? true : false;
     }
     return null;
 }

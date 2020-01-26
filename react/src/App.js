@@ -65,7 +65,7 @@ class App extends Component {
 
     async componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
-        const isAdmin = AuthService.isAdmin() === "true" ? true : false;
+        const isAdmin = AuthService.isAdmin();
         if (currentUser) {
             this.updateUser({ 
                 username: currentUser,

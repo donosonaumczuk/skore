@@ -7,6 +7,10 @@ import ImageInput from './inputs/ImageInput';
 import SubmitButton from './inputs/SubmitButton';
 import FormComment from './inputs/FormComment';
 import CreateSportValidator from './validators/CreateSportValidator';
+import AuthService from '../../services/AuthService';
+import SportService from '../../services/SportService';
+import ErrorPage from './../ErrorPage';
+import { SC_FORBIDDEN } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -18,10 +22,12 @@ const validate = values => {
 }
 
 class CreateSportForm extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
-            image: null
+            image: null,
+            error: null
         };
     }
 
@@ -60,18 +66,25 @@ class CreateSportForm extends Component {
 
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        console.log(sport);//TODO remove is here just to prevent warning
-        // const res = await SportService.createSport(user); //TODO uncomment when admin is received
-        // if (res.status) {
-        //    //TODO handle error
-        // }
+        const res = await SportService.createSport(sport);
+        if (res.status && this.mounted) {
+            this.setState({ error: res.status });
+        }
     } 
+
+    componentDidMount() {
+        this.mounted = true;
+    }
 
     render() {
         const { handleSubmit, submitting } = this.props; 
-        //TODO check if currentUser is admin adn redirect to error page with status 403
+        const isAdmin = AuthService.isAdmin();
         let imageName = "";
-        if (this.state.image != null) {
+        if (!isAdmin || this.state.error) {
+            console.log("porque no entra aca");
+            return <ErrorPage status={!isAdmin ? SC_FORBIDDEN : this.state.error} />
+        }
+        else if (this.state.image != null) {
             imageName = this.state.image.name;
         }
         return (
@@ -96,6 +109,10 @@ class CreateSportForm extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 

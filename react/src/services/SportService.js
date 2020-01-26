@@ -12,8 +12,19 @@ const getSports = async () => {
     }
 }
 
+const createSport = async sport => {
+    try {
+        const res = await api.post(`${SPORTS_ENDPOINT}`, sport);
+        return res.data.sports;
+    }
+    catch(err) {
+        return { status: err.response.status}
+    }
+}
+
 const SportService = {
-    getSports: getSports
+    getSports: getSports,
+    createSport: createSport
 }
 
 export default SportService;
