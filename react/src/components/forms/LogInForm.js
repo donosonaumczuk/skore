@@ -40,9 +40,10 @@ class LogInForm extends Component {
         }
         else {
             //TODO handle other error status maybe?
+            const isAdmin = AuthService.isAdmin() === "true" ? true : false;
             this.props.updateUser({
                 username: values.username,
-                isAdmin: AuthService.isAdmin() === "true" ? true : false
+                isAdmin: isAdmin
             });
         }
     }

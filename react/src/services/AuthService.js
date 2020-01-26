@@ -14,7 +14,7 @@ const removeUser = () => localStorage.removeItem('currentUser');
 
 const getUser = () => localStorage.getItem('currentUser');
 
-const setIsAdmin = () => localStorage.setItem('isAdmin', true);
+const setIsAdmin = isAdmin => localStorage.setItem('isAdmin', isAdmin);
 
 const removeAdmin = () => localStorage.removeItem('isAdmin');
 
@@ -25,7 +25,7 @@ const logInUser = async user => {
         const response = await api.post(`${AUTH_ENDPOINT}/login`, user);
         setToken(response.headers['x-token']);
         loadUser(user.username);
-        setIsAdmin('isAdmin', response.data.admin);
+        setIsAdmin(response.data.admin);
         return { "status": SC_OK };
     }
     catch(err) {

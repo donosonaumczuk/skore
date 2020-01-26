@@ -17,17 +17,36 @@ const getAnonymousForm = () => {
     );
 }
 
+const getAdminForm = isAdmin => {
+    if (isAdmin) {
+        return (
+            <form className="d-none d-sm-block form-inline">
+                <Link className="login-link" to="/admin">Administrator</Link>
+            </form>
+        )
+    }
+    else {
+        return <React.Fragment></React.Fragment>
+    }
+}
+
 const getLoggedForm = currentUser => {
     const  { username } = currentUser;
     const linkReference = `/users/${username}`;
+    const adminForm = getAdminForm(currentUser.isAdmin);
+    
     return (
-        <form className="d-none d-sm-block form-inline">
-            <Link className="mr-1 login-link" to={linkReference}>{username}</Link>
-            <span className="white-text mr-1"> | </span>
-            <Link className="login-link" to="/logout">{i18next.t('navBar.logOut')}</Link>
-        </form>
+        <React.Fragment>
+            {adminForm}
+            <form className="d-none d-sm-block form-inline">
+                <Link className="mr-1 login-link" to={linkReference}>{username}</Link>
+                <span className="white-text mr-1"> | </span>
+                <Link className="login-link" to="/logout">{i18next.t('navBar.logOut')}</Link>
+            </form>
+        </React.Fragment>
     );
 }
+
 const NavBarForm = ({ currentUser }) => {
     let form = getAnonymousForm();
     if (currentUser.username) {
