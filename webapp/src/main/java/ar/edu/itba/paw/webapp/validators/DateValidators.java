@@ -9,7 +9,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Set;
 
-public class DateValidator {
+public class DateValidators {
 
     private static final String YEAR  = "year";
     private static final String MONTH = "monthNumber";

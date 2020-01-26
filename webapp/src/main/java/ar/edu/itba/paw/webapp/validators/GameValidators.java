@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class GameValidator {
+public class GameValidators {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameValidators.class);
     private static final String TITLE       = "title";
     private static final String DESCRIPTION = "description";
     private static final String SPORT       = "sport";
@@ -55,9 +55,9 @@ public class GameValidator {
                 .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
                         HomeValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(DATE, ValidatorFactory.fieldIsValidObjectValidatorOf(DATE,
-                        DateValidator.creationValidatorOf(log), log)))
+                        DateValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(TIME, ValidatorFactory.fieldIsValidObjectValidatorOf(TIME,
-                        TimeValidator.creationValidatorOf(log), log)))
+                        TimeValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,
                         Pattern.compile(TITLE_REGEX), PATTER_DESCRIPTION, log)))//TODO check team name pattern, it must not have '.'
                 .add(Pair.of(TEAM_NAME_2, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_2,

@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.Set;
 
-public class TimeValidator {
+public class TimeValidators {
 
     private static final String HOUR   = "hour";
     private static final String MINUTE = "minute";

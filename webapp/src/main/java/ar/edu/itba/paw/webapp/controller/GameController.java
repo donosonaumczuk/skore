@@ -15,7 +15,7 @@ import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
-import ar.edu.itba.paw.webapp.validators.GameValidator;
+import ar.edu.itba.paw.webapp.validators.GameValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +111,7 @@ public class GameController {
 
     @POST
     public Response createGame(@RequestBody final String requestBody) {
-        GameValidator.creationValidatorOf("Match creation fails, invalid creation JSON");
+        GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON");
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Optional<Game> game;
         if (!gameDto.isIndividual()) {
