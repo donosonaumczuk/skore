@@ -17,6 +17,7 @@
         "imageFormat": "Accepted formats: png, jpeg or jpg",
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
+        "address": "Address",
         "country": "Country",
         "state": "State / Province",
         "city": "City",

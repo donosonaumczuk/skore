@@ -12,7 +12,8 @@ import AuthService from './../../services/AuthService';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 import UserService from '../../services/UserService';
 import FormComment from './inputs/FormComment';
-// import LocationInput from './inputs/LocationInput'; //TODO add when auto completes fields
+import LocationInput from './inputs/LocationInput';
+import SubLocationInput from './inputs/SubLocationInput';
 
 const validate = values => {
     const errors = {}
@@ -29,11 +30,16 @@ const validate = values => {
 }
 
 class CreateUserForm extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
             image: null,
-            created: false
+            created: false,
+            street: null,
+            city: null,
+            state: null,
+            country: null
         };
     }
  
@@ -78,13 +84,24 @@ class CreateUserForm extends Component {
             "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday,
             "home": {
-                "country": values.country ? values.country : null,
-                "state": values.state ? values.state : null,
-                "city": values.city ? values.city : null,
-                "street": values.street ? values.street: null
+                "country": this.state.country,
+                "state": this.state.state,
+                "city": this.state.city,
+                "street": this.state.street
             }
         };
         return user;
+    }
+
+    updateLocation = home => {
+        if (this.mounted) {
+            this.setState({
+                street: home.street,
+                city: home.city,
+                state: home.state,
+                country: home.country            
+            });
+        }
     }
 
     onSubmit = async (values) => {
@@ -98,6 +115,10 @@ class CreateUserForm extends Component {
         }
     }
 
+    componentDidMount() {
+        this.mounted = true;
+    }
+
     render() {
         const { handleSubmit, submitting } = this.props;
         let imageName = "";
@@ -109,51 +130,62 @@ class CreateUserForm extends Component {
             imageName = this.state.image.name;
         }
     
-    return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
-                    <FormTitle />
-                    <form onSubmit={handleSubmit(this.onSubmit)}>
-                        <Field name="username" label={i18next.t('createUserForm.username')}
-                                id="username" inputType="text" required={true} component={RenderInput} />
-                        <Field name="password" label={i18next.t('createUserForm.password')} 
-                                id="password" inputType="password" required={true} component={RenderInput} />
-                        <Field name="repeatPassword" label={i18next.t('createUserForm.repeatPassword')}
-                                id="repeatPassword" inputType="password" required={true} 
-                                component={RenderInput} />
-                        <Field name="firstName" label={i18next.t('createUserForm.firstName')} id="firstName"
-                                inputType="text" required={true} component={RenderInput} />
-                        <Field name="lastName" label={i18next.t('createUserForm.lastName')} id="lastName"
-                                inputType="text" required={true} component={RenderInput} />
-                        <Field name="email" label={i18next.t('createUserForm.email')} id="email"
-                                inputType="text" required={true} component={RenderInput} />
-                        <Field name="image" label={i18next.t('createUserForm.profilePicture')} type="file"
-                                imageName={imageName} acceptedFormat={i18next.t('createUserForm.imageFormat')}
-                                component={ImageInput} onChange={this.handleChange} />
-                        <Field name="cellphone" label={i18next.t('createUserForm.cellphone')} id="cellphone"
-                                    inputType="text" required={false} component={RenderInput} />
-                        <Field name="birthday" label={i18next.t('createUserForm.birthday')} id="birthday"
-                                inputType="text" required={true} component={RenderDatePicker} />
-                        <Field name="country" label={i18next.t('createUserForm.country')} id="country"
-                                    inputType="text" required={false} component={RenderInput} />
-                        <Field name="state" label={i18next.t('createUserForm.state')} id="state"
-                                    inputType="text" required={false} component={RenderInput} />
-                        <Field name="city" label={i18next.t('createUserForm.city')} id="city"
-                                    inputType="text" required={false} component={RenderInput} />
-                        <Field name="street" label={i18next.t('createUserForm.street')} id="street"
-                                    inputType="text" required={false} component={RenderInput} />
-                        {/* <Field name="location" label="Address" inputType="text" component={LocationInput} />
-                        //TODO make this tag work with autoComplete */}
-                        <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
-                        <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
-                        <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.login')} />
-                    </form>
+        return (
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+                        <FormTitle />
+                        <form onSubmit={handleSubmit(this.onSubmit)}>
+                            <Field name="username" label={i18next.t('createUserForm.username')}
+                                    id="username" inputType="text" required={true} component={RenderInput} />
+                            <Field name="password" label={i18next.t('createUserForm.password')} 
+                                    id="password" inputType="password" required={true} component={RenderInput} />
+                            <Field name="repeatPassword" label={i18next.t('createUserForm.repeatPassword')}
+                                    id="repeatPassword" inputType="password" required={true} 
+                                    component={RenderInput} />
+                            <Field name="firstName" label={i18next.t('createUserForm.firstName')} id="firstName"
+                                    inputType="text" required={true} component={RenderInput} />
+                            <Field name="lastName" label={i18next.t('createUserForm.lastName')} id="lastName"
+                                    inputType="text" required={true} component={RenderInput} />
+                            <Field name="email" label={i18next.t('createUserForm.email')} id="email"
+                                    inputType="text" required={true} component={RenderInput} />
+                            <Field name="image" label={i18next.t('createUserForm.profilePicture')} type="file"
+                                    imageName={imageName} acceptedFormat={i18next.t('createUserForm.imageFormat')}
+                                    component={ImageInput} onChange={this.handleChange} />
+                            <Field name="cellphone" label={i18next.t('createUserForm.cellphone')} id="cellphone"
+                                        inputType="text" required={false} component={RenderInput} />
+                            <Field name="birthday" label={i18next.t('createUserForm.birthday')} id="birthday"
+                                    inputType="text" required={true} component={RenderDatePicker} />
+                            <LocationInput updateLocation={this.updateLocation} />
+                            <SubLocationInput label={i18next.t('createUserForm.country')} id="country" path="country"
+                                                value={this.state.country ? this.state.country : ""} />
+                            <SubLocationInput label={i18next.t('createUserForm.street')} id="route" path="street"
+                                                value={this.state.street ? this.state.street : ""} />
+                            <SubLocationInput label={i18next.t('createUserForm.city')} id="locality" path="city" 
+                                                value={this.state.city ? this.state.city : ""} />
+                            <SubLocationInput label={i18next.t('createUserForm.state')} id="administrative_area_level_1"
+                                                path="state" value={this.state.state ? this.state.state : ""} /> 
+                            {/* <Field name="country" label={i18next.t('createUserForm.country')} id="country"
+                                        inputType="text" required={false} component={RenderInput} />
+                            <Field name="state" label={i18next.t('createUserForm.state')} id="state"
+                                        inputType="text" required={false} component={RenderInput} />
+                            <Field name="city" label={i18next.t('createUserForm.city')} id="city"
+                                        inputType="text" required={false} component={RenderInput} />
+                            <Field name="street" label={i18next.t('createUserForm.street')} id="street"
+                                        inputType="text" required={false} component={RenderInput} /> */}
+                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
+                            <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
+                            <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.login')} />
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-  }
+        );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+    }
 }               
 
 CreateUserForm = reduxForm({
