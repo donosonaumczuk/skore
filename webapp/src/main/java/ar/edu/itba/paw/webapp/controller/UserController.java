@@ -12,14 +12,15 @@ import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.UserPageDto;
-import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
-import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.UserPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,11 +212,15 @@ public class UserController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
-        //TODO: check what to do with UserDto and nullable fields, userDto.getHome().getCountry() -> NPE if getHome() returns null!
-        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
-                userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
-                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image, username);
+        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
+                userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
+                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getHome().flatMap(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getState).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getCity).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getStreet).orElse(null),
+                userDto.getReputation(), userDto.getPassword(), image, username
+        );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(newPremiumUser);
         LOGGER.trace("User '{}' modified successfully", username);
@@ -229,14 +234,18 @@ public class UserController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
-        PremiumUser newPremiumUser = premiumUserService.create(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
-                userDto.getHome().getCountry(), userDto.getHome().getState(), userDto.getHome().getCity(),
-                userDto.getHome().getStreet(), userDto.getReputation(), userDto.getPassword(), image)
-                .orElseThrow(() -> {
-                    LOGGER.trace("User '{}' already exist", userDto.getUsername());
-                    return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
-                });
+        PremiumUser newPremiumUser = premiumUserService.create(
+                userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
+                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getHome().flatMap(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getState).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getCity).orElse(null),
+                userDto.getHome().flatMap(PlaceDto::getStreet).orElse(null),
+                userDto.getReputation(), userDto.getPassword(), image
+        ).orElseThrow(() -> {
+            LOGGER.trace("User '{}' already exist", userDto.getUsername());
+            return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
+        });
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
     }
