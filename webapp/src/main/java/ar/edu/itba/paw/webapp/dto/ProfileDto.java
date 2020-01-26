@@ -14,8 +14,8 @@ public class ProfileDto {
     private final String username;
     private final String firstName;
     private final String lastName;
-    private final double winRate;
-    private final int age;
+    private final Double winRate;
+    private final Integer age;
     private final String location;
     private final List<Link> links;
 
@@ -54,11 +54,11 @@ public class ProfileDto {
         return lastName;
     }
 
-    public double getWinRate() {
+    public Double getWinRate() {
         return winRate;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 

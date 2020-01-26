@@ -124,7 +124,7 @@
     },
     "changePasswordForm": {
         "changePasswordButton": "CAMBIAR CONTRASEÑA",
-        "oldPassword": "Contraseña vieja",
+        "oldPassword": "Contraseña anterior",
         "newPassword": "Contraseña nueva",
         "repeatNewPassword": "Repita la contraseña nueva"
     },

@@ -53,6 +53,8 @@ public class UserValidatorsTest {
     public void whenValidatingUpdateIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
+                    "\t\"password\" : \"myNewPassword\",\n" +
+                    "\t\"oldPassword\" : \"myOldPassword\",\n" +
                     "\t\"email\" : \"an@email.com\",\n" +
                     "\t\"home\" : {\n" +
                     "\t\t\"state\" : \"a state\",\n" +
@@ -90,6 +92,31 @@ public class UserValidatorsTest {
     }
 
     @Test
+    public void whenValidatingUpdateIfHasPasswordButNotOldPasswordThrowApiExceptionWithExpectedValues() {
+        exceptionRule.expect(ApiException.class);
+        exceptionRule.expectMessage("To update 'password' field you must provide an 'oldPassword' field with"
+                + " the old password");
+        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+                "{\n" +
+                        "\t\"password\" : \"myNewPassword\",\n" +
+                        "}"
+                )
+        );
+    }
+
+    @Test
+    public void whenValidatingUpdateIfHasOldPasswordButNotPasswordThrowApiExceptionWithExpectedValues() {
+        exceptionRule.expect(ApiException.class);
+        exceptionRule.expectMessage("This is for testing!"); //TODO: update
+        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+                "{\n" +
+                        "\t\"oldPassword\" : \"myOldPassword\",\n" +
+                        "}"
+                )
+        );
+    }
+
+    @Test
     public void whenValidatingCreationIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
@@ -104,7 +131,8 @@ public class UserValidatorsTest {
                     "\t\t\"city\" : \"a city\",\n" +
                     "\t\t\"country\" : \"a country\",\n" +
                     "\t\t\"street\" : \"a street\"\n" +
-                    "\t}\n" +
+                    "\t},\n" +
+                    "\t\"password\" : \"aPassword\",\n" +
                     "}"
                 )
         );
@@ -161,8 +189,9 @@ public class UserValidatorsTest {
                     "\t\t\"city\" : \"a city\",\n" +
                     "\t\t\"country\" : \"a country\",\n" +
                     "\t\t\"street\" : \"a street\"\n" +
-                    "\t}\n" +
-                "}"
+                    "\t},\n" +
+                    "\t\"password\" : \"aPassword\",\n" +
+                    "}"
                 )
         );
     }

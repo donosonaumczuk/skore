@@ -10,13 +10,13 @@ import java.util.List;
 public class SportDto {
 
     private String sportName;
-    private int playerQuantity;
+    private Integer playerQuantity;
     private String displayName;
     private String imageSport;
     private List<Link> links;
 
-    public SportDto() {
-
+    private SportDto() {
+        /* Required by JSON object mapper */
     }
 
     private SportDto(Sport sport) {
@@ -51,22 +51,6 @@ public class SportDto {
 
     public String getImageSport() {
         return imageSport;
-    }
-
-    public void setSportName(String sportName) {
-        this.sportName = sportName;
-    }
-
-    public void setPlayerQuantity(int playerQuantity) {
-        this.playerQuantity = playerQuantity;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public void setImageSport(String imageSport) {
-        this.imageSport = imageSport;
     }
 
     public List<Link> getLinks() {
