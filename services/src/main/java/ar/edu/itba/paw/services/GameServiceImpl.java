@@ -7,21 +7,17 @@ import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.GameKey;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +33,10 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private TeamService teamService;
 
-    public static final String GROUP       = "Group";
-    public static final String INDIVIDUAL  = "Individual";
-    public static final String COMPETITIVE = "Competitive";
-    public static final String FRIENDLY    = "Friendly";
+    private static final String GROUP       = "Group";
+    private static final String INDIVIDUAL  = "Individual";
+    private static final String COMPETITIVE = "Competitive";
+    private static final String FRIENDLY    = "Friendly";
 
     public GameServiceImpl() {
 
@@ -52,15 +48,11 @@ public class GameServiceImpl implements GameService {
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
                                  final String title) {
-        StringBuilder typeBuilder = new StringBuilder();
-        typeBuilder.append(isIndividual ? INDIVIDUAL : GROUP).append('-')
-                .append(isCompetitive ? COMPETITIVE : FRIENDLY);
+        String type = (isIndividual ? INDIVIDUAL : GROUP) + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
 
-        Optional<Game> game = gameDao.create(teamName1, teamName2, startTime.toString(),
-                startTime.plusMinutes(durationInMinutes).toString(), typeBuilder.toString(), null,
+        return gameDao.create(teamName1, teamName2, startTime.toString(),
+                startTime.plusMinutes(durationInMinutes).toString(), type, null,
                 country, state, city, street, tornamentName, description, title);
-
-        return game;
     }
 
     @Override
@@ -75,69 +67,45 @@ public class GameServiceImpl implements GameService {
 
         Optional<Game> game = create(team1.getName(), team2.getName(), startTime, durationInMinutes, isCompetitive,
                 true, country, state, city, street, tornamentName, description, title);
-        if (game.isPresent()) {
-            insertUserInGame(game.get().getTeam1().getName(), startTime.toString(),
-                    startTime.plusMinutes(durationInMinutes).toString(), creatorId);
-        }
-        return game;
+        return insertUserInGameTeam(game.orElse(null), creatorId, true);
     }
 
     @Override
-    public Game insertUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId) {
-        Game game;
+    public Optional<Game> insertUserInGame(final String key, final long userId) {
+        Optional<Game> game;
         try {
-            game = insertUserInGameTeam(teamName1, startTime, finishTime, userId, true);
+            game = insertUserInGameTeam(findByKey(key).orElse(null), userId, true);
         }
         catch (TeamFullException e) {
-            game = insertUserInGameTeam(teamName1, startTime, finishTime, userId, false);
+            game = insertUserInGameTeam(findByKey(key).orElse(null), userId, false);
         }
         return game;
     }
 
-    private Game insertUserInGameTeam(final String teamName1, final String startTime,
-                                      final String finishTime, final long userId,
-                                      final boolean toTeam1) {
-        Game game = findByKey(teamName1, startTime, finishTime);
-        Game gameAns;
-        if(!toTeam1) {
-            teamService.addPlayer(game.team2Name(), userId);
+    @Override
+    public Optional<Game> deleteUserInGame(final String key, final long userId) {
+        Optional<Game> game = findByKey(key);
+        if (game.isPresent()) {
+            for (User user : game.get().getTeam1().getPlayers()) {
+                if (user.getUserId() == userId) {
+                    LOGGER.trace("Found user: {} in team1", userId);
+                    teamService.removePlayer(game.get().team1Name(), userId);
+                    return findByKey(key);
+                }
+            }
+            for (User user : game.get().getTeam2().getPlayers()) {
+                if (user.getUserId() == userId) {
+                    LOGGER.trace("Found user: {} in team2", userId);
+                    teamService.removePlayer(game.get().team2Name(), userId);
+                    return findByKey(key);
+                }
+            }
+            LOGGER.trace("Not found user: {} in game",userId);
         }
         else {
-            teamService.addPlayer(game.team1Name(), userId);
+            LOGGER.trace("Game '{}' does not exist", key);
         }
-        gameAns = findByKey(game.team1Name(), game.getStartTime().toString(), game.getFinishTime().toString());
-        return gameAns;
-    }
-
-    @Override
-    public Game deleteUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId) {
-        Game game = findByKey(teamName1, startTime, finishTime);
-        for (User user:game.getTeam1().getPlayers()) {
-            if(user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team1",userId);
-                teamService.removePlayer(game.team1Name(), userId);
-                return findByKey(teamName1, startTime, finishTime);
-            }
-        }
-        for (User user:game.getTeam2().getPlayers()) {
-            if(user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team2",userId);
-                teamService.removePlayer(game.team2Name(), userId);
-                return findByKey(teamName1, startTime, finishTime);
-            }
-        }
-        LOGGER.trace("Not found user: {} in game",userId);
         return game;
-    }
-
-    @Override
-    public Game findByKey(String teamName1, String startTime, String finishTime) {
-        Optional<Game> game = gameDao.findByKey(teamName1, startTime, finishTime);
-
-        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1
-                + " starting at " + startTime + "and finishing at " + finishTime));
     }
 
     @Override
@@ -173,74 +141,37 @@ public class GameServiceImpl implements GameService {
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
-                       final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
+                       final String key) {
+        GameKey gameKey = new GameKey(key);
         Optional<Game> game = gameDao.modify(teamName1, teamName2, startTime, finishTime, type, result,
-                country, state, city, street, tornamentName, description, teamName1Old, startTimeOld,
-                finishTimeOld);
+                country, state, city, street, tornamentName, description, gameKey.getTeamName1(),
+                gameKey.getStartTime(), gameKey.getFinishTime());
         return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1
                 + " starting at " + startTime + "and finishing at " + finishTime));
     }
 
     @Override
-    public boolean remove(final String teamName1, final String startTime, final String finishTime,
-                          final long userId) {
-        Game game = findByKey(teamName1, startTime, finishTime);
-        if(game.getTeam1().getLeader().getUser().getUserId() != userId) {
-            return false;
-        }
-        return gameDao.remove(teamName1, startTime, finishTime);
-    }
-
-    private List<String> jsonArrayToList(JSONArray jsonArray) {
-        List<String> list = new ArrayList<String>();
-        for (int i=0; i<jsonArray.length(); i++) {
-            list.add( jsonArray.getString(i) );
-        }
-        return list;
+    public boolean remove(final String key) {
+        GameKey gameKey = new GameKey(key);
+        return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
     }
 
     @Override
-    public Game findByKeyFromURL(final String matchURLKey) {
-        final int URL_DATE_LENGTH = 12;
-        final int MIN_TEAMNAME1_LENGTH = 1;
-        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + MIN_TEAMNAME1_LENGTH;
-
-        int length = matchURLKey.length();
-
-        if(length < MIN_LENGTH)
-            throw new GameNotFoundException("matchURLKey '" + matchURLKey + "' is too short to be formatted to a key");
-
-        String startTime = urlDateToKeyDate(matchURLKey.substring(0, URL_DATE_LENGTH));
-        String teamName1 = matchURLKey.substring(URL_DATE_LENGTH, length - URL_DATE_LENGTH);
-        String finishTime = urlDateToKeyDate(matchURLKey.substring(length - URL_DATE_LENGTH));
-
-        Game game = findByKey(teamName1, startTime, finishTime);
-//        teamService.getAccountsList(game.getTeam1()); TODO: if we ar going to use this method check this
-        return game;
+    public Optional<Game> findByKey(final String key) {
+        GameKey gameKey = new GameKey(key);
+        return gameDao.findByKey(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
     }
 
     @Override
-    public String urlDateToKeyDate(final String date) {
-        StringBuilder formattedDate = new StringBuilder(date);
-
-        formattedDate = formattedDate.insert(4, "-");
-        formattedDate = formattedDate.insert(7, "-");
-        formattedDate = formattedDate.insert(10, " ");
-        formattedDate = formattedDate.insert(13, ":");
-        formattedDate = formattedDate.insert(16, ":00");
-
-        return formattedDate.toString();
-    }
-
-    @Override
-    public Game updateResultOfGame(final String teamName1, final String starTime, final String finishTime,
-                                   final int scoreTeam1, final int scoreTeam2) {
-        Game game = gameDao.findByKey(teamName1, starTime, finishTime)
-                .orElseThrow(() -> new GameNotFoundException("Game does not exist"));
-        if(game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
-            throw new GameHasNotBeenPlayException("The game has not been play");
+    public Optional<Game> updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2) {
+        GameKey gameKey = new GameKey(key);
+        Optional<Game> game = gameDao.findByKey(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
+        if (game.isPresent()) {
+            if (game.get().getFinishTime().compareTo(LocalDateTime.now()) > 0) {
+                throw new GameHasNotBeenPlayException("The game has not been play");
+            }
+            game.get().setResult(scoreTeam1 + "-" + scoreTeam2);
         }
-        game.setResult(scoreTeam1+"-"+scoreTeam2);
         return game;
     }
 
@@ -252,4 +183,16 @@ public class GameServiceImpl implements GameService {
         return listsOfGames;
     }
 
+    private Optional<Game> insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
+        Optional<Game> gameAns = Optional.ofNullable(game);
+        if (game != null) {
+            if (!toTeam1) {
+                teamService.addPlayer(game.team2Name(), userId);
+            } else {
+                teamService.addPlayer(game.team1Name(), userId);
+            }
+            gameAns = gameDao.findByKey(game.team1Name(), game.getStartTime().toString(), game.getFinishTime().toString()); //TODO check
+        }
+        return gameAns;
+    }
 }

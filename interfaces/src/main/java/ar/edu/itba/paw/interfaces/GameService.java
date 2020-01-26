@@ -30,9 +30,6 @@ public interface GameService {
                                             final long creatorId, final String sportName, final String title);
 
     @Transactional
-    public Game findByKey(String teamName1, String startTime, String finishTime);
-
-    @Transactional
     public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
                                     final String minFinishTime, final String maxFinishTime,
                                     final List<String> types, final List<String> sportNames,
@@ -50,28 +47,22 @@ public interface GameService {
                        final String finishTime, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
-                       final String teamName1Old, final String startTimeOld, final String finishTimeOld);
+                       final String key);
 
     @Transactional
-    public Game insertUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId);
+    public boolean remove(final String key);
 
     @Transactional
-    public Game deleteUserInGame(final String teamName1, final String startTime,
-                                 final String finishTime, final long userId);
+    public Optional<Game> findByKey(final String key);
 
     @Transactional
-    public boolean remove(final String teamName1, final String startTime, final String finishtime,
-                          final long userId);
+    public Optional<Game> insertUserInGame(final String key, final long userId);
 
     @Transactional
-    public Game findByKeyFromURL(final String matchURLKey);
-
-    public String urlDateToKeyDate(String date);
+    public Optional<Game> deleteUserInGame(final String key, final long userId);
 
     @Transactional
-    public Game updateResultOfGame(final String teamName1, final String starTime, final String finishTime,
-                                   final int scoreTeam1, final int scoreTeam2);
+    public Optional<Game> updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
 
     @Transactional
     public List<List<Game>> getGamesThatPlay(final long userId);

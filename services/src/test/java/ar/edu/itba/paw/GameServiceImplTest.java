@@ -1,7 +1,6 @@
 package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.interfaces.GameDao;
-import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.GameServiceImpl;
@@ -13,25 +12,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 
+@SuppressWarnings("Duplicates")
 @RunWith(MockitoJUnitRunner.class)
 @Configuration
 public class GameServiceImplTest {
     private static final String  TEAMNAME_1          = "teamname1";
     private static final String  TEAMNAME_2          = "teamname2";
-    private static final String  STARTTIME_1         = "2018-12-12 00:00:00";
-    private static final String  FINISHTIME_1        = "2018-12-13 00:00:00";
+    private static final String  STARTTIME_1         = "2018-12-12T00:00:00";
+    private static final String  FINISHTIME_1        = "2018-12-13T00:00:00";
     private static final int     QUANTITY_1          = 0;
     private static final String  URL                 = "201812120000teamname1201812130000";
 
@@ -82,8 +79,6 @@ public class GameServiceImplTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME, null);
 
         PremiumUser leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME, LEADER_1_LASTNAME, LEADER_1_EMAIL,
@@ -99,8 +94,8 @@ public class GameServiceImplTest {
         team2.addPlayer(new User(USER_2_FIRSTNAME, USER_2_LASTNAME, USER_2_EMAIL, USER_2_ID));
 
         GAME_1 = Optional.of(new Game(team1, team2,
-                 null, LocalDateTime.parse(STARTTIME_1, dateformat),
-                LocalDateTime.parse(FINISHTIME_1, dateformat), null, null,
+                 null, LocalDateTime.parse(STARTTIME_1),
+                LocalDateTime.parse(FINISHTIME_1), null, null,
                 null, null, null));
     }
 
@@ -108,9 +103,10 @@ public class GameServiceImplTest {
     public void findByUrlTest() {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
 
-        Game ans = gameService.findByKeyFromURL(URL);
+        Optional<Game> ans = gameService.findByKey(URL);
 
-        Assert.assertEquals(GAME_1.get(), ans);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(GAME_1, ans);
     }
 
     @Test
@@ -118,9 +114,10 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
         when(teamServiceMock.removePlayer(TEAMNAME_1, USER_1_ID)).thenReturn(null);
 
-        Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_1_ID);
+        Optional<Game> ans = gameService.deleteUserInGame(URL, USER_1_ID);
 
-        Assert.assertEquals(GAME_1.get(), ans);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(GAME_1, ans);
     }
 
     @Test
@@ -128,8 +125,9 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
         when(teamServiceMock.removePlayer(TEAMNAME_2, USER_2_ID)).thenReturn(null);
 
-        Game ans = gameService.deleteUserInGame(TEAMNAME_1, STARTTIME_1, FINISHTIME_1, USER_2_ID);
+        Optional<Game> ans = gameService.deleteUserInGame(URL, USER_2_ID);
 
-        Assert.assertEquals(GAME_1.get(), ans);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(GAME_1, ans);
     }
 }

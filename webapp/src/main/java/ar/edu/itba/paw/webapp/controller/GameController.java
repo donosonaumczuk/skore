@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidator;
@@ -23,9 +24,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -138,24 +141,31 @@ public class GameController {
                 gameDto.getTime().getSecond());
     }
 
-//    private String getStartTimeFrom(GameDto gameDto) {
-//        StringBuilder stringBuilder = new StringBuilder(gameDto.getDate().getYear());
-//        return stringBuilder.append('-').append(gameDto.getDate().getMonth()).append('-')
-//                .append(gameDto.getDate().getDayOfMonth()).append('T').append(gameDto.getTime().getHour())
-//                .append(':').append(gameDto.getTime().getMinute()).append(':').append(gameDto.getTime().getSecond())
-//                .toString();
-//    }
-//
-//    private String getFinishTimeFrom(GameDto gameDto) {
-//        LocalDateTime finishTime = LocalDateTime.of(gameDto.getDate().getYear(), gameDto.getDate().getMonth().getValue(),
-//                gameDto.getDate().getDayOfMonth(), gameDto.getTime().getHour(), gameDto.getTime().getMinute(),
-//                gameDto.getTime().getSecond()).plusMinutes(gameDto.getMinutesOfDuration());
-//        StringBuilder stringBuilder = new StringBuilder(finishTime.getYear());
-//        return stringBuilder.append('-').append(finishTime.getMonth()).append('-')
-//                .append(finishTime.getDayOfMonth()).append('T').append(finishTime.getHour())
-//                .append(':').append(finishTime.getMinute()).append(':').append(finishTime.getSecond())
-//                .toString();
-//    }
+    @GET
+    @Path("/{key}")
+    public Response getGame(@PathParam("key") String key) {
+        //Todo: Validate key values
+        Game game = gameService.findByKey(key).orElseThrow(() -> {
+            LOGGER.trace("Match '{}' does not exist", key);
+            return new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
+        });
+        LOGGER.trace("Match '{}' founded successfully", key);
+        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
+    }
+
+    @DELETE
+    @Path("/{key}")
+    public Response deleteGame(@PathParam("key") String key) {
+        //Todo: Validate key values and that user is creator
+        if (!gameService.remove(key)) {
+            LOGGER.trace("Match '{}' does not exist", key);
+            throw new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
+        }
+        LOGGER.trace("Match '{}' deleted successfully", key);
+        return Response.noContent().build();
+    }
+
+
 
 //    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
 //    @ResponseStatus(HttpStatus.OK)
@@ -209,31 +219,6 @@ public class GameController {
 //        return objectMapper.writeValueAsString(ans);
 //    }
 //
-//    @RequestMapping(value = "/createMatch", method = {RequestMethod.GET })
-//    public ModelAndView createMatchForm(@ModelAttribute("createMatchForm") MatchForm matchForm) {
-//        return new ModelAndView("createMatch").addObject("sports", sportService.findSportsPage());
-//    }
-//
-//    @RequestMapping(value = "/createMatch", method = {RequestMethod.POST })
-//    public ModelAndView createMatch(@Valid @ModelAttribute("createMatchForm") final MatchForm matchForm,
-//                                    final BindingResult errors) {
-//        if(errors.hasErrors()) {
-//            return createMatchForm(matchForm);
-//        }
-//
-//        PremiumUser loggedUser = loggedUser();
-//
-//        LOGGER.debug("Match form completed, creating match...");
-//
-//        Game game = gameService.createNoTeamGame(matchForm.getDate() + " " + matchForm.getStartTime(),
-//                matchForm.getDuration(), "Individual" + "-" + matchForm.getCompetitivity(), matchForm.getCountry(),
-//                matchForm.getState(), matchForm.getCity(), matchForm.getStreet()+" "+matchForm.getStreetNumber(),
-//                null, matchForm.getDescription(), loggedUser.getUserName(),
-//                loggedUser.getUser().getUserId(), matchForm.getSportName(), matchForm.getMatchName());
-//        LOGGER.debug("Match created \n\n");
-//
-//        return new ModelAndView("index");
-//    }
 //
 //    @RequestMapping(value = "/match/*", method = {RequestMethod.GET})
 //    public ModelAndView matchDetails(HttpServletRequest request) {
@@ -241,7 +226,7 @@ public class GameController {
 //
 //        Game game;
 //        try {
-//            game = gameService.findByKeyFromURL(matchURLKey);
+//            game = gameService.findByKey(matchURLKey);
 //        }
 //        catch (GameNotFoundException e) {
 //            return new ModelAndView("genericPageWithMessage").addObject("message",
@@ -268,7 +253,7 @@ public class GameController {
 //        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
 //        Game game = null;
 //        try {
-//            game = gameService.findByKeyFromURL(matchKey);
+//            game = gameService.findByKey(matchKey);
 //        }
 //        catch (GameNotFoundException e) {
 //            return new ModelAndView("genericPageWithMessage").addObject("message",
@@ -299,7 +284,7 @@ public class GameController {
 //
 //        Game game;
 //        try {
-//            game = gameService.findByKeyFromURL(submitResultForm.getMatchKey());
+//            game = gameService.findByKey(submitResultForm.getMatchKey());
 //        }
 //        catch (GameNotFoundException e) {
 //            return new ModelAndView("genericPageWithMessage").addObject("message",
