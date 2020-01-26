@@ -1,10 +1,14 @@
 import api from './../config/Api';
+import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
 
-const getMatches = async () => {
-    //TODO replace endpoint with /matches when endpoint is created
-    const res = await api.get(`users/donosonaumczuk/matches`);
-    // console.log(res)//TODO validate error
-    return res.data.matches;
+const getMatches = async (offset, limit) => {
+    try {
+        const res = await api.get(`${MATCHES_ENDPOINT}?offset=${offset}&limit=${limit}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
 }
 
 const MatchService = {

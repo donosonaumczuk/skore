@@ -136,7 +136,6 @@ public class GameHibernateDao implements GameDao {
 
         filter.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
         filter.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
-
         filter.addFilterOnlyFinished(onlyWithResults);
 
         final TypedQuery<Game> query = em.createQuery(filter.toString() +

@@ -2,7 +2,8 @@
     "navBar": {
         "signIn": "Ingresar",
         "createAccount": "Crear Cuenta",
-        "logOut": "Cerrar Sesión"
+        "logOut": "Cerrar Sesión",
+        "or": "o"
     },
     "createUserForm": {
         "accounts": "Cuentas",
@@ -56,7 +57,7 @@
                 "invalidEmail": "No es un email bien formado, debe ser un email valido.\n"
             },
             "image": {
-                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg, jpeg.\n",
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             },
             "cellphone": {
@@ -66,7 +67,6 @@
                 "required": "La fecha de nacimiento es obligatorio.\n",
                 "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
-                "invalidDate": "La fecha de nacimiento debe ser una fecha valida.\n",
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha valida pasada.\n"
             }
         }
@@ -89,11 +89,16 @@
         "loginButton": "INGRESAR",
         "login": "ingresar",
         "newUser": "eres nuevo? ",
-        "invalidUsernameOrPassword": "Usuario o contraseña incorrecto"
+        "errors": {
+            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto.",
+            "requiredUsername": "El nombre de usuario es obligatorio.",
+            "requiredPassword": "La contraseña es obligatoria."
+        }
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",
         "cantFindMatch": "No encontras el partido que estas buscando?",
+        "wantToCreateMatch": "Queres crear tu propio partido?\n",
         "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
         "filtersAndCategories": "Filtros y Categorias",
         "countryFilter": "Pais",
@@ -122,5 +127,46 @@
         "oldPassword": "Contraseña anterior",
         "newPassword": "Contraseña nueva",
         "repeatNewPassword": "Repita la contraseña nueva"
+    },
+    "sports": {
+        "playersPerTeam": "Jugadores por equipo: "
+    },
+    "createMatchForm": {
+        "matchName": "Nombre del partido ",
+        "createMatch": "CREAR PARTIDO"
+    },
+    "forms": {
+        "requiredFields":"Los campos que contienen (*) son obligatorios."
+    },
+    "createSportForm": {
+        "sportName": "Nombre del deporte ",
+        "displayName": "Nombre a mostrar del deporte ",
+        "playersPerTeam": "Jugadores por equipo ",
+        "sportImage": "Imagen del deporte ",
+        "createSportButton": "CREAR DEPORTE",
+        "updateInfoButton": "ACTUALIZAR",
+        "errors": {
+            "sportName": {
+                "required": "El nombre del deporte es obligatorio.\n",
+                "invalidSymbols": "El nombre del deporte solo puede contener simbolos alfanumericos.\n",
+                "invalidLength": "El nombre del deporte debe tener entre 4 y 100 caracteres.\n"
+            },
+            "displayName": {
+                "required": "El nombre a mostrar del deporte es obligatorio.\n",
+                "invalidSymbols": "El nombre a mostrar del deporte solo puede contener simbolos alfanumericos o espacios.\n",
+                "invalidLength": "El nombre a mostrar del deporte debe tener entre 4 y 100 caracteres.\n"
+            },
+            "playersPerTeam": {
+                "required": "Jugadores por equipo es obbligatorio.\n",
+                "invalidSymbols": "Jugadores por equipo debe contener unicamente digitos.\n",
+                "invalidLength": "Jugadores por equipo no puede tener entre 1 y 3 digitos.\n",
+                "invalidValue": "Jugadores por equipo debe tener un valor entre 1 y 100.\n"
+            },
+            "image": {
+                "required": "La imagen del deporte es obligatoria.\n",
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
+                "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
+            }
+        }
     }
 }
