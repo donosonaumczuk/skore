@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.auth.filters.login;
 
 import ar.edu.itba.paw.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import ar.edu.itba.paw.webapp.dto.AuthDto;
@@ -12,24 +13,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginAuthSuccessHandler.class);
 
+    private static final String ADMIN = "ROLE_ADMIN";
     @Autowired
     private JWTUtility jwtUtility;
 
     @Autowired
     private PremiumUserService premiumUserService;
+
+    @Autowired
+    private SessionService sessionService;
 
     private static final String TOKEN_HEADER = "X-TOKEN";
 
@@ -45,6 +53,8 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(premiumUser.getUserName(), false)); //TODO: check if profile or entire user
+        String username = premiumUser.getUserName();
+        boolean isAdmin = sessionService.isAdmin();
+        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(username, isAdmin));
     }
 }
