@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Place;
 
-import java.util.Optional;
-
 public class PlaceDto {
 
     private String country;
@@ -26,19 +24,19 @@ public class PlaceDto {
         return new PlaceDto(place);
     }
 
-    public Optional<String> getState() {
-        return Optional.ofNullable(state);
+    public String getState() {
+        return state;
     }
 
-    public Optional<String> getCity() {
-        return Optional.ofNullable(city);
+    public String getCity() {
+        return city;
     }
 
-    public Optional<String> getStreet() {
-        return Optional.ofNullable(street);
+    public String getStreet() {
+        return street;
     }
 
-    public Optional<String> getCountry() {
-        return Optional.ofNullable(country);
+    public String getCountry() {
+        return country;
     }
 }

@@ -215,10 +215,10 @@ public class UserController {
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
                 userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
-                userDto.getHome().flatMap(PlaceDto::getCountry).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getState).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getCity).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getStreet).orElse(null),
+                userDto.getHome().map(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().map(PlaceDto::getState).orElse(null),
+                userDto.getHome().map(PlaceDto::getCity).orElse(null),
+                userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), image, username
         );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
@@ -237,10 +237,10 @@ public class UserController {
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
                 userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
-                userDto.getHome().flatMap(PlaceDto::getCountry).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getState).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getCity).orElse(null),
-                userDto.getHome().flatMap(PlaceDto::getStreet).orElse(null),
+                userDto.getHome().map(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().map(PlaceDto::getState).orElse(null),
+                userDto.getHome().map(PlaceDto::getCity).orElse(null),
+                userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), image
         ).orElseThrow(() -> {
             LOGGER.trace("User '{}' already exist", userDto.getUsername());
