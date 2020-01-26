@@ -1,6 +1,6 @@
 import React from 'react';
 import i18next from 'i18next';
-import Proptypes from 'prop-types';
+import AuthUserPropType from './../../proptypes/AuthUserPropType';
 import { Link } from 'react-router-dom';
 
 const getAnonymousForm = () => {
@@ -17,19 +17,20 @@ const getAnonymousForm = () => {
     );
 }
 
-const getLoggedForm = userName => {
-    const linkReference = `/users/${userName}`;
+const getLoggedForm = currentUser => {
+    const  { username } = currentUser;
+    const linkReference = `/users/${username}`;
     return (
         <form className="d-none d-sm-block form-inline">
-            <Link className="mr-1 login-link" to={linkReference}>{userName}</Link>
+            <Link className="mr-1 login-link" to={linkReference}>{username}</Link>
             <span className="white-text mr-1"> | </span>
             <Link className="login-link" to="/logout">{i18next.t('navBar.logOut')}</Link>
         </form>
-    )
+    );
 }
 const NavBarForm = ({ currentUser }) => {
     let form = getAnonymousForm();
-    if (currentUser) {
+    if (currentUser.username) {
         form = getLoggedForm(currentUser);
     }
     return (<React.Fragment>{form}</React.Fragment>);
@@ -37,7 +38,7 @@ const NavBarForm = ({ currentUser }) => {
  
 
 NavBarForm.propTypes = {
-    currentUser: Proptypes.string
+    currentUser: AuthUserPropType.isRequired
 }
 
 export default NavBarForm;

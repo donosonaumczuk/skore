@@ -14,11 +14,18 @@ const removeUser = () => localStorage.removeItem('currentUser');
 
 const getUser = () => localStorage.getItem('currentUser');
 
+const setIsAdmin = () => localStorage.setItem('isAdmin', true);
+
+const removeAdmin = () => localStorage.removeItem('isAdmin');
+
+const getIsAdmin = () => localStorage.getItem('isAdmin');
+
 const logInUser = async user => {
     try {
         const response = await api.post(`${AUTH_ENDPOINT}/login`, user);
         setToken(response.headers['x-token']);
         loadUser(user.username);
+        setIsAdmin('isAdmin', response.data.admin);
         return { "status": SC_OK };
     }
     catch(err) {
@@ -34,7 +41,8 @@ const logOutUser = async () => {
         await api.post(`${AUTH_ENDPOINT}/logout`);
         if (getToken) {
             removeToken();
-            removeUser();  
+            removeUser(); 
+            removeAdmin(); 
         }
         return { "status": SC_OK };
     }
@@ -42,13 +50,12 @@ const logOutUser = async () => {
         if (err.response.status === SC_UNAUTHORIZED) {
             removeToken();
             removeUser();
+            removeAdmin();
         }
         else {
             return { "status": err.response.status };
         }
     }
-    
-    // console.log(response); //TODO remove on production is here to avoid warning
     //TODO handle errors using response
 }
 
@@ -59,11 +66,19 @@ const getCurrentUser = () => {
     return null;
 }
 
+const isAdmin = () => {
+    if (getToken()) {
+        return getIsAdmin();
+    }
+    return null;
+}
+
 const AuthService = {
     getToken: getToken,
     logInUser: logInUser,
     logOutUser: logOutUser,
-    getCurrentUser: getCurrentUser
+    getCurrentUser: getCurrentUser,
+    isAdmin: isAdmin
 };
 
 export default AuthService;

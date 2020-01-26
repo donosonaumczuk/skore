@@ -28,7 +28,10 @@ class App extends Component {
         this.state = {
             account: {},
             translation: false,
-            currentUser: null
+            currentUser: {
+                username: null,
+                isAdmin: false
+            }
         }
     }
 
@@ -42,15 +45,32 @@ class App extends Component {
     }
 
     updateUser = currentUser => {
-        this.setState({
-            currentUser: currentUser
-        });
+        if (currentUser) {
+            this.setState({
+                currentUser: {
+                    username: currentUser.username,
+                    isAdmin: currentUser.isAdmin ? currentUser.isAdmin : false
+                }
+            });
+        }
+        else {
+            this.setState({ 
+                currentUser: {
+                    username: null,
+                    isAdmin: false
+                }
+            });
+        }
     }
 
     async componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
+        const isAdmin = AuthService.isAdmin() === "true" ? true : false;
         if (currentUser) {
-            this.updateUser(currentUser);
+            this.updateUser({ 
+                username: currentUser,
+                isAdmin: isAdmin
+            });
         }
         this.initializeI18next();   
     }
@@ -68,7 +88,7 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/">
-                            <Home currentUser={this.state.currentUser} />
+                            <Home currentUser={this.state.currentUser.username} />
                         </Route>
                         <Route exact path="/sports">
                             <Sports />
