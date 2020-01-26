@@ -1,10 +1,11 @@
 import React from 'react';
 
-const SubLocationInput = ({ label, id, path })  => {
+const SubLocationInput = ({ divStyle, label, id, path, value })  => {
     return (
-        <div className="form-group">
+        <div className={divStyle}>
             <label htmlFor={id}>{label}</label>
-            <input type="text" path={path} className="form-control" id={id} readOnly={true} />
+            <input type="text" path={path} className="form-control" id={id} 
+                    value={value} readOnly={true} />
         </div>
     );
 }
