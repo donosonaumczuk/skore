@@ -158,13 +158,19 @@ class CreateUserForm extends Component {
                                     inputType="text" required={true} component={RenderDatePicker} />
                             <LocationInput updateLocation={this.updateLocation} />
                             <SubLocationInput label={i18next.t('createUserForm.country')} id="country" path="country"
-                                                value={this.state.country ? this.state.country : ""} />
+                                                value={this.state.country ? this.state.country : ""} 
+                                                divStyle="form-group" />
                             <SubLocationInput label={i18next.t('createUserForm.street')} id="route" path="street"
-                                                value={this.state.street ? this.state.street : ""} />
-                            <SubLocationInput label={i18next.t('createUserForm.city')} id="locality" path="city" 
-                                                value={this.state.city ? this.state.city : ""} />
-                            <SubLocationInput label={i18next.t('createUserForm.state')} id="administrative_area_level_1"
-                                                path="state" value={this.state.state ? this.state.state : ""} /> 
+                                                value={this.state.street ? this.state.street : ""} 
+                                                divStyle="form-group" />
+                            <div className="form-row">
+                                <SubLocationInput label={i18next.t('createUserForm.city')} id="locality" path="city" 
+                                                    value={this.state.city ? this.state.city : ""} 
+                                                    divStyle="form-group col-6" />
+                                <SubLocationInput label={i18next.t('createUserForm.state')} id="administrative_area_level_1"
+                                                    path="state" value={this.state.state ? this.state.state : ""} 
+                                                    divStyle="form-group col-6"/> 
+                            </div>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createUserForm.signUpButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                             <SuggestionText suggestion={i18next.t('createUserForm.existingUser')} link="/login" linkText={i18next.t('login.login')} />
