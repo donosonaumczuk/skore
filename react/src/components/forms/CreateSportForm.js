@@ -10,7 +10,7 @@ import CreateSportValidator from './validators/CreateSportValidator';
 import AuthService from '../../services/AuthService';
 import SportService from '../../services/SportService';
 import ErrorPage from './../ErrorPage';
-import { SC_FORBIDDEN } from './../../services/constants/StatusCodesConstants';
+import { SC_FORBIDDEN, SC_CONFLICT } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -68,7 +68,15 @@ class CreateSportForm extends Component {
         let sport = this.loadSport(values, this.state.image);
         const res = await SportService.createSport(sport);
         if (res.status && this.mounted) {
-            this.setState({ error: res.status });
+            if (res.status === SC_CONFLICT) {
+                this.setState({ sportNameError: true });
+            }
+            else {
+                this.setState({ error: res.status });
+            }
+        }
+        else {
+            this.props.history.push(`/sports`);
         }
     } 
 
@@ -94,6 +102,10 @@ class CreateSportForm extends Component {
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             <Field name="sportName" label={i18next.t('createSportForm.sportName')}
                                     id="sportName" inputType="text" required={true} component={RenderInput} />
+                                    {this.state.sportNameError && 
+                                    <span className="invalid-feedback d-block">
+                                        {i18next.t('createSportForm.errors.sportName.alreadyExists')}
+                                    </span> }
                             <Field name="displayName" label={i18next.t('createSportForm.displayName')}
                                     id="displayName" inputType="text" required={true} component={RenderInput} />
                             <Field name="playersPerTeam" label={i18next.t('createSportForm.playersPerTeam')}

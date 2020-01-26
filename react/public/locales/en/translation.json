@@ -150,7 +150,8 @@
             "sportName": {
                 "required": "Sport name is required.\n",
                 "invalidSymbols": "Sport name can only contains alphanumeric.\n",
-                "invalidLength": "Sport name must be between 4 and 100 characters.\n"
+                "invalidLength": "Sport name must be between 4 and 100 characters.\n",
+                "alreadyExists": "Sport name already exists.\n"
             },
             "displayName": {
                 "required": "Display name is required.\n",

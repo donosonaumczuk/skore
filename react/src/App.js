@@ -110,9 +110,7 @@ class App extends Component {
                         <Route path="/createMatch">
                             <CreateMatchForm />
                         </Route>
-                        <Route path="/createSport">
-                            <CreateSportForm />
-                        </Route>
+                        <Route path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
