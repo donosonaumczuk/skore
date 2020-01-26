@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Place;
 
+import java.util.Optional;
+
 public class PlaceDto {
 
     private String country;
@@ -9,8 +11,8 @@ public class PlaceDto {
     private String city;
     private String street;
 
-    public PlaceDto() {
-
+    private PlaceDto() {
+        /* Required by JSON object mapper */
     }
 
     private PlaceDto(Place place) {
@@ -24,35 +26,19 @@ public class PlaceDto {
         return new PlaceDto(place);
     }
 
-    public void setCountry(final String country) {
-        this.country = country;
+    public Optional<String> getState() {
+        return Optional.ofNullable(state);
     }
 
-    public void setState(final String state) {
-        this.state = state;
+    public Optional<String> getCity() {
+        return Optional.ofNullable(city);
     }
 
-    public void setCity(final String city) {
-        this.city = city;
+    public Optional<String> getStreet() {
+        return Optional.ofNullable(street);
     }
 
-    public void setStreet(final String street) {
-        this.street = street;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getCountry() {
-        return country;
+    public Optional<String> getCountry() {
+        return Optional.ofNullable(country);
     }
 }

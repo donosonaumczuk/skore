@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 public class GameDto {
 
@@ -20,17 +21,17 @@ public class GameDto {
     private final String title;
     private final String description;
     private final String creator;
-    private final boolean isCompetitive;
+    private final Boolean isCompetitive;
     private final String sport;
     private final String sportName;
     private final LocalDate date;
     private final LocalTime time;
-    private final long durationInMinutes;
+    private final Long durationInMinutes;
     private final String location;
-    private final int totalPlayers;
-    private final int currentPlayers;
-    private final boolean hasStarted;
-    private final boolean hasFinished;
+    private final Integer totalPlayers;
+    private final Integer currentPlayers;
+    private final Boolean hasStarted;
+    private final Boolean hasFinished;
     private final String results;
     private final TeamDto team1;
     private final TeamDto team2;
@@ -89,7 +90,7 @@ public class GameDto {
         return creator;
     }
 
-    public boolean isCompetitive() {
+    public Boolean isCompetitive() {
         return isCompetitive;
     }
 
@@ -101,15 +102,15 @@ public class GameDto {
         return sportName;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public Optional<LocalDate> getDate() {
+        return Optional.ofNullable(date);
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Optional<LocalTime> getTime() {
+        return Optional.ofNullable(time);
     }
 
-    public long getDurationInMinutes() {
+    public Long getDurationInMinutes() {
         return durationInMinutes;
     }
 
@@ -117,19 +118,19 @@ public class GameDto {
         return location;
     }
 
-    public int getTotalPlayers() {
+    public Integer getTotalPlayers() {
         return totalPlayers;
     }
 
-    public int getCurrentPlayers() {
+    public Integer getCurrentPlayers() {
         return currentPlayers;
     }
 
-    public boolean isHasStarted() {
+    public Boolean isHasStarted() {
         return hasStarted;
     }
 
-    public boolean isHasFinished() {
+    public Boolean isHasFinished() {
         return hasFinished;
     }
 
@@ -137,12 +138,12 @@ public class GameDto {
         return results;
     }
 
-    public TeamDto getTeam1() {
-        return team1;
+    public Optional<TeamDto> getTeam1() {
+        return Optional.ofNullable(team1);
     }
 
-    public TeamDto getTeam2() {
-        return team2;
+    public Optional<TeamDto> getTeam2() {
+        return Optional.ofNullable(team2);
     }
 
     public List<Link> getLinks() {
