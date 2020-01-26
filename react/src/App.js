@@ -20,6 +20,7 @@ import Sports from './components/Sports/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
 import './css/main.css';
 import CreateSportForm from './components/forms/CreateSportForm';
+import EditSport from './components/EditSport';
 
 
 class App extends Component {
@@ -112,6 +113,7 @@ class App extends Component {
                         <Route path="/createSport">
                             <CreateSportForm />
                         </Route>
+                        <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />

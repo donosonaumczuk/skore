@@ -81,7 +81,6 @@ class CreateSportForm extends Component {
         const isAdmin = AuthService.isAdmin();
         let imageName = "";
         if (!isAdmin || this.state.error) {
-            console.log("porque no entra aca");
             return <ErrorPage status={!isAdmin ? SC_FORBIDDEN : this.state.error} />
         }
         else if (this.state.image != null) {
