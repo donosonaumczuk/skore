@@ -58,7 +58,7 @@ class EditSport extends Component {
             return <Loader />
         }
         return (
-            <EditSportForm initialValues={formInitialValues} />
+            <EditSportForm initialValues={formInitialValues} history={this.props.history} />
         );
     }
 

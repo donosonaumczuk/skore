@@ -1,7 +1,6 @@
 import api from './../config/Api';
 import { SPORTS_ENDPOINT } from './constants/EndpointConstants';
 
-
 const getSports = async () => {
     try {
         const res = await api.get(`${SPORTS_ENDPOINT}`);
@@ -32,10 +31,21 @@ const createSport = async sport => {
     }
 }
 
+const updateSport = async sport => {
+    try {
+        const res = await api.put(`${SPORTS_ENDPOINT}/${sport.sportName}`, sport);
+        return res.data;
+    }
+    catch(err) {
+        return { status: err.response.status }
+    }
+}
+
 const SportService = {
     getSports: getSports,
     createSport: createSport,
-    getSportByName: getSportByName
+    getSportByName: getSportByName,
+    updateSport: updateSport
 }
 
 export default SportService;

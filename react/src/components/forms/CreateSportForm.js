@@ -17,7 +17,7 @@ const validate = values => {
     errors.sportName = CreateSportValidator.validateSportName(values.sportName);
     errors.displayName = CreateSportValidator.validateDisplayName(values.displayName);
     errors.playersPerTeam = CreateSportValidator.validatePlayersPerTeam(values.playersPerTeam);
-    errors.sportImage = CreateSportValidator.validateSportImage(values.sportImage);
+    errors.sportImage = CreateSportValidator.validateRequiredSportImage(values.sportImage);
     return errors;
 }
 

@@ -6,13 +6,19 @@ import ImageInput from './inputs/ImageInput';
 import SubmitButton from './inputs/SubmitButton';
 import FormTitle from './inputs/FormTitle';
 import FormComment from './inputs/FormComment';
+import CreateSportValidator from './../forms/validators/CreateSportValidator';
+import SportService from '../../services/SportService';
 
 const validate = values => {
     const errors = {}
+    errors.displayName = CreateSportValidator.validateDisplayName(values.displayName);
+    errors.playersPerTeam = CreateSportValidator.validatePlayersPerTeam(values.playersPerTeam);
+    errors.sportImage = CreateSportValidator.validateSportImage(values.sportImage);
     return errors;
 }
 
 class EditSportForm extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -22,19 +28,19 @@ class EditSportForm extends Component {
 
     handleChange = (image) => {
         if (image && image.size > 0) {
-          let reader = new FileReader();
-          reader.readAsDataURL(image);
-          reader.onload = (e) => {
-            const data = (e.target.result);
-            this.setState ({
-                image: {
-                  name: image.name,
-                  type: image.type,
-                  size: image.size,
-                  data: data
-                }
-            });
-          }
+            let reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = (e) => {
+                const data = (e.target.result);
+                this.setState ({
+                    image: {
+                    name: image.name,
+                    type: image.type,
+                    size: image.size,
+                    data: data
+                    }
+                });
+            }
         }
         else {
           this.setState ({
@@ -54,8 +60,18 @@ class EditSportForm extends Component {
     }
     
     onSubmit = async (values) => {
-        // let user = this.loadUser(values, this.state.image);
-        //TODO make post
+        let sport = this.loadSport(values, this.state.image);
+        const res = await SportService.updateSport(sport);
+        if (res.status && this.mounted) {
+            //TODO handle errors
+        }
+        else {
+            this.props.history.push(`/sports`);
+        }
+    }
+
+    componentDidMount() {
+        this.mounted = true;
     }
     
     render() {
@@ -91,6 +107,10 @@ class EditSportForm extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }              
 
