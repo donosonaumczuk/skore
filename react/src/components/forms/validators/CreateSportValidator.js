@@ -49,9 +49,6 @@ const validatePlayersPerTeam = playersPerTeam => {
 const validateSportImage = image => {
     let errorLabelBase = `${ERROR_BASE_LABEL}image`;
     let errorMessage = ``;
-    if(!image) {
-        errorMessage = i18next.t(`${errorLabelBase}.required`);
-    }
     if (image && !validImageFormats(image.type)) {
         errorMessage = i18next.t(`${errorLabelBase}.invalidImageFormat`);
     }
@@ -61,11 +58,24 @@ const validateSportImage = image => {
     return errorMessage;
 }
 
+const validateRequiredSportImage = image => {
+    let errorLabelBase = `${ERROR_BASE_LABEL}image`;
+    let errorMessage = ``;
+    if(!image) {
+        errorMessage = i18next.t(`${errorLabelBase}.required`);
+    }
+    errorMessage = `${errorMessage} ${validateSportImage(image)}`;
+    return errorMessage;
+}
+
+
+
 const CreateSportValidator = {
     validateSportName: validateSportName,
     validateDisplayName: validateDisplayName,
     validatePlayersPerTeam: validatePlayersPerTeam,
-    validateSportImage: validateSportImage
+    validateSportImage: validateSportImage,
+    validateRequiredSportImage: validateRequiredSportImage
 };
 
 export default CreateSportValidator;

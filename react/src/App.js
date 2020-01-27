@@ -20,6 +20,7 @@ import Sports from './components/Sports/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
 import './css/main.css';
 import CreateSportForm from './components/forms/CreateSportForm';
+import EditSport from './components/EditSport';
 
 
 class App extends Component {
@@ -28,7 +29,10 @@ class App extends Component {
         this.state = {
             account: {},
             translation: false,
-            currentUser: null
+            currentUser: {
+                username: null,
+                isAdmin: false
+            }
         }
     }
 
@@ -42,15 +46,32 @@ class App extends Component {
     }
 
     updateUser = currentUser => {
-        this.setState({
-            currentUser: currentUser
-        });
+        if (currentUser) {
+            this.setState({
+                currentUser: {
+                    username: currentUser.username,
+                    isAdmin: currentUser.isAdmin ? currentUser.isAdmin : false
+                }
+            });
+        }
+        else {
+            this.setState({ 
+                currentUser: {
+                    username: null,
+                    isAdmin: false
+                }
+            });
+        }
     }
 
     async componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
+        const isAdmin = AuthService.isAdmin();
         if (currentUser) {
-            this.updateUser(currentUser);
+            this.updateUser({ 
+                username: currentUser,
+                isAdmin: isAdmin
+            });
         }
         this.initializeI18next();   
     }
@@ -68,7 +89,7 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/">
-                            <Home currentUser={this.state.currentUser} />
+                            <Home currentUser={this.state.currentUser.username} />
                         </Route>
                         <Route exact path="/sports">
                             <Sports />
@@ -89,9 +110,8 @@ class App extends Component {
                         <Route path="/createMatch">
                             <CreateMatchForm />
                         </Route>
-                        <Route path="/createSport">
-                            <CreateSportForm />
-                        </Route>
+                        <Route path="/createSport" component={CreateSportForm} />
+                        <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />

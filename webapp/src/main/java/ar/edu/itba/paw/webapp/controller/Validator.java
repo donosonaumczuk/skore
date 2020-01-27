@@ -101,8 +101,17 @@ public class Validator { //TODO: remove this class later
 
     public Validator isAlphaNumericAndLessThan(final String string, final String fieldName, final int maxsize) {
         if (string == null || !string.matches("[a-zA-Z0-9]+") || string.length() > maxsize || string.isEmpty()) {
-            LOGGER.trace("The field '{}' must be alphanumeic and less than {} characters", fieldName, maxsize);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeic and less than"
+            LOGGER.trace("The field '{}' must be alphanumeric and less than {} characters", fieldName, maxsize);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric and less than"
+                    + maxsize + " characters");
+        }
+        return this;
+    }
+
+    public Validator isAlphaNumericorSpacesAndLessThan(final String string, final String fieldName, final int maxsize) {
+        if (string == null || !string.matches("[a-zA-Z0-9 ]+") || string.length() > maxsize || string.isEmpty()) {
+            LOGGER.trace("The field '{}' must be alphanumeric or spaces and less than {} characters", fieldName, maxsize);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric or spaces and less than"
                     + maxsize + " characters");
         }
         return this;
