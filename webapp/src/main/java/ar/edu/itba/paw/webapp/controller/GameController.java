@@ -113,7 +113,8 @@ public class GameController {
 
     @POST
     public Response createGame(@RequestBody final String requestBody) {
-        GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON");
+        GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Optional<Game> game;
         if (!gameDto.isIndividual()) {
@@ -141,10 +142,6 @@ public class GameController {
         return LocalDateTime.of(gameDto.getDate().getYear(), gameDto.getDate().getMonthNumber(),
                 gameDto.getDate().getDayOfMonth(), gameDto.getTime().getHour(), gameDto.getTime().getMinute(),
                 gameDto.getTime().getSecond());
-    }
-
-    private LocalDateTime getFinishTimeFrom(GameDto gameDto) {
-        return getStartTimeFrom(gameDto).plusMinutes(gameDto.getMinutesOfDuration());
     }
 
     @GET
@@ -179,7 +176,8 @@ public class GameController {
     @Path("/{key}")
     public Response updateGame(@PathParam("key") String key, @RequestBody final String requestBody) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
-        //TODO: validate requestBody
+        GameValidators.updateValidatorOf("Match update fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Optional<Game> newGame;
         try {
