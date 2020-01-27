@@ -1,8 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
 public class AuthDto {
-    private final String username;
-    private final Boolean isAdmin;
+
+    private String username;
+    private Boolean isAdmin;
+
+    private AuthDto() {
+        /* Required by JSON object mapper */
+    }
 
     private AuthDto(String username, Boolean isAdmin) {
         this.username = username;
