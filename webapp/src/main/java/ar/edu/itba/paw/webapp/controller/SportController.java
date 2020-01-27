@@ -114,7 +114,8 @@ public class SportController {
     public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
         byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
 
-        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), imageBytes)
+        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getPlayerQuantity(),
+                imageBytes)
                 .orElseThrow(() -> {
                     LOGGER.trace("Sport '{}' does not exist", sportname);
                     return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");

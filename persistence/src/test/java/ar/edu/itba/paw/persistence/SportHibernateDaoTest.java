@@ -95,14 +95,25 @@ public class SportHibernateDaoTest {
     }
 
     @Test
-    public void testModifySport() throws IOException {
+    public void testModifySportDisplayName() throws IOException {
         //exercise
         Optional<Sport> returnedSport = sportDao.modifySport(sport.getName(),
-                "BASKETBALL", null);
+                "BASKETBALL", sport.getQuantity(),null);
 
         //postconditions
         Assert.assertTrue(returnedSport.isPresent());
         Assert.assertEquals("BASKETBALL", returnedSport.get().getDisplayName());
+    }
+
+    @Test
+    public void testModifySportQuantity() throws IOException {
+        //exercise
+        Optional<Sport> returnedSport = sportDao.modifySport(sport.getName(),
+                sport.getDisplayName(), 10,null);
+
+        //postconditions
+        Assert.assertTrue(returnedSport.isPresent());
+        Assert.assertEquals(10, returnedSport.get().getQuantity());
     }
 
     @Test
