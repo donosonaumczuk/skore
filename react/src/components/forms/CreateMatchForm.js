@@ -10,6 +10,7 @@ import FormComment from './inputs/FormComment';
 import RenderSelect from './inputs/SelectInput';
 import SportService from '../../services/SportService';
 import Loader from '../Loader';
+import CompetitiveRadio from '../match/CompetitiveRadio';
 
 class CreateMatchForm extends Component {
     mounted = false;
@@ -70,6 +71,7 @@ class CreateMatchForm extends Component {
                             <Field name="sport" label={i18next.t('createMatchForm.sport')} 
                                     inputType="text" required={true} defaultText={i18next.t('createMatchForm.chooseSport')}
                                     options={sportOptions} component={RenderSelect} />
+                            <CompetitiveRadio />
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>
