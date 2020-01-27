@@ -134,6 +134,8 @@
     },
     "createMatchForm": {
         "matchName": "Nombre del partido ",
+        "sport": "Deporte ",
+        "chooseSport": "Elija un deporte",
         "createMatch": "CREAR PARTIDO"
     },
     "forms": {
