@@ -299,7 +299,7 @@ public class GameHibernateDaoTest {
                 gameNotInserted.getType(), gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(),
                 gameNotInserted.getPlace().getState(), gameNotInserted.getPlace().getCity(),
                 gameNotInserted.getPlace().getStreet(), gameNotInserted.getTornament(), gameNotInserted.getDescription(),
-                game1.getTeam1().getName(), game1.getStartTime().toString(),
+                gameNotInserted.getTitle(), game1.getTeam1().getName(), game1.getStartTime().toString(),
                 game1.getFinishTime().toString()).get();
 
         Assert.assertEquals(game1, gameReturned);

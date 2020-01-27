@@ -27,7 +27,7 @@ public class GameDto {
     private String sportName;
     private DateDto date;
     private TimeDto time;
-    private long minutesOfDuration;
+    private Long minutesOfDuration;
     private PlaceDto location; //TODO: make a decision about DOCKER
     private int totalPlayers;
     private int currentPlayers;
@@ -117,7 +117,7 @@ public class GameDto {
         return time;
     }
 
-    public long getMinutesOfDuration() {
+    public Long getMinutesOfDuration() {
         return minutesOfDuration;
     }
 

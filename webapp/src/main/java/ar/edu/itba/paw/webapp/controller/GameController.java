@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -141,10 +143,14 @@ public class GameController {
                 gameDto.getTime().getSecond());
     }
 
+    private LocalDateTime getFinishTimeFrom(GameDto gameDto) {
+        return getStartTimeFrom(gameDto).plusMinutes(gameDto.getMinutesOfDuration());
+    }
+
     @GET
     @Path("/{key}")
     public Response getGame(@PathParam("key") String key) {
-        //Todo: Validate key values
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         Game game = gameService.findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Match '{}' does not exist", key);
             return new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
@@ -156,7 +162,11 @@ public class GameController {
     @DELETE
     @Path("/{key}")
     public Response deleteGame(@PathParam("key") String key) {
-        //Todo: Validate key values and that user is creator
+        GameValidators.keyValidator("Invalid '" + key + "' key for a match").validate(key);
+        Optional<Game> game = gameService.findByKey(key);
+        GameValidators.existenceValidatorOf(key, "Can't get '" + key + "' match").validate(game);
+        GameValidators.isCreatorValidatorOf(key, game.get().getTeam1().getLeader().getUserName(),
+                "User is not creator of '" + key + "' match").validate(sessionService.getLoggedUser().get());
         if (!gameService.remove(key)) {
             LOGGER.trace("Match '{}' does not exist", key);
             throw new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
@@ -165,7 +175,28 @@ public class GameController {
         return Response.noContent().build();
     }
 
-
+    @PUT
+    @Path("/{key}")
+    public Response updateGame(@PathParam("key") String key, @RequestBody final String requestBody) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        //TODO: validate requestBody
+        final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
+        Optional<Game> newGame;
+        try {
+            newGame = gameService.modify(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
+                    getStartTimeFrom(gameDto).toString(), gameDto.getMinutesOfDuration(), null, null,
+                    gameDto.getLocation().getCountry(), gameDto.getLocation().getState(), gameDto.getLocation().getCity(),
+                    gameDto.getLocation().getStreet(), null, gameDto.getDescription(), gameDto.getTitle(), key);
+        }
+        catch (TeamNotFoundException | IllegalArgumentException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        GameValidators.existenceValidatorOf(key, "Match update fails, match '" + key + "' does not exist")
+                .validate(newGame);
+        LOGGER.trace("Match '{}' modified successfully", key);
+        return Response.ok(GameDto.from(newGame.get(), getTeam(newGame.get().getTeam1()),
+                getTeam(newGame.get().getTeam2()))).build();
+    }
 
 //    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
 //    @ResponseStatus(HttpStatus.OK)

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
-import ar.edu.itba.paw.exceptions.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -137,17 +136,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game modify(final String teamName1, final String teamName2, final String startTime,
-                       final String finishTime, final String type, final String result,
-                       final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description,
-                       final String key) {
+    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
+                                 final Long minutesOfDuration, final String type, final String result,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description,
+                                 final String title, final String key) {
         GameKey gameKey = new GameKey(key);
-        Optional<Game> game = gameDao.modify(teamName1, teamName2, startTime, finishTime, type, result,
-                country, state, city, street, tornamentName, description, gameKey.getTeamName1(),
-                gameKey.getStartTime(), gameKey.getFinishTime());
-        return game.orElseThrow(() -> new GameNotFoundException("There is not a game of " + teamName1
-                + " starting at " + startTime + "and finishing at " + finishTime));
+        Optional<Game> gameOptional = findByKey(key), game = Optional.empty();
+        if (gameOptional.isPresent()) {
+            if ((teamName1 != null || teamName2 != null) && gameOptional.get().getGroupType().equals(INDIVIDUAL)) {
+                throw new IllegalArgumentException("Cannot modify teams in a individual match");
+            }
+            game = gameDao.modify(teamName1, teamName2, startTime, (minutesOfDuration != null) ?
+                            gameOptional.get().getStartTime().plusMinutes(minutesOfDuration).toString() : null, type,
+                    result, country, state, city, street, tornamentName, description, title, gameKey.getTeamName1(),
+                    gameKey.getStartTime(), gameKey.getFinishTime());
+        }
+        return game;
     }
 
     @Override

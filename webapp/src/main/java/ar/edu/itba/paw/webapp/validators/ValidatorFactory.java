@@ -117,14 +117,29 @@ public class ValidatorFactory {
     public static Validator<JSONObject> fieldIsStringWithLengthInRangeValidatorOf(final String field, final Integer min,
                                                                                   final Integer max, final String log) {
         return fieldIsStringValidatorOf(field, log).and(jsonObject -> {
-                    if ((max != null && jsonObject.getString(field).length() > max) ||
-                            (min != null && jsonObject.getString(field).length() < min)) {
-                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
-                                + "' length must belong to [" + (min == null ? "-Inf" : min) + "," +
-                                (max == null ? "Inf" : max) + "]"));
-                    }
-                }
-        );
+                    ValidatorFactory.isStringWithLengthInRangeValidatorOf(field, min, max, log)
+                            .validate(jsonObject.getString(field));
+                });
+    }
+
+    /**
+     * Validates that a string length belongs to an interval
+     *
+     * @param field the name of the field to validate
+     * @param min the minimum of the interval
+     * @param max the maximum of the interval
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<String> isStringWithLengthInRangeValidatorOf(final String field, final Integer min,
+                                                                         final Integer max, final String log) {
+        return (string) -> {
+            if ((max != null && string.length() > max) || (min != null && string.length() < min)) {
+                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                        + "' length must belong to [" + (min == null ? "-Inf" : min) + "," +
+                        (max == null ? "Inf" : max) + "]"));
+            }
+        };
     }
 
     /**

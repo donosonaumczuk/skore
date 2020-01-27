@@ -183,10 +183,13 @@ public class GameHibernateDao implements GameDao {
                                  final String finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
-                                 final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
-        Team team1Old = teamDao.findByTeamName(teamName1Old)
-                .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        Game game = em.find(Game.class, new GamePK(team1Old, LocalDateTime.parse(startTimeOld),
+                                 final String title, final String teamName1Old, final String startTimeOld,
+                                 final String finishTimeOld) {
+        Optional<Team> team1Old = teamDao.findByTeamName(teamName1Old);
+        if (!team1Old.isPresent()) {
+            return Optional.empty();
+        }
+        Game game = em.find(Game.class, new GamePK(team1Old.get(), LocalDateTime.parse(startTimeOld),
                 LocalDateTime.parse(finishTimeOld)));
         LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
                 startTimeOld, finishTimeOld);
@@ -195,19 +198,40 @@ public class GameHibernateDao implements GameDao {
                     startTimeOld, finishTimeOld);
             return Optional.empty();
         }
-        Team team = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        game.setTeam1(team);
-        team = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
-        game.setTeam2(team);
-        game.setStartTime(LocalDateTime.parse(startTime));
-        game.setFinishTime(LocalDateTime.parse(finishTime));
-        game.setType(type);
-        game.setResult(result);
-        game.setPlace(new Place(country, state, city, street));
-        game.setTornament(tornamentName);
-        game.setDescription(description);
+        if (teamName1 != null) {
+            Team team = teamDao.findByTeamName(teamName1)
+                    .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
+            game.setTeam1(team);
+        }
+        if (teamName1 != null) {
+            Team team = teamDao.findByTeamName(teamName2)
+                    .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
+            game.setTeam2(team);
+        }
+        if (startTime != null) {
+            game.setStartTime(LocalDateTime.parse(startTime));
+        }
+        if (finishTime != null) {
+            game.setFinishTime(LocalDateTime.parse(finishTime));
+        }
+        if (type != null) {
+            game.setType(type);
+        }
+        if (result != null) {
+            game.setResult(result);
+        }
+        if (country != null || state != null || city != null || street != null) {
+            game.setPlace(new Place(country, state, city, street));
+        }
+        if (result != null) {
+            game.setTornament(tornamentName);
+        }
+        if (result != null) {
+            game.setDescription(description);
+        }
+        if (result != null) {
+            game.setTitle(title);
+        }
 
         em.merge(game);
         LOGGER.trace("Successfully modify game: {} |starting at {} |finishing at {}", teamName1Old,

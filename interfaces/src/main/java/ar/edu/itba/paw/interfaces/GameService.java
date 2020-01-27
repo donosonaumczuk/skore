@@ -43,11 +43,11 @@ public interface GameService {
                                     final Integer offset, final GameSort sort, final Boolean onlyWithResults);
 
     @Transactional
-    public Game modify(final String teamName1, final String teamName2, final String startTime,
-                       final String finishTime, final String type, final String result,
-                       final String country, final String state, final String city,
-                       final String street, final String tornamentName, final String description,
-                       final String key);
+    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
+                                 final Long minutesOfDuration, final String type, final String result,
+                                 final String country, final String state, final String city,
+                                 final String street, final String tornamentName, final String description,
+                                 final String title, final String key);
 
     @Transactional
     public boolean remove(final String key);

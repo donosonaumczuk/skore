@@ -10,9 +10,13 @@ import java.util.List;
 
 public class TeamPlayerDto {
 
-    private final String username;
-    private final String email;
-    private final List<Link> links;
+    private String username;
+    private String email;
+    private List<Link> links;
+
+    private TeamPlayerDto() {
+        /* Required by JSON object mapper */
+    }
 
     private TeamPlayerDto(String username, String email) {
         this.username = username;
