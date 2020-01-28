@@ -113,7 +113,7 @@ public class GameController {
         GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
-        Game game = gameService.create(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
+        Game game = gameService.create(gameDto.getTeamName1(), gameDto.getTeamName2(),
                     getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
                     gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
                     gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
@@ -163,7 +163,7 @@ public class GameController {
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Game newGame;
         try {
-            newGame = gameService.modify(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
+            newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(),
                     getStartTimeFrom(gameDto).toString(), gameDto.getMinutesOfDuration(), null, null,
                     gameDto.getLocation().getCountry(), gameDto.getLocation().getState(), gameDto.getLocation().getCity(),
                     gameDto.getLocation().getStreet(), null, gameDto.getDescription(), gameDto.getTitle(), key);

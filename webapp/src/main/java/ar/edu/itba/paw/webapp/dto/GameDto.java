@@ -35,7 +35,9 @@ public class GameDto {
     private boolean hasFinished;
     private String results;
     private TeamDto team1;
+    private String teamName1;
     private TeamDto team2;
+    private String teamName2;
     private String key;
     private List<Link> links;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
@@ -169,5 +171,13 @@ public class GameDto {
 
     public String getKey() {
         return key;
+    }
+
+    public String getTeamName1() {
+        return teamName1;
+    }
+
+    public String getTeamName2() {
+        return teamName2;
     }
 }
