@@ -3,6 +3,7 @@ import { Field } from 'redux-form';
 import RadioInput from '../forms/inputs/RadioInput';
 
 const CompetitiveRadio = () => {
+    //TODO add i18n
     return  (
         <div className="form-group">
             <label htmlFor="competitiveness">
