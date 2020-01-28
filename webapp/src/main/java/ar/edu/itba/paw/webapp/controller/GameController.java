@@ -10,7 +10,6 @@ import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
@@ -24,7 +23,6 @@ import ar.edu.itba.paw.webapp.validators.GameValidators;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
 import ar.edu.itba.paw.webapp.validators.ResultValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
-import ar.edu.itba.paw.webapp.validators.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,14 +126,14 @@ public class GameController {
         GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
-        Optional<Game> game;
+        Game game;
         if (!gameDto.isIndividual()) {
-            //TODO: validate that teams exist and maybe that logged user has permissions
             game = gameService.create(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
                     getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
                     gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
                     gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
                     gameDto.getDescription(), gameDto.getTitle());
+            //TODO catch exception TeamNotFoundException, InvalidGameKeyException (should never happend)
         } else {
             PremiumUser creator = sessionService.getLoggedUser().get();
             game = gameService.createNoTeamGame(getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(),
@@ -144,9 +142,10 @@ public class GameController {
                     gameDto.getDescription(), creator.getUserName(), creator.getUser().getUserId(), gameDto.getSport(),
                     gameDto.getTitle());
         }
+        //TODO catch exception GameAlreadyExist, InvalidGameKeyException (should never happend)
 
         return Response.status(HttpStatus.CREATED.value())
-                .entity(GameDto.from(game.get(), getTeam(game.get().getTeam1()), getTeam(game.get().getTeam2())))
+                .entity(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
                 .build();
     }
 
@@ -160,10 +159,8 @@ public class GameController {
     @Path("/{key}")
     public Response getGame(@PathParam("key") String key) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
-        Game game = gameService.findByKey(key).orElseThrow(() -> {
-            LOGGER.trace("Match '{}' does not exist", key);
-            return new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
-        });
+        Game game = gameService.findByKey(key);
+        //TODO catch exception GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' founded successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }
@@ -172,14 +169,11 @@ public class GameController {
     @Path("/{key}")
     public Response deleteGame(@PathParam("key") String key) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a match").validate(key);
-        Optional<Game> game = gameService.findByKey(key);
-        GameValidators.existenceValidatorOf(key, "Can't get '" + key + "' match").validate(game);
-        GameValidators.isCreatorValidatorOf(key, game.get().getTeam1().getLeader().getUserName(),
-                "User is not creator of '" + key + "' match").validate(sessionService.getLoggedUser().get());
         if (!gameService.remove(key)) {
             LOGGER.trace("Match '{}' does not exist", key);
             throw new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
         }
+        //TODO catch UnauthorizedExecption, GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' deleted successfully", key);
         return Response.noContent().build();
     }
@@ -191,21 +185,19 @@ public class GameController {
         GameValidators.updateValidatorOf("Match update fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
-        Optional<Game> newGame;
+        Game newGame;
         try {
             newGame = gameService.modify(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
                     getStartTimeFrom(gameDto).toString(), gameDto.getMinutesOfDuration(), null, null,
                     gameDto.getLocation().getCountry(), gameDto.getLocation().getState(), gameDto.getLocation().getCity(),
                     gameDto.getLocation().getStreet(), null, gameDto.getDescription(), gameDto.getTitle(), key);
         }
-        catch (TeamNotFoundException | IllegalArgumentException e) {
+        catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        GameValidators.existenceValidatorOf(key, "Match update fails, match '" + key + "' does not exist")
-                .validate(newGame);
         LOGGER.trace("Match '{}' modified successfully", key);
-        return Response.ok(GameDto.from(newGame.get(), getTeam(newGame.get().getTeam1()),
-                getTeam(newGame.get().getTeam2()))).build();
+        return Response.ok(GameDto.from(newGame, getTeam(newGame.getTeam1()),
+                getTeam(newGame.getTeam2()))).build();
     }
 
     @POST
@@ -225,14 +217,12 @@ public class GameController {
         }
         else {
             userId = userService.create(playerDto.getFirstName(), playerDto.getLastName(),
-                    playerDto.getEmail()).getUserId();//TODO map exception
+                    playerDto.getEmail()).getUserId();//TODO catch UserAlreadyExist
         }
-        Optional<Game> gameOptional = gameService.insertUserInGame(key, userId);
-        GameValidators.existenceValidatorOf(key, "Add player to match fails, match '" + key + "' does not exist")
-                .validate(gameOptional);
+        Game game = gameService.insertUserInGame(key, userId); //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend), AlreadyJoinedToMatchException, TeamFullException
         LOGGER.trace("User '{}' added successfully to match '{}'", userId, key);
-        return Response.ok(GameDto.from(gameOptional.get(), getTeam(gameOptional.get().getTeam1()),
-                getTeam(gameOptional.get().getTeam2()))).build();
+        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()),
+                getTeam(game.getTeam2()))).build();
     }
 
     @DELETE
@@ -245,6 +235,7 @@ public class GameController {
             throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");
         }
+        //TODO catch TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
         return Response.noContent().build();
     }
@@ -257,12 +248,10 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final ResultDto resultDto = JSONUtils.jsonToObject(requestBody, ResultDto.class);
 
-        Optional<Game> gameOptional = gameService.updateResultOfGame(key, resultDto.getScoreTeam1(),
+        Game game = gameService.updateResultOfGame(key, resultDto.getScoreTeam1(),
                 resultDto.getScoreTeam2());
-        GameValidators.existenceValidatorOf(key, "Match update fails, match '" + key + "' does not exist")
-                .validate(gameOptional);
+        //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException
         LOGGER.trace("Match '{}' result added successfully", key);
-        return Response.ok(GameDto.from(gameOptional.get(), getTeam(gameOptional.get().getTeam1()),
-                getTeam(gameOptional.get().getTeam2()))).build();
+        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }
 }

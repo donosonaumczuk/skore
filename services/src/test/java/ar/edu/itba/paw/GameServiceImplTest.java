@@ -28,9 +28,8 @@ import static org.mockito.Mockito.when;
 public class GameServiceImplTest {
     private static final String  TEAMNAME_1          = "teamname1";
     private static final String  TEAMNAME_2          = "teamname2";
-    private static final String  STARTTIME_1         = "2018-12-12T00:00:00";
-    private static final String  FINISHTIME_1        = "2018-12-13T00:00:00";
-    private static final int     QUANTITY_1          = 0;
+    private static final String  STARTTIME_1         = "2018-12-12T00:00";
+    private static final String  FINISHTIME_1        = "2018-12-13T00:00";
     private static final String  URL                 = "201812120000teamname1201812130000";
 
     private static final String  SPORTNAME           = "sPoRtNaMe";
@@ -109,10 +108,9 @@ public class GameServiceImplTest {
     public void findByUrlTest() {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
 
-        Optional<Game> ans = gameService.findByKey(URL);
+        Game ans = gameService.findByKey(URL);
 
-        Assert.assertTrue(ans.isPresent());
-        Assert.assertEquals(GAME_1, ans);
+        Assert.assertEquals(GAME_1.get(), ans);
     }
 
     @Test

@@ -15,19 +15,19 @@ import java.util.Optional;
 
 public interface GameService {
     @Transactional
-    public Optional<Game> create(final String teamName1, final String teamName2, final LocalDateTime startTime,
-                                 final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
-                                 final String country, final String state, final String city,
-                                 final String street, final String tornamentName, final String description,
-                                 final String title);
+    public Game create(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                       final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
+                       final String country, final String state, final String city,
+                       final String street, final String tornamentName, final String description,
+                       final String title);
 
     @Transactional
-    public  Optional<Game> createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
-                                            final boolean isCompetitive, final String country,
-                                            final String state, final String city,
-                                            final String street, final String tornamentName,
-                                            final String description, final String creatorName,
-                                            final long creatorId, final String sportName, final String title);
+    public Game createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
+                                 final boolean isCompetitive, final String country,
+                                 final String state, final String city,
+                                 final String street, final String tornamentName,
+                                 final String description, final String creatorName,
+                                 final long creatorId, final String sportName, final String title);
 
     @Transactional
     public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
@@ -43,26 +43,26 @@ public interface GameService {
                                     final Integer offset, final GameSort sort, final Boolean onlyWithResults);
 
     @Transactional
-    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
-                                 final Long minutesOfDuration, final String type, final String result,
-                                 final String country, final String state, final String city,
-                                 final String street, final String tornamentName, final String description,
-                                 final String title, final String key);
+    public Game modify(final String teamName1, final String teamName2, final String startTime,
+                       final Long minutesOfDuration, final String type, final String result,
+                       final String country, final String state, final String city,
+                       final String street, final String tornamentName, final String description,
+                       final String title, final String key);
 
     @Transactional
     public boolean remove(final String key);
 
     @Transactional
-    public Optional<Game> findByKey(final String key);
+    public Game findByKey(final String key);
 
     @Transactional
-    public Optional<Game> insertUserInGame(final String key, final long userId);
+    public Game insertUserInGame(final String key, final long userId);
 
     @Transactional
     public boolean deleteUserInGame(final String key, final long userId);
 
     @Transactional
-    public Optional<Game> updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
+    public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
 
     @Transactional
     public List<List<Game>> getGamesThatPlay(final long userId);

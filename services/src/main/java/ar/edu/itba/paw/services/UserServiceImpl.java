@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.UserAlreadyExist;
 import ar.edu.itba.paw.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -49,7 +50,10 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> user = userDao.create(firstName, lastName, email);
 
-        return user.orElseThrow(() -> new UserNotFoundException("Couldn't create user."));
+        return user.orElseThrow(() -> {
+            LOGGER.trace("Creation fails, user '{}' already exist", email);
+            return new UserAlreadyExist("Creation fails, user '" + email + "' already exist");
+        });
     }
 
     @Override

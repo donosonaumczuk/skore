@@ -8,9 +8,9 @@ public class GameKey {
     private static final int MIN_TEAM_NAME1_LENGTH = 1;
     private static final int MIN_LENGTH = URL_DATE_LENGTH * 2 + MIN_TEAM_NAME1_LENGTH;
 
-    private final String startTime;
+    private final LocalDateTime startTime;
     private final String teamName1;
-    private final String finishTime;
+    private final LocalDateTime finishTime;
 
     public GameKey(String keyString) {
         int length = keyString.length();
@@ -21,26 +21,24 @@ public class GameKey {
             this.finishTime = null;
         }
         else {
-            this.startTime  = keyDateToKeyDate(keyString.substring(0, URL_DATE_LENGTH));//TODO: validate imposible time, etc
+            this.startTime  = LocalDateTime.parse(keyDateToKeyDate(keyString.substring(0, URL_DATE_LENGTH)));
             this.teamName1  = keyString.substring(URL_DATE_LENGTH, length - URL_DATE_LENGTH);
-            this.finishTime = keyDateToKeyDate(keyString.substring(length - URL_DATE_LENGTH));
+            this.finishTime = LocalDateTime.parse(keyDateToKeyDate(keyString.substring(length - URL_DATE_LENGTH)));
         }
     }
 
     public GameKey(LocalDateTime startTime, String teamName1, LocalDateTime finishTime) {
-        this.startTime  = startTime.toString();
+        this.startTime  = startTime;
         this.teamName1  = teamName1;
-        this.finishTime = finishTime.toString();
+        this.finishTime = finishTime;
     }
 
     public String toString() {
-        LocalDateTime startTime  = LocalDateTime.parse(getStartTime());
-        LocalDateTime finishTime = LocalDateTime.parse(getFinishTime());
         return dateToString(startTime) + teamName1 + dateToString(finishTime);
     }
 
     public String getStartTime() {
-        return startTime;
+        return startTime.toString();
     }
 
     public String getTeamName1() {
@@ -48,7 +46,7 @@ public class GameKey {
     }
 
     public String getFinishTime() {
-        return finishTime;
+        return finishTime.toString();
     }
 
     private String dateToString(LocalDateTime localDateTime) {
