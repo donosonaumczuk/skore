@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.GameAlreadyExist;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.exceptions.GameNotFoundException;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -100,12 +102,12 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game insertUserInGame(final String key, final long userId) {
-        Game game;
+        Game game = findByKey(key);
         try {
-            game = insertUserInGameTeam(findByKey(key), userId, true);
+            game = insertUserInGameTeam(game, userId, true);
         }
         catch (TeamFullException e) {
-            game = insertUserInGameTeam(findByKey(key), userId, false);
+            game = insertUserInGameTeam(game, userId, false);
         }
         return game;
     }
@@ -230,8 +232,18 @@ public class GameServiceImpl implements GameService {
 
     private Game insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
         if (!toTeam1) {
+            if(!game.getTeam1().getPlayers().stream()
+                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
+                LOGGER.trace("User already joined to match");
+                throw new AlreadyJoinedToMatchException("User already joined to match");
+            }
             game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
         } else {
+            if(game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
+                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
+                LOGGER.trace("User already joined to match");
+                throw new AlreadyJoinedToMatchException("User already joined to match");
+            }
             game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
         }
         return game;
