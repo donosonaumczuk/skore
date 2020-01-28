@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.ResultDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -21,6 +22,7 @@ import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidators;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
+import ar.edu.itba.paw.webapp.validators.ResultValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.validators.ValidatorFactory;
 import org.slf4j.Logger;
@@ -245,5 +247,22 @@ public class GameController {
         }
         LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{key}/result")
+    public Response addResultToAGame(@PathParam("key") String key, @RequestBody final String requestBody) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        ResultValidators.creationValidatorOf("Add result to match fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final ResultDto resultDto = JSONUtils.jsonToObject(requestBody, ResultDto.class);
+
+        Optional<Game> gameOptional = gameService.updateResultOfGame(key, resultDto.getScoreTeam1(),
+                resultDto.getScoreTeam2());
+        GameValidators.existenceValidatorOf(key, "Match update fails, match '" + key + "' does not exist")
+                .validate(gameOptional);
+        LOGGER.trace("Match '{}' result added successfully", key);
+        return Response.ok(GameDto.from(gameOptional.get(), getTeam(gameOptional.get().getTeam1()),
+                getTeam(gameOptional.get().getTeam2()))).build();
     }
 }
