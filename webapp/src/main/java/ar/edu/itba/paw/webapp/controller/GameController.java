@@ -67,14 +67,6 @@ public class GameController {
     @Qualifier("teamServiceImpl")
     private TeamService teamService;
 
-    @Autowired
-    @Qualifier("userServiceImpl")
-    private UserService userService;
-
-    @Autowired
-    @Qualifier("sessionServiceImpl")
-    private SessionService sessionService;
-
     public static String getGameEndpoint(final String gameId) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(gameId).toTemplate();
     }
@@ -126,23 +118,12 @@ public class GameController {
         GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
-        Game game;
-        if (!gameDto.isIndividual()) {
-            game = gameService.create(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
+        Game game = gameService.create(gameDto.getTeam1().getTeamName(), gameDto.getTeam2().getTeamName(),
                     getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
                     gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
                     gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
-                    gameDto.getDescription(), gameDto.getTitle());
-            //TODO catch exception TeamNotFoundException, InvalidGameKeyException (should never happend)
-        } else {
-            PremiumUser creator = sessionService.getLoggedUser().get();
-            game = gameService.createNoTeamGame(getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(),
-                    gameDto.isCompetitive(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
-                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
-                    gameDto.getDescription(), creator.getUserName(), creator.getUser().getUserId(), gameDto.getSport(),
-                    gameDto.getTitle());
-        }
-        //TODO catch exception GameAlreadyExist, InvalidGameKeyException (should never happend)
+                    gameDto.getDescription(), gameDto.getTitle(), gameDto.getSport());
+        //TODO catch exception TeamNotFoundException, GameAlreadyExist, InvalidGameKeyException (should never happend)
 
         return Response.status(HttpStatus.CREATED.value())
                 .entity(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
@@ -207,22 +188,12 @@ public class GameController {
         PlayerValidators.creationValidatorOf("Add player to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-        long userId;
-        if (playerDto.getUsername() != null) {//TODO maybe move logic to service
-            Optional<PremiumUser> premiumUserOptional = sessionService.getLoggedUser();
-            UserValidators.isAuthorizedForUpdateValidatorOf(playerDto.getUsername(), "User '" +
-                    playerDto.getUsername() + "' addition to a match failed, unauthorized")
-                    .validate(premiumUserOptional);
-            userId = premiumUserOptional.get().getUser().getUserId();
-        }
-        else {
-            userId = userService.create(playerDto.getFirstName(), playerDto.getLastName(),
-                    playerDto.getEmail()).getUserId();//TODO catch UserAlreadyExist
-        }
-        Game game = gameService.insertUserInGame(key, userId); //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend), AlreadyJoinedToMatchException, TeamFullException
-        LOGGER.trace("User '{}' added successfully to match '{}'", userId, key);
-        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()),
-                getTeam(game.getTeam2()))).build();
+        Game game = gameService.insertUserInGame(key, playerDto.getUserId());
+        //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
+        //TODO AlreadyJoinedToMatchException, TeamFullException
+        //TODO maybe delete not premium user if it fails
+        LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
+        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }
 
     @DELETE

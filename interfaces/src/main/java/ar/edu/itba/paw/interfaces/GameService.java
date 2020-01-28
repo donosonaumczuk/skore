@@ -19,15 +19,7 @@ public interface GameService {
                        final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
-                       final String title);
-
-    @Transactional
-    public Game createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
-                                 final boolean isCompetitive, final String country,
-                                 final String state, final String city,
-                                 final String street, final String tornamentName,
-                                 final String description, final String creatorName,
-                                 final long creatorId, final String sportName, final String title);
+                       final String title, final String sportName);
 
     @Transactional
     public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,

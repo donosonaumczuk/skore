@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    public EmailService emailSender;
+    private EmailService emailSender;
 
     private SimpleEncrypter encrypter = new SimpleEncrypter();
 

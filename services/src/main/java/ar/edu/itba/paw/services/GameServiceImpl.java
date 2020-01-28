@@ -20,6 +20,7 @@ import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,43 +62,41 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game create(final String teamName1, final String teamName2, final LocalDateTime startTime,
-                                 final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
-                                 final String country, final String state, final String city,
-                                 final String street, final String tornamentName, final String description,
-                                 final String title) {
-        //TODO: validate that teams exist and maybe that logged user has permissions
-        String type = (isIndividual ? INDIVIDUAL : GROUP) + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
+                       final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
+                       final String country, final String state, final String city,
+                       final String street, final String tornamentName, final String description,
+                       final String title, final String sportName) {
+        PremiumUser logged = sessionService.getLoggedUser()
+                .orElseThrow(() -> new UnauthorizedExecption("Must be logged to create match"));
 
-        return gameDao.create(teamName1, teamName2, startTime.toString(),
+        GameKey gameKey = new GameKey(startTime, teamName1, startTime.plusMinutes(durationInMinutes));
+        String type = (isIndividual ? INDIVIDUAL : GROUP) + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
+        String newTeamName1 = teamName1, newTeamName2 = teamName2;
+        if (isIndividual) {
+            if (teamName1 != null || teamName2 != null) {
+                LOGGER.trace("Creation fails, match '{}' cannot be INDIVIDUAL and add teams to match", gameKey.toString());
+                throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
+                        "INDIVIDUAL and add teams to match");
+            }
+        } else {
+            newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
+            newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
+        }
+
+        Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime.toString(),
                 startTime.plusMinutes(durationInMinutes).toString(), type, null,
                 country, state, city, street, tornamentName, description, title)
                 .orElseThrow(() -> {
-                    GameKey gameKey = new GameKey(startTime, teamName1, startTime.plusMinutes(durationInMinutes));
                     LOGGER.trace("Creation fails, match '{}' already exist", gameKey.toString());
                     return new GameAlreadyExist("Creation fails, match '" + gameKey.toString() + "' already exist");
                 });
-    }
 
-    @Override
-    public Game createNoTeamGame(final LocalDateTime startTime, final long durationInMinutes,
-                                           final boolean isCompetitive, final String country,
-                                           final String state, final String city,
-                                           final String street, final String tornamentName,
-                                           final String description, final String creatorName,
-                                           final long creatorId, final String sportName, final String title) {
-        Team team1 = teamService.createTempTeam1(creatorName, creatorId, sportName);
-        Team team2 = teamService.createTempTeam2(creatorName, creatorId, sportName);
-
-        String type = INDIVIDUAL + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
-
-        Game game = gameDao.create(team1.getName(), team2.getName(), startTime.toString(),
-                startTime.plusMinutes(durationInMinutes).toString(), type, null,
-                country, state, city, street, tornamentName, description, title).orElseThrow(() -> {
-                    GameKey gameKey = new GameKey(startTime, team1.getName(), startTime.plusMinutes(durationInMinutes));
-                    LOGGER.trace("Creation fails, match '{}' already exist", gameKey.toString());
-                    return new GameAlreadyExist("Creation fails, match '" + gameKey.toString() + "' already exist");
-                });
-        return insertUserInGameTeam(game, creatorId, true);
+        if (isIndividual) {
+            newGame = insertUserInGameTeam(newGame, logged.getUser().getUserId(), true);
+        }
+        return newGame;
     }
 
     @Override
@@ -169,10 +168,10 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game modify(final String teamName1, final String teamName2, final String startTime,
-                                 final Long minutesOfDuration, final String type, final String result,
-                                 final String country, final String state, final String city,
-                                 final String street, final String tornamentName, final String description,
-                                 final String title, final String key) {
+                       final Long minutesOfDuration, final String type, final String result,
+                       final String country, final String state, final String city,
+                       final String street, final String tornamentName, final String description,
+                       final String title, final String key) {
         GameKey gameKey = getGameKey(key);
         Game gameOptional = findByKey(key), game;
         if ((teamName1 != null || teamName2 != null) && gameOptional.getGroupType().equals(INDIVIDUAL)) {
