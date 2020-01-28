@@ -128,7 +128,7 @@
     },
     "changePasswordForm": {
         "changePasswordButton": "CAMBIAR CONTRASEÑA",
-        "oldPassword": "Contraseña anterior",
+        "oldPassword": "Contraseña actual",
         "newPassword": "Contraseña nueva",
         "repeatNewPassword": "Repita la contraseña nueva"
     },
@@ -161,7 +161,7 @@
                 "required": "El nombre del deporte es obligatorio.\n",
                 "invalidSymbols": "El nombre del deporte solo puede contener simbolos alfanumericos.\n",
                 "invalidLength": "El nombre del deporte debe tener entre 4 y 100 caracteres.\n",
-                "alreadyExists": "El nombre del deporte ya existe.\n"
+                "alreadyExists": "Ya existe un deporte con ese nombre.\n"
             },
             "displayName": {
                 "required": "El nombre a mostrar del deporte es obligatorio.\n",
