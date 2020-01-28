@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import org.springframework.hateoas.Link;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ public class TeamDto {
 
     private String teamName;
     private List<TeamPlayerDto> players;
-    private int playerQuantity;
+    private Integer playerQuantity;
 //    private final List<Link> links; TODO if we decide to show teams should have one
 
     private TeamDto() {
@@ -57,7 +56,7 @@ public class TeamDto {
         return players;
     }
 
-    public int getPlayerQuantity() {
+    public Integer getPlayerQuantity() {
         return playerQuantity;
     }
 }

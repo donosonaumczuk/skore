@@ -80,7 +80,6 @@ public class Filters {
             else {
                 values.add('%' + value + '%');
             }
-
             if (!isCaseSensitive) {
                 start = start.append(LOWER).append(OPEN_PARENTHESE);
             }
@@ -162,6 +161,7 @@ public class Filters {
     public List<Object> getValues() {
         return values;
     }
+
 
     public void addFilterOnlyFinished(Boolean onlyWithResults) {
         if (onlyWithResults != null) {

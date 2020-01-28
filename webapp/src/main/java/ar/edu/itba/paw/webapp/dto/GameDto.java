@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 public class GameDto {
 
@@ -21,18 +22,18 @@ public class GameDto {
     private String description;
     private String creator;
     private String tornamentNameThatIsFrom;
-    private boolean individual;
-    private boolean competitive;
+    private Boolean individual;
+    private Boolean isCompetitive;
     private String sport;
     private String sportName;
     private DateDto date;
     private TimeDto time;
-    private Long minutesOfDuration;
+    private Long durationInMinutes;
     private PlaceDto location; //TODO: make a decision about DOCKER
-    private int totalPlayers;
-    private int currentPlayers;
-    private boolean hasStarted;
-    private boolean hasFinished;
+    private Integer totalPlayers;
+    private Integer currentPlayers;
+    private Boolean hasStarted;
+    private Boolean hasFinished;
     private String results;
     private TeamDto team1;
     private String teamName1;
@@ -51,14 +52,14 @@ public class GameDto {
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
         individual = game.getGroupType().equals("Individual");
-        competitive = game.getCompetitiveness().equals("Competitive");
+        isCompetitive = game.getCompetitiveness().equals("Competitive");
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
         LocalDateTime finishTime = game.getFinishTime();
         date = DateDto.from(LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth()));
         time = TimeDto.from(LocalTime.of(startTime.getHour(), startTime.getMinute()));
-        minutesOfDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
+        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
         tornamentNameThatIsFrom = game.getTornament();
         location = PlaceDto.from(game.getPlace());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
@@ -101,8 +102,8 @@ public class GameDto {
         return creator;
     }
 
-    public boolean isCompetitive() {
-        return competitive;
+    public Boolean isCompetitive() {
+        return isCompetitive;
     }
 
     public String getSport() {
@@ -113,39 +114,39 @@ public class GameDto {
         return sportName;
     }
 
-    public DateDto getDate() {
-        return date;
+    public Optional<DateDto> getDate() {
+        return Optional.ofNullable(date);
     }
 
-    public TimeDto getTime() {
-        return time;
+    public Optional<TimeDto> getTime() {
+        return Optional.ofNullable(time);
     }
 
-    public Long getMinutesOfDuration() {
-        return minutesOfDuration;
+    public Long getDurationInMinutes() {
+        return durationInMinutes;
     }
 
     public PlaceDto getLocation() {
         return location;
     }
 
-    public int getTotalPlayers() {
+    public Integer getTotalPlayers() {
         return totalPlayers;
     }
 
-    public int getCurrentPlayers() {
+    public Integer getCurrentPlayers() {
         return currentPlayers;
     }
 
-    public boolean isHasStarted() {
+    public Boolean isHasStarted() {
         return hasStarted;
     }
 
-    public boolean isHasFinished() {
+    public Boolean isHasFinished() {
         return hasFinished;
     }
 
-    public boolean isIndividual() {
+    public Boolean isIndividual() {
         return individual;
     }
 
@@ -153,12 +154,12 @@ public class GameDto {
         return results;
     }
 
-    public TeamDto getTeam1() {
-        return team1;
+    public Optional<TeamDto> getTeam1() {
+        return Optional.ofNullable(team1);
     }
 
-    public TeamDto getTeam2() {
-        return team2;
+    public Optional<TeamDto> getTeam2() {
+        return Optional.ofNullable(team2);
     }
 
     public List<Link> getLinks() {

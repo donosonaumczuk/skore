@@ -196,6 +196,7 @@ public class GameHibernateDaoTest {
                 null, null, new GameSort("country asc,state asc"),
                 null);
 
+
         Assert.assertEquals(2,games.size());
         Assert.assertEquals(game1,games.get(0));
         Assert.assertEquals(game2,games.get(1));
@@ -280,7 +281,6 @@ public class GameHibernateDaoTest {
 
     @Test
     public void findGamesTestHasNotResult() {
-
         final List<Game> games = gameDao.findGames(null, null,
                 null, null, null, null, null,
                 null, null, null, null, null,

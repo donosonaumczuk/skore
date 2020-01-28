@@ -3,11 +3,21 @@ import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import i18next from 'i18next';
-import FormTitle from './utils/FormTitle';
-import RenderInput from './utils/RenderInput';
-import SubmitButton from './utils/SubmitButton';
-import SuggestionText from './utils/SuggestionText';
+import FormTitle from './inputs/FormTitle';
+import RenderInput from './inputs/RenderInput';
+import SubmitButton from './inputs/SubmitButton';
+import SuggestionText from './inputs/SuggestionText';
 import AuthService from './../../services/AuthService';
+import LogInValidator from './validators/LogInValidator';
+import FormComment from './inputs/FormComment';
+import { SC_UNAUTHORIZED } from './../../services/constants/StatusCodesConstants';
+
+const validate = values => {
+    const errors = {}
+    errors.username = LogInValidator.validateUsername(values.username);
+    errors.password =  LogInValidator.validatePassword(values.password);
+    return errors;
+}
 
 class LogInForm extends Component {
     constructor(props) {
@@ -24,13 +34,17 @@ class LogInForm extends Component {
                 "password": values.password
             }
         );
-        if (response.status === 401) {
-            const errorMessage = i18next.t('login.invalidUsernameOrPassword')
+        if (response.status === SC_UNAUTHORIZED) {
+            const errorMessage = i18next.t('login.errors.invalidUsernameOrPassword')
             this.setState({ errorMessage: errorMessage })
         }
         else {
             //TODO handle other error status maybe?
-            this.props.updateUser(values.username);
+            const isAdmin = AuthService.isAdmin();
+            this.props.updateUser({
+                username: values.username,
+                isAdmin: isAdmin
+            });
         }
     }
 
@@ -41,7 +55,6 @@ class LogInForm extends Component {
                     </span>);
         }
         return <React.Fragment></React.Fragment>;
-
     }
 
     render() {
@@ -55,14 +68,15 @@ class LogInForm extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
-                    <FormTitle />
+                        <FormTitle />
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             {errorMessage}
-                            <Field name="username" label={i18next.t('createUserForm.username')} 
-                                    inputType="text" required={true} component={RenderInput} />
+                            <Field name="username" label={i18next.t('createUserForm.username')}
+                            id="username" inputType="text" required={true} component={RenderInput} />
                             <Field name="password" label={i18next.t('createUserForm.password')}
                                 inputType="password" required={true} component={RenderInput} />
                             {/* TODO remember me */}
+                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('login.loginButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                             <SuggestionText suggestion={i18next.t('login.newUser')} link="/signUp" linkText={i18next.t('createUserForm.signUp')} />
                         </form>
@@ -76,7 +90,8 @@ class LogInForm extends Component {
 LogInForm = reduxForm({
     form: 'login',
     destroyOnUnmount: false, // set to true to remove data on refresh
-})(LogInForm)
+    validate
+})(LogInForm) 
 
 LogInForm.propTypes = {
     updateUser: Proptypes.func.isRequired
