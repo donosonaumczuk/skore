@@ -373,5 +373,66 @@ public class GameValidatorsTest {
         );
     }
 
-    //TODO testing update
+    @Test
+    public void whenValidatingUpdateThenSuccessByDoingNothing() {
+        GameValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+                "{\n" +
+                        "\t\"title\": \"El juego del siglo\",\n" +
+                        "\t\"description\": \"\",\n" +
+                        "\t\"date\": {\n" +
+                        "\t\t\"year\": 2020,\n" +
+                        "\t\t\"monthNumber\": 2,\n" +
+                        "\t\t\"dayOfMonth\": 29\n" +
+                        "\t},\n" +
+                        "\t\"time\": {\n" +
+                        "\t\t\"hour\": 10,\n" +
+                        "\t\t\"minute\": 9,\n" +
+                        "\t\t\"second\": 0\n" +
+                        "\t},\n" +
+                        "\t\"minutesOfDuration\": 20,\n" +
+                        "\t\"location\": {\n" +
+                        "\t\t\"country\": \"Argentina\",\n" +
+                        "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
+                        "\t\t\"city\": \"Pellegrini\",\n" +
+                        "\t\t\"street\": \"Guarrochena \"\n" +
+                        "\t},\n" +
+                        "\t\"teamName1\": \"Equipo Uno\",\n" +
+                        "\t\"teamName2\": \"Equipo Dos\"\n" +
+                        "}"
+                )
+        );
+    }
+
+    @Test
+    public void whenValidatingUpdateIfHasAnUnknownUpdateFieldThenThrowApiExceptionWithExpectedValues() {
+        exceptionRule.expect(ApiException.class);
+        exceptionRule.expectMessage("Field 'unknown' is unknown or unaccepted");
+        GameValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
+                "{\n" +
+                            "\t\"title\": \"El juego del siglo\",\n" +
+                            "\t\"description\": \"\",\n" +
+                            "\t\"date\": {\n" +
+                                "\t\t\"year\": 2020,\n" +
+                                "\t\t\"monthNumber\": 2,\n" +
+                                "\t\t\"dayOfMonth\": 29\n" +
+                            "\t},\n" +
+                            "\t\"time\": {\n" +
+                                "\t\t\"hour\": 10,\n" +
+                                "\t\t\"minute\": 9,\n" +
+                                "\t\t\"second\": 0\n" +
+                            "\t},\n" +
+                            "\t\"minutesOfDuration\": 20,\n" +
+                            "\t\"location\": {\n" +
+                                "\t\t\"country\": \"Argentina\",\n" +
+                                "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
+                                "\t\t\"city\": \"Pellegrini\",\n" +
+                                "\t\t\"street\": \"Guarrochena \"\n" +
+                            "\t},\n" +
+                            "\t\"unknown\": \"something\"," +
+                            "\t\"teamName1\": \"Equipo Uno\",\n" +
+                            "\t\"teamName2\": \"Equipo Dos\"\n" +
+                        "}"
+                )
+        );
+    }
 }
