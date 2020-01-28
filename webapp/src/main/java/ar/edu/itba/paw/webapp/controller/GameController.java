@@ -4,19 +4,25 @@ import ar.edu.itba.paw.exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidators;
+import ar.edu.itba.paw.webapp.validators.PlayerValidators;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
+import ar.edu.itba.paw.webapp.validators.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +66,10 @@ public class GameController {
     @Autowired
     @Qualifier("teamServiceImpl")
     private TeamService teamService;
+
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     @Qualifier("sessionServiceImpl")
@@ -196,295 +206,44 @@ public class GameController {
                 getTeam(newGame.get().getTeam2()))).build();
     }
 
-//    @RequestMapping(value="/addPlayerToMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String addPlayerToMatch(@RequestParam final String teamName1,
-//                                                 @RequestParam final String startTime,
-//                                                 @RequestParam final String finishTime) throws IOException {
-//        LOGGER.trace("Asking to add logged player from {}|{}|{}", teamName1,startTime,finishTime);
-//        boolean ans;
-//        try {
-//            gameService.insertUserInGame(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
-//            LOGGER.trace("insert user: {} success", loggedUser().getUser().getUserId());
-//            ans = true;
-//        }
-//        catch (Exception e) {
-//            LOGGER.trace("insert user: {} fail", loggedUser().getUser().getUserId());
-//            ans = false;
-//        }
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        return objectMapper.writeValueAsString(ans);
-//    }
-//
-//    @RequestMapping(value="/removePlayerFromMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String removePlayerFromMatch(@RequestParam final String teamName1,
-//                                                      @RequestParam final String startTime,
-//                                                      @RequestParam final String finishTime) throws IOException {
-//        LOGGER.trace("Asking to remove logged player from {}|{}|{}", teamName1,startTime,finishTime);
-//        boolean ans;
-//        try {
-//            gameService.deleteUserInGame(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
-//            LOGGER.trace("delete user: {} success", loggedUser().getUser().getUserId());
-//            ans = true;
-//        }
-//        catch (Exception e) {
-//            LOGGER.trace("insert user: {} fail", loggedUser().getUser().getUserId());
-//            ans = false;
-//        }
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        return objectMapper.writeValueAsString(ans);
-//    }
-//
-//    @RequestMapping(value="/deleteMatch", method= RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody String deleteMatch(@RequestParam final String teamName1,
-//                                            @RequestParam final String startTime,
-//                                            @RequestParam final String finishTime) throws IOException {
-//        LOGGER.trace("Asking to delete a match");
-//        boolean ans = gameService.remove(teamName1, startTime, finishTime, loggedUser().getUser().getUserId());
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        LOGGER.trace("The result for delete a match is {}", ans);
-//        return objectMapper.writeValueAsString(ans);
-//    }
-//
-//
-//    @RequestMapping(value = "/match/*", method = {RequestMethod.GET})
-//    public ModelAndView matchDetails(HttpServletRequest request) {
-//        String matchURLKey = request.getServletPath().substring(7); /* /match/ .length */
-//
-//        Game game;
-//        try {
-//            game = gameService.findByKey(matchURLKey);
-//        }
-//        catch (GameNotFoundException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindMatch").addObject("attribute", "");
-//        }
-//
-//        int sportQuantity = game.getTeam1().getSport().getQuantity();
-//        int team1Quantity = game.getTeam1().getPlayers().size();
-//        int team2Quantity = game.getTeam2().getPlayers().size();
-//        boolean isFull = sportQuantity == team1Quantity && sportQuantity == team2Quantity;
-//        boolean isCreator = isLogged() && loggedUser().getUserName().equals(game.getTeam1().getLeader().getUserName());
-//       // boolean hasFinished = game.getFinishTime().isAfter(LocalDateTime.now());
-//        boolean hasResult = game.getResult() != null;
-//        boolean hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
-//        boolean canEdit = isFull && isCreator && hasFinished && !hasResult;
-//        return new ModelAndView("match").addObject("match", game)
-//                .addObject("canEdit", canEdit)
-//                .addObject("matchURLKey", matchURLKey);
-//    }
-//
-//    @RequestMapping(value= "/submitMatchResult/{matchKey:.+}", method = {RequestMethod.GET})
-//    public ModelAndView submitMatchResultForm(@ModelAttribute("submitResultForm") SubmitResultForm submitResultForm,
-//                                      HttpServletRequest request, @PathVariable String matchKey) {
-//        //String sportName = request.getServletPath().replace("/admin/editSport/", "");
-//        Game game = null;
-//        try {
-//            game = gameService.findByKey(matchKey);
-//        }
-//        catch (GameNotFoundException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindMatch").addObject("attribute", "");
-//        }
-//
-//        return new ModelAndView("submitMatchResult").addObject("game", game)
-//                .addObject("matchKey", matchKey);
-//    }
-//
-//    @RequestMapping(value="/submitMatchResult/*",  method = {RequestMethod.POST})
-//    public ModelAndView submitMatchResult(@Valid @ModelAttribute("submitResultForm") final SubmitResultForm submitResultForm,
-//                                  final BindingResult errors, HttpServletRequest request) {
-//        if(errors.hasErrors()) {
-//            return submitMatchResultForm(submitResultForm, request, submitResultForm.getMatchKey());
-//        }
-//        int team1Score = 0, team2Score = 0;
-//
-//        for(int i = 0; i< submitResultForm.getTeam1Points().length(); i++) {
-//            team1Score = team1Score * 10 + (submitResultForm.getTeam1Points().charAt(i) - '0');
-//        }
-//
-//        for(int i = 0; i< submitResultForm.getTeam2Points().length(); i++) {
-//            team2Score = team2Score * 10 + (submitResultForm.getTeam2Points().charAt(i) - '0');
-//        }
-//
-//
-//
-//        Game game;
-//        try {
-//            game = gameService.findByKey(submitResultForm.getMatchKey());
-//        }
-//        catch (GameNotFoundException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindMatch").addObject("attribute", "");
-//        }
-//
-//        //addResult
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String startTime = game.getStartTime().format(formatter);
-//        String finishTime = game.getFinishTime().format(formatter);
-//        try {
-//            game = gameService.updateResultOfGame(game.team1Name(), startTime, finishTime,
-//                    team1Score, team2Score);
-//        }
-//        catch(GameHasNotBeenPlayException e) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "CanNotUpdateResultHasNotPlayed").addObject("attribute", "");
-//        }
-//
-//        return new ModelAndView("redirect:/match/" + submitResultForm.getMatchKey());
-////        return new ModelAndView("match").addObject("match", game)
-////                .addObject("canEdit", false)
-////                .addObject("matchURLKey", submitResultForm.getMatchKey());
-//    }
-//
-//    @RequestMapping(value = "/confirmMatch/**")
-//    public ModelAndView confirmMatch(HttpServletRequest request) {
-//        LOGGER.trace("Match assistance confirmed");
-//        String path = request.getServletPath().replace("/confirmMatch/", "");
-//        System.out.println("\n\npath:\n\n");
-////        for(int i = 0; i < 90; i ++) {
-////            if(path.charAt(i) != '%') {
-////                System.out.print(path.charAt(i));
-////            }
-////        }
-////        System.out.println("end\n\n\n");
-//        SimpleEncrypter encrypter = userService.getEncrypter();
-//        String data = encrypter.decryptString(path);
-//        System.out.println("\n\ndata=" + data + "\n\n");
-//
-//        String userData = data.substring(0, data.indexOf("$"));
-//        String gameData = data.substring(data.indexOf("$") + 1, data.length());
-//        System.out.println("userdata: " + userData + "\ngameData: " + gameData + "\n\n\n\n");
-//        long userId = userService.getUserIdFromData(userData);
-//        User user = userService.findById(userId);
-//
-//        if(user == null) {
-//            return new ModelAndView("404UserNotFound").addObject("username", "");
-//            //throw new UserNotFoundException("Can't find user");
-//        }
-//
-//        final int URL_DATE_LENGTH =12;
-//        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
-//        if(gameData.length() < MIN_LENGTH) {
-//            throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
-//        }
-//
-//        String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
-//        String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
-//        String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
-//        Game game = gameService.findByKey(teamName1, startTime, finishTime);
-//        if(game == null) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindMatch").addObject("attribute", "");
-//        //    throw new GameNotFoundException("Can't find game");
-//        }
-//
-//        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "confirmMatchAlreadyFinished").addObject("attribute", "");
-//        }
-//
-//        if(LocalDateTime.now().isAfter(game.getStartTime())) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "confirmMatchAlreadyStarted").addObject("attribute", "");
-//        }
-//        if(!isPlayerInTeam(game, user)) {
-//            try {
-//                game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUserId());
-//                LOGGER.trace("added to Match");
-//            } catch (Exception e) {
-//                LOGGER.error("Team is already full");
-//
-//                return new ModelAndView("teamFull");
-//            }
-//        }
-//        else {
-//            return new ModelAndView("alreadyInGame");
-//        }
-//        userService.sendCancelOptionMatch(user, game, gameData);
-//        return new ModelAndView("confirmedMatchAssistance");
-//    }
-//
-//    @RequestMapping(value = "/cancelMatch/*")
-//    public ModelAndView cancelMatch(HttpServletRequest request) {
-//        LOGGER.trace("Match assistance cancelled");
-//        String path = request.getServletPath().replace("/cancelMatch/", "");
-//        String userData = path.substring(0, path.indexOf("$"));
-//        String gameData = path.substring(path.indexOf("$") + 1, path.length());
-//        long userId = userService.getUserIdFromData(userData);
-//        User user = userService.findById(userId);
-//
-//        if(user == null) {
-//            return new ModelAndView("404UserNotFound").addObject("username", "");
-//            //throw new UserNotFoundException("Can't find user");
-//        }
-//
-//        final int URL_DATE_LENGTH =12;
-//        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
-//
-//        if(gameData.length() < MIN_LENGTH) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindGame").addObject("attribute", "");
-//
-//            //throw new GameNotFoundException("path '" + gameData + "' is too short to be formatted to a key");
-//        }
-//
-//        String startTime = gameService.urlDateToKeyDate(gameData.substring(0, URL_DATE_LENGTH));
-//        String teamName1 = gameData.substring(URL_DATE_LENGTH, gameData.length() - URL_DATE_LENGTH);
-//        String finishTime = gameService.urlDateToKeyDate(gameData.substring(gameData.length() - URL_DATE_LENGTH));
-//        Game game = gameService.findByKey(teamName1, startTime, finishTime);
-//
-//        if(game == null) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "canNotFindMatch").addObject("attribute", "");
-//            //throw new GameNotFoundException("Can't find game");
-//        }
-//
-//        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "cancelMatchHasAlreadyFinished");
-//        }
-//
-//        if(LocalDateTime.now().isAfter(game.getStartTime())) {
-//            return new ModelAndView("genericPageWithMessage").addObject("message",
-//                    "cancelMatchHasAlreadyStarted");
-//        }
-//
-//        if(isPlayerInTeam(game, user)) {
-//            gameService.deleteUserInGame(teamName1, startTime, finishTime, userId);
-//            return new ModelAndView("cancelledMatchAssistance");
-//        }
-//
-//        return new ModelAndView("genericPageWithMessage").addObject("message",
-//                "matchAlreadyCanceled").addObject("attribute","");
-//
-//    }
-//
-//    private boolean isPlayerInTeam(Game game, User user) {
-//        Set<User> players = game.getTeam1().getPlayers();
-//        if(players.contains(user)) {
-//            return true;
-//        }
-//        if(game.getTeam2() != null) {
-//            players = game.getTeam2().getPlayers();
-//            if (players.contains(user)) {
-//                    return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    private void setUpGame(List<Game> games) {
-//        for (Game g: games) {
-//            g.setQuantityOccupiedPlaces();
-//            g.getTeam1().getLeader().setFriends(null);
-//            g.getTeam1().getLeader().setLikes(null);
-//            g.getTeam1().getLeader().setNotifications(null);
-//            if(g.getTeam2() != null) {
-//                g.getTeam2().setLeader(null);
-//            }
-//        }
-//    }
+    @POST
+    @Path("/{key}/players")
+    public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        PlayerValidators.creationValidatorOf("Add player to match fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
+        long userId;
+        if (playerDto.getUsername() != null) {//TODO maybe move logic to service
+            Optional<PremiumUser> premiumUserOptional = sessionService.getLoggedUser();
+            UserValidators.isAuthorizedForUpdateValidatorOf(playerDto.getUsername(), "User '" +
+                    playerDto.getUsername() + "' addition to a match failed, unauthorized")
+                    .validate(premiumUserOptional);
+            userId = premiumUserOptional.get().getUser().getUserId();
+        }
+        else {
+            userId = userService.create(playerDto.getFirstName(), playerDto.getLastName(),
+                    playerDto.getEmail()).getUserId();//TODO map exception
+        }
+        Optional<Game> gameOptional = gameService.insertUserInGame(key, userId);
+        GameValidators.existenceValidatorOf(key, "Add player to match fails, match '" + key + "' does not exist")
+                .validate(gameOptional);
+        LOGGER.trace("User '{}' added successfully to match '{}'", userId, key);
+        return Response.ok(GameDto.from(gameOptional.get(), getTeam(gameOptional.get().getTeam1()),
+                getTeam(gameOptional.get().getTeam2()))).build();
+    }
+
+    @DELETE
+    @Path("/{key}/players/{id}")
+    public Response removeUserFromGame(@PathParam("key") String key, @PathParam("id") long userId) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        //TODO: maybe validate user id is positive
+        if (!gameService.deleteUserInGame(key, userId)) {
+            LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
+            throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
+                    key + "'");
+        }
+        LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
+        return Response.noContent().build();
+    }
 }

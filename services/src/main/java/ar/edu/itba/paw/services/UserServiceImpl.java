@@ -33,15 +33,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(final long id) {
+    public Optional<User> findById(final long id) {
         if(id < 0 ) {
             LOGGER.error("Attempted to find a user with negative id.");
             throw new IllegalArgumentException("id must be positive");
         }
 
         LOGGER.trace("Looking up user with id {}", id);
-        Optional<User> user = userDao.findById(id);
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
+        return userDao.findById(id);
     }
 
     @Override

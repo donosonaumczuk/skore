@@ -1,6 +1,7 @@
 package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.interfaces.GameDao;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.GameServiceImpl;
@@ -64,6 +65,8 @@ public class GameServiceImplTest {
     private static final String  USER_2_EMAIL        = "useremail2";
     private static final long    USER_2_ID           = 4;
 
+    private static final long    USER_3_ID           = 9;
+
     private static Optional<Game> GAME_1;
 
     @Mock
@@ -71,6 +74,9 @@ public class GameServiceImplTest {
 
     @Mock
     private TeamService teamServiceMock;
+
+    @Mock
+    private PremiumUserService premiumUserService;
 
     @InjectMocks
     private GameServiceImpl gameService;
@@ -113,21 +119,30 @@ public class GameServiceImplTest {
     public void deleteAUserInAGameTeam1Test() {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
         when(teamServiceMock.removePlayer(TEAMNAME_1, USER_1_ID)).thenReturn(null);
+        when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.get().getTeam1().getLeader()));
 
-        Optional<Game> ans = gameService.deleteUserInGame(URL, USER_1_ID);
+        boolean ans = gameService.deleteUserInGame(URL, USER_1_ID);
 
-        Assert.assertTrue(ans.isPresent());
-        Assert.assertEquals(GAME_1, ans);
+        Assert.assertTrue(ans);
     }
 
     @Test
     public void deleteAUserInAGameTeam2Test() {
         when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
         when(teamServiceMock.removePlayer(TEAMNAME_2, USER_2_ID)).thenReturn(null);
+        when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.get().getTeam2().getLeader()));
 
-        Optional<Game> ans = gameService.deleteUserInGame(URL, USER_2_ID);
+        boolean ans = gameService.deleteUserInGame(URL, USER_2_ID);
 
-        Assert.assertTrue(ans.isPresent());
-        Assert.assertEquals(GAME_1, ans);
+        Assert.assertTrue(ans);
+    }
+
+    @Test
+    public void deleteAUserThatIsNotInTheGame() {
+        when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
+
+        boolean ans = gameService.deleteUserInGame(URL, USER_3_ID);
+
+        Assert.assertFalse(ans);
     }
 }

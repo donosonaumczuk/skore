@@ -43,6 +43,7 @@ public class GameValidators {
             "digits, spaces or any of these characters: ¿?¡!ÁÉÍÓÚáéíñóöúü";
     private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
     private static final String TEAM_NAME_PATTER_DESCRIPTION = TITLE_PATTER_DESCRIPTION;
+    private static final String KEY_REGEX = "\\d{12}" + TEAM_NAME_REGEX + "\\d{12}";
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
@@ -56,7 +57,7 @@ public class GameValidators {
 
     public static Validator<String> keyValidator(final String log) {
         return (string) -> {
-            if (string.length() < 25) {
+            if (Pattern.compile(KEY_REGEX).matcher(string).matches()) {
                 ApiException apiException = new ApiException(HttpStatus.NOT_FOUND, "Match '" + string + "' does not exist");
                 LOGGER.error(log, apiException);
                 throw apiException;

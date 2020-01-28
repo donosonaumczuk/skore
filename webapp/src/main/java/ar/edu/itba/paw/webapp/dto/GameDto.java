@@ -36,6 +36,7 @@ public class GameDto {
     private String results;
     private TeamDto team1;
     private TeamDto team2;
+    private String key;
     private List<Link> links;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
 
@@ -65,6 +66,7 @@ public class GameDto {
         results = game.getResult();
         this.team1 = team1;
         this.team2 = team2;
+        key = game.getKey();
         this.links = getHateoasLinks(game, creator);
     }
 
@@ -163,5 +165,9 @@ public class GameDto {
 
     public String getTornamentName() {
         return tornamentNameThatIsFrom;
+    }
+
+    public String getKey() {
+        return key;
     }
 }

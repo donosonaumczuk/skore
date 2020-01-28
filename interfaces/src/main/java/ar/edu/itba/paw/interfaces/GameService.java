@@ -59,7 +59,7 @@ public interface GameService {
     public Optional<Game> insertUserInGame(final String key, final long userId);
 
     @Transactional
-    public Optional<Game> deleteUserInGame(final String key, final long userId);
+    public boolean deleteUserInGame(final String key, final long userId);
 
     @Transactional
     public Optional<Game> updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);

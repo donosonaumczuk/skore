@@ -6,10 +6,11 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     @Transactional
-    public User findById(final long id);
+    public Optional<User> findById(final long id);
 
     @Transactional
     public User create(final String firstName, final String lastName,

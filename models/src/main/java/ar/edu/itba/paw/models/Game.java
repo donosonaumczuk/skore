@@ -215,4 +215,9 @@ public class Game {
 
         return secondScore;
     }
+
+    public String getKey() {
+        GameKey gameKey = new GameKey(getStartTime(), getTeam1().getName(), getFinishTime());
+        return gameKey.toString();
+    }
 }

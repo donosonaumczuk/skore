@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
+import ar.edu.itba.paw.exceptions.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameKey;
 import ar.edu.itba.paw.models.GameSort;
@@ -31,6 +34,12 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PremiumUserService premiumUserService;
 
     private static final String GROUP       = "Group";
     private static final String INDIVIDUAL  = "Individual";
@@ -82,29 +91,30 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Optional<Game> deleteUserInGame(final String key, final long userId) {
-        Optional<Game> game = findByKey(key);
-        if (game.isPresent()) {
-            for (User user : game.get().getTeam1().getPlayers()) {
-                if (user.getUserId() == userId) {
-                    LOGGER.trace("Found user: {} in team1", userId);
-                    teamService.removePlayer(game.get().team1Name(), userId);
-                    return findByKey(key);
+    public boolean deleteUserInGame(final String key, final long userId) {
+        Game game = findByKey(key).orElseThrow(() -> new GameNotFoundException("Game '" + key + "' was not found"));
+        for (User user : game.getTeam1().getPlayers()) {
+            if (user.getUserId() == userId) {
+                LOGGER.trace("Found user: {} in team1", userId);
+                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userId));
+                if (!premiumUserService.findById(userId).isPresent()) {
+                    userService.remove(userId);
                 }
+                return true;
             }
-            for (User user : game.get().getTeam2().getPlayers()) {
-                if (user.getUserId() == userId) {
-                    LOGGER.trace("Found user: {} in team2", userId);
-                    teamService.removePlayer(game.get().team2Name(), userId);
-                    return findByKey(key);
+        }
+        for (User user : game.getTeam2().getPlayers()) {
+            if (user.getUserId() == userId) {
+                LOGGER.trace("Found user: {} in team2", userId);
+                game.setTeam2(teamService.removePlayer(game.team2Name(), userId));
+                if (!premiumUserService.findById(userId).isPresent()) {
+                    userService.remove(userId);
                 }
+                return true;
             }
-            LOGGER.trace("Not found user: {} in game",userId);
         }
-        else {
-            LOGGER.trace("Game '{}' does not exist", key);
-        }
-        return game;
+        LOGGER.trace("Not found user: {} in game", userId);
+        return false;
     }
 
     @Override
@@ -189,15 +199,13 @@ public class GameServiceImpl implements GameService {
     }
 
     private Optional<Game> insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
-        Optional<Game> gameAns = Optional.ofNullable(game);
         if (game != null) {
             if (!toTeam1) {
-                teamService.addPlayer(game.team2Name(), userId);
+                game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
             } else {
-                teamService.addPlayer(game.team1Name(), userId);
+                game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
             }
-            gameAns = gameDao.findByKey(game.team1Name(), game.getStartTime().toString(), game.getFinishTime().toString()); //TODO check
         }
-        return gameAns;
+        return Optional.of(game);//TODO: check
     }
 }
