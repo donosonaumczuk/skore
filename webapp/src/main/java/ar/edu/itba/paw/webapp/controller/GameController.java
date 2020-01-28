@@ -8,11 +8,13 @@ import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.DateDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ResultDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
+import ar.edu.itba.paw.webapp.dto.TimeDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
@@ -114,7 +116,7 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Game game = gameService.create(gameDto.getTeamName1(), gameDto.getTeamName2(),
-                    getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
+                    getStartTimeFrom(gameDto), gameDto.getDurationInMinutes(), gameDto.isCompetitive(),
                     gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
                     gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
                     gameDto.getDescription(), gameDto.getTitle(), gameDto.getSport());
@@ -126,9 +128,11 @@ public class GameController {
     }
 
     private LocalDateTime getStartTimeFrom(GameDto gameDto) {
-        return LocalDateTime.of(gameDto.getDate().getYear(), gameDto.getDate().getMonthNumber(),
-                gameDto.getDate().getDayOfMonth(), gameDto.getTime().getHour(), gameDto.getTime().getMinute(),
-                gameDto.getTime().getSecond());
+        DateDto dateDto = gameDto.getDate().get();
+        TimeDto timeDto = gameDto.getTime().get();
+        return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
+                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(),
+                timeDto.getSecond());
     }
 
     @GET
@@ -164,9 +168,11 @@ public class GameController {
         Game newGame;
         try {
             newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(),
-                    getStartTimeFrom(gameDto).toString(), gameDto.getMinutesOfDuration(), null, null,
-                    gameDto.getLocation().getCountry(), gameDto.getLocation().getState(), gameDto.getLocation().getCity(),
-                    gameDto.getLocation().getStreet(), null, gameDto.getDescription(), gameDto.getTitle(), key);
+                    (gameDto.getDate().isPresent() && gameDto.getTime().isPresent()) ?
+                            getStartTimeFrom(gameDto).toString() : null, gameDto.getDurationInMinutes(), null,
+                    null, gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
+                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), null,
+                    gameDto.getDescription(), gameDto.getTitle(), key);
         }
         catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());

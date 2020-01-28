@@ -6,7 +6,7 @@ import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.exceptions.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
-import ar.edu.itba.paw.exceptions.UnauthorizedExecption;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -65,7 +65,7 @@ public class GameServiceImpl implements GameService {
                        final String street, final String tornamentName, final String description,
                        final String title, final String sportName) {
         PremiumUser logged = sessionService.getLoggedUser()
-                .orElseThrow(() -> new UnauthorizedExecption("Must be logged to create match"));
+                .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
 
         GameKey gameKey = new GameKey(startTime, teamName1, startTime.plusMinutes(durationInMinutes));
         String type = (isIndividual ? INDIVIDUAL : GROUP) + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
@@ -192,7 +192,7 @@ public class GameServiceImpl implements GameService {
         PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO maybe check
         if (!findByKey(key).getPrimaryKey().getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
-            throw new UnauthorizedExecption("User '" + premiumUser.getUserName() +
+            throw new UnauthorizedException("User '" + premiumUser.getUserName() +
                     "' is not creator of '" + key + "' match");//TODO maybe another exception
         }
         return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
