@@ -40,7 +40,11 @@ class LogInForm extends Component {
         }
         else {
             //TODO handle other error status maybe?
-            this.props.updateUser(values.username);
+            const isAdmin = AuthService.isAdmin();
+            this.props.updateUser({
+                username: values.username,
+                isAdmin: isAdmin
+            });
         }
     }
 
