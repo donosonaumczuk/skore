@@ -5,9 +5,8 @@ public class ResultDto {
     private int scoreTeam1;
     private int scoreTeam2;
 
-    private ResultDto(int scoreTeam1, int scoreTeam2) {
-        this.scoreTeam1 = scoreTeam1;
-        this.scoreTeam2 = scoreTeam2;
+    private ResultDto() {
+      /* Required by JSON object mapper */
     }
 
     public int getScoreTeam1() {
