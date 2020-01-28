@@ -180,7 +180,7 @@ public class GameController {
     @Path("/{key}/players")
     public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
-        PlayerValidators.creationValidatorOf("Add player to match fails, invalid creation JSON")
+        PlayerValidators.updateValidatorOf("Add player to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Game game = gameService.insertUserInGame(key, playerDto.getUserId());

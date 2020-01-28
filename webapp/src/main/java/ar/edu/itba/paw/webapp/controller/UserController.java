@@ -4,18 +4,22 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.PlayerValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -65,6 +69,10 @@ public class UserController {
     @Autowired
     @Qualifier("premiumUserServiceImpl")
     private PremiumUserService premiumUserService;
+
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     @Qualifier("gameServiceImpl")
@@ -239,6 +247,18 @@ public class UserController {
                 });
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
+    }
+
+    @POST
+    @Path("/temporal")
+    public Response createTemporalUser(@RequestBody final String requestBody) {
+        PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
+
+        User user = userService.create(teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail());
+        //TODO catch UserAlreadyExist
+        return Response.status(HttpStatus.CREATED.value()).entity(TeamPlayerDto.from(user)).build();
     }
 
     @GET
