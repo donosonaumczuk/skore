@@ -2,13 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.exceptions.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
-import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
-import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
@@ -22,7 +19,6 @@ import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidators;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
 import ar.edu.itba.paw.webapp.validators.ResultValidators;
-import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +42,6 @@ import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
