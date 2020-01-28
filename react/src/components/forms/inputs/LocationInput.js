@@ -77,16 +77,16 @@ class LocationInput extends Component {
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                     <div className="form-group">
                         <div>
-                            <label htmlFor='address'>{i18next.t('createUserForm.address')}</label> 
+                            <label htmlFor='address'>{i18next.t('location.address')}</label> 
                         </div>
-                        <input {...getInputProps({ placeholder: i18next.t('createUserForm.address'),
-                                                    className: 'location-search-input', 
+                        <input {...getInputProps({ placeholder: i18next.t('location.address'),
+                                                    className: 'location-search-input form-control', 
                                                     id: 'address', autoComplete: 'new-password' })} />
                         <div className="autocomplete-dropdown-container">
                         {loading && <Loader />}
                         {suggestions.map(suggestion => {
-                            const className = suggestion.active ? 'suggestion-item--active'
-                                                                : 'suggestion-item';
+                            const className = suggestion.active ? 'location-suggestion-active'
+                                                                : 'location-suggestion';
                             return (
                                 <div {...getSuggestionItemProps(suggestion, { className })}>
                                     <span>{suggestion.description}</span>

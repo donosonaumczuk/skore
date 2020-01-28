@@ -10,7 +10,6 @@ import SuggestionText from './inputs/SuggestionText';
 import AuthService from './../../services/AuthService';
 import LogInValidator from './validators/LogInValidator';
 import { SC_UNAUTHORIZED } from './../../services/constants/StatusCodesConstants';
-import FormComment from './inputs/FormComment';
 
 const validate = values => {
     const errors = {}
@@ -72,10 +71,9 @@ class LogInForm extends Component {
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             {errorMessage}
                             <Field name="username" label={i18next.t('createUserForm.username')}
-                                    id="username" inputType="text" required={true} component={RenderInput} />
+                                    id="username" inputType="text" required={false} component={RenderInput} />
                             <Field name="password" label={i18next.t('createUserForm.password')}
-                                 inputType="password" required={true} component={RenderInput} />
-                            <FormComment />
+                                 inputType="password" required={false} component={RenderInput} />
                             <SubmitButton label={i18next.t('login.loginButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                             <SuggestionText suggestion={i18next.t('login.newUser')} link="/signUp" linkText={i18next.t('createUserForm.signUp')} />
                         </form>

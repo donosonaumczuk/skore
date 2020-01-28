@@ -5,6 +5,14 @@
         "logOut": "Log out",
         "or": "or"
     },
+    "location": {
+        "address": "Address",
+        "country": "Country",
+        "state": "State / Province",
+        "city": "City",
+        "street": "Street",
+        "number": "Number"
+    },
     "createUserForm": {
         "accounts": "Accounts",
         "username": "Username ",
@@ -17,11 +25,6 @@
         "imageFormat": "Accepted formats: png, jpeg or jpg",
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
-        "address": "Address",
-        "country": "Country",
-        "state": "State / Province",
-        "city": "City",
-        "street": "Street",
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
         "signUpButton": "SIGN UP",
@@ -136,6 +139,11 @@
         "matchName": "Match name ",
         "sport": "Sport ",
         "chooseSport": "Choose sport",
+        "date": "Date ",
+        "duration": "Duration ",
+        "chooseHour": "Choose hours",
+        "chooseMinutes": "Choose minutes",
+        "description": "Description",
         "createMatch": "CREATE MATCH"
     },
     "forms": {

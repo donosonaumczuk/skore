@@ -1,9 +1,12 @@
 import React from 'react';
 
-const RadioInput = (labelStyle, id,  radioValue, labelText) => {
+const RadioInput = ({ input, meta, labelStyle, id, labelText, radioValue, ...rest }) => {
+    const checked = input.value === radioValue;
     return (
         <label className={labelStyle} id={id}>
-            <input type="radio"  name="options" value={radioValue} autocomplete="false"/>{labelText}
+            <input {...input} type="radio" {...rest} checked={checked} />
+            <i className={checked ? "fas fa-check" : "d-none fas fa-check"}></i>
+            {labelText}
         </label>
     );
 }

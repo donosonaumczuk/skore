@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './config/i18n';
 import './index.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'rc-time-picker/assets/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

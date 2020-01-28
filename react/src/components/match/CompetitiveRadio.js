@@ -1,16 +1,22 @@
 import React from 'react';
+import { Field } from 'redux-form';
 import RadioInput from '../forms/inputs/RadioInput';
 
 const CompetitiveRadio = () => {
     return  (
-        <div class="form-group">
-            <label for="competitiveness">competitive<span className="text-muted">*</span>
-                <span class="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" data-html="true" data-placement="right" title="matchModeToolTip"/>
+        <div className="form-group">
+            <label htmlFor="competitiveness">
+                competitive
+                <span className="text-muted">*</span>
+                <span className="tooltip-icon ml-2 far fa-question-circle" data-toggle="tooltip" 
+                        data-html="true" data-placement="right" title="matchModeToolTip" />
             </label>
             <div className="input-group">
                 <div className="btn-group btn-group-toggle" data-toggle="buttons" id="competitiveness">
-                    <RadioInput labelStyle="btn btn-green" id="friendly" value="Friendly" labelText="Friendly" />
-                    <RadioInput labelStyle="btn btn-green" id="competitive" value="Competitive" labelText="Competitive" />
+                    <Field labelStyle="btn btn-green" id="friendly" name="competitivity" 
+                            props={{ value: "friendly" }} radioValue="friendly" labelText="Friendly" component={RadioInput} />
+                    <Field labelStyle="btn btn-green" id="competitive" name="competitivity"
+                            props={{ value: "competitive" }} radioValue="competitive" labelText="Competitive" component={RadioInput} />
                 </div>
             </div>
         </div>

@@ -5,6 +5,14 @@
         "logOut": "Cerrar Sesión",
         "or": "o"
     },
+    "location": {
+        "address": "Dirección",
+        "country": "Pais",
+        "state": "Estado / Provincia",
+        "city": "Ciudad",
+        "street": "Calle",
+        "number": "Numero"
+    },
     "createUserForm": {
         "accounts": "Cuentas",
         "username": "Nombre de usuario",
@@ -17,11 +25,6 @@
         "imageFormat": "Formatos aceptados: png, jpeg or jpg",
         "cellphone": "Celular ",
         "birthday": "Fecha de nacimiento ",
-        "address": "Dirección",
-        "country": "Pais",
-        "state": "Estado / Provincia",
-        "city": "Ciudad",
-        "street": "Calle",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
         "signUpButton": "REGISTRARSE",
@@ -136,6 +139,11 @@
         "matchName": "Nombre del partido ",
         "sport": "Deporte ",
         "chooseSport": "Elija un deporte",
+        "date": "Fecha ",
+        "duration": "Duración ",
+        "chooseHour": "Elija las horas",
+        "chooseMinutes": "Elija los minutos",
+        "description": "Descripción",
         "createMatch": "CREAR PARTIDO"
     },
     "forms": {
