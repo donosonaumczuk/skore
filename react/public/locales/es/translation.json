@@ -32,17 +32,17 @@
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio.\n",
-                "invalidSymbols": "El nombre de usuario solo puede contener simbolos alfanuméricos, guion bajo('_') y punto(',').\n",
+                "invalidSymbols": "El nombre de usuario sólo puede contener símbolos alfanuméricos, guión bajo('_') y punto(',').\n",
                 "invalidLength": "El nombre de usuario debe tener etre 4 y 100 caracteres.\n"
             },
             "password": {
                 "required": "La contraseña es obligatoria.\n",
-                "invalidSymbols": "La contraseña solo puede contener simbolos alfanuméricos.\n",
+                "invalidSymbols": "La contraseña sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
             },
             "repeatedPassword": {
                 "required": "Repetir la contraseña es obligatorio.\n",
-                "invalidSymbols": "La contraseña repetida solo puede contener simbolos alfanuméricos.\n",
+                "invalidSymbols": "La contraseña repetida sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
                 "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
             },
@@ -153,7 +153,7 @@
         "errors": {
             "title": {
                 "required": "El nombre del partido es obligatorio.\n",
-                "invalidSymbols": "El nombre del partido solo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
+                "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
                 "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
             },
             "competitivity": {
@@ -168,7 +168,7 @@
             },
             "time": {
                 "required": "Desde es obligatorio.\n",
-                "invalidTime": "Desde debe ser un tiempo valido.\n"
+                "invalidTime": "Desde debe ser un tiempo válido.\n"
             },
             "durationHours": {
                 "required": "La duración debe contener un valor de horas.\n"
@@ -194,13 +194,13 @@
         "errors": {
             "sportName": {
                 "required": "El nombre del deporte es obligatorio.\n",
-                "invalidSymbols": "El nombre del deporte solo puede contener simbolos alfanuméricos.\n",
+                "invalidSymbols": "El nombre del deporte sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "El nombre del deporte debe tener entre 4 y 100 caracteres.\n",
                 "alreadyExists": "Ya existe un deporte con ese nombre.\n"
             },
             "displayName": {
                 "required": "El nombre a mostrar del deporte es obligatorio.\n",
-                "invalidSymbols": "El nombre a mostrar del deporte solo puede contener simbolos alfanuméricos o espacios.\n",
+                "invalidSymbols": "El nombre a mostrar del deporte sólo puede contener símbolos alfanuméricos o espacios.\n",
                 "invalidLength": "El nombre a mostrar del deporte debe tener entre 4 y 100 caracteres.\n"
             },
             "playersPerTeam": {
