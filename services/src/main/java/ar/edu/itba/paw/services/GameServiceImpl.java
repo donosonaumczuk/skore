@@ -165,6 +165,12 @@ public class GameServiceImpl implements GameService {
                        final String title, final String key) {
         GameKey gameKey = getGameKey(key);
         Game gameOptional = findByKey(key), game;
+        PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
+        if (game.getTeam1().getLeader().equals(premiumUser)) {
+            LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
+            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+                    "' is not creator of '" + key + "' match");
+        }
         if ((teamName1 != null || teamName2 != null) && gameOptional.getGroupType().equals(INDIVIDUAL)) {
             throw new IllegalArgumentException("Cannot modify teams in a individual match");
         }

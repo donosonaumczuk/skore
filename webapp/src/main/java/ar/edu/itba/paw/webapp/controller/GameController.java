@@ -175,7 +175,7 @@ public class GameController {
                     gameDto.getLocation().getState(), gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(),
                     null, gameDto.getDescription(), gameDto.getTitle(), key);
         }
-        catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException
+        catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException, ForbiddenException
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         LOGGER.trace("Match '{}' modified successfully", key);
