@@ -12,6 +12,16 @@ const getUsers = async (offset, limit) => {
     }
 }
 
+const getUser = async username => {
+    try {
+        const res = await api.get(`${USERS_ENDPOINT}/${username}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const getProfileByUsername = async username => {
     try {
         const res = await api.get(`${USERS_ENDPOINT}/${username}/profile`);
@@ -60,16 +70,28 @@ const createUser = async user => {
     catch (err) {
         return { status: err.response.status };
     }
+}
 
+const updateUser = async (user, username) => {
+    try {
+        const res = await api.put(`${USERS_ENDPOINT}/${username}`, user);
+        console.log(res);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status };
+    }
 }
 
 const UserService = {
     getUsers: getUsers,
+    getUser: getUser,
     getProfileByUsername: getProfileByUsername,
     getUserImage: getUserImage,
     getUserMatches: getUserMatches,
     getUserMatchesWithResults: getUserMatchesWithResults,
-    createUser: createUser
+    createUser: createUser,
+    updateUser: updateUser
 };
 
 export default UserService;
