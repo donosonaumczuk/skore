@@ -38,9 +38,9 @@ public class GameValidators {
             LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!ÁÉÍÓÚáéíñóöúü ]+";
+    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_ÑÁÉÍÓÚáéíñóöúü ]+";
     private static final String TITLE_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
-            "digits, spaces or any of these characters: ¿?¡!ÁÉÍÓÚáéíñóöúü";
+            "digits, spaces or any of these characters: ¿?¡!_ÑÁÉÍÓÚáéíñóöúü";
     private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
     private static final String TEAM_NAME_PATTER_DESCRIPTION = TITLE_PATTER_DESCRIPTION;
     private static final String KEY_REGEX = "\\d{12}" + TEAM_NAME_REGEX + "\\d{12}";
@@ -89,8 +89,6 @@ public class GameValidators {
                 .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DESCRIPTION,
                         0, 140, log)))
                 .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, 1, null, log)))
-                .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
-                        HomeValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(DATE, ValidatorFactory.fieldIsValidObjectValidatorOf(DATE,
                         DateValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(TIME, ValidatorFactory.fieldIsValidObjectValidatorOf(TIME,
@@ -99,6 +97,8 @@ public class GameValidators {
 
     private static List<Pair<String, Validator<JSONObject>>> creationFieldValidatorListOf(final String log) {
         return baseFieldValidatorListOf(log)
+                .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
+                        LocationValidator.creationValidatorOf(log), log)))
                 .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringValidatorOf(SPORT, log)))
                 .add(Pair.of(INDIVIDUAL, individualValidation(log)))
                 .add(Pair.of(COMPETITIVE, ValidatorFactory.fieldIsBooleanValidatorOf(COMPETITIVE, log)))
@@ -111,6 +111,8 @@ public class GameValidators {
 
     private static List<Pair<String, Validator<JSONObject>>> updateFieldValidatorListOf(final String log) {
         return baseFieldValidatorListOf(log)
+                .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
+                        LocationValidator.updateValidatorOf(log), log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,
                         Pattern.compile(TEAM_NAME_REGEX), TEAM_NAME_PATTER_DESCRIPTION, log)))
                 .add(Pair.of(TEAM_NAME_2, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_2,

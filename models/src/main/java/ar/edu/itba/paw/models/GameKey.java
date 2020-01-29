@@ -50,9 +50,9 @@ public class GameKey {
     }
 
     private String dateToString(LocalDateTime localDateTime) {
-        return String.valueOf(localDateTime.getYear()) + localDateTime.getMonthValue() +
-                localDateTime.getDayOfMonth() + localDateTime.getHour() +
-                localDateTime.getMinute();
+        return new StringBuilder().append(localDateTime.getYear())
+                .append(localDateTime.getMonthValue()).append(localDateTime.getDayOfMonth())
+                .append(localDateTime.getHour()).append(localDateTime.getMinute()).toString();
     }
 
     private String keyDateToKeyDate(final String date) {
