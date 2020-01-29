@@ -164,18 +164,18 @@ public class GameServiceImpl implements GameService {
                        final String street, final String tornamentName, final String description,
                        final String title, final String key) {
         GameKey gameKey = getGameKey(key);
-        Game gameOptional = findByKey(key), game;
+        Game gameOld = findByKey(key), game;
         PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
-        if (game.getTeam1().getLeader().equals(premiumUser)) {
+        if (gameOld.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
             throw new ForbiddenException("User '" + premiumUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
-        if ((teamName1 != null || teamName2 != null) && gameOptional.getGroupType().equals(INDIVIDUAL)) {
+        if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL)) {
             throw new IllegalArgumentException("Cannot modify teams in a individual match");
         }
         game = gameDao.modify(teamName1, teamName2, startTime, (minutesOfDuration != null) ?
-                        gameOptional.getStartTime().plusMinutes(minutesOfDuration) : null, type,
+                        gameOld.getStartTime().plusMinutes(minutesOfDuration) : null, type,
                 result, country, state, city, street, tornamentName, description, title, gameKey.getTeamName1(),
                 gameKey.getStartTime(), gameKey.getFinishTime()).orElseThrow(() -> {
                     LOGGER.trace("Modify fails, match '{}' not found", key);
