@@ -17,17 +17,64 @@ import LocationInput from './inputs/LocationInput';
 import SubLocationInput from './inputs/SubLocationInput';
 import RenderMatchDatePicker from './inputs/RenderMatchDatePicker';
 import RenderTimePicker from './inputs/RenderTimePicker';
+import CreateMatchValidator from './validators/CreateMatchValidator';
+
+const location = {
+    "country": null,
+    "state": null,
+    "city": null,
+    "street": null,    
+    "number": null
+};
+
+const time = {
+    "hour": null,
+    "minutes": null
+};
+
+const customErrors = {
+    locationError: null,
+    timeError: null
+}
+
+const updateLocation = home => {
+    location.street = home.street;
+    location.city = home.city;
+    location.state = home.state;
+    location.country = home.country;
+    location.number = home.number;
+}
+
+const updateTime = time => {
+    const timeArray = moment(time).format("hh:mm").split(":");
+    location.hour = parseInt(timeArray[0]);
+    location.minutes = parseInt(timeArray[1]);  
+}
+
+const validate = values => {
+    const errors = {}
+    errors.title = CreateMatchValidator.validateTitle(values.title);
+    errors.competitivity = CreateMatchValidator.validateCompetitivity(values.competitivity);
+    errors.sport = CreateMatchValidator.validateSport(values.sport);
+    errors.date = CreateMatchValidator.validateDate(values.date);
+    errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
+    errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
+    errors.description = CreateMatchValidator.validateDescription(values.description);
+    customErrors.timeError = CreateMatchValidator.validateTime(time);
+    customErrors.locationError = CreateMatchValidator.validateLocation(location);
+    return errors;
+}
+
 
 class CreateMatchForm extends Component {
     mounted = false;
     constructor(props) {
         super(props);
         this.state = {
-            image: null,
             sports: null,
         };
     }
-
+    
     componentDidMount = async () => {
         this.mounted = true;
         let response = await SportService.getSports();
@@ -40,6 +87,44 @@ class CreateMatchForm extends Component {
                 sports: response.sports
             });
         }
+    }
+
+    // isValidLocation = () => {
+    //     if (this.mounted) {
+    //         if (!this.state.street || !this.state.number) {
+    //             this.setState({ locationError: true });
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+
+    // isValidTime = () => {
+    //     if (this.mounted) {
+    //         if (!CreateMatchValidator.isValidTime(this.state.time)) {
+    //             this.setState({ invalidTime: true });
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+
+    areFieldsValid = competitivity => {
+        console.log("competitivity");
+        let validFields = true;
+        if (!this.isValidLocation()) {
+            validFields = false;
+        }
+        if (!this.isValidTime()) {
+            validFields = false;
+        }
+        if (!competitivity) {
+            if (this.mounted) {
+                this.setState({ competitivityRequired: true });
+            }
+            validFields = false;
+        }
+        return validFields;
     }
 
     generateSportOptions = () => {
@@ -77,29 +162,41 @@ class CreateMatchForm extends Component {
         );
     }
 
-    updateLocation = home => {
-        if (this.mounted) {
-            this.setState({
-                street: home.street,
-                city: home.city,
-                state: home.state,
-                country: home.country,
-                number: home.number          
-            });
-        }
-    }
+    // updateLocation = home => {
+    //     if (this.mounted) {
+    //         this.setState({
+    //             street: home.street,
+    //             city: home.city,
+    //             state: home.state,
+    //             country: home.country,
+    //             number: home.number          
+    //         });
+    //     }
+    // }
 
-    getDateTime = (date, time) => {
-        const dateArray = moment(date).format("MM/DD/YYYY").split("/");
-        //TODO get Time and calculate its value
-        const dateTime = {
-            year: parseInt(dateArray[2]),
-            month: parseInt(dateArray[0]),
-            day: parseInt(dateArray[1]),
-            "hour": 0,
-            "minutes": 0,
-        };
-        return dateTime;
+    // updateTime = time => {
+    //     if (this.mounted) {
+    //         const timeArray = moment(time).format("hh:mm").split(":");
+    //         this.setState({
+    //             hour: parseInt(timeArray[0]),
+    //             minutes: parseInt(timeArray[1])
+    //         });
+    //         this.isValidTime();
+    //     }  
+    // }
+
+    getDate = (date) => {
+        let newDate;
+        if (date) {
+            const dateArray = moment(date).format("MM/DD/YYYY").split("/");
+            //TODO get Time and calculate its value
+            newDate = {
+                year: parseInt(dateArray[2]),
+                month: parseInt(dateArray[0]),
+                day: parseInt(dateArray[1]),
+            };
+        }
+        return newDate;
     }
 
     getDurationMinutes = (hours, minutes) => {
@@ -108,21 +205,21 @@ class CreateMatchForm extends Component {
         return numericHours * 60 + numericMinutes;
     }
 
-    loadMatch = (values, image) => {
-        const dateTime = this.getDateTime(values.date, values.matchTime);
+    loadMatch = (values) => {
+        const date = this.getDate(values.date);
         const durationMinutes = this.getDurationMinutes(values.durationHours, values.durationMinutes);
         const match = {
             "title": values.title,
             "description": values.description,
             "sport": values.sport,
             "date" : {
-                "year": dateTime.year,
-                "monthNumber": dateTime.month,
-                "dayOfMonth": dateTime.day,
+                "year": date.year,
+                "monthNumber": date.month,
+                "dayOfMonth": date.day,
             },
             "time": {
-                "hour": dateTime.hour,
-                "minute": dateTime.minutes
+                "hour": this.state.hour,
+                "minute": this.state.minutes
             },
             "minutesOfDuration": durationMinutes,
             "location": {
@@ -137,20 +234,13 @@ class CreateMatchForm extends Component {
         return match;
     }
 
+    
     onSubmit = async (values) => {
-        let match = this.loadMatch(values, this.state.image);
-        console.log("matchTime");
-        console.log(values.matchTime);
-        console.log("entro");
-        console.log(match);
-        // const res = await UserService.createUser(user);
-        // if (res.status) {
-        //    //TODO handle error
-        // }
-        // else {
-        //     this.props.history.push(`/confirmAccount`);
-        // }
-       //TODO implement
+        if (this.areFieldsValid(values.competitivity)) {
+            let match = this.loadMatch(values, this.state.image);
+            console.log(match);//TODO is here just to prevent warning
+            //TODO implement post to endpoint and then redirect, when ednpoint is created
+        }
     }
 
     render() {
@@ -175,7 +265,7 @@ class CreateMatchForm extends Component {
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             <Field name="title" label={i18next.t('createMatchForm.matchName')} 
                                     inputType="text" required={true} component={RenderInput} />
-                            <CompetitiveRadio />
+                            <CompetitiveRadio error={this.state.competitivityRequired ? true : false }/>
                             <Field name="sport" label={i18next.t('createMatchForm.sport')} 
                                     required={true} defaultText={i18next.t('createMatchForm.chooseSport')}
                                     options={sportOptions} component={RenderSelect} />
@@ -186,7 +276,8 @@ class CreateMatchForm extends Component {
                                 <div className="form-group col-6">
                                     <div className="form-row">
                                         <div className="col-12">
-                                            <Field name="matchTime" label="From" component={RenderTimePicker} />
+                                            <Field name="matchTime" label={i18next.t('createMatchForm.from')} updateTime={updateTime}
+                                                    component={RenderTimePicker} />
                                         </div>
                                     </div>
                                 </div>
@@ -208,7 +299,7 @@ class CreateMatchForm extends Component {
                             </div>
                             <Field name="description" label={i18next.t('createMatchForm.description')} 
                                     inputType="text-area" required={false} component={RenderTextArea} />
-                            <LocationInput updateLocation={this.updateLocation} />
+                            <LocationInput updateLocation={updateLocation} />
                             <SubLocationInput label={i18next.t('location.country')} id="country" path="country"
                                                 value={this.state.country ? this.state.country : ""} 
                                                 divStyle="form-group" />
@@ -228,8 +319,10 @@ class CreateMatchForm extends Component {
                                                     path="state" value={this.state.state ? this.state.state : ""} 
                                                     divStyle="form-group col-6" />
                             </div>
-                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
-                            <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
+                            <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" 
+                                            text={i18next.t('forms.requiredFields')} />
+                            <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" 
+                                            buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>
                     </div>
                 </div>
@@ -244,7 +337,8 @@ class CreateMatchForm extends Component {
 
 CreateMatchForm = reduxForm({
     form: 'createMatch',
-    destroyOnUnmount: false, // set to true to remove data on refresh
+    destroyOnUnmount: false,
+    validate
 })(CreateMatchForm)
 
 export default CreateMatchForm;

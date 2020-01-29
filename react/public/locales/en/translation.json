@@ -140,11 +140,46 @@
         "sport": "Sport ",
         "chooseSport": "Choose sport",
         "date": "Date ",
+        "from": "From ",
         "duration": "Duration ",
         "chooseHour": "Choose hours",
         "chooseMinutes": "Choose minutes",
         "description": "Description",
-        "createMatch": "CREATE MATCH"
+        "competitivity": "Competitivity",
+        "friendly": "Friendly",
+        "competitive": "Competitive",
+        "competitivityTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.\n\nCompetitive requires an account to join the match.\nImpacts winrate.\n",
+        "createMatch": "CREATE MATCH",
+        "errors": {
+            "title": {
+                "required": "Title is required.\n",
+                "invalidSymbols": "Title can have alphanumeric symbols, spaces and the following characters '¿?¡!-_.'\n",
+                "invalidLength": "Title must be between 4 and 100 characters length.\n"
+            },
+            "competitivity": {
+                "required": "Competitivity is required.\n"
+            },
+            "sport": {
+                "required": "Sport is required.\n"
+            },
+            "date": {
+                "required": "Date is required.\n",
+                "invalidFutureDate": "Date must be a valid future date.\n"
+            },
+            "time": {
+                "required": "From is required.\n",
+                "invalidTime": "From must be a valid time.\n"
+            },
+            "durationHours": {
+                "required": "Duration must have hours.\n"
+            },
+            "durationMinutes": {
+                "required": "Duration must have minutes.\n"
+            },
+            "description": {
+                "invalidLength": "Decription can not have more than 140 characters.\n"
+            }
+        }
     },
     "forms": {
         "requiredFields":"Fields containing (*) are required."
