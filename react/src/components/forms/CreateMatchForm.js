@@ -32,9 +32,11 @@ const time = {
     "minutes": null
 };
 
+//TODO only show them after submit is pressed
 const customErrors = {
     locationError: null,
-    timeError: null
+    timeError: null,
+    active: false
 }
 
 const updateLocation = home => {
@@ -89,44 +91,6 @@ class CreateMatchForm extends Component {
         }
     }
 
-    // isValidLocation = () => {
-    //     if (this.mounted) {
-    //         if (!this.state.street || !this.state.number) {
-    //             this.setState({ locationError: true });
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    // isValidTime = () => {
-    //     if (this.mounted) {
-    //         if (!CreateMatchValidator.isValidTime(this.state.time)) {
-    //             this.setState({ invalidTime: true });
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    areFieldsValid = competitivity => {
-        console.log("competitivity");
-        let validFields = true;
-        if (!this.isValidLocation()) {
-            validFields = false;
-        }
-        if (!this.isValidTime()) {
-            validFields = false;
-        }
-        if (!competitivity) {
-            if (this.mounted) {
-                this.setState({ competitivityRequired: true });
-            }
-            validFields = false;
-        }
-        return validFields;
-    }
-
     generateSportOptions = () => {
         return (
             this.state.sports.map( sport => 
@@ -161,29 +125,6 @@ class CreateMatchForm extends Component {
             )
         );
     }
-
-    // updateLocation = home => {
-    //     if (this.mounted) {
-    //         this.setState({
-    //             street: home.street,
-    //             city: home.city,
-    //             state: home.state,
-    //             country: home.country,
-    //             number: home.number          
-    //         });
-    //     }
-    // }
-
-    // updateTime = time => {
-    //     if (this.mounted) {
-    //         const timeArray = moment(time).format("hh:mm").split(":");
-    //         this.setState({
-    //             hour: parseInt(timeArray[0]),
-    //             minutes: parseInt(timeArray[1])
-    //         });
-    //         this.isValidTime();
-    //     }  
-    // }
 
     getDate = (date) => {
         let newDate;
@@ -234,13 +175,11 @@ class CreateMatchForm extends Component {
         return match;
     }
 
-    
     onSubmit = async (values) => {
-        if (this.areFieldsValid(values.competitivity)) {
-            let match = this.loadMatch(values, this.state.image);
-            console.log(match);//TODO is here just to prevent warning
-            //TODO implement post to endpoint and then redirect, when ednpoint is created
-        }
+        let match = this.loadMatch(values, this.state.image);
+        console.log(match);//TODO is here just to prevent warning
+        //TODO implement post to endpoint and then redirect, when ednpoint is created
+        
     }
 
     render() {
@@ -276,7 +215,8 @@ class CreateMatchForm extends Component {
                                 <div className="form-group col-6">
                                     <div className="form-row">
                                         <div className="col-12">
-                                            <Field name="matchTime" label={i18next.t('createMatchForm.from')} updateTime={updateTime}
+                                            <Field name="matchTime" label={i18next.t('createMatchForm.from')} 
+                                                    updateTime={updateTime} errorMessage={customErrors.timeError}
                                                     component={RenderTimePicker} />
                                         </div>
                                     </div>
@@ -319,6 +259,9 @@ class CreateMatchForm extends Component {
                                                     path="state" value={this.state.state ? this.state.state : ""} 
                                                     divStyle="form-group col-6" />
                             </div>
+                            <span className="invalid-feedback d-block">
+                                {customErrors.locationError}
+                            </span>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" 
                                             text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" 
