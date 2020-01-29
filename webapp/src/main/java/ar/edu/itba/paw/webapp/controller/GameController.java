@@ -156,7 +156,7 @@ public class GameController {
             LOGGER.trace("Match '{}' does not exist", key);
             throw new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
         }
-        //TODO catch UnauthorizedExecption, GameNotFound, TeamNotFoundException, InvalidGameKeyException
+        //TODO catch ForbiddenException, GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' deleted successfully", key);
         return Response.noContent().build();
     }
@@ -223,7 +223,7 @@ public class GameController {
 
         Game game = gameService.updateResultOfGame(key, resultDto.getScoreTeam1(),
                 resultDto.getScoreTeam2());
-        //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException
+        //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException, ForbiddenException
         LOGGER.trace("Match '{}' result added successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
+import ar.edu.itba.paw.exceptions.ForbiddenException;
 import ar.edu.itba.paw.exceptions.GameAlreadyExist;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.exceptions.GameNotFoundException;
@@ -184,8 +185,8 @@ public class GameServiceImpl implements GameService {
         PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO maybe check
         if (!findByKey(key).getPrimaryKey().getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
-            throw new UnauthorizedException("User '" + premiumUser.getUserName() +
-                    "' is not creator of '" + key + "' match");//TODO maybe another exception
+            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+                    "' is not creator of '" + key + "' match");
         }
         return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
     }
@@ -202,9 +203,15 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2) {
-       Game game = findByKey(key);
+        Game game = findByKey(key);
+        PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
+        if (game.getTeam1().getLeader().equals(premiumUser)) {
+            LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
+            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+                    "' is not creator of '" + key + "' match");
+        }
         if (game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
-            throw new GameHasNotBeenPlayException("The game has not been play");
+            throw new GameHasNotBeenPlayException("The match has not been play");
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 

@@ -259,7 +259,7 @@ public class UserController {
     }
 
     @POST
-    @Path("/temporal")
+    @Path("/temporal")//TODO: better name
     public Response createTemporalUser(@RequestBody final String requestBody) {
         PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
