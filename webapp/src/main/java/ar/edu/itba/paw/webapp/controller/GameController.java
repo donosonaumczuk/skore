@@ -131,8 +131,7 @@ public class GameController {
         DateDto dateDto = gameDto.getDate().get();
         TimeDto timeDto = gameDto.getTime().get();
         return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
-                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(),
-                timeDto.getSecond());
+                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
     }
 
     @GET

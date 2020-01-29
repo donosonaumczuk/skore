@@ -26,8 +26,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -56,8 +55,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -88,8 +86,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -112,28 +109,27 @@ public class GameValidatorsTest {
         exceptionRule.expectMessage("Field 'year' must belong to [0,Inf]");
         GameValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"title\": \"El juego del siglo\",\n" +
-                        "\t\"description\": \"\",\n" +
-                        "\t\"sport\": \"futbol5\",\n" +
-                        "\t\"date\": {\n" +
-                        "\t\t\"year\": -2018,\n" +
-                        "\t\t\"monthNumber\": 2,\n" +
-                        "\t\t\"dayOfMonth\": 28\n" +
-                        "\t},\n" +
-                        "\t\"time\": {\n" +
-                        "\t\t\"hour\": 10,\n" +
-                        "\t\t\"minute\": 9,\n" +
-                        "\t\t\"second\": 0\n" +
-                        "\t},\n" +
-                        "\t\"minutesOfDuration\": 20,\n" +
-                        "\t\"location\": {\n" +
-                        "\t\t\"country\": \"Argentina\",\n" +
-                        "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
-                        "\t\t\"city\": \"Pellegrini\",\n" +
-                        "\t\t\"street\": \"Guarrochena \"\n" +
-                        "\t},\n" +
-                        "\t\"individual\": true,\n" +
-                        "\t\"competitive\": false\n" +
+                            "\t\"title\": \"El juego del siglo\",\n" +
+                            "\t\"description\": \"\",\n" +
+                            "\t\"sport\": \"futbol5\",\n" +
+                            "\t\"date\": {\n" +
+                                "\t\t\"year\": -2018,\n" +
+                                "\t\t\"monthNumber\": 2,\n" +
+                                "\t\t\"dayOfMonth\": 28\n" +
+                            "\t},\n" +
+                            "\t\"time\": {\n" +
+                                "\t\t\"hour\": 10,\n" +
+                            "\t\t\"minute\": 9\n" +
+                            "\t},\n" +
+                            "\t\"minutesOfDuration\": 20,\n" +
+                            "\t\"location\": {\n" +
+                                "\t\t\"country\": \"Argentina\",\n" +
+                                "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
+                                "\t\t\"city\": \"Pellegrini\",\n" +
+                                "\t\t\"street\": \"Guarrochena \"\n" +
+                            "\t},\n" +
+                            "\t\"individual\": true,\n" +
+                            "\t\"competitive\": false\n" +
                         "}"
                 )
         );
@@ -145,28 +141,27 @@ public class GameValidatorsTest {
         exceptionRule.expectMessage("Field 'monthNumber' must belong to [1,12]");
         GameValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"title\": \"El juego del siglo\",\n" +
-                        "\t\"description\": \"\",\n" +
-                        "\t\"sport\": \"futbol5\",\n" +
-                        "\t\"date\": {\n" +
-                        "\t\t\"year\": 2018,\n" +
-                        "\t\t\"monthNumber\": 14,\n" +
-                        "\t\t\"dayOfMonth\": 28\n" +
-                        "\t},\n" +
-                        "\t\"time\": {\n" +
-                        "\t\t\"hour\": 10,\n" +
-                        "\t\t\"minute\": 9,\n" +
-                        "\t\t\"second\": 0\n" +
-                        "\t},\n" +
-                        "\t\"minutesOfDuration\": 20,\n" +
-                        "\t\"location\": {\n" +
-                        "\t\t\"country\": \"Argentina\",\n" +
-                        "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
-                        "\t\t\"city\": \"Pellegrini\",\n" +
-                        "\t\t\"street\": \"Guarrochena \"\n" +
-                        "\t},\n" +
-                        "\t\"individual\": true,\n" +
-                        "\t\"competitive\": false\n" +
+                            "\t\"title\": \"El juego del siglo\",\n" +
+                            "\t\"description\": \"\",\n" +
+                            "\t\"sport\": \"futbol5\",\n" +
+                            "\t\"date\": {\n" +
+                                "\t\t\"year\": 2018,\n" +
+                                "\t\t\"monthNumber\": 14,\n" +
+                                "\t\t\"dayOfMonth\": 28\n" +
+                            "\t},\n" +
+                            "\t\"time\": {\n" +
+                                "\t\t\"hour\": 10,\n" +
+                                "\t\t\"minute\": 9\n" +
+                            "\t},\n" +
+                            "\t\"minutesOfDuration\": 20,\n" +
+                            "\t\"location\": {\n" +
+                                "\t\t\"country\": \"Argentina\",\n" +
+                                "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
+                                "\t\t\"city\": \"Pellegrini\",\n" +
+                                "\t\t\"street\": \"Guarrochena \"\n" +
+                            "\t},\n" +
+                            "\t\"individual\": true,\n" +
+                            "\t\"competitive\": false\n" +
                         "}"
                 )
         );
@@ -188,8 +183,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -221,8 +215,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -255,8 +248,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -289,8 +281,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -323,8 +314,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -355,8 +345,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +
@@ -377,27 +366,26 @@ public class GameValidatorsTest {
     public void whenValidatingUpdateThenSuccessByDoingNothing() {
         GameValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
-                        "\t\"title\": \"El juego del siglo\",\n" +
-                        "\t\"description\": \"\",\n" +
-                        "\t\"date\": {\n" +
-                        "\t\t\"year\": 2020,\n" +
-                        "\t\t\"monthNumber\": 2,\n" +
-                        "\t\t\"dayOfMonth\": 29\n" +
-                        "\t},\n" +
-                        "\t\"time\": {\n" +
-                        "\t\t\"hour\": 10,\n" +
-                        "\t\t\"minute\": 9,\n" +
-                        "\t\t\"second\": 0\n" +
-                        "\t},\n" +
-                        "\t\"minutesOfDuration\": 20,\n" +
-                        "\t\"location\": {\n" +
-                        "\t\t\"country\": \"Argentina\",\n" +
-                        "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
-                        "\t\t\"city\": \"Pellegrini\",\n" +
-                        "\t\t\"street\": \"Guarrochena \"\n" +
-                        "\t},\n" +
-                        "\t\"teamName1\": \"Equipo Uno\",\n" +
-                        "\t\"teamName2\": \"Equipo Dos\"\n" +
+                            "\t\"title\": \"El juego del siglo\",\n" +
+                            "\t\"description\": \"\",\n" +
+                            "\t\"date\": {\n" +
+                                "\t\t\"year\": 2020,\n" +
+                                "\t\t\"monthNumber\": 2,\n" +
+                                "\t\t\"dayOfMonth\": 29\n" +
+                            "\t},\n" +
+                            "\t\"time\": {\n" +
+                                "\t\t\"hour\": 10,\n" +
+                                "\t\t\"minute\": 9\n" +
+                            "\t},\n" +
+                            "\t\"minutesOfDuration\": 20,\n" +
+                            "\t\"location\": {\n" +
+                                "\t\t\"country\": \"Argentina\",\n" +
+                                "\t\t\"state\": \"Pcia de Buenos Aires\",\n" +
+                                "\t\t\"city\": \"Pellegrini\",\n" +
+                                "\t\t\"street\": \"Guarrochena \"\n" +
+                            "\t},\n" +
+                            "\t\"teamName1\": \"Equipo Uno\",\n" +
+                            "\t\"teamName2\": \"Equipo Dos\"\n" +
                         "}"
                 )
         );
@@ -418,8 +406,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
-                                "\t\t\"minute\": 9,\n" +
-                                "\t\t\"second\": 0\n" +
+                                "\t\t\"minute\": 9\n" +
                             "\t},\n" +
                             "\t\"minutesOfDuration\": 20,\n" +
                             "\t\"location\": {\n" +

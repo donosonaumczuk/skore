@@ -11,10 +11,9 @@ public class TimeValidators {
 
     private static final String HOUR   = "hour";
     private static final String MINUTE = "minute";
-    private static final String SECOND = "second";
-    private static final Set<String> CREATION_KNOWN_FIELDS    = ImmutableSet.of(HOUR, MINUTE, SECOND);
+    private static final Set<String> CREATION_KNOWN_FIELDS    = ImmutableSet.of(HOUR, MINUTE);
     private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(HOUR, MINUTE);
-    private static final Set<String> UPDATE_KNOWN_FIELDS      = ImmutableSet.of(HOUR, MINUTE, SECOND);
+    private static final Set<String> UPDATE_KNOWN_FIELDS      = ImmutableSet.of(HOUR, MINUTE);
     private static final Set<String> UPDATE_REQUIRED_FIELDS   = ImmutableSet.of();
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
@@ -31,7 +30,6 @@ public class TimeValidators {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
                 .put(HOUR, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(HOUR, 0, 23,log))
                 .put(MINUTE,  ValidatorFactory.fieldIsIntegerInRangeValidatorOf(MINUTE, 0, 59, log))
-                .put(SECOND,  ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SECOND, 0, 59, log))
                 .build();
     }
 }

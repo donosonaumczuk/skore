@@ -6,7 +6,6 @@ public class TimeDto {
 
     private int hour;
     private int minute;
-    private int second;
 
     private TimeDto() {
         /* Required by JSON object mapper */
@@ -16,7 +15,6 @@ public class TimeDto {
     private TimeDto(LocalTime time) {
         this.hour   = time.getHour();
         this.minute = time.getMinute();
-        this.second = time.getSecond();
     }
 
     public static TimeDto from(LocalTime time) {
@@ -29,9 +27,5 @@ public class TimeDto {
 
     public int getMinute() {
         return minute;
-    }
-
-    public int getSecond() {
-        return second;
     }
 }
