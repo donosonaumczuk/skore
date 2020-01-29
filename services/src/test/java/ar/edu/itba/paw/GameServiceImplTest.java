@@ -66,7 +66,7 @@ public class GameServiceImplTest {
 
     private static final long    USER_3_ID           = 9;
 
-    private static Optional<Game> GAME_1;
+    private static Game GAME_1;
 
     @Mock
     private GameDao gameDaoMock;
@@ -98,26 +98,26 @@ public class GameServiceImplTest {
         team2.addPlayer(leaderTeam2.getUser());
         team2.addPlayer(new User(USER_2_FIRSTNAME, USER_2_LASTNAME, USER_2_EMAIL, USER_2_ID));
 
-        GAME_1 = Optional.of(new Game(team1, team2,
-                 null, LocalDateTime.parse(STARTTIME_1),
-                LocalDateTime.parse(FINISHTIME_1), null, null,
-                null, null, null));
+        GAME_1 = new Game(team1, team2, null, LocalDateTime.parse(STARTTIME_1), LocalDateTime.parse(FINISHTIME_1),
+                null, null, null, null, null);
     }
 
     @Test
     public void findByUrlTest() {
-        when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
+        when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
+                .thenReturn(Optional.of(GAME_1));
 
         Game ans = gameService.findByKey(URL);
 
-        Assert.assertEquals(GAME_1.get(), ans);
+        Assert.assertEquals(GAME_1, ans);
     }
 
     @Test
     public void deleteAUserInAGameTeam1Test() {
-        when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
+        when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
+                .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_1, USER_1_ID)).thenReturn(null);
-        when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.get().getTeam1().getLeader()));
+        when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
 
         boolean ans = gameService.deleteUserInGame(URL, USER_1_ID);
 
@@ -126,9 +126,10 @@ public class GameServiceImplTest {
 
     @Test
     public void deleteAUserInAGameTeam2Test() {
-        when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
+        when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
+                .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_2, USER_2_ID)).thenReturn(null);
-        when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.get().getTeam2().getLeader()));
+        when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
 
         boolean ans = gameService.deleteUserInGame(URL, USER_2_ID);
 
@@ -137,7 +138,8 @@ public class GameServiceImplTest {
 
     @Test
     public void deleteAUserThatIsNotInTheGame() {
-        when(gameDaoMock.findByKey(TEAMNAME_1, STARTTIME_1, FINISHTIME_1)).thenReturn(GAME_1);
+        when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
+                .thenReturn(Optional.of(GAME_1));
 
         boolean ans = gameService.deleteUserInGame(URL, USER_3_ID);
 

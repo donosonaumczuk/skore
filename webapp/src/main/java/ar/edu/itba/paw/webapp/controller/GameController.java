@@ -89,14 +89,15 @@ public class GameController {
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                              @QueryParam("hasResult") String hasResult) {
-        Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
-                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
+        Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
+                QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
+                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
+                countries, states, cities, QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude,
+                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude,
+                QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
+                QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
@@ -128,6 +129,9 @@ public class GameController {
     }
 
     private LocalDateTime getStartTimeFrom(GameDto gameDto) {
+        if (!gameDto.getDate().isPresent() || !gameDto.getTime().isPresent()) {
+            return null;
+        }
         DateDto dateDto = gameDto.getDate().get();
         TimeDto timeDto = gameDto.getTime().get();
         return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
@@ -166,12 +170,10 @@ public class GameController {
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Game newGame;
         try {
-            newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(),
-                    (gameDto.getDate().isPresent() && gameDto.getTime().isPresent()) ?
-                            getStartTimeFrom(gameDto).toString() : null, gameDto.getDurationInMinutes(), null,
-                    null, gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
-                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), null,
-                    gameDto.getDescription(), gameDto.getTitle(), key);
+            newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(), getStartTimeFrom(gameDto),
+                    gameDto.getDurationInMinutes(), null, null, gameDto.getLocation().getCountry(),
+                    gameDto.getLocation().getState(), gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(),
+                    null, gameDto.getDescription(), gameDto.getTitle(), key);
         }
         catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());

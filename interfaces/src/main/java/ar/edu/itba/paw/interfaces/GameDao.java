@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GameDao {
-    public Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
-                                 final String finishTime, final String type, final String result,
+    public Optional<Game> create(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final LocalDateTime finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
                                  final String title);
 
-    public Optional<Game> findByKey(String teamName1, String startTime, String finishTime);
+    public Optional<Game> findByKey(String teamName1, LocalDateTime startTime, LocalDateTime finishTime);
 
     public List<Game> findGames(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
                                 final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
@@ -32,12 +32,12 @@ public interface GameDao {
 
     public List<Game> gamesThatAUserPlayInTeam2(final long userId);
 
-    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
-                                 final String finishTime, final String type, final String result,
+    public Optional<Game> modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final LocalDateTime finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
-                                 final String title, final String teamName1Old, final String startTimeOld,
-                                 final String finishTimeOld);
+                                 final String title, final String teamName1Old, final LocalDateTime startTimeOld,
+                                 final LocalDateTime finishTimeOld);
 
-    public boolean remove(final String teamName1, final String startTime, final String finishTime);
+    public boolean remove(final String teamName1, final LocalDateTime startTime, final LocalDateTime finishTime);
 }

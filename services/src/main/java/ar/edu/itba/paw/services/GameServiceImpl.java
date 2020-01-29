@@ -83,8 +83,8 @@ public class GameServiceImpl implements GameService {
                     .getName();
         }
 
-        Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime.toString(),
-                startTime.plusMinutes(durationInMinutes).toString(), type, null,
+        Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime,
+                startTime.plusMinutes(durationInMinutes), type, null,
                 country, state, city, street, tornamentName, description, title)
                 .orElseThrow(() -> {
                     LOGGER.trace("Creation fails, match '{}' already exist", gameKey.toString());
@@ -137,8 +137,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
-                                    final String minFinishTime, final String maxFinishTime,
+    public Page<Game> findGamesPage(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
+                                    final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
                                     final List<String> types, final List<String> sportNames,
                                     final Integer minQuantity, final Integer maxQuantity,
                                     final List<String> countries, final List<String> states,
@@ -148,24 +148,16 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
                                     final Integer offset, final GameSort sort, final Boolean onlyWithResults) {
-        List<Game> games = gameDao.findGames(getLocalDateTimeFromString(minStartTime),
-                getLocalDateTimeFromString(maxStartTime), getLocalDateTimeFromString(minFinishTime),
-                getLocalDateTimeFromString(maxFinishTime), types, sportNames, minQuantity, maxQuantity, countries,
-                states, cities, minFreePlaces, maxFreePlaces, usernamesPlayersInclude, usernamesPlayersNotInclude,
-                usernamesCreatorsInclude, usernamesCreatorsNotInclude, sort, onlyWithResults);
+        List<Game> games = gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types,
+                sportNames, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
+                usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
+                usernamesCreatorsNotInclude, sort, onlyWithResults);
 
         return new Page<>(games, offset, limit);
     }
 
-    private LocalDateTime getLocalDateTimeFromString(String string) {
-        if(string == null || !string.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
-            return null;
-        }
-        return LocalDateTime.parse(string);
-    }
-
     @Override
-    public Game modify(final String teamName1, final String teamName2, final String startTime,
+    public Game modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final Long minutesOfDuration, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
@@ -176,7 +168,7 @@ public class GameServiceImpl implements GameService {
             throw new IllegalArgumentException("Cannot modify teams in a individual match");
         }
         game = gameDao.modify(teamName1, teamName2, startTime, (minutesOfDuration != null) ?
-                        gameOptional.getStartTime().plusMinutes(minutesOfDuration).toString() : null, type,
+                        gameOptional.getStartTime().plusMinutes(minutesOfDuration) : null, type,
                 result, country, state, city, street, tornamentName, description, title, gameKey.getTeamName1(),
                 gameKey.getStartTime(), gameKey.getFinishTime()).orElseThrow(() -> {
                     LOGGER.trace("Modify fails, match '{}' not found", key);

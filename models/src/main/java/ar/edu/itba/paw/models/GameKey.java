@@ -37,16 +37,16 @@ public class GameKey {
         return dateToString(startTime) + teamName1 + dateToString(finishTime);
     }
 
-    public String getStartTime() {
-        return startTime.toString();
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public String getTeamName1() {
         return teamName1;
     }
 
-    public String getFinishTime() {
-        return finishTime.toString();
+    public LocalDateTime getFinishTime() {
+        return finishTime;
     }
 
     private String dateToString(LocalDateTime localDateTime) {

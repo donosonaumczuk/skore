@@ -22,8 +22,8 @@ public interface GameService {
                        final String title, final String sportName);
 
     @Transactional
-    public Page<Game> findGamesPage(final String minStartTime, final String maxStartTime,
-                                    final String minFinishTime, final String maxFinishTime,
+    public Page<Game> findGamesPage(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
+                                    final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
                                     final List<String> types, final List<String> sportNames,
                                     final Integer minQuantity, final Integer maxQuantity,
                                     final List<String> countries, final List<String> states,
@@ -35,7 +35,7 @@ public interface GameService {
                                     final Integer offset, final GameSort sort, final Boolean onlyWithResults);
 
     @Transactional
-    public Game modify(final String teamName1, final String teamName2, final String startTime,
+    public Game modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final Long minutesOfDuration, final String type, final String result,
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,

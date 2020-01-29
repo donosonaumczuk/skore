@@ -119,8 +119,8 @@ public class GameHibernateDaoTest {
     public void createTest() {
 
         final Optional<Game> gameOpt = gameDao.create(gameNotInserted.getTeam1().getName(),
-                gameNotInserted.getTeam2().getName(), gameNotInserted.getStartTime().toString(),
-                gameNotInserted.getFinishTime().toString(), gameNotInserted.getType(),
+                gameNotInserted.getTeam2().getName(), gameNotInserted.getStartTime(),
+                gameNotInserted.getFinishTime(), gameNotInserted.getType(),
                 gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(),
                 gameNotInserted.getPlace().getState(), gameNotInserted.getPlace().getCity(),
                 gameNotInserted.getPlace().getStreet(), gameNotInserted.getTornament(),
@@ -295,12 +295,11 @@ public class GameHibernateDaoTest {
     public void modifyTest() {
 
         final Game gameReturned = gameDao.modify(gameNotInserted.getTeam1().getName(), gameNotInserted.getTeam2().getName(),
-                gameNotInserted.getStartTime().toString(), gameNotInserted.getFinishTime().toString(),
-                gameNotInserted.getType(), gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(),
-                gameNotInserted.getPlace().getState(), gameNotInserted.getPlace().getCity(),
-                gameNotInserted.getPlace().getStreet(), gameNotInserted.getTornament(), gameNotInserted.getDescription(),
-                gameNotInserted.getTitle(), game1.getTeam1().getName(), game1.getStartTime().toString(),
-                game1.getFinishTime().toString()).get();
+                gameNotInserted.getStartTime(), gameNotInserted.getFinishTime(), gameNotInserted.getType(),
+                gameNotInserted.getResult(), gameNotInserted.getPlace().getCountry(), gameNotInserted.getPlace().getState(),
+                gameNotInserted.getPlace().getCity(), gameNotInserted.getPlace().getStreet(),
+                gameNotInserted.getTornament(), gameNotInserted.getDescription(), gameNotInserted.getTitle(),
+                game1.getTeam1().getName(), game1.getStartTime(), game1.getFinishTime()).get();
 
         Assert.assertEquals(game1, gameReturned);
     }
@@ -308,8 +307,7 @@ public class GameHibernateDaoTest {
     @Test
     public void deleteTest() {
 
-        boolean ans = gameDao.remove(game1.getTeam1().getName(), game1.getStartTime().toString(),
-                            game1.getFinishTime().toString());
+        boolean ans = gameDao.remove(game1.getTeam1().getName(), game1.getStartTime(), game1.getFinishTime());
 
         Assert.assertEquals(true, ans);
         Assert.assertNull(em.find(Game.class, new GamePK(game1.getTeam1(), game1.getStartTime(),
