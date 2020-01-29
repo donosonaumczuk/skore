@@ -319,6 +319,29 @@ html {
 .username-label:hover {
     color: var(--dark-secondary-color);
 }
+.location-suggestion {
+    background-color: white;
+    cursor: pointer;
+    padding-left: 1rem;
+}
+
+.location-suggestion-active {
+    cursor: pointer;
+    padding-left: 1rem;
+    background-color: lightskyblue;
+}
+
+.react-datepicker__input-container {
+    width: inherit;
+  }
+
+  .react-datepicker__input-container input {
+    width: inherit;
+  }
+  
+.react-datepicker-wrapper {
+    width: 100%;
+}
 
 /* sm - Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
