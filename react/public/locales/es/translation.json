@@ -5,6 +5,14 @@
         "logOut": "Cerrar Sesión",
         "or": "o"
     },
+    "location": {
+        "address": "Dirección",
+        "country": "Pais",
+        "state": "Estado / Provincia",
+        "city": "Ciudad",
+        "street": "Calle",
+        "number": "Numero"
+    },
     "createUserForm": {
         "accounts": "Cuentas",
         "username": "Nombre de usuario",
@@ -17,11 +25,6 @@
         "imageFormat": "Formatos aceptados: png, jpeg or jpg",
         "cellphone": "Celular ",
         "birthday": "Fecha de nacimiento ",
-        "address": "Dirección",
-        "country": "Pais",
-        "state": "Estado / Provincia",
-        "city": "Ciudad",
-        "street": "Calle",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
         "signUpButton": "REGISTRARSE",
@@ -29,17 +32,17 @@
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio.\n",
-                "invalidSymbols": "El nombre de usuario solo puede contener simbolos alfanumericos, guion bajo('_') y punto(',').\n",
+                "invalidSymbols": "El nombre de usuario sólo puede contener símbolos alfanuméricos, guión bajo('_') y punto(',').\n",
                 "invalidLength": "El nombre de usuario debe tener etre 4 y 100 caracteres.\n"
             },
             "password": {
                 "required": "La contraseña es obligatoria.\n",
-                "invalidSymbols": "La contraseña solo puede contener simbolos alfanumericos.\n",
+                "invalidSymbols": "La contraseña sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
             },
             "repeatedPassword": {
                 "required": "Repetir la contraseña es obligatorio.\n",
-                "invalidSymbols": "La contraseña repetida solo puede contener simbolos alfanumericos.\n",
+                "invalidSymbols": "La contraseña repetida sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
                 "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
             },
@@ -68,7 +71,7 @@
                 "required": "La fecha de nacimiento es obligatorio.\n",
                 "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
-                "invalidPastDate": "La fecha de nacimiento debe ser una fecha valida pasada.\n"
+                "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
             }
         }
     },
@@ -134,7 +137,49 @@
     },
     "createMatchForm": {
         "matchName": "Nombre del partido ",
-        "createMatch": "CREAR PARTIDO"
+        "sport": "Deporte ",
+        "chooseSport": "Elija un deporte",
+        "date": "Fecha ",
+        "from": "Desde ",
+        "duration": "Duración ",
+        "chooseHour": "Elija las horas",
+        "chooseMinutes": "Elija los minutos",
+        "description": "Descripción",
+        "competitivity": "Competitividad",
+        "friendly": "Amistoso",
+        "competitive": "Competitivo",
+        "competitivityTooltip": "Amistoso no requiere cuenta para unirse al partido.\nNo impacta el winrate.\n\nCompetitivo requiere una cuenta para unirse al partido.\nImpacta el winrate.\n",
+        "createMatch": "CREAR PARTIDO",
+        "errors": {
+            "title": {
+                "required": "El nombre del partido es obligatorio.\n",
+                "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
+                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
+            },
+            "competitivity": {
+                "required": "La competitividad es obligatoria.\n"
+            },
+            "sport": {
+                "required": "El deporte es obligatorio.\n"
+            },
+            "date": {
+                "required": "La fecha es obligatoria.\n",
+                "invalidFutureDate": "La fecha debe ser una fecha futura válida.\n"
+            },
+            "time": {
+                "required": "Desde es obligatorio.\n",
+                "invalidTime": "Desde debe ser un tiempo válido.\n"
+            },
+            "durationHours": {
+                "required": "La duración debe contener un valor de horas.\n"
+            },
+            "durationMinutes": {
+                "required": "La duración debe contener un valor de minutos..\n"
+            },
+            "description": {
+                "invalidLength": "La descripción no puede contener mas de 140 caracteres.\n"
+            }
+        }
     },
     "forms": {
         "requiredFields":"Los campos que contienen (*) son obligatorios."
@@ -149,13 +194,13 @@
         "errors": {
             "sportName": {
                 "required": "El nombre del deporte es obligatorio.\n",
-                "invalidSymbols": "El nombre del deporte solo puede contener simbolos alfanumericos.\n",
+                "invalidSymbols": "El nombre del deporte sólo puede contener símbolos alfanuméricos.\n",
                 "invalidLength": "El nombre del deporte debe tener entre 4 y 100 caracteres.\n",
                 "alreadyExists": "Ya existe un deporte con ese nombre.\n"
             },
             "displayName": {
                 "required": "El nombre a mostrar del deporte es obligatorio.\n",
-                "invalidSymbols": "El nombre a mostrar del deporte solo puede contener simbolos alfanumericos o espacios.\n",
+                "invalidSymbols": "El nombre a mostrar del deporte sólo puede contener símbolos alfanuméricos o espacios.\n",
                 "invalidLength": "El nombre a mostrar del deporte debe tener entre 4 y 100 caracteres.\n"
             },
             "playersPerTeam": {
