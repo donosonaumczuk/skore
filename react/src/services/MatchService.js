@@ -42,23 +42,15 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
     }
 }
 
-// const addNotStartedToFilters = filters => {
-//     const newFilters = {
-
-//     }
-//     if (filters) {
-
-//     }
-// }
 
 const getMatchesToJoin =  async (username, offset, limit, filters) => {
-    // filters = addNotStartedToFilters(filters); 
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     let paramsUrl =  buildUrlFromParamQueries(paramObject);
-    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withoutPlayers=${username}`:
+    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withoutPlayers=${username}` :
                                         `?withoutPlayers=${username}`;
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
+        console.log(res);
         return res.data;
     }
     catch (err) {
