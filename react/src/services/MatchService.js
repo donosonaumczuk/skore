@@ -50,7 +50,6 @@ const getMatchesToJoin =  async (username, offset, limit, filters) => {
                                         `?withoutPlayers=${username}`;
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
-        console.log(res);
         return res.data;
     }
     catch (err) {

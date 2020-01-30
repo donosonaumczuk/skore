@@ -28,7 +28,6 @@ class Home extends Component {
     }
 
     handleTabChange = tabNumber => {
-        console.log("handle tab", tabNumber);
         if (tabNumber !== this.state.currentTab && this.mounted) {
             this.setState({
                 matches: [],
