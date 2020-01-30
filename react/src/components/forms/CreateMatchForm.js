@@ -32,13 +32,6 @@ var time = {
     "minutes": null
 };
 
-//TODO only show them after submit is pressed
-const customErrors = {
-    locationError: null,
-    timeError: null,
-    active: false
-}
-
 const updateLocation = home => {
     location.street = home.street;
     location.city = home.city;
@@ -54,7 +47,6 @@ const updateTime = newTime => {
 }
 
 const validate = values => {
-    console.log("entro");
     const errors = {}
     errors.title = CreateMatchValidator.validateTitle(values.title);
     errors.competitivity = CreateMatchValidator.validateCompetitivity(values.competitivity);
@@ -63,8 +55,8 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    customErrors.timeError = CreateMatchValidator.validateTime(time);
-    customErrors.locationError = CreateMatchValidator.validateLocation(location);
+    errors.matchTime = CreateMatchValidator.validateTime(time);
+    errors.matchLocation = CreateMatchValidator.validateLocation(location);
     return errors;
 }
 
@@ -186,6 +178,7 @@ class CreateMatchForm extends Component {
     }
 
     onSubmit = async (values) => {
+        console.log("entro a onSubmit");
         let match = this.loadMatch(values, this.state.image);
         console.log(match);//TODO is here just to prevent warning
         //TODO implement post to endpoint and then redirect, when ednpoint is created
@@ -226,8 +219,7 @@ class CreateMatchForm extends Component {
                                     <div className="form-row">
                                         <div className="col-12">
                                             <Field name="matchTime" label={i18next.t('createMatchForm.from')} 
-                                                    updateTime={updateTime} errorMessage={customErrors.timeError}
-                                                    component={RenderTimePicker} />
+                                                    updateTime={updateTime} component={RenderTimePicker} />
                                         </div>
                                     </div>
                                 </div>
@@ -250,7 +242,7 @@ class CreateMatchForm extends Component {
                             <Field name="description" label={i18next.t('createMatchForm.description')} 
                                     inputType="text-area" required={false} component={RenderTextArea} />
                             <Field name="matchLocation" updateLocationAndState={this.updateLocationAndState}
-                                    errorMessage={customErrors.locationError} component={MatchLocation} />
+                                    component={MatchLocation} />
                             <SubLocationInput label={i18next.t('location.country')} id="country"
                                                 value={location.country ? location.country : ""} 
                                                 divStyle="form-group" />
