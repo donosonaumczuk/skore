@@ -9,17 +9,31 @@ import ErrorPage from '../ErrorPage';
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
 
+// const filtersChanged = (newFilters, oldFilters) => {
+//     if (!newFilters && !oldFilters) {
+//         return false;
+//     }
+//     if ((!newFilters && oldFilters) || (!oldFilters && newFilters)) {
+//         return true;
+//     }
+//     return !(newFilters.country === oldFilters.country && 
+//             newFilters.state === oldFilters.state &&
+//             newFilters.city === oldFilters.city &&
+//             newFilters.sport === oldFilters.sport);
+// }
+
 class HomeMatches extends Component { 
     mounted = false;
     constructor(props) {
         super(props);
-        const { tab } = this.props; 
+        const { tab, filters } = this.props; 
         this.state = {
                 matches: [],
                 offset: INITIAL_OFFSET,
                 total: QUERY_QUANTITY,
                 hasMore: true,
-                tab: tab
+                tab: tab,
+                filters: filters
         }
     }
 
@@ -44,19 +58,31 @@ class HomeMatches extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, previousState) {
+        let newState = null;
         if (nextProps.tab !== previousState.tab) {
-            const newState = { 
+            newState = { 
                 ...previousState,
                 tab: nextProps.tab,
                 offset: INITIAL_OFFSET,
                 hasMore: true,
-                matches: []
+                matches: [],
+                filters: previousState.filters
             };
-            return newState;
         }
-        else {
-            return null;
-        }
+        // if (filtersChanged(nextProps.filters, previousState.filters)) {
+        //     if (newState) {
+        //         return { ...newState, filters: nextProps.filters };
+        //     }
+        //     return {
+        //         ...previousState,
+        //         offset: INITIAL_OFFSET,
+        //         hasMore: true,
+        //         matches: [],
+        //         filters: nextProps.filters
+        //     }
+        // }
+    
+        return newState;
     }
 
     componentDidUpdate(previousProps, previousState) {

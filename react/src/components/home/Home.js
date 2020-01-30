@@ -20,7 +20,6 @@ class Home extends Component {
         this.setState({
             currentTab: tabNumber
         });
-        //TODO do corresponding post to request matches according to tab
     }
 
     componentDidMount = () => {
@@ -29,7 +28,11 @@ class Home extends Component {
 
     updateFilters = filters => {
         const newUrl = buildUrlFromParamQueries(filters);
-        this.props.history.push(`/${newUrl}`);
+        if (this.mounted) {
+            this.setState({ filters: filters });
+            this.props.history.push(`/${newUrl}`);
+        }
+        
     }
 
     render() {

@@ -16,9 +16,11 @@ const getMatches = async (offset, limit, filters) => {
 
 const getMatchesCreatedBy =  async (username, offset, limit, filters) => {
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    const paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&createdBy=${username}`:
+                                        `?createdBy=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}&createdBy=${username}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
         return res.data;
     }
     catch (err) {
@@ -28,9 +30,11 @@ const getMatchesCreatedBy =  async (username, offset, limit, filters) => {
 
 const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    const paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withPlayers=${username}`:
+                                        `?withPlayers=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}&withPlayers=${username}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
         return res.data;
     }
     catch (err) {
@@ -50,9 +54,11 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
 const getMatchesToJoin =  async (username, offset, limit, filters) => {
     // filters = addNotStartedToFilters(filters); 
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    const paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withoutPlayers=${username}`:
+                                        `?withoutPlayers=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}&withoutPlayers=${username}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
         return res.data;
     }
     catch (err) {
