@@ -178,6 +178,9 @@
             },
             "description": {
                 "invalidLength": "La descripción no puede contener mas de 140 caracteres.\n"
+            },
+            "location": {
+                "required": "La ubicación es obligatoria.\n"
             }
         }
     },
