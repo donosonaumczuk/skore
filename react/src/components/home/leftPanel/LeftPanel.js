@@ -11,8 +11,8 @@ const getTabs = (user, currentTab, handleTabChange) => {
     }
     return <React.Fragment></React.Fragment>;
 }
-
-const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, updateFilters }) => {
+ 
+const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, updateFilters }) => {
     const user = currentUser;
     const tabs = getTabs(user, currentTab, handleTabChange);
     const message = user ? i18next.t('home.cantFindMatch') : i18next.t('home.wantToCreateMatch');
@@ -24,7 +24,7 @@ const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, updateFilters
                                     buttonUrl="/createMatch" />
             </div>
             {tabs}
-            <FilterMenu updateFilters={updateFilters} />
+            <FilterMenu initialValues={filters} updateFilters={updateFilters} />
         </div>
     );
 }
@@ -34,6 +34,7 @@ HomeLeftPanel.propTypes = {
     handleTabChange: PropTypes.func.isRequired,
     currentUser: PropTypes.string,
     updateFilters: PropTypes.func.isRequired,
+    filters: PropTypes.object.isRequired
 }
 
 export default HomeLeftPanel;

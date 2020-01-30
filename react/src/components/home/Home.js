@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import LeftPanel from './leftPanel/LeftPanel';
 import HomeMatches from './HomeMatches';
+import queryString from 'query-string';
+import { buildUrlFromParamQueries } from '../../services/Util';
 
 class Home extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        console.log(props);
         const currentTab = this.props.currentUser ? 1 : 0;
+        const queryParams = queryString.parse(this.props.location.search);
         this.state = {
             currentTab: currentTab,
-            filters: {}
+            filters: queryParams
         };
     }
 
@@ -26,11 +28,8 @@ class Home extends Component {
     }
 
     updateFilters = filters => {
-        if (this.mounted) {
-            this.setState({
-                filters: filters
-            })
-        }
+        const newUrl = buildUrlFromParamQueries(filters);
+        this.props.history.push(`/${newUrl}`);
     }
 
     render() {
@@ -42,7 +41,8 @@ class Home extends Component {
                     <div className="sidepanel col-md-4 col-lg-4 offset-xl-1 
                         col-xl-3 navbar-collapse" id="navbarSupportedContent">
                         <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange}
-                                    currentUser={currentUser} updateFilters={this.updateFilters} />
+                                    currentUser={currentUser} filters={this.state.filters}
+                                    updateFilters={this.updateFilters} />
                     </div>
                     <div className="col-md-8 col-lg-8 col-xl-6">
                             {/* TODO pass down filters when implemented filter search */}
