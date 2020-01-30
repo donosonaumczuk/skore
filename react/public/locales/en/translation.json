@@ -180,7 +180,7 @@
                 "invalidLength": "Decription can not have more than 140 characters.\n"
             },
             "location": {
-                "required": "Location is required.\n"
+                "required": "street and number are required.\n"
             }
         }
     },

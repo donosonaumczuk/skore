@@ -75,7 +75,6 @@ const createUser = async user => {
 const updateUser = async (user, username) => {
     try {
         const res = await api.put(`${USERS_ENDPOINT}/${username}`, user);
-        console.log(res);
         return res.data;
     }
     catch (err) {

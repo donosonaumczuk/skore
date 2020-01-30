@@ -56,7 +56,6 @@ const validate = values => {
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
     errors.matchTime = CreateMatchValidator.validateTime(time);
-    errors.matchLocation = CreateMatchValidator.validateLocation(location);
     return errors;
 }
 
@@ -178,10 +177,19 @@ class CreateMatchForm extends Component {
     }
 
     onSubmit = async (values) => {
-        console.log("entro a onSubmit");
-        let match = this.loadMatch(values, this.state.image);
-        console.log(match);//TODO is here just to prevent warning
-        //TODO implement post to endpoint and then redirect, when ednpoint is created
+        const locationError = CreateMatchValidator.validateLocation(location);
+        if(locationError) {
+            if (this.mounted) {
+                this.setState({ locationError: locationError });
+            }
+        }
+        else {
+            if (this.mounted) {
+                this.setState({ locationError: null });
+            }
+            let match = this.loadMatch(values, this.state.image);
+            console.log(match);//TODO is here just to prevent warning
+        } //TODO implement post to endpoint and then redirect, when ednpoint is created
         
     }
 
@@ -242,6 +250,7 @@ class CreateMatchForm extends Component {
                             <Field name="description" label={i18next.t('createMatchForm.description')} 
                                     inputType="text-area" required={false} component={RenderTextArea} />
                             <Field name="matchLocation" updateLocationAndState={this.updateLocationAndState}
+                                    errorMessage={this.state.locationError} location={location} 
                                     component={MatchLocation} />
                             <SubLocationInput label={i18next.t('location.country')} id="country"
                                                 value={location.country ? location.country : ""} 

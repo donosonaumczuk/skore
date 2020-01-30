@@ -1,14 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LocationInput from './LocationInput';
+import CreateMatchValidator from '../validators/CreateMatchValidator';
 
-const MatchLocation = ({ updateLocationAndState, meta }) => {
+const MatchLocation = ({ updateLocationAndState, input, meta, errorMessage, location }) => {
+    if( !errorMessage) {
+        errorMessage = meta.submitFailed ? CreateMatchValidator.validateLocation(location) : null;
+    }
     return (
         <React.Fragment>
-            <LocationInput updateLocation={updateLocationAndState} />
-                {meta.submitFailed && meta.error &&
+            <LocationInput updateLocation={updateLocationAndState} inputInfo={input} />
+                {errorMessage &&
                     <span className="invalid-feedback d-block">
-                        {meta.error}
+                        {errorMessage}
                     </span>}
         </React.Fragment>
     );
