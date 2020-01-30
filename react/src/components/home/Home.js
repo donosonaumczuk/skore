@@ -7,7 +7,8 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentTab: 1
+            currentTab: 1,
+            filters: {}
         };
     }
 
@@ -16,6 +17,18 @@ class Home extends Component {
             currentTab: tabNumber
         });
         //TODO do corresponding post to request matches according to tab
+    }
+
+    componentDidMount = () => {
+        this.mounted = true;
+    }
+
+    updateFilters = filters => {
+        if (this.mounted) {
+            this.setState({
+                filters: filters
+            })
+        }
     }
 
     render() {
@@ -27,11 +40,11 @@ class Home extends Component {
                     <div className="sidepanel col-md-4 col-lg-4 offset-xl-1 
                         col-xl-3 navbar-collapse" id="navbarSupportedContent">
                         <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange}
-                                    currentUser={currentUser} />
+                                    currentUser={currentUser} updateFilters={this.updateFilters} />
                     </div>
                     <div className="col-md-8 col-lg-8 col-xl-6">
                             {/* TODO pass down filters when implemented filter search */}
-                            <HomeMatches />
+                            <HomeMatches filters={this.state.filters} tab={this.state.currentTab} />
                     </div>
                 </div>
             </div>
