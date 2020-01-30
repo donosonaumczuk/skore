@@ -83,14 +83,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendConfirmMatchAssistance(User user, Game game, String data) {
+    public void sendConfirmMatchAssistance(final User user, final Game game, final String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
         emailSender.sendConfirmMatch(user, game, data + "/confirmMatch/" + phrase , LocaleContextHolder.getLocale());
     }
 
     @Override
-    public long getUserIdFromData(String data, String gameData) {
+    public User getUserFromData(final String data, final String gameData) {
         String[] datas = encrypter.decryptString(data).split("\\$");
         String userDataDecrypted = datas[0];
         String gameDataDecrypted = datas[1];
@@ -106,15 +106,16 @@ public class UserServiceImpl implements UserService {
             id = id * 10 + (userDataDecrypted.charAt(i) - '0');
         }
 
-        if (!findById(id).getFirstName().equals(userDataDecrypted.substring(i))) {
+        User user = findById(id);
+        if (!user.getFirstName().equals(userDataDecrypted.substring(i))) {
             throwAndLogCodeError(data);
         }
 
-        return id;
+        return user;
     }
 
     @Override
-    public void sendCancelOptionMatch(User user, Game game, String data) {
+    public void sendCancelOptionMatch(final User user, final Game game, final String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
         emailSender.sendCancelMatch(user, game, data + "/cancelMatch/" + phrase, LocaleContextHolder.getLocale());

@@ -114,12 +114,13 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game insertTemporalUserInGame(final String key, final String code) {
         Game game;
-        long userId = userService.getUserIdFromData(code, key);
+        User user = userService.getUserFromData(code, key);
         try {
-            game = insertUserInGame(key, userId);
+            game = insertUserInGame(key, user.getUserId());
+            userService.sendCancelOptionMatch(user, game, key);
         }
         catch (Exception e) {
-            userService.remove(userId);
+            userService.remove(user.getUserId());
             throw e;
         }
         return game;

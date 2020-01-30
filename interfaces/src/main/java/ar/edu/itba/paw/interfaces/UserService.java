@@ -28,9 +28,9 @@ public interface UserService {
     @Transactional
     public User updateEmail(final long userId, final String newEmail);
 
-    public void sendConfirmMatchAssistance(User user, Game game, String data);
+    public void sendConfirmMatchAssistance(final User user, final Game game, final String data);
 
-    public long getUserIdFromData(String data, String gameData);
+    public User getUserFromData(final String data, final String gameData);
 
-    public void sendCancelOptionMatch(User user, Game game, String data);
+    public void sendCancelOptionMatch(final User user, final Game game, final String data);
 }

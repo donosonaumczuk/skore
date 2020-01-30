@@ -41,11 +41,12 @@ public class UserServiceImplTest {
 
     @Test
     public void getIdFromCode() {
-        when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(FIRST_NAME, null, null)));
+        when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(FIRST_NAME, null, null, ID)));
 
-        long idReceive = userService.getUserIdFromData(CODE, GAME_KEY);
+        User user = userService.getUserFromData(CODE, GAME_KEY);
 
-        Assert.assertEquals(ID, idReceive);
+        Assert.assertEquals(ID, user.getUserId());
+        Assert.assertEquals(FIRST_NAME, user.getFirstName());
     }
 
     @Test
@@ -54,7 +55,7 @@ public class UserServiceImplTest {
         exceptionRule.expectMessage("User with id: " + ID + " doesn't exist.");
         when(userDaoMock.findById(ID)).thenReturn(Optional.empty());
 
-        userService.getUserIdFromData(CODE, GAME_KEY);
+        userService.getUserFromData(CODE, GAME_KEY);
     }
 
     @Test
@@ -63,7 +64,7 @@ public class UserServiceImplTest {
         exceptionRule.expectMessage("The code '" + CODE + "' is invalid");
         when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(FIRST_NAME, null, null)));
 
-        userService.getUserIdFromData(CODE, ANOTHER_GAME_KEY);
+        userService.getUserFromData(CODE, ANOTHER_GAME_KEY);
     }
 
     @Test
@@ -72,6 +73,6 @@ public class UserServiceImplTest {
         exceptionRule.expectMessage("The code '" + CODE + "' is invalid");
         when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(ANOTHER_FIRST_NAME, null, null)));
 
-        userService.getUserIdFromData(CODE, GAME_KEY);
+        userService.getUserFromData(CODE, GAME_KEY);
     }
 }
