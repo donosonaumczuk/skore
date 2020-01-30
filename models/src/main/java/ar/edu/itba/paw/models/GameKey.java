@@ -13,6 +13,9 @@ public class GameKey {
     private final LocalDateTime finishTime;
 
     public GameKey(String keyString) {
+        if (keyString == null) {
+            throw new IllegalArgumentException("Match key must not be null");
+        }
         int length = keyString.length();
 
         if (keyString.length() < MIN_LENGTH) {

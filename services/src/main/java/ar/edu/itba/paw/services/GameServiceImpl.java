@@ -30,6 +30,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.models.GameType.INDIVIDUAL;
+import static ar.edu.itba.paw.models.GameType.GROUP;
+import static ar.edu.itba.paw.models.GameType.COMPETITIVE;
+import static ar.edu.itba.paw.models.GameType.FRIENDLY;
+
+
 @Service
 public class GameServiceImpl implements GameService {
 
@@ -50,11 +56,6 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private SessionService sessionService;
 
-    private static final String GROUP       = "Group";
-    private static final String INDIVIDUAL  = "Individual";
-    private static final String COMPETITIVE = "Competitive";
-    private static final String FRIENDLY    = "Friendly";
-
     public GameServiceImpl() {
 
     }
@@ -69,13 +70,14 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
 
         GameKey gameKey = new GameKey(startTime, teamName1, startTime.plusMinutes(durationInMinutes));
-        String type = (isIndividual ? INDIVIDUAL : GROUP) + '-' + (isCompetitive ? COMPETITIVE : FRIENDLY);
+        String type = (isIndividual ? INDIVIDUAL.toString() : GROUP.toString()) + '-' +
+                (isCompetitive ? COMPETITIVE.toString() : FRIENDLY.toString());
         String newTeamName1 = teamName1, newTeamName2 = teamName2;
         if (isIndividual) {
             if (teamName1 != null || teamName2 != null) {
-                LOGGER.trace("Creation fails, match '{}' cannot be INDIVIDUAL and add teams to match", gameKey.toString());
+                LOGGER.trace("Creation fails, match '{}' cannot be individual and add teams to match", gameKey.toString());
                 throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
-                        "INDIVIDUAL and add teams to match");
+                        "individual and add teams to match");
             }
         } else {
             newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
@@ -165,13 +167,13 @@ public class GameServiceImpl implements GameService {
                        final String title, final String key) {
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key), game;
-        PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
-        if (gameOld.getTeam1().getLeader().equals(premiumUser)) {
-            LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
-            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO check
+        if (gameOld.getTeam1().getLeader().equals(loggedUser)) {
+            LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
+            throw new ForbiddenException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
-        if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL)) {
+        if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL.toString())) {
             throw new IllegalArgumentException("Cannot modify teams in a individual match");
         }
         game = gameDao.modify(teamName1, teamName2, startTime, (minutesOfDuration != null) ?
@@ -188,10 +190,10 @@ public class GameServiceImpl implements GameService {
     @Override
     public boolean remove(final String key) {
         GameKey gameKey = getGameKey(key);
-        PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO maybe check
-        if (!findByKey(key).getPrimaryKey().getTeam1().getLeader().equals(premiumUser)) {
-            LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
-            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO maybe check
+        if (!findByKey(key).getPrimaryKey().getTeam1().getLeader().equals(loggedUser)) {
+            LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
+            throw new ForbiddenException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
         return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
