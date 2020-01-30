@@ -16,13 +16,16 @@ import java.util.regex.Pattern;
 public class PlayerValidators {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerValidators.class);
-    private static final String USER_ID    = "userId";
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME  = "lastName";
     private static final String EMAIL      = "email";
+    private static final String USERNAME   = "username";
+    private static final String CODE       = "code";
 
     private static final Set<String> CREATION_KNOWN_AND_REQUIRED_FIELDS = ImmutableSet.of(FIRST_NAME, LAST_NAME, EMAIL);
-    private static final Set<String> UPDATE_KNOWN_AND_REQUIRED_FIELDS   = ImmutableSet.of(USER_ID);
+    private static final Set<String> UPDATE_KNOWN_FIELDS      = ImmutableSet.of(USERNAME, CODE);
+    private static final Set<String> UPDATE_REQUIRED_FIELDS   = ImmutableSet.of();
+
 
     public static Validator<JSONObject> createValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_AND_REQUIRED_FIELDS, CREATION_KNOWN_AND_REQUIRED_FIELDS,
@@ -30,13 +33,15 @@ public class PlayerValidators {
     }
 
     public static Validator<JSONObject> updateValidatorOf(final String log) {
-        return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_AND_REQUIRED_FIELDS, UPDATE_KNOWN_AND_REQUIRED_FIELDS,
+        return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS,UPDATE_REQUIRED_FIELDS,
                 updateFieldValidatorListOf(log), log);
     }
 
     private static List<Pair<String, Validator<JSONObject>>> updateFieldValidatorListOf(final String log) {
         return new ImmutableList.Builder<Pair<String, Validator<JSONObject>>>()
-                .add(Pair.of(USER_ID, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(USER_ID, 1, null, log)))
+                .add(Pair.of(USERNAME, ValidatorFactory.fieldIsStringValidatorOf(USERNAME, log)
+                        .and(ValidatorFactory.forbiddenFieldsValidatorOf(ImmutableSet.of(CODE), log))))
+                .add(Pair.of(CODE, ValidatorFactory.fieldIsStringValidatorOf(CODE, log)))
                 .build();
     }
 

@@ -14,6 +14,7 @@ public class TeamPlayerDto {
     private String email;
     private String firstName;
     private String lastName;
+    private String code;
     private long userId;
     private List<Link> links;
 
@@ -62,5 +63,9 @@ public class TeamPlayerDto {
 
     public long getUserId() {
         return userId;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

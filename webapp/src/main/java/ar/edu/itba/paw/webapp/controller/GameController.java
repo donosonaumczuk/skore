@@ -184,15 +184,34 @@ public class GameController {
     }
 
     @POST
+    @Path("/{key}/players/requestToJoin")
+    public Response createTemporalUser(@PathParam("key") String key, @RequestBody final String requestBody) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
+
+        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail());
+        //TODO catch UserAlreadyExist,
+        return Response.status(HttpStatus.CREATED.value()).build();
+    }
+
+    @POST
     @Path("/{key}/players")
     public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         PlayerValidators.updateValidatorOf("Add player to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-        Game game = gameService.insertUserInGame(key, playerDto.getUserId());
+        Game game;
+        if (playerDto.getUsername() != null) {
+            game = gameService.insertPremiumUserInGame(key, playerDto.getUsername());
+        }
+        else  {
+            game = gameService.insertTemporalUserInGame(key, playerDto.getCode());
+        }
         //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
-        //TODO AlreadyJoinedToMatchException, TeamFullException
+        //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
         //TODO maybe delete not premium user if it fails
         LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();

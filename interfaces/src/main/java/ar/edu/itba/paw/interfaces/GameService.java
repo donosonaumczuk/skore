@@ -48,7 +48,10 @@ public interface GameService {
     public Game findByKey(final String key);
 
     @Transactional
-    public Game insertUserInGame(final String key, final long userId);
+    public Game insertPremiumUserInGame(final String key, final String username);
+
+    @Transactional
+    public Game insertTemporalUserInGame(final String key, final String code);
 
     @Transactional
     public boolean deleteUserInGame(final String key, final long userId);
@@ -58,4 +61,7 @@ public interface GameService {
 
     @Transactional
     public List<List<Game>> getGamesThatPlay(final long userId);
+
+    @Transactional
+    public void createRequestToJoin(final String key, final String firstName, final String lastName, final String email);
 }

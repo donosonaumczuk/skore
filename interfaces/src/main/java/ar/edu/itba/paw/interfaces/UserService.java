@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserService {
     @Transactional
-    public Optional<User> findById(final long id);
+    public User findById(final long id);
 
     @Transactional
     public User create(final String firstName, final String lastName,
@@ -30,10 +30,7 @@ public interface UserService {
 
     public void sendConfirmMatchAssistance(User user, Game game, String data);
 
-    public long getUserIdFromData (String data);
+    public long getUserIdFromData(String data, String gameData);
 
     public void sendCancelOptionMatch(User user, Game game, String data);
-
-    public SimpleEncrypter getEncrypter();
-
 }

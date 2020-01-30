@@ -71,10 +71,6 @@ public class UserController {
     private PremiumUserService premiumUserService;
 
     @Autowired
-    @Qualifier("userServiceImpl")
-    private UserService userService;
-
-    @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
@@ -256,18 +252,6 @@ public class UserController {
         });
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
-    }
-
-    @POST
-    @Path("/temporal")//TODO: better name
-    public Response createTemporalUser(@RequestBody final String requestBody) {
-        PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
-                .validate(JSONUtils.jsonObjectFrom(requestBody));
-        final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-
-        User user = userService.create(teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail());
-        //TODO catch UserAlreadyExist
-        return Response.status(HttpStatus.CREATED.value()).entity(TeamPlayerDto.from(user)).build();
     }
 
     @GET

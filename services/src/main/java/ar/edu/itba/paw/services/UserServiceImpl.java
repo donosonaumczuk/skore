@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(final long id) {
+    public User findById(final long id) {
         if(id < 0 ) {
             LOGGER.error("Attempted to find a user with negative id.");
             throw new IllegalArgumentException("id must be positive");
         }
 
         LOGGER.trace("Looking up user with id {}", id);
-        return userDao.findById(id);
+        return userDao.findById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
     }
 
     @Override
@@ -86,29 +86,42 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmMatchAssistance(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale());
+        emailSender.sendConfirmMatch(user, game, data + "/confirmMatch/" + phrase , LocaleContextHolder.getLocale());
     }
 
     @Override
-    public long getUserIdFromData (String data) {
-        long id = 0;
-        for(int i = 0; i < data.length() && (data.charAt(i) >= '0' && data.charAt(i) <= '9'); i++) {
-            if(data.charAt(i) >= '0' && data.charAt(i) <= '9') {
-                id = id * 10 + (data.charAt(i) - '0');
-            }
+    public long getUserIdFromData(String data, String gameData) {
+        String[] datas = encrypter.decryptString(data).split("\\$");
+        String userDataDecrypted = datas[0];
+        String gameDataDecrypted = datas[1];
+
+        if (!gameDataDecrypted.equals(gameData)) {
+            throwAndLogCodeError(data);
         }
+
+        long id = 0;
+        int i;
+        for(i = 0; i < userDataDecrypted.length() && (userDataDecrypted.charAt(i) >= '0'
+                && userDataDecrypted.charAt(i) <= '9'); i++) {
+            id = id * 10 + (userDataDecrypted.charAt(i) - '0');
+        }
+
+        if (!findById(id).getFirstName().equals(userDataDecrypted.substring(i))) {
+            throwAndLogCodeError(data);
+        }
+
         return id;
     }
 
     @Override
     public void sendCancelOptionMatch(User user, Game game, String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
-        SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.encryptString(phrase);
-        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale());
+        phrase = encrypter.encryptString(phrase);
+        emailSender.sendCancelMatch(user, game, data + "/cancelMatch/" + phrase, LocaleContextHolder.getLocale());
     }
 
-    public SimpleEncrypter getEncrypter() {
-        return encrypter;
+    private void throwAndLogCodeError(String code) {
+        LOGGER.trace("The code '{}' is invalid", code);
+        throw new IllegalArgumentException("The code '" + code + "' is invalid");
     }
 }

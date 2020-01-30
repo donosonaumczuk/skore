@@ -101,13 +101,26 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game insertUserInGame(final String key, final long userId) {
-        Game game = findByKey(key);
-        try {
-            game = insertUserInGameTeam(game, userId, true);
+    public Game insertPremiumUserInGame(final String key, final String username) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO: check
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new ForbiddenException("User '" + loggedUser.getUserName() +
+                    "' is not user '" + username + "'");
         }
-        catch (TeamFullException e) {
-            game = insertUserInGameTeam(game, userId, false);
+        return insertUserInGame(key, loggedUser.getUser().getUserId());
+    }
+
+    @Override
+    public Game insertTemporalUserInGame(final String key, final String code) {
+        Game game;
+        long userId = userService.getUserIdFromData(code, key);
+        try {
+            game = insertUserInGame(key, userId);
+        }
+        catch (Exception e) {
+            userService.remove(userId);
+            throw e;
         }
         return game;
     }
@@ -226,12 +239,30 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    public void createRequestToJoin(final String key, final String firstName, final String lastName,
+                                    final String email) {
+        User newUser = userService.create(firstName, lastName, email);
+        userService.sendConfirmMatchAssistance(newUser, findByKey(key), key);
+    }
+
+
     @Override
     public List<List<Game>> getGamesThatPlay(final long userId) {
         List<List<Game>> listsOfGames = new LinkedList<>();
         listsOfGames.add(gameDao.gamesThatAUserPlayInTeam1(userId));
         listsOfGames.add(gameDao.gamesThatAUserPlayInTeam2(userId));
         return listsOfGames;
+    }
+
+    private Game insertUserInGame(String key, long userId) {
+        Game game = findByKey(key);
+        try {
+            game = insertUserInGameTeam(game, userId, true);
+        }
+        catch (TeamFullException e) {
+            game = insertUserInGameTeam(game, userId, false);
+        }
+        return game;
     }
 
     private Game insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
