@@ -13,11 +13,13 @@ class HomeMatches extends Component {
     mounted = false;
     constructor(props) {
         super(props);
+        const { tab } = this.props; 
         this.state = {
                 matches: [],
                 offset: INITIAL_OFFSET,
                 total: QUERY_QUANTITY,
-                hasMore: true
+                hasMore: true,
+                tab: tab
         }
     }
 
@@ -41,8 +43,46 @@ class HomeMatches extends Component {
         }
     }
 
+    static getDerivedStateFromProps(nextProps, previousState) {
+        if (nextProps.tab !== previousState.tab) {
+            const newState = { 
+                ...previousState,
+                tab: nextProps.tab,
+                offset: INITIAL_OFFSET,
+                hasMore: true,
+                matches: []
+            };
+            return newState;
+        }
+        else {
+            return null;
+        }
+    }
+
+    componentDidUpdate(previousProps, previousState) {
+        if (previousProps.tab !== this.props.tab) {
+            if (this.mounted) {
+                this.getMatches();
+            }
+        }
+    }
+
     getMatches = async () => {
-        let response = await MatchService.getMatches(this.state.offset, this.state.total);
+        let response;
+        const { currentUser } = this.props;
+        const { offset, total, tab } = this.state;
+        if (tab === 0) {
+            response = await MatchService.getMatches(offset, total);
+        }
+        else if (tab === 1) {
+            response = await MatchService.getMatchesToJoin(currentUser, offset, total);
+        }
+        else if (tab === 2) {
+            response = await MatchService.getMatchesJoinedBy(currentUser, offset, total);
+        }
+        else if (tab === 3) {
+            response = await MatchService.getMatchesCreatedBy(currentUser, offset, total);
+        }
         if (this.mounted) {
             this.updateMatches(response);
         }

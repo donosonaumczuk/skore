@@ -6,8 +6,10 @@ class Home extends Component {
     mounted = false;
     constructor(props) {
         super(props);
+        console.log(props);
+        const currentTab = this.props.currentUser ? 1 : 0;
         this.state = {
-            currentTab: 1,
+            currentTab: currentTab,
             filters: {}
         };
     }
@@ -44,7 +46,8 @@ class Home extends Component {
                     </div>
                     <div className="col-md-8 col-lg-8 col-xl-6">
                             {/* TODO pass down filters when implemented filter search */}
-                            <HomeMatches filters={this.state.filters} tab={this.state.currentTab} />
+                            <HomeMatches filters={this.state.filters} tab={this.state.currentTab}
+                                            currentUser={currentUser} />
                     </div>
                 </div>
             </div>

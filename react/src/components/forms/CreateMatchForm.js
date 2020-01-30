@@ -13,7 +13,7 @@ import SportService from '../../services/SportService';
 import Loader from '../Loader';
 import CompetitiveRadio from '../match/CompetitiveRadio';
 import RenderTextArea from './inputs/RenderTextArea';
-import LocationInput from './inputs/LocationInput';
+import MatchLocation from './inputs/MatchLocation';
 import SubLocationInput from './inputs/SubLocationInput';
 import RenderMatchDatePicker from './inputs/RenderMatchDatePicker';
 import RenderTimePicker from './inputs/RenderTimePicker';
@@ -249,8 +249,9 @@ class CreateMatchForm extends Component {
                             </div>
                             <Field name="description" label={i18next.t('createMatchForm.description')} 
                                     inputType="text-area" required={false} component={RenderTextArea} />
-                            <LocationInput updateLocation={this.updateLocationAndState} />
-                            <SubLocationInput label={i18next.t('location.country')} id="country" path="country"
+                            <Field name="matchLocation" updateLocationAndState={this.updateLocationAndState}
+                                    errorMessage={customErrors.locationError} component={MatchLocation} />
+                            <SubLocationInput label={i18next.t('location.country')} id="country"
                                                 value={location.country ? location.country : ""} 
                                                 divStyle="form-group" />
                             <div className="form-row">
@@ -262,16 +263,13 @@ class CreateMatchForm extends Component {
                                                 divStyle="form-group col-3" />
                             </div>
                             <div className="form-row">
-                                <SubLocationInput label={i18next.t('location.city')} id="locality" path="city" 
+                                <SubLocationInput label={i18next.t('location.city')} id="locality"
                                                     value={location.city ? location.city : ""} 
                                                     divStyle="form-group col-6" />
                                 <SubLocationInput label={i18next.t('location.state')} id="administrative_area_level_1"
-                                                    path="state" value={location.state ? location.state : ""} 
+                                                    value={location.state ? location.state : ""} 
                                                     divStyle="form-group col-6" />
                             </div>
-                            <span className="invalid-feedback d-block">
-                                {customErrors.locationError}
-                            </span>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" 
                                             text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" 
