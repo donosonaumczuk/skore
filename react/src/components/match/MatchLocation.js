@@ -1,14 +1,14 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import LocationPropType from '../../proptypes/LocationPropType';
 
 const MatchLocation = ({ address }) => {
-  
+    //TODO make toString of address
     return (
          <div className="row">
             <div className="col">
                 <p>
                     <span className="location-icon mr-2 fas fa-map-marker-alt"></span>
-                    {address}
+                    {address.street}
                 </p>
             </div>
         </div>
@@ -16,7 +16,7 @@ const MatchLocation = ({ address }) => {
 }
 
 MatchLocation.propTypes = {
-    address: Proptypes.string.isRequired
+    address: LocationPropType.isRequired
 }
 
 export default MatchLocation;

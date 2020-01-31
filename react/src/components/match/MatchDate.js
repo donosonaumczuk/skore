@@ -4,7 +4,7 @@ import Proptypes from 'prop-types';
 
 const getDateString = date => {
     //TODO add translation in spanish
-    return `${date.monthValue}/${date.dayOfMonth}/${date.year}`;
+    return `${date.monthNumber}/${date.dayOfMonth}/${date.year}`;
 }
 
 const getTimeString = time => `${time.hour}:${time.minute}`;

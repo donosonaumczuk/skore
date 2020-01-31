@@ -28,7 +28,6 @@ const HomeMatchContainer = ({ currentMatch }) => {
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
-
     return (
         <HomeMatch currentMatch={currentMatch} creatorImageUrl={creatorImageUrl}
                     sportImageUrl={sportImageUrl} handleClick={handleClick} />
