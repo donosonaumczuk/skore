@@ -46,11 +46,21 @@ class LocationInput extends Component {
     }
 
     loadHome = components => {
-        for(let i = 0; i < components.length; i++) {
-            const longName = components[i].long_name;
-            const shortName = components[i].short_name;
-            const types = components[i].types;
-            this.loadValueForTypes(longName, shortName, types);
+        if (this.mounted) {
+            this.setState({ 
+                address: '',
+                street: '',
+                city: '',
+                state: '',
+                country: '',
+                number: ''
+            });
+            for(let i = 0; i < components.length; i++) {
+                const longName = components[i].long_name;
+                const shortName = components[i].short_name;
+                const types = components[i].types;
+                this.loadValueForTypes(longName, shortName, types);
+            }
         }
     }
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import Proptypes from 'prop-types';
 
-const FilterInput = ({ containerId, labelText, inputStyle, inputId, inputType }) => {
+const FilterInput = ({ containerId, labelText, inputStyle, inputId, inputType, input }) => {
     return (
         <div className="row mb-4" id={containerId}>
             <label>{labelText}</label>
-            <input className={inputStyle} type={inputType} id={inputId}/>
+            <input {...input} className={inputStyle} type={inputType} id={inputId}/>
         </div>
     );
 }
