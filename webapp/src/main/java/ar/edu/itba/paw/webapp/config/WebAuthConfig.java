@@ -100,6 +100,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RegexRequestMatcher("/api/users/\\w+/?", "PUT"),
                 new RegexRequestMatcher("/api/users/\\w+/?", "DELETE"),
                 new RegexRequestMatcher("/api/users/\\w+/verification/?", "POST"), //TODO maybe it is not needed
+                new RegexRequestMatcher("/api/matches/?", "POST"),
+                new RegexRequestMatcher("/api/matches/\\w+/?", "PUT"),
+                new RegexRequestMatcher("/api/matches/\\w+/?", "DELETE"),
                 optionalAuthEndpointsMatcher(),
                 adminAuthEndpointsMatcher()
         );
@@ -108,7 +111,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RequestMatcher optionalAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
-                new AntPathRequestMatcher("/**", "GET")
+                new RegexRequestMatcher("/api/matches/temporal/?", "POST")//TODO: maybe not needed
         );
     }
 

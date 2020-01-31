@@ -1,13 +1,14 @@
 package ar.edu.itba.paw.webapp.utils;
 
+import java.time.LocalDateTime;
+
 public class QueryParamsUtils {
 
     public static Integer positiveIntegerOrElse(String s, Integer i) {
         Integer integer;
         try {
             integer = Integer.parseInt(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             integer = i;
         }
         return integer;
@@ -31,5 +32,16 @@ public class QueryParamsUtils {
 
     public static Boolean booleanOrNull(String s) {
         return booleanOrElse(s, null);
+    }
+
+    public static LocalDateTime localDateTimeOrElse(String s, LocalDateTime l) {
+        if (s == null || !s.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
+            return l;
+        }
+        return LocalDateTime.parse(s);
+    }
+
+    public static LocalDateTime localDateTimeOrNull(String s) {
+        return localDateTimeOrElse(s, null);
     }
 }
