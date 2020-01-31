@@ -126,8 +126,8 @@ public class GameDto {
         return durationInMinutes;
     }
 
-    public PlaceDto getLocation() {
-        return location;
+    public Optional<PlaceDto> getLocation() {
+        return Optional.ofNullable(location);
     }
 
     public Integer getTotalPlayers() {

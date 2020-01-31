@@ -6,11 +6,13 @@ import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.DateDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ResultDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
@@ -116,13 +118,12 @@ public class GameController {
         GameValidators.creationValidatorOf("Match creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
+        PlaceDto location = gameDto.getLocation().orElse(PlaceDto.from(new Place(null, null, null, null)));
         Game game = gameService.create(gameDto.getTeamName1(), gameDto.getTeamName2(),
                     getStartTimeFrom(gameDto), gameDto.getDurationInMinutes(), gameDto.isCompetitive(),
-                    gameDto.isIndividual(),  (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCountry(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getState(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCity(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
-                    gameDto.getDescription(), gameDto.getTitle(), gameDto.getSport());
+                    gameDto.isIndividual(),  location.getCountry(), location.getState(), location.getCity(),
+                    location.getStreet(), gameDto.getTornamentName(), gameDto.getDescription(), gameDto.getTitle(),
+                    gameDto.getSport());
         //TODO catch exception TeamNotFoundException, GameAlreadyExist, InvalidGameKeyException (should never happend)
 
         return Response.status(HttpStatus.CREATED.value())
@@ -172,13 +173,11 @@ public class GameController {
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Game newGame;
         try {
+            PlaceDto location = gameDto.getLocation().orElse(PlaceDto.from(new Place(null, null, null, null)));
             newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(), getStartTimeFrom(gameDto),
-                    gameDto.getDurationInMinutes(), null, null,
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCountry(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getState(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCity(),
-                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getStreet(),
-                    null, gameDto.getDescription(), gameDto.getTitle(), key);
+                    gameDto.getDurationInMinutes(), null, null, location.getCountry(), location.getState(),
+                    location.getCity(), location.getStreet(), null, gameDto.getDescription(),
+                    gameDto.getTitle(), key);
         }
         catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException, ForbiddenException
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
