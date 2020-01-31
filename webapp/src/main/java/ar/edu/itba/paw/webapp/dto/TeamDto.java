@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 
 public class TeamDto {
 
-    private final String teamName;
-    private final List<TeamPlayerDto> players;
-    private final Integer playerQuantity;
+    private String teamName;
+    private List<TeamPlayerDto> players;
+    private Integer playerQuantity;
 //    private final List<Link> links; TODO if we decide to show teams should have one
+
+    private TeamDto() {
+        /* Required by JSON object mapper */
+    }
 
     private TeamDto(List<TeamPlayerDto> players, String teamName) {
         this.teamName = teamName;

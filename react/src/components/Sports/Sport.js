@@ -12,6 +12,7 @@ const getSportImageUrl = links => {
     });
     return sportImageUrl;
 }
+
 const Sport = ({ sport }) => {
     //TODO maybe make image bigger and name bigger, add more staff to sport
     const sportImageUrl = getSportImageUrl(sport.links);

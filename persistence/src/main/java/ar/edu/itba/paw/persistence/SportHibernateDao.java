@@ -41,7 +41,7 @@ public class SportHibernateDao implements SportDao {
     }
 
     @Override
-    public Optional<Sport> modifySport(final String sportName, final String displayName,
+    public Optional<Sport> modifySport(final String sportName, final String displayName, final Integer playerQuantity,
                                        final byte[] file) {
         Sport sport = em.find(Sport.class, sportName);
 
@@ -49,7 +49,13 @@ public class SportHibernateDao implements SportDao {
             return Optional.empty();
         }
 
-        sport.setDisplayName(displayName);
+        if(displayName != null) {
+            sport.setDisplayName(displayName);
+        }
+
+        if(playerQuantity != null) {
+            sport.setQuantity(playerQuantity);
+        }
 
         if(file != null) {
             sport.setImage(file);

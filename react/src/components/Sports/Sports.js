@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Sport from './Sport';
 import SportService from '../../services/SportService';
 import Loader from '../Loader';
+import Utils from './../utils/Utils';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
@@ -18,22 +19,24 @@ class Sports extends Component {
         }
     }
 
-    addSports = sports => {
+    addSports = response => {
+        const  { sports } = response;
+        const hasMore = Utils.hasMorePages(response.links);
         this.setState({
             sports: [...this.state.sports, ...sports],
             offset: this.state.offset + sports.length,
             total: QUERY_QUANTITY,
-            hasMore: true
+            hasMore: hasMore
         })
     }
 
     getSports = async () => {
-        const sports = await SportService.getSports();
-        if (sports.status) {
+        const response = await SportService.getSports();
+        if (response.status) {
             //TODO handle error
         }
         else if (this.mounted) {
-            this.addSports(sports);
+            this.addSports(response);
         }
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import AuthUserPropType from './../../proptypes/AuthUserPropType';
 import NavBarForm from './NavBarForm';
 import { Link } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const NavBar = (props) => {
 }
 
 NavBar.propTypes = {
-    currentUser: Proptypes.string
+    currentUser: AuthUserPropType.isRequired
 }
 
 export default NavBar;

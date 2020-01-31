@@ -5,6 +5,14 @@
         "logOut": "Log out",
         "or": "or"
     },
+    "location": {
+        "address": "Address",
+        "country": "Country",
+        "state": "State / Province",
+        "city": "City",
+        "street": "Street",
+        "number": "Number"
+    },
     "createUserForm": {
         "accounts": "Accounts",
         "username": "Username ",
@@ -17,11 +25,6 @@
         "imageFormat": "Accepted formats: png, jpeg or jpg",
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
-        "address": "Address",
-        "country": "Country",
-        "state": "State / Province",
-        "city": "City",
-        "street": "Street",
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
         "signUpButton": "SIGN UP",
@@ -134,7 +137,52 @@
     },
     "createMatchForm": {
         "matchName": "Match name ",
-        "createMatch": "CREATE MATCH"
+        "sport": "Sport ",
+        "chooseSport": "Choose sport",
+        "date": "Date ",
+        "from": "From ",
+        "duration": "Duration ",
+        "chooseHour": "Choose hours",
+        "chooseMinutes": "Choose minutes",
+        "description": "Description",
+        "competitivity": "Competitivity",
+        "friendly": "Friendly",
+        "competitive": "Competitive",
+        "competitivityTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.\n\nCompetitive requires an account to join the match.\nImpacts winrate.\n",
+        "createMatch": "CREATE MATCH",
+        "errors": {
+            "title": {
+                "required": "Title is required.\n",
+                "invalidSymbols": "Title can have alphanumeric symbols, spaces and the following characters '¿?¡!-_.'\n",
+                "invalidLength": "Title must be between 4 and 100 characters length.\n"
+            },
+            "competitivity": {
+                "required": "Competitivity is required.\n"
+            },
+            "sport": {
+                "required": "Sport is required.\n"
+            },
+            "date": {
+                "required": "Date is required.\n",
+                "invalidFutureDate": "Date must be a valid future date.\n"
+            },
+            "time": {
+                "required": "From is required.\n",
+                "invalidTime": "From must be a valid time.\n"
+            },
+            "durationHours": {
+                "required": "Duration must have hours.\n"
+            },
+            "durationMinutes": {
+                "required": "Duration must have minutes.\n"
+            },
+            "description": {
+                "invalidLength": "Decription can not have more than 140 characters.\n"
+            },
+            "location": {
+                "required": "Street and number are required.\n"
+            }
+        }
     },
     "forms": {
         "requiredFields":"Fields containing (*) are required."
@@ -150,7 +198,8 @@
             "sportName": {
                 "required": "Sport name is required.\n",
                 "invalidSymbols": "Sport name can only contains alphanumeric.\n",
-                "invalidLength": "Sport name must be between 4 and 100 characters.\n"
+                "invalidLength": "Sport name must be between 4 and 100 characters.\n",
+                "alreadyExists": "Sport name already exists.\n"
             },
             "displayName": {
                 "required": "Display name is required.\n",

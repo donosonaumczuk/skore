@@ -46,11 +46,21 @@ class LocationInput extends Component {
     }
 
     loadHome = components => {
-        for(let i = 0; i < components.length; i++) {
-            const longName = components[i].long_name;
-            const shortName = components[i].short_name;
-            const types = components[i].types;
-            this.loadValueForTypes(longName, shortName, types);
+        if (this.mounted) {
+            this.setState({ 
+                address: '',
+                street: '',
+                city: '',
+                state: '',
+                country: '',
+                number: ''
+            });
+            for(let i = 0; i < components.length; i++) {
+                const longName = components[i].long_name;
+                const shortName = components[i].short_name;
+                const types = components[i].types;
+                this.loadValueForTypes(longName, shortName, types);
+            }
         }
     }
 
@@ -77,16 +87,16 @@ class LocationInput extends Component {
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                     <div className="form-group">
                         <div>
-                            <label htmlFor='address'>{i18next.t('createUserForm.address')}</label> 
+                            <label htmlFor='address'>{i18next.t('location.address')}</label> 
                         </div>
-                        <input {...getInputProps({ placeholder: i18next.t('createUserForm.address'),
-                                                    className: 'location-search-input', 
+                        <input {...getInputProps({ placeholder: i18next.t('location.address'),
+                                                    className: 'location-search-input form-control', 
                                                     id: 'address', autoComplete: 'new-password' })} />
                         <div className="autocomplete-dropdown-container">
                         {loading && <Loader />}
                         {suggestions.map(suggestion => {
-                            const className = suggestion.active ? 'suggestion-item--active'
-                                                                : 'suggestion-item';
+                            const className = suggestion.active ? 'location-suggestion-active'
+                                                                : 'location-suggestion';
                             return (
                                 <div {...getSuggestionItemProps(suggestion, { className })}>
                                     <span>{suggestion.description}</span>

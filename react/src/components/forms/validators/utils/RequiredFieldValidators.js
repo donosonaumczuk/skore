@@ -1,13 +1,20 @@
 import i18next from 'i18next';
 import { isStringLengthBetween } from './StringValidators';
 
-const validateRequiredField = (fieldValue, errorLabel, invalidSymbols, minLength, maxLength) => {
+const validateOnlyRequiredField = (fieldValue, errorLabel) => {
     //TODO make breakline appear between errors, i do not know why it is not working
     let errorLabelBase = `${errorLabel}`;
     let errorMessage = ``;
     if (!fieldValue) {
         errorMessage = i18next.t(`${errorLabelBase}.required`);
     }
+    return errorMessage;
+}
+
+const validateRequiredField = (fieldValue, errorLabel, invalidSymbols, minLength, maxLength) => {
+    //TODO make breakline appear between errors, i do not know why it is not working
+    let errorLabelBase = `${errorLabel}`;
+    let errorMessage = validateOnlyRequiredField(fieldValue, errorLabel);
     if (fieldValue && !invalidSymbols(fieldValue)) {
         errorMessage = `${errorMessage} ${i18next.t(`${errorLabelBase}.invalidSymbols`)}`;
     }
@@ -18,5 +25,6 @@ const validateRequiredField = (fieldValue, errorLabel, invalidSymbols, minLength
 }
 
 export {
-    validateRequiredField
+    validateOnlyRequiredField,
+    validateRequiredField,
 };

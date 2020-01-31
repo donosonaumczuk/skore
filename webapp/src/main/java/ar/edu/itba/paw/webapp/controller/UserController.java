@@ -4,10 +4,12 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
@@ -15,12 +17,14 @@ import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.PlayerValidators;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
+import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
-import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
-import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,14 +149,15 @@ public class UserController {
             usernamesPlayersInclude = new ArrayList<>();
         }
         usernamesPlayersInclude.add(username);
-        Page<GameDto> page = gameService.findGamesPage(minStartTime, maxStartTime, minFinishTime, maxFinishTime,
-                types, sports, QueryParamsUtils.positiveIntegerOrNull(minQuantity),
-                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), countries, states, cities,
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
+        Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
+                QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
+                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
+                countries, states, cities, QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude,
+                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude,
+                QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
+                QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
@@ -212,13 +217,13 @@ public class UserController {
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
-                userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
-                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                username, userDto.getFirstName(), userDto.getLastName(),
+                userDto.getEmail(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), image, username
+                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(), image
         );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(newPremiumUser);

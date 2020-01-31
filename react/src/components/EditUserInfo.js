@@ -16,6 +16,11 @@ class EditUserInfo extends Component {
         };
     }
 
+    getBirthdayWithFormat = birthday => {
+        const birthdayArray = birthday.split("-");
+        return `${birthdayArray[1]}/${birthdayArray[2]}/${birthdayArray[0]}`;
+    }
+
     updateStateWithUser = currentUser => {
         if (currentUser.status) {
             this.setState({ status: currentUser.status });
@@ -30,7 +35,7 @@ class EditUserInfo extends Component {
         this.mounted = true;
         const currentUser = AuthService.getCurrentUser();
         if (currentUser && currentUser === this.state.username) { 
-            let currentUser = await UserService.getProfileByUsername(this.state.username);
+            let currentUser = await UserService.getUser(this.state.username);
             if (this.mounted) {
                 this.updateStateWithUser(currentUser);
             }
@@ -45,7 +50,7 @@ class EditUserInfo extends Component {
                 "email": currentUser.email,
                 "firstName": currentUser.firstName,
                 "lastName": currentUser.lastName,
-                "birthday": currentUser.birthday,
+                "birthday": this.getBirthdayWithFormat(currentUser.birthday),
                 "cellphone": currentUser.cellphone
             }
         }
@@ -67,7 +72,8 @@ class EditUserInfo extends Component {
             return <Loader />
         }
         return (
-            <EditUserInfoForm initialValues={formInitialValues} />
+            <EditUserInfoForm initialValues={formInitialValues} username={currentUser} 
+                                history={this.props.history} />
         );
     }
 

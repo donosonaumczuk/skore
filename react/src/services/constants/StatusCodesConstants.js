@@ -13,6 +13,8 @@ const SC_FORBIDDEN = 403;
 
 const SC_NOT_FOUND = 404;
 
+const SC_CONFLICT = 409;
+
 export {
     SC_OK,
     SC_CREATED,
@@ -20,5 +22,6 @@ export {
     SC_BAD_REQUEST,
     SC_UNAUTHORIZED,
     SC_FORBIDDEN,
-    SC_NOT_FOUND
+    SC_NOT_FOUND,
+    SC_CONFLICT
 };

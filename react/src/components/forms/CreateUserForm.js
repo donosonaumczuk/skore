@@ -157,18 +157,18 @@ class CreateUserForm extends Component {
                             <Field name="birthday" label={i18next.t('createUserForm.birthday')} id="birthday"
                                     inputType="text" required={true} component={RenderDatePicker} />
                             <LocationInput updateLocation={this.updateLocation} />
-                            <SubLocationInput label={i18next.t('createUserForm.country')} id="country" path="country"
+                            <SubLocationInput label={i18next.t('location.country')} id="country"
                                                 value={this.state.country ? this.state.country : ""} 
                                                 divStyle="form-group" />
-                            <SubLocationInput label={i18next.t('createUserForm.street')} id="route" path="street"
+                            <SubLocationInput label={i18next.t('location.street')} id="route"
                                                 value={this.state.street ? this.state.street : ""} 
                                                 divStyle="form-group" />
                             <div className="form-row">
-                                <SubLocationInput label={i18next.t('createUserForm.city')} id="locality" path="city" 
+                                <SubLocationInput label={i18next.t('location.city')} id="locality" 
                                                     value={this.state.city ? this.state.city : ""} 
                                                     divStyle="form-group col-6" />
-                                <SubLocationInput label={i18next.t('createUserForm.state')} id="administrative_area_level_1"
-                                                    path="state" value={this.state.state ? this.state.state : ""} 
+                                <SubLocationInput label={i18next.t('location.state')} id="administrative_area_level_1"
+                                                    value={this.state.state ? this.state.state : ""} 
                                                     divStyle="form-group col-6"/> 
                             </div>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />

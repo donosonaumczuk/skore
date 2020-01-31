@@ -34,9 +34,8 @@ public class SportServiceImpl implements SportService {
     }
 
     @Override
-    public Optional<Sport> modifySport(final String sportName, final String displayName,
-                             final byte[] file) {
-        return sportDao.modifySport(sportName, displayName, file);
+    public Optional<Sport> modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
+        return sportDao.modifySport(sportName, displayName, playerQuantity, file);
     }
 
     @Override

@@ -7,21 +7,27 @@ import ImageInput from './inputs/ImageInput';
 import SubmitButton from './inputs/SubmitButton';
 import FormComment from './inputs/FormComment';
 import CreateSportValidator from './validators/CreateSportValidator';
+import AuthService from '../../services/AuthService';
+import SportService from '../../services/SportService';
+import ErrorPage from './../ErrorPage';
+import { SC_FORBIDDEN, SC_CONFLICT } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
     errors.sportName = CreateSportValidator.validateSportName(values.sportName);
     errors.displayName = CreateSportValidator.validateDisplayName(values.displayName);
     errors.playersPerTeam = CreateSportValidator.validatePlayersPerTeam(values.playersPerTeam);
-    errors.sportImage = CreateSportValidator.validateSportImage(values.sportImage);
+    errors.sportImage = CreateSportValidator.validateRequiredSportImage(values.sportImage);
     return errors;
 }
 
 class CreateSportForm extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
-            image: null
+            image: null,
+            error: null
         };
     }
 
@@ -60,18 +66,32 @@ class CreateSportForm extends Component {
 
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        console.log(sport);//TODO remove is here just to prevent warning
-        // const res = await SportService.createSport(user); //TODO uncomment when admin is received
-        // if (res.status) {
-        //    //TODO handle error
-        // }
+        const res = await SportService.createSport(sport);
+        if (res.status && this.mounted) {
+            if (res.status === SC_CONFLICT) {
+                this.setState({ sportNameError: true });
+            }
+            else {
+                this.setState({ error: res.status });
+            }
+        }
+        else {
+            this.props.history.push(`/sports`);
+        }
     } 
+
+    componentDidMount() {
+        this.mounted = true;
+    }
 
     render() {
         const { handleSubmit, submitting } = this.props; 
-        //TODO check if currentUser is admin adn redirect to error page with status 403
+        const isAdmin = AuthService.isAdmin();
         let imageName = "";
-        if (this.state.image != null) {
+        if (!isAdmin || this.state.error) {
+            return <ErrorPage status={!isAdmin ? SC_FORBIDDEN : this.state.error} />
+        }
+        else if (this.state.image != null) {
             imageName = this.state.image.name;
         }
         return (
@@ -82,6 +102,10 @@ class CreateSportForm extends Component {
                         <form onSubmit={handleSubmit(this.onSubmit)}>
                             <Field name="sportName" label={i18next.t('createSportForm.sportName')}
                                     id="sportName" inputType="text" required={true} component={RenderInput} />
+                                    {this.state.sportNameError && 
+                                    <span className="invalid-feedback d-block">
+                                        {i18next.t('createSportForm.errors.sportName.alreadyExists')}
+                                    </span> }
                             <Field name="displayName" label={i18next.t('createSportForm.displayName')}
                                     id="displayName" inputType="text" required={true} component={RenderInput} />
                             <Field name="playersPerTeam" label={i18next.t('createSportForm.playersPerTeam')}
@@ -96,6 +120,10 @@ class CreateSportForm extends Component {
                 </div>
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 
