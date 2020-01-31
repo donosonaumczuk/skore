@@ -75,13 +75,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file) {
-        if(findByUserName(userName).isPresent()) {
+        if (findByUserName(userName).isPresent()) {
             return Optional.empty();
         }
 
         final Optional<User> basicUser = userDao.create(firstName, lastName, email);
 
-        if(!basicUser.isPresent()) {
+        if (!basicUser.isPresent()) {
             return Optional.empty();
         }
 
@@ -98,7 +98,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     public boolean remove(final String userName) {
         Optional<PremiumUser> user = findByUserName(userName);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             em.remove(user.get());
             return true;
         }
@@ -107,10 +107,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     public Optional<byte[]> readImage(final String userName) {
         Optional<PremiumUser> premiumUser = findByUserName(userName);
-        if(premiumUser.isPresent()) {
+        if (premiumUser.isPresent()) {
             PremiumUser user = premiumUser.get();
             byte image[] = user.getImage();
-            if(image != null) {
+            if (image != null) {
                 return Optional.of(image);
             }
         }
@@ -129,23 +129,47 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
         if (currentUser.isPresent()) {
             final PremiumUser user = currentUser.get();
-            Optional.ofNullable(newFirstName).ifPresent(firstName -> user.getUser().setFirstName(firstName));
-            Optional.ofNullable(newLastName).ifPresent(lastName -> user.getUser().setLastName(lastName));
-            Optional.ofNullable(newEmail).ifPresent(email -> {
-                    user.getUser().setEmail(email);
-                    user.setEmail(email);
-                    user.setEnabled(false);
-            });
-            Optional.ofNullable(newUserName).ifPresent(user::setUserName);
-            Optional.ofNullable(newCellphone).ifPresent(user::setCellphone);
-            Optional.ofNullable(newCountry).ifPresent(country -> user.getHome().setCountry(country));
-            Optional.ofNullable(newState).ifPresent(state -> user.getHome().setState(state));
-            Optional.ofNullable(newCity).ifPresent(city -> user.getHome().setCity(city));
-            Optional.ofNullable(newStreet).ifPresent(street -> user.getHome().setStreet(street));
-            Optional.ofNullable(newReputation).ifPresent(user::setReputation);
-            Optional.ofNullable(newBirthday).ifPresent(birthday -> user.setBirthday(LocalDate.parse(birthday)));
-            Optional.ofNullable(newPassword).ifPresent(user::setPassword);
-            Optional.ofNullable(file).ifPresent(user::setImage);
+            if (newFirstName != null) {
+                user.getUser().setFirstName(newFirstName);
+            }
+            if (newLastName != null) {
+                user.getUser().setLastName(newLastName);
+            }
+            if (newEmail != null) {
+                user.getUser().setEmail(newEmail);
+                user.setEmail(newEmail);
+                user.setEnabled(false);
+            }
+            if (newUserName != null) {
+                user.setUserName(newUserName);
+            }
+            if (newCellphone != null) {
+                user.setCellphone(newCellphone);
+            }
+            if (newCountry != null) {
+                user.getHome().setCountry(newCountry);
+            }
+            if (newState != null) {
+                user.getHome().setState(newState);
+            }
+            if (newCity != null) {
+                user.getHome().setCity(newCity);
+            }
+            if (newStreet != null) {
+                user.getHome().setStreet(newStreet);
+            }
+            if (newReputation != null) {
+                user.setReputation(newReputation);
+            }
+            if (newBirthday != null) {
+                user.setBirthday(LocalDate.parse(newBirthday));
+            }
+            if (newPassword != null) {
+                user.setPassword(newPassword);
+            }
+            if (file != null) {
+                user.setImage(file);
+            }
             em.merge(user);
             return Optional.of(user);
         }

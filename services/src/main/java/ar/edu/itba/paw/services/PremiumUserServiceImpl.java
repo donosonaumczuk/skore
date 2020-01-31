@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PremiumUserServiceImpl implements PremiumUserService{
+public class PremiumUserServiceImpl implements PremiumUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserServiceImpl.class);
 
