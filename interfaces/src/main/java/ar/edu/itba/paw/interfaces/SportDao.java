@@ -15,7 +15,6 @@ public interface SportDao {
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
                                   final byte[] file);
 
-
     public Optional<Sport> modifySport(final String sportName, final String displayName, final Integer playerQuantity,
                                                 final byte[] file);
 
