@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 
 const MatchButton = ({ buttonStyle, handleClick, buttonText, fontAwesome }) => {
     return (
@@ -8,6 +8,13 @@ const MatchButton = ({ buttonStyle, handleClick, buttonText, fontAwesome }) => {
             {buttonText}
         </button>
     );
+}
+
+MatchButton.propTypes = {
+    buttonStyle: PropTypes.string.isRequired,
+    handleClick: PropTypes.func.isRequired,
+    buttonText: PropTypes.string.isRequired,
+    fontAwesome: PropTypes.string.isRequired
 }
 
 export default MatchButton;

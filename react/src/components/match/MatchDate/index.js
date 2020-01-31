@@ -1,5 +1,6 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import DatePropType from '../../../proptypes/DatePropType';
+import TimePropType from '../../../proptypes/TimePropType';
 
 
 const getDateString = date => {
@@ -26,8 +27,8 @@ const MatchDate = ({ date, time }) => {
 }
 
 MatchDate.propTypes = {
-    date: Proptypes.object.isRequired,
-    time: Proptypes.object.isRequired
+    date: DatePropType.isRequired,
+    time: TimePropType.isRequired
 }
 
 export default MatchDate;

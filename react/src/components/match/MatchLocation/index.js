@@ -1,5 +1,5 @@
 import React from 'react';
-import LocationPropType from '../../proptypes/LocationPropType';
+import LocationPropType from '../../../proptypes/LocationPropType';
 
 const MatchLocation = ({ address }) => {
     //TODO make toString of address

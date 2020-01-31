@@ -1,7 +1,7 @@
 import React from 'react';
 import Proptypes from 'prop-types';
-import AuthService from '../../services/AuthService';
-import MatchButton from './MatchButton';
+import AuthService from '../../../services/AuthService';
+import MatchButton from '../MatchButton';
 import i18next from 'i18next';
 
 const joinMatch = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'redux-form';
 import i18next from 'i18next';
-import RadioInput from '../forms/inputs/RadioInput';
+import RadioInput from '../../forms/inputs/RadioInput';
 
 const CompetitiveRadio = () => {
     return  (
