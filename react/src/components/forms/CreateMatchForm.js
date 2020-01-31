@@ -13,13 +13,21 @@ import SportService from '../../services/SportService';
 import Loader from '../Loader';
 import CompetitiveRadio from '../match/CompetitiveRadio';
 import RenderTextArea from './inputs/RenderTextArea';
+<<<<<<< HEAD
 import MatchLocation from './inputs/MatchLocation';
+=======
+import LocationInput from './inputs/LocationInput';
+>>>>>>> development
 import SubLocationInput from './inputs/SubLocationInput';
 import RenderMatchDatePicker from './inputs/RenderMatchDatePicker';
 import RenderTimePicker from './inputs/RenderTimePicker';
 import CreateMatchValidator from './validators/CreateMatchValidator';
 
+<<<<<<< HEAD
 var location = {
+=======
+const location = {
+>>>>>>> development
     "country": null,
     "state": null,
     "city": null,
@@ -27,11 +35,25 @@ var location = {
     "number": null
 };
 
+<<<<<<< HEAD
 var time = {
+=======
+const time = {
+>>>>>>> development
     "hour": null,
     "minutes": null
 };
 
+<<<<<<< HEAD
+=======
+//TODO only show them after submit is pressed
+const customErrors = {
+    locationError: null,
+    timeError: null,
+    active: false
+}
+
+>>>>>>> development
 const updateLocation = home => {
     location.street = home.street;
     location.city = home.city;
@@ -40,10 +62,17 @@ const updateLocation = home => {
     location.number = home.number;
 }
 
+<<<<<<< HEAD
 const updateTime = newTime => {
     const timeArray = moment(newTime).format("hh:mm").split(":");
     time.hour = parseInt(timeArray[0]);
     time.minutes = parseInt(timeArray[1]);  
+=======
+const updateTime = time => {
+    const timeArray = moment(time).format("hh:mm").split(":");
+    location.hour = parseInt(timeArray[0]);
+    location.minutes = parseInt(timeArray[1]);  
+>>>>>>> development
 }
 
 const validate = values => {
@@ -55,7 +84,12 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
+<<<<<<< HEAD
     errors.matchTime = CreateMatchValidator.validateTime(time);
+=======
+    customErrors.timeError = CreateMatchValidator.validateTime(time);
+    customErrors.locationError = CreateMatchValidator.validateLocation(location);
+>>>>>>> development
     return errors;
 }
 
@@ -189,8 +223,7 @@ class CreateMatchForm extends Component {
             }
             let match = this.loadMatch(values, this.state.image);
             console.log(match);//TODO is here just to prevent warning
-        } //TODO implement post to endpoint and then redirect, when ednpoint is created
-        
+        } //TODO implement post to endpoint and then redirect, when ednpoint is created        
     }
 
     render() {
@@ -290,7 +323,7 @@ class CreateMatchForm extends Component {
 CreateMatchForm = reduxForm({
     form: 'createMatch',
     destroyOnUnmount: false,
-    validate,
+    validate
 })(CreateMatchForm)
 
 export default CreateMatchForm;
