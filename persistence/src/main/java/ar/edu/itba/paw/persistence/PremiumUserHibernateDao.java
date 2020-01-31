@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.models.Filters;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
@@ -310,7 +309,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
         queryStart = queryStart.append(QUERY_PART_4);
 
-        Filters  filter = new Filters(queryStart.toString());
+        DaoHelper filter = new DaoHelper(queryStart.toString());
         filter.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
         filter.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
         //TODO: winrate filter and Sort, need base migration
@@ -318,7 +317,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         filter.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
         filter.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
 
-        final TypedQuery<PremiumUser> query = em.createQuery(filter.toString() +
+        final TypedQuery<PremiumUser> query = em.createQuery(filter.getQuery() +
                 (sort != null ? sort.toQuery() : ""), PremiumUser.class);
         List<String> valueName = filter.getValueNames();
         List<Object> values    = filter.getValues();

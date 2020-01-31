@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.SportDao;
-import ar.edu.itba.paw.models.Filters;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.SportSort;
 import org.springframework.stereotype.Repository;
@@ -81,11 +80,11 @@ public class SportHibernateDao implements SportDao {
     @Override
     public List<Sport> findSports(final List<String> sportNames, final Integer minQuantity,
                                   final Integer maxQuantity, final SportSort sort) {
-        Filters filter = new Filters(QUERY_START);
+        DaoHelper filter = new DaoHelper(QUERY_START);
         filter.addFilter(QUERY_SPORT_NAME, EQUALS, SPORT_NAME, sportNames);
         filter.addFilter(QUERY_PLAYER_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
         filter.addFilter(QUERY_PLAYER_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
-        final TypedQuery<Sport> query = em.createQuery(filter.toString() +
+        final TypedQuery<Sport> query = em.createQuery(filter.getQuery() +
                 (sort != null ? sort.toQuery() : ""), Sport.class);
         List<String> valueName = filter.getValueNames();
         List<Object> values    = filter.getValues();
