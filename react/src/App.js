@@ -11,7 +11,7 @@ import Loader from './components/Loader';
 import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
 import ErrorPage from './components/ErrorPage';
-import Home from './components/home/Home';
+import Home from './components/Home';
 import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';

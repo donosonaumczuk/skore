@@ -1,6 +1,7 @@
 import React from 'react';
 import i18next from 'i18next';
-import Tab from './Tab';
+import PropTypes from 'prop-types';
+import Tab from '../Tab';
 
 const getTabState = currentTab => {
     let tabOne = false, tabTwo=false, tabThree=false;
@@ -35,6 +36,11 @@ const Tabs = ({ currentTab, handleTabChange }) => {
             </div>
         </div>
     );
+}
+
+Tabs.propTypes = {
+    currentTab: PropTypes.number.isRequired,
+    handleTabChange: PropTypes.func.isRequired
 }
 
 export default Tabs;

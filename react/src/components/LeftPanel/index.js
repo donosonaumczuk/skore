@@ -1,9 +1,9 @@
 import React from 'react';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
-import PosterWithButton from '../../panel/PosterWithButton';
-import FilterMenu from './FilterMenu';
-import Tabs from './Tabs';
+import PosterWithButton from '../panel/PosterWithButton';
+import FilterMenu from './components/FilterMenu';
+import Tabs from './components/Tabs';
 
 const getTabs = (user, currentTab, handleTabChange) => {
     if (user) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LeftPanel from './leftPanel/LeftPanel';
+import LeftPanel from '../LeftPanel';
 
 const Home = (props) => {
-    const { currentTab, handleTabChange, filters, updateFilters, currentMatches } = props;
+    const { currentTab, handleTabChange, filters, updateFilters, currentMatches, currentUser } = props;
      return (
         <div className="container-fluid">
             <div className="row">
@@ -26,7 +26,8 @@ Home.propTypes = {
     handleTabChange: PropTypes.func.isRequired,
     filters: PropTypes.object.isRequired,
     updateFilters: PropTypes.func.isRequired,
-    currentMatches: PropTypes.object.isRequired
+    currentMatches: PropTypes.object.isRequired,
+    currentUser: PropTypes.string,
 }
 
 export default Home;

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import PropTypes from 'prop-types';
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../services/MatchService';
 import { buildUrlFromParamQueries } from '../../services/Util';
 import Utils from '../utils/Utils';
 import Loader from '../Loader';
 import ErrorPage from './../ErrorPage';
-import Home from './components/layout';
+import Home from './layout';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -116,6 +117,12 @@ class HomeContainer extends Component {
         //TODO stop request
         this.mounted = false;
     }
+}
+
+HomeContainer.propTypes = {
+    currentUser: PropTypes.string,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 export default HomeContainer;
