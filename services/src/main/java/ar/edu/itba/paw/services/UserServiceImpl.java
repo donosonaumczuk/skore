@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.UserAlreadyExist;
 import ar.edu.itba.paw.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    public EmailService emailSender;
+    private EmailService emailSender;
 
     private SimpleEncrypter encrypter = new SimpleEncrypter();
 
@@ -40,8 +41,7 @@ public class UserServiceImpl implements UserService {
         }
 
         LOGGER.trace("Looking up user with id {}", id);
-        Optional<User> user = userDao.findById(id);
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
+        return userDao.findById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
     }
 
     @Override
@@ -50,7 +50,10 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> user = userDao.create(firstName, lastName, email);
 
-        return user.orElseThrow(() -> new UserNotFoundException("Couldn't create user."));
+        return user.orElseThrow(() -> {
+            LOGGER.trace("Creation fails, user '{}' already exist", email);
+            return new UserAlreadyExist("Creation fails, user '" + email + "' already exist");
+        });
     }
 
     @Override
@@ -80,32 +83,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendConfirmMatchAssistance(User user, Game game, String data) {
+    public void sendConfirmMatchAssistance(final User user, final Game game, final String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendConfirmMatch(user, game, "confirmMatch/" + phrase , LocaleContextHolder.getLocale());
+        emailSender.sendConfirmMatch(user, game, data + "/confirmMatch/" + phrase , LocaleContextHolder.getLocale());
     }
 
     @Override
-    public long getUserIdFromData (String data) {
-        long id = 0;
-        for(int i = 0; i < data.length() && (data.charAt(i) >= '0' && data.charAt(i) <= '9'); i++) {
-            if(data.charAt(i) >= '0' && data.charAt(i) <= '9') {
-                id = id * 10 + (data.charAt(i) - '0');
-            }
+    public User getUserFromData(final String data, final String gameData) {
+        String[] datas = encrypter.decryptString(data).split("\\$");
+        String userDataDecrypted = datas[0];
+        String gameDataDecrypted = datas[1];
+
+        if (!gameDataDecrypted.equals(gameData)) {
+            throwAndLogCodeError(data);
         }
-        return id;
+
+        long id = 0;
+        int i;
+        for(i = 0; i < userDataDecrypted.length() && (userDataDecrypted.charAt(i) >= '0'
+                && userDataDecrypted.charAt(i) <= '9'); i++) {
+            id = id * 10 + (userDataDecrypted.charAt(i) - '0');
+        }
+
+        User user = findById(id);
+        if (!user.getFirstName().equals(userDataDecrypted.substring(i))) {
+            throwAndLogCodeError(data);
+        }
+
+        return user;
     }
 
     @Override
-    public void sendCancelOptionMatch(User user, Game game, String data) {
+    public void sendCancelOptionMatch(final User user, final Game game, final String data) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
-        SimpleEncrypter encrypter = new SimpleEncrypter();
-        encrypter.encryptString(phrase);
-        emailSender.sendCancelMatch(user, game, "cancelMatch/" + phrase, LocaleContextHolder.getLocale());
+        phrase = encrypter.encryptString(phrase);
+        emailSender.sendCancelMatch(user, game, data + "/cancelMatch/" + phrase, LocaleContextHolder.getLocale());
     }
 
-    public SimpleEncrypter getEncrypter() {
-        return encrypter;
+    private void throwAndLogCodeError(String code) {
+        LOGGER.trace("The code '{}' is invalid", code);
+        throw new IllegalArgumentException("The code '" + code + "' is invalid");
     }
 }

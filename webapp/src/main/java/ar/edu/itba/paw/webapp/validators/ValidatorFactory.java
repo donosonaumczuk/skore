@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.validators;
 
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import org.checkerframework.javacutil.Pair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -41,6 +43,101 @@ public class ValidatorFactory {
             } catch (JSONException e) {
                 logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
                         + field + "' must be a string"));
+            }
+        };
+    }
+
+    /**
+     * Validates that a JSON Object field is an int
+     *
+     * @param field the name of the field to validate
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> fieldIsIntegerValidatorOf(final String field, final String log) {
+        return jsonObject -> {
+            try {
+                jsonObject.getInt(field);
+            } catch (JSONException e) {
+                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                        + field + "' must be a integer"));
+            }
+        };
+    }
+
+    /**
+     * Validates that a JSON Object field is a boolean
+     *
+     * @param field the name of the field to validate
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> fieldIsBooleanValidatorOf(final String field, final String log) {
+        return jsonObject -> {
+            try {
+                jsonObject.getBoolean(field);
+            } catch (JSONException e) {
+                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                        + field + "' must be a boolean"));
+            }
+        };
+    }
+
+    /**
+     * Validates that a JSON Object field is an integer and belongs to an interval
+     *
+     * @param field the name of the field to validate
+     * @param min the minimum of the interval
+     * @param max the maximum of the interval
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> fieldIsIntegerInRangeValidatorOf(final String field, final Integer min,
+                                                                         final Integer max, final String log) {
+        return fieldIsIntegerValidatorOf(field, log).and(jsonObject -> {
+                    if ((max != null && jsonObject.getInt(field) > max) ||
+                            (min != null && jsonObject.getInt(field) < min)) {
+                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                                + "' must belong to [" + (min == null ? "-Inf" : min) + "," +
+                                (max == null ? "Inf" : max) + "]"));
+                    }
+                }
+        );
+    }
+
+    /**
+     * Validates that a JSON Object field is an String and it's length belongs to an interval
+     *
+     * @param field the name of the field to validate
+     * @param min the minimum of the interval
+     * @param max the maximum of the interval
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> fieldIsStringWithLengthInRangeValidatorOf(final String field, final Integer min,
+                                                                                  final Integer max, final String log) {
+        return fieldIsStringValidatorOf(field, log).and(jsonObject -> {
+                    ValidatorFactory.isStringWithLengthInRangeValidatorOf(field, min, max, log)
+                            .validate(jsonObject.getString(field));
+                });
+    }
+
+    /**
+     * Validates that a string length belongs to an interval
+     *
+     * @param field the name of the field to validate
+     * @param min the minimum of the interval
+     * @param max the maximum of the interval
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<String> isStringWithLengthInRangeValidatorOf(final String field, final Integer min,
+                                                                         final Integer max, final String log) {
+        return (string) -> {
+            if ((max != null && string.length() > max) || (min != null && string.length() < min)) {
+                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                        + "' length must belong to [" + (min == null ? "-Inf" : min) + "," +
+                        (max == null ? "Inf" : max) + "]"));
             }
         };
     }
@@ -100,6 +197,25 @@ public class ValidatorFactory {
     }
 
     /**
+     * Validate that a JSON Object does not contain any of the forbidden fields
+     *
+     * @param forbiddenFields the forbidden fields
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> forbiddenFieldsValidatorOf(final Set<String> forbiddenFields, final String log) {
+        return jsonObject -> {
+            final Set<String> jsonFields = jsonObject.keySet();
+            Optional<String> forbiddenField = jsonFields.stream()
+                    .filter(forbiddenFields::contains)
+                    .findFirst();
+            forbiddenField.ifPresent(field -> logAndThrowApiException(log,
+                    new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field + "' known but other field values " +
+                            "turn it unaccepted")));
+        };
+    }
+
+    /**
      * Validate that an Optional of a resource must be present
      *
      * @param resourceType a description of the resource type
@@ -137,6 +253,27 @@ public class ValidatorFactory {
     }
 
     /**
+     * Validate that all JSON Object known fields have valid values
+     *
+     * @param fieldValidators a List with the Validator for every known JSON field
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> jsonFieldValuesValidatorOf(
+            final List<Pair<String, Validator<JSONObject>>> fieldValidators
+    ) {
+        return jsonObject -> {
+            Validator<JSONObject> validator = json -> { /* Clean validator, do nothing */ };
+            Set<String> fields = jsonObject.keySet();
+            for (Pair<String, Validator<JSONObject>> pair : fieldValidators) {
+                if (fields.contains(pair.first)) {
+                    validator = validator.and(pair.second);
+                }
+            }
+            validator.validate(jsonObject);
+        };
+    }
+
+    /**
      * Validate that a JSON Object have only known fields, have all the required field and that all the fields have
      * valid values
      *
@@ -147,9 +284,28 @@ public class ValidatorFactory {
      * @return the validator which performs the described validation
      */
     public static Validator<JSONObject> jsonInputValidator(final Set<String> knownFields,
-                                                            final Set<String> requiredFields,
-                                                            final Map<String, Validator<JSONObject>> fieldValidators,
-                                                            final String log) {
+                                                           final Set<String> requiredFields,
+                                                           final Map<String, Validator<JSONObject>> fieldValidators,
+                                                           final String log) {
+        return ValidatorFactory.knownFieldsValidatorOf(knownFields, log)
+                .and(ValidatorFactory.requiredFieldsValidatorOf(requiredFields, log))
+                .and(ValidatorFactory.jsonFieldValuesValidatorOf(fieldValidators));
+    }
+
+    /**
+     * Validate that a JSON Object have only known fields, have all the required field and that all the fields have
+     * valid values
+     *
+     * @param knownFields a Set with the JSON known fields
+     * @param requiredFields a Set with the JSON required fields
+     * @param fieldValidators a List with the Validator for every known JSON field
+     * @param log a String to log if something is invalid
+     * @return the validator which performs the described validation
+     */
+    public static Validator<JSONObject> jsonInputValidator(final Set<String> knownFields,
+                                                           final Set<String> requiredFields,
+                                                           final List<Pair<String, Validator<JSONObject>>> fieldValidators,
+                                                           final String log) {
         return ValidatorFactory.knownFieldsValidatorOf(knownFields, log)
                 .and(ValidatorFactory.requiredFieldsValidatorOf(requiredFields, log))
                 .and(ValidatorFactory.jsonFieldValuesValidatorOf(fieldValidators));

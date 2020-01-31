@@ -13,7 +13,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,13 +61,13 @@ public class GameHibernateDao implements GameDao {
     private static final String MAX_FREE_PLACES        = "maxFreePlaces";
 
     @Override
-    public Optional<Game> create(final String teamName1, final String teamName2, final String startTime,
-                                 final String finishTime, final String type, final String result,
+    public Optional<Game> create(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final LocalDateTime finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
                                  final String title) {
         LOGGER.trace("Try to create game: {} vs {} |starting at {} |finishing at {}",
-                teamName1, teamName2, startTime,finishTime);
+                teamName1, teamName2, startTime.toString(), finishTime.toString());
         Team team1 = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
         Team team2;
@@ -79,26 +78,23 @@ public class GameHibernateDao implements GameDao {
         else {
             team2 = null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Game game = new Game(team1, team2, new Place(country, state, city, street),
-                LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(finishTime, formatter),
+        Game game = new Game(team1, team2, new Place(country, state, city, street), startTime, finishTime,
                 type, result, description, title, tornamentName);
         em.persist(game);
         LOGGER.trace("Successfully create game: {} vs {} |starting at {} |finishing at {}",
-                teamName1, teamName2, startTime,finishTime);
+                teamName1, teamName2, startTime.toString(), finishTime.toString());
         return Optional.of(game);
     }
 
     @Override
-    public Optional<Game> findByKey(String teamName1, String startTime, String finishTime) {
-        LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime, finishTime);
+    public Optional<Game> findByKey(String teamName1, LocalDateTime startTime, LocalDateTime finishTime) {
+        LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime.toString(),
+                finishTime.toString());
         Team team1 = teamDao.findByTeamName(teamName1)
                 .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Game game = em.find(Game.class, new GamePK(team1, LocalDateTime.parse(startTime, formatter),
-                LocalDateTime.parse(finishTime, formatter)));
+        Game game = em.find(Game.class, new GamePK(team1, startTime, finishTime));
         LOGGER.trace("Returning what was find");
-        return (game == null)?Optional.empty():Optional.of(game);
+        return Optional.ofNullable(game);
     }
 
     @Override
@@ -181,46 +177,68 @@ public class GameHibernateDao implements GameDao {
     }
 
     @Override
-    public Optional<Game> modify(final String teamName1, final String teamName2, final String startTime,
-                                 final String finishTime, final String type, final String result,
+    public Optional<Game> modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
+                                 final LocalDateTime finishTime, final String type, final String result,
                                  final String country, final String state, final String city,
                                  final String street, final String tornamentName, final String description,
-                                 final String teamName1Old, final String startTimeOld, final String finishTimeOld) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Team team1Old = teamDao.findByTeamName(teamName1Old)
-                .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        Game game = em.find(Game.class, new GamePK(team1Old, LocalDateTime.parse(startTimeOld, formatter),
-                LocalDateTime.parse(finishTimeOld, formatter)));
-        LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
-                startTimeOld, finishTimeOld);
-        if(game == null) {
-            LOGGER.trace("Fail to modify game: {} |starting at {} |finishing at {}", teamName1Old,
-                    startTimeOld, finishTimeOld);
+                                 final String title, final String teamName1Old, final LocalDateTime startTimeOld,
+                                 final LocalDateTime finishTimeOld) {
+        Optional<Team> team1Old = teamDao.findByTeamName(teamName1Old);
+        if (!team1Old.isPresent()) {
             return Optional.empty();
         }
-        Team team = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
-        game.setTeam1(team);
-        team = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
-        game.setTeam2(team);
-        game.setStartTime(LocalDateTime.parse(startTime, formatter));
-        game.setFinishTime(LocalDateTime.parse(finishTime, formatter));
-        game.setType(type);
-        game.setResult(result);
-        game.setPlace(new Place(country, state, city, street));
-        game.setTornament(tornamentName);
-        game.setDescription(description);
+        Game game = em.find(Game.class, new GamePK(team1Old.get(), startTimeOld, finishTimeOld));
+        LOGGER.trace("Try to modify game: {} |starting at {} |finishing at {}", teamName1Old,
+                startTimeOld.toString(), finishTimeOld.toString());
+        if(game == null) {
+            LOGGER.trace("Fail to modify game: {} |starting at {} |finishing at {}", teamName1Old,
+                    startTimeOld.toString(), finishTimeOld.toString());
+            return Optional.empty();
+        }
+        if (teamName1 != null) {
+            Team team = teamDao.findByTeamName(teamName1)
+                    .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
+            game.setTeam1(team);
+        }
+        if (teamName1 != null) {
+            Team team = teamDao.findByTeamName(teamName2)
+                    .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
+            game.setTeam2(team);
+        }
+        if (startTime != null) {
+            game.setStartTime(startTime);
+        }
+        if (finishTime != null) {
+            game.setFinishTime(finishTime);
+        }
+        if (type != null) {
+            game.setType(type);
+        }
+        if (result != null) {
+            game.setResult(result);
+        }
+        if (country != null || state != null || city != null || street != null) {
+            game.setPlace(new Place(country, state, city, street));
+        }
+        if (result != null) {
+            game.setTornament(tornamentName);
+        }
+        if (result != null) {
+            game.setDescription(description);
+        }
+        if (result != null) {
+            game.setTitle(title);
+        }
 
         em.merge(game);
         LOGGER.trace("Successfully modify game: {} |starting at {} |finishing at {}", teamName1Old,
-                startTimeOld, finishTimeOld);
+                startTimeOld.toString(), finishTimeOld.toString());
         return Optional.of(game);
     }
 
     @Override
-    public boolean remove(final String teamName1, final String startTime, final String finishTime) {
-        LOGGER.trace("Try to delete game: {}|{}|{}", teamName1, startTime, finishTime);
+    public boolean remove(final String teamName1, final LocalDateTime startTime, final LocalDateTime finishTime) {
+        LOGGER.trace("Try to delete game: {}|{}|{}", teamName1, startTime.toString(), finishTime.toString());
         Optional<Game> game = findByKey(teamName1, startTime, finishTime);
         boolean ans = false;
         if(game.isPresent()) {

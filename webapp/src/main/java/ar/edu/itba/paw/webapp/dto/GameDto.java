@@ -18,39 +18,50 @@ public class GameDto {
 
     private static final int TEAMS_PER_SPORT = 2;
 
-    private final String title;
-    private final String description;
-    private final String creator;
-    private final Boolean isCompetitive;
-    private final String sport;
-    private final String sportName;
-    private final LocalDate date;
-    private final LocalTime time;
-    private final Long durationInMinutes;
-    private final String location;
-    private final Integer totalPlayers;
-    private final Integer currentPlayers;
-    private final Boolean hasStarted;
-    private final Boolean hasFinished;
-    private final String results;
-    private final TeamDto team1;
-    private final TeamDto team2;
-    private final List<Link> links;
+    private String title;
+    private String description;
+    private String creator;
+    private String tornamentNameThatIsFrom;
+    private Boolean individual;
+    private Boolean isCompetitive;
+    private String sport;
+    private String sportName;
+    private DateDto date;
+    private TimeDto time;
+    private Long durationInMinutes;
+    private PlaceDto location; //TODO: make a decision about DOCKER
+    private Integer totalPlayers;
+    private Integer currentPlayers;
+    private Boolean hasStarted;
+    private Boolean hasFinished;
+    private String results;
+    private TeamDto team1;
+    private String teamName1;
+    private TeamDto team2;
+    private String teamName2;
+    private String key;
+    private List<Link> links;
 //    private ResultDto results; TODO maybe dto with specific results according to sport
+
+    private GameDto() {
+        /* Required by JSON object mapper */
+    }
 
     private GameDto(Game game, TeamDto team1, TeamDto team2) {
         title = game.getTitle();
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
+        individual = game.getGroupType().equals("Individual");
         isCompetitive = game.getCompetitiveness().equals("Competitive");
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
         LocalDateTime finishTime = game.getFinishTime();
-        date = LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth());
-        time = LocalTime.of(startTime.getHour(), startTime.getMinute());
+        date = DateDto.from(LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth()));
+        time = TimeDto.from(LocalTime.of(startTime.getHour(), startTime.getMinute()));
         durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
-        location = game.getPlace().toString();
+        tornamentNameThatIsFrom = game.getTornament();
+        location = PlaceDto.from(game.getPlace());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
         currentPlayers = team1.getPlayerQuantity() + (team2 == null ? 0 : team2.getPlayerQuantity());
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
@@ -58,6 +69,7 @@ public class GameDto {
         results = game.getResult();
         this.team1 = team1;
         this.team2 = team2;
+        key = game.getKey();
         this.links = getHateoasLinks(game, creator);
     }
 
@@ -102,11 +114,11 @@ public class GameDto {
         return sportName;
     }
 
-    public Optional<LocalDate> getDate() {
+    public Optional<DateDto> getDate() {
         return Optional.ofNullable(date);
     }
 
-    public Optional<LocalTime> getTime() {
+    public Optional<TimeDto> getTime() {
         return Optional.ofNullable(time);
     }
 
@@ -114,8 +126,8 @@ public class GameDto {
         return durationInMinutes;
     }
 
-    public String getLocation() {
-        return location;
+    public Optional<PlaceDto> getLocation() {
+        return Optional.ofNullable(location);
     }
 
     public Integer getTotalPlayers() {
@@ -134,6 +146,10 @@ public class GameDto {
         return hasFinished;
     }
 
+    public Boolean isIndividual() {
+        return individual;
+    }
+
     public String getResults() {
         return results;
     }
@@ -148,5 +164,21 @@ public class GameDto {
 
     public List<Link> getLinks() {
         return links;
+    }
+
+    public String getTornamentName() {
+        return tornamentNameThatIsFrom;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getTeamName1() {
+        return teamName1;
+    }
+
+    public String getTeamName2() {
+        return teamName2;
     }
 }

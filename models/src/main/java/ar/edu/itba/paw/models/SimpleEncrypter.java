@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import javassist.tools.reflect.CannotInvokeException;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -21,13 +23,13 @@ public class SimpleEncrypter {
             cipher = Cipher.getInstance(INSTANCE_KEY);
         }
         catch(Exception e) {
-            System.out.println("Can't instanciate encrypter");
+            throw new CannotInvokeException("Can't instanciate encrypter");
         }
     }
 
 
     public String encryptString(String textToBeEncrypted) {
-        String encryptedString = null;
+        String encryptedString;
 
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -35,14 +37,14 @@ public class SimpleEncrypter {
             encryptedString = Base64.getEncoder().encodeToString(encryptedBytes);
         }
         catch(Exception e) {
-            System.out.println("Can't encrypt"); //TODO: Check this, we are logging to stdout!
+            throw new CannotInvokeException("Can't instanciate encrypter");
         }
 
         return encryptedString;
     }
 
     public String decryptString(String textToBeDecrypted) {
-        String decryptedString = null;
+        String decryptedString;
 
         try {
 
@@ -51,7 +53,7 @@ public class SimpleEncrypter {
             final byte[] decryptedBytes = cipher.doFinal(decodedBytes);
             decryptedString = new String(decryptedBytes);
         } catch(Exception ex) {
-            System.out.println("The Exception is=" + ex); //TODO: Check this, we are logging to stdout!
+            throw new CannotInvokeException("Can't instanciate encrypter");
         }
 
         return decryptedString;
