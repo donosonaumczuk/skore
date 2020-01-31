@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
 public class JSONExceptionMapper implements ExceptionMapper<JSONException> {
 
     @Override
-    public Response toResponse(JSONException e) {
+    public Response toResponse(JSONException jsonException) {
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(ApiErrorDto.of(HttpStatus.BAD_REQUEST, "The request body must be a valid JSON"))
                 .build();

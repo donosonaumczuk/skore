@@ -195,7 +195,7 @@ public class GameServiceImpl implements GameService {
                 result, country, state, city, street, tornamentName, description, title, gameKey.getTeamName1(),
                 gameKey.getStartTime(), gameKey.getFinishTime()).orElseThrow(() -> {
                     LOGGER.trace("Modify fails, match '{}' not found", key);
-                    return new GameNotFoundException("Modify fails, match '" + key + "' not found");
+                    return GameNotFoundException.ofKey(key);
                 });
 
         return game;
@@ -219,7 +219,7 @@ public class GameServiceImpl implements GameService {
         return gameDao.findByKey(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime())
                 .orElseThrow(() -> {
                     LOGGER.trace("Find by key fails, match '{}' not found", key);
-                    return new GameNotFoundException("Find by key fails, match '" + key + "' not found");
+                    return GameNotFoundException.ofKey(key);
                 });
     }
 
