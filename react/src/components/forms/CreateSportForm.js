@@ -112,7 +112,7 @@ class CreateSportForm extends Component {
                                     id="playersPerTeam" inputType="text" required={true} component={RenderInput} />
                             <Field name="sportImage" label={i18next.t('createSportForm.sportImage')} type="file"
                                 imageName={imageName} acceptedFormat={i18next.t('createUserForm.imageFormat')}
-                                required={true} component={ImageInput} onChange={this.handleChange} />
+                                required={true} component={ImageInput} checkOnSubmit={true} onChange={this.handleChange} />
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createSportForm.createSportButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>

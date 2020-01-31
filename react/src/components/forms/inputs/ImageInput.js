@@ -12,8 +12,11 @@ class ImageInput  extends Component{
     }
 
     render(){
-        const { label, acceptedFormat, imageName, meta, required } = this.props
-
+        const { label, acceptedFormat, imageName, meta, required, checkOnSubmit } = this.props
+        let showError = meta.error;
+        if (checkOnSubmit) {
+            showError = showError && meta.submitFailed;
+        }
         return (
             <div className="form-group">
                 <label htmlFor="image">{label}{required && "*"}</label>
@@ -21,7 +24,7 @@ class ImageInput  extends Component{
                 <div className="input-group custom-file">
                     <input type='file' className="custom-file-input" id="image" accept='.jpg, .png, .jpeg' onChange={this.onChange} />
                     <label className="custom-file-label" aria-describedby="inputGroupFileAddon02" >{imageName}</label>
-                    {meta.error && <span className="invalid-feedback d-block">{meta.error}</span>}
+                    {showError && <span className="invalid-feedback d-block">{meta.error}</span>}
                 </div>
             </div>
         )
