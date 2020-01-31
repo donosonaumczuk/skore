@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
+import com.google.common.base.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -122,36 +123,29 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCellphone, final String newBirthday,
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
-                                                final int newReputation, final String newPassword,
+                                                final Integer newReputation, final String newPassword,
                                                 final byte[] file, final String oldUserName) {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
-        if(currentUser.isPresent()) {
+        if (currentUser.isPresent()) {
             final PremiumUser user = currentUser.get();
-            user.getUser().setFirstName(newFirstName);
-            user.getUser().setLastName(newLastName);
-            if(newEmail != null) {
-                user.getUser().setEmail(newEmail);
-                user.setEmail(newEmail);
-                user.setEnabled(false);
-            }
-            if(newUserName != null) {
-                user.setUserName(newUserName);
-            }
-            user.setCellphone(newCellphone);
-            final Place newHome = new Place(newCountry, newState, newCity, newStreet);
-            user.setHome(newHome);
-            user.setReputation(newReputation);
-            user.setBirthday(LocalDate.parse(newBirthday));
-
-            if(newPassword != null) {
-                user.setPassword(newPassword);
-            }
-
-            if(file != null) {
-                user.setImage(file);
-            }
-
+            Optional.ofNullable(newFirstName).ifPresent(firstName -> user.getUser().setFirstName(firstName));
+            Optional.ofNullable(newLastName).ifPresent(lastName -> user.getUser().setLastName(lastName));
+            Optional.ofNullable(newEmail).ifPresent(email -> {
+                    user.getUser().setEmail(email);
+                    user.setEmail(email);
+                    user.setEnabled(false);
+            });
+            Optional.ofNullable(newUserName).ifPresent(user::setUserName);
+            Optional.ofNullable(newCellphone).ifPresent(user::setCellphone);
+            Optional.ofNullable(newCountry).ifPresent(country -> user.getHome().setCountry(country));
+            Optional.ofNullable(newState).ifPresent(state -> user.getHome().setState(state));
+            Optional.ofNullable(newCity).ifPresent(city -> user.getHome().setCity(city));
+            Optional.ofNullable(newStreet).ifPresent(street -> user.getHome().setStreet(street));
+            Optional.ofNullable(newReputation).ifPresent(user::setReputation);
+            Optional.ofNullable(newBirthday).ifPresent(birthday -> user.setBirthday(LocalDate.parse(birthday)));
+            Optional.ofNullable(newPassword).ifPresent(user::setPassword);
+            Optional.ofNullable(file).ifPresent(user::setImage);
             em.merge(user);
             return Optional.of(user);
         }
