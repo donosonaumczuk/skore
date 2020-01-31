@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
-import LeftPanel from './leftPanel/LeftPanel';
-import HomeMatches from './HomeMatches';
+import HomeMatches from './components/HomeMatches';
 import MatchService from '../../services/MatchService';
 import { buildUrlFromParamQueries } from '../../services/Util';
 import Utils from '../utils/Utils';
 import Loader from '../Loader';
 import ErrorPage from './../ErrorPage';
+import Home from './components/layout';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
 
-class Home extends Component {
+class HomeContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -106,19 +106,9 @@ class Home extends Component {
             currentMatches = <HomeMatches matches={matches} hasMore={hasMore} getMatches={this.getMatches} />;
         }
         return (
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="sidepanel col-md-4 col-lg-4 offset-xl-1 
-                        col-xl-3 navbar-collapse" id="navbarSupportedContent">
-                        <LeftPanel currentTab={currentTab} handleTabChange={this.handleTabChange}
-                                    currentUser={currentUser} filters={this.state.filters}
-                                    updateFilters={this.updateFilters} />
-                    </div>
-                    <div className="col-md-8 col-lg-8 col-xl-6">
-                        {currentMatches}
-                    </div>
-                </div>
-            </div>
+            <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
+                    currentUser={currentUser} filters={this.state.filters}
+                    updateFilters={this.updateFilters} currentMatches={currentMatches} />
         );
     }
 
@@ -128,4 +118,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default HomeContainer;
