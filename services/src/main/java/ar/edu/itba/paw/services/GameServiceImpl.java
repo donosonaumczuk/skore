@@ -182,7 +182,7 @@ public class GameServiceImpl implements GameService {
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key), game;
         PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO check
-        if (gameOld.getTeam1().getLeader().equals(loggedUser)) {
+        if (!gameOld.getTeam1().getLeader().equals(loggedUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
             throw new ForbiddenException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
