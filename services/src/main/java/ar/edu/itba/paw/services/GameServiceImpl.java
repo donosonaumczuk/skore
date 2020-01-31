@@ -227,7 +227,7 @@ public class GameServiceImpl implements GameService {
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2) {
         Game game = findByKey(key);
         PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
-        if (game.getTeam1().getLeader().equals(premiumUser)) {
+        if (!game.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
             throw new ForbiddenException("User '" + premiumUser.getUserName() +
                     "' is not creator of '" + key + "' match");
