@@ -246,7 +246,6 @@ public class GameServiceImpl implements GameService {
         userService.sendConfirmMatchAssistance(newUser, findByKey(key), key);
     }
 
-
     @Override
     public List<List<Game>> getGamesThatPlay(final long userId) {
         List<List<Game>> listsOfGames = new LinkedList<>();

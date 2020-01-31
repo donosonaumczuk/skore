@@ -2,11 +2,11 @@ package ar.edu.itba.paw.exceptions;
 
 public abstract class EntityNotFoundException extends RuntimeException {
 
-    public EntityNotFoundException(final String resourceType, final String resourceId) {
-        super(resourceType + " '" + resourceId + "' not found");
+    public EntityNotFoundException(final String entityName, final String entityId) {
+        super(entityName + " '" + entityId + "' not found");
     }
 
-    public EntityNotFoundException(final String resourceType, final String idAttributeName, final String idAttributeValue) {
-        super("No " + resourceType + " found with " + idAttributeName + " '" + idAttributeValue + "'");
+    public EntityNotFoundException(final String entityName, final String idAttributeName, final String idAttributeValue) {
+        super("No " + entityName + " found with " + idAttributeName + " '" + idAttributeValue + "'");
     }
 }
