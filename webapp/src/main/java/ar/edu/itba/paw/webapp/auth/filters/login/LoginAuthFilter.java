@@ -4,6 +4,7 @@ import ar.edu.itba.paw.exceptions.AlreadyLoggedException;
 import ar.edu.itba.paw.exceptions.InvalidLoginException;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -49,7 +50,6 @@ public class LoginAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     private LoginDto getLoginDtoFromRequest(HttpServletRequest request) throws IOException {
         String json = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, LoginDto.class);
+        return JSONUtils.jsonToObject(json, LoginDto.class);
     }
 }
