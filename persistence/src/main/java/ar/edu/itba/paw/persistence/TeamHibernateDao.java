@@ -110,13 +110,13 @@ public class TeamHibernateDao implements TeamDao {
         User user = userDao.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(("User does not exist")));
 
-        for (User u:team.getPlayers()) {
+        for (User u:team.getPlayers()) {//TODO: maybe move to service
             if(u.equals(user)) {
                 throw new AlreadyJoinedToMatchException("User already joined to match");
             }
         }
 
-        if(team.getPlayers().size() >= team.getSport().getQuantity()) {
+        if(team.getPlayers().size() >= team.getSport().getQuantity()) {//TODO: maybe move to service
             LOGGER.error("The team: {} is full", teamName);
             throw new TeamFullException("The team " + teamName + "is full");
         }
