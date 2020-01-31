@@ -88,9 +88,8 @@ class App extends Component {
                 <div>
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
-                        <Route exact path="/">
-                            <Home currentUser={this.state.currentUser.username} />
-                        </Route>
+                        <Route exact path="/" render={(props) => <Home {...props} 
+                                currentUser={this.state.currentUser.username} />} />
                         <Route exact path="/sports">
                             <Sports />
                         </Route>

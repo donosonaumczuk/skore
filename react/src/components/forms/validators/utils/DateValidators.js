@@ -14,13 +14,13 @@ const isDayValid = (day, month, year) => {
     let monthMaxDays = daysInMonths[1];
     if (month !== 2 && month <=12 && month > 0) {
         monthMaxDays = daysInMonths[month - 1];
-        return day < monthMaxDays && day > 0;
+        return day <= monthMaxDays && day > 0;
     }
     else {
         if (isLeapYear(year)) {
             monthMaxDays = 29;
         }
-        return day < monthMaxDays && day > 0;
+        return day <= monthMaxDays && day > 0;
     }
 }
 
@@ -32,10 +32,9 @@ const isValidDate = (day, month, year) => {
 }
 
 const isDateBeforeCurrentDate = (day, month, year) => {
-
     const currentDate = new Date();
     var currentDay = currentDate.getDate();
-    var currentMonth = currentDate.getMonth()
+    var currentMonth = currentDate.getMonth() + 1;
     var currentYear = currentDate.getFullYear();
     if (year < currentYear) {
         return true;
@@ -52,10 +51,9 @@ const isDateBeforeCurrentDate = (day, month, year) => {
 }
 
 const isDateAfterCurrentDate = (day, month, year) => {
-
     const currentDate = new Date();
     var currentDay = currentDate.getDate();
-    var currentMonth = currentDate.getMonth()
+    var currentMonth = currentDate.getMonth() + 1;
     var currentYear = currentDate.getFullYear();
     if (year > currentYear) {
         return true;
@@ -65,7 +63,7 @@ const isDateAfterCurrentDate = (day, month, year) => {
             return true;
         }
         else if (month === currentMonth) {
-            return day > currentDay;
+            return day >= currentDay;
         }
     }
     return false;
