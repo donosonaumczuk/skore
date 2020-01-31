@@ -118,8 +118,10 @@ public class GameController {
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         Game game = gameService.create(gameDto.getTeamName1(), gameDto.getTeamName2(),
                     getStartTimeFrom(gameDto), gameDto.getDurationInMinutes(), gameDto.isCompetitive(),
-                    gameDto.isIndividual(), gameDto.getLocation().getCountry(), gameDto.getLocation().getState(),
-                    gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
+                    gameDto.isIndividual(),  (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCountry(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getState(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCity(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getStreet(), gameDto.getTornamentName(),
                     gameDto.getDescription(), gameDto.getTitle(), gameDto.getSport());
         //TODO catch exception TeamNotFoundException, GameAlreadyExist, InvalidGameKeyException (should never happend)
 
@@ -171,8 +173,11 @@ public class GameController {
         Game newGame;
         try {
             newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(), getStartTimeFrom(gameDto),
-                    gameDto.getDurationInMinutes(), null, null, gameDto.getLocation().getCountry(),
-                    gameDto.getLocation().getState(), gameDto.getLocation().getCity(), gameDto.getLocation().getStreet(),
+                    gameDto.getDurationInMinutes(), null, null,
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCountry(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getState(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getCity(),
+                    (gameDto.getLocation() == null) ? null : gameDto.getLocation().getStreet(),
                     null, gameDto.getDescription(), gameDto.getTitle(), key);
         }
         catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException, ForbiddenException
