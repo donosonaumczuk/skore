@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class UnauthorizedExceptionMapper implements ExceptionMapper<UnauthorizedException> {
-
+//TODO: this is not working! check later
     @Override
     public Response toResponse(UnauthorizedException unauthorizedException) {
         return Response.status(Response.Status.UNAUTHORIZED)
