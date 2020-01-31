@@ -124,7 +124,7 @@ public class UserValidatorsTest {
                     "\t\"firstName\" : \"a first name\",\n" +
                     "\t\"lastName\" : \"a last name\",\n" +
                     "\t\"cellphone\" : \"1512345678\",\n" +
-                    "\t\"birthday\" : \"06/06/1969\",\n" +
+                    "\t\"birthday\" : \"06-06-1969\",\n" +
                     "\t\"email\" : \"an@email.com\",\n" +
                     "\t\"home\" : {\n" +
                     "\t\t\"state\" : \"a state\",\n" +

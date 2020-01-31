@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.*;
-import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.PremiumUserDao;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -13,16 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PremiumUserServiceImpl implements PremiumUserService{
+public class PremiumUserServiceImpl implements PremiumUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserServiceImpl.class);
 
@@ -116,39 +116,31 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     }
 
     @Override
-    public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
-                                      final String newEmail,final String newUserName,
-                                      final String newCellphone, final String newBirthday,
-                                      final String newCountry, final String newState,
-                                      final String newCity, final String newStreet,
-                                      final int newReputation, final String newPassword,
-                                      final byte[] file, final String oldUserName) {
+    public Optional<PremiumUser> updateUserInfo(
+            final String username, final String newFirstName, final String newLastName, final String newEmail,
+            final String newCellphone, final String newBirthday, final String newCountry, final String newState,
+            final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
+            final String oldPassword, final byte[] file
+    ) {
 
-        LOGGER.trace("Looking for user with username: {} to update", oldUserName);
+        LOGGER.trace("Looking for user with username: {} to update", username);
+
+        if (newPassword != null) {
+            //TODO: validations like != ""
+            PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> new UserNotFoundException("User not found")); //TODO: this will be improved in other PR
+            if (oldPassword != null && ! bcrypt.matches(oldPassword, premiumUser.getPassword()) ) {
+                throw new IllegalArgumentException("Wrong old password"); //TODO: discuss! Will be improved in other PR
+            }
+        }
 
         final String encodedPassword = (newPassword == null)? null : bcrypt.encode(newPassword);
         Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
-                newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, encodedPassword, file, oldUserName);
+                newEmail, username, newCellphone, newBirthday, newCountry, newState,
+                newCity, newStreet, newReputation, encodedPassword, file, username);
 
-        if(user.isPresent() && newEmail != null) {
+        if (user.isPresent() && newEmail != null) {
             sendConfirmationMail(user.get());
         }
-
-        return user;
-    }
-
-    @Override
-    public Optional<PremiumUser> changePassword(final String newPassword, final String username) {
-        Optional <PremiumUser> premiumUser = findByUserName(username);
-        PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
-                "with username:" + username));
-        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        Optional<PremiumUser> user = updateUserInfo(currentUser.getUser().getFirstName(), currentUser.getUser()
-                        .getLastName(), currentUser.getEmail(), currentUser.getUserName(), currentUser
-                        .getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome()
-                        .getCountry(), currentUser.getHome().getState(),currentUser.getHome().getCity(),
-                currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username);
 
         return user;
     }
