@@ -1,7 +1,7 @@
 import React from 'react';
-import Proptypes from 'prop-types';
-import SportInfo from '../match/SportInfo';
-import SportPlayers from './SportPalyers';
+import SportInfo from '../../../match/SportInfo';
+import SportPlayers from '../SportPlayers';
+import SportPropTypes from '../../../../proptypes/SportPropType'
 
 const getSportImageUrl = links => {
     let sportImageUrl;
@@ -29,7 +29,7 @@ const Sport = ({ sport }) => {
 }
 
 Sport.propTypes = {
-    sport: Proptypes.object.isRequired//TODO add custom sport proptype
+    sport: SportPropTypes.isRequired
 }
 
 export default Sport;

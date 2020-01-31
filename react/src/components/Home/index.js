@@ -77,7 +77,7 @@ class HomeContainer extends Component {
         const { currentUser } = this.props;
         const { offset, total, currentTab, filters } = this.state;
         if (currentTab === 0) {
-            response = await MatchService.getMatches(offset, total);
+            response = await MatchService.getMatches(offset, total, filters);
         }
         else if (currentTab === 1) {
             response = await MatchService.getMatchesToJoin(currentUser, offset, total, filters);

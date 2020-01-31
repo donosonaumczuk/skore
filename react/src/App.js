@@ -16,7 +16,7 @@ import Accounts from './components/Accounts';
 import EditUserInfo from './components/EditUserInfo';
 import ChangePassword from './components/ChangePassword';
 import ConfirmAccount from './components/ConfirmAccount';
-import Sports from './components/Sports/Sports';
+import Sports from './components/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
 import './css/main.css';
 import CreateSportForm from './components/forms/CreateSportForm';
