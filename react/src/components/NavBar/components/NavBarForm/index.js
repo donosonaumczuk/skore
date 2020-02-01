@@ -1,6 +1,6 @@
 import React from 'react';
 import i18next from 'i18next';
-import AuthUserPropType from './../../proptypes/AuthUserPropType';
+import AuthUserPropType from '../../../../proptypes/AuthUserPropType';
 import { Link } from 'react-router-dom';
 
 const getAnonymousForm = () => {

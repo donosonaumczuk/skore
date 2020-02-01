@@ -9,7 +9,8 @@ const getItalicTag = (hasItalics, italicText, italicStyle) => {
     return italicTag;
 }
 
-const NavBarLink = (linkStyle, linkReference, textBeforeItalics, hasItalics, italicText, italicStyle, textAfterItalics ) => {
+const NavBarLink = (linkStyle, linkReference, textBeforeItalics, hasItalics,
+                    italicText, italicStyle, textAfterItalics ) => {
     
     return (
          <a className={linkStyle} href={linkReference}>

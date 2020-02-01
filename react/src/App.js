@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import i18next from 'i18next';
-import NavBar from './components/navBar/NavBar';
+import NavBar from './components/NavBar';
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
 import UserProfile from './components/userProfile/UserProfile';

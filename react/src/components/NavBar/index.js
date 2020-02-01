@@ -1,10 +1,8 @@
 import React from 'react';
-import AuthUserPropType from './../../proptypes/AuthUserPropType';
-import NavBarForm from './NavBarForm';
+import AuthUserPropType from '../../proptypes/AuthUserPropType';
+import NavBarForm from './components/NavBarForm';
 import { Link } from 'react-router-dom';
 
-//TODO maybe use link instead of href an check that is valid to use href directly
-// i dont remember why was it that in jsp we used to put <c:url> and here we use it directly
 const NavBar = (props) => {
     return (
         <React.Fragment>
