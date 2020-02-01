@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Transactional
     @Override
     public User findById(final long id) {
         if(id < 0 ) {
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
         return userDao.findById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
     }
 
+    @Transactional
     @Override
     public User create(final String firstName, final String lastName,
                        final String email) {
@@ -56,11 +59,13 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
     @Override
     public boolean remove(final long userId) {
         return userDao.remove(userId);
     }
 
+    @Transactional
     @Override
     public User updateFirstName(final long userId, final String newFirstName){
         Optional<User> user = userDao.updateFirstName(userId, newFirstName);
@@ -68,6 +73,7 @@ public class UserServiceImpl implements UserService {
         return user.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesn't exist."));
     }
 
+    @Transactional
     @Override
     public User updateLastName(final long userId, final String newLastName) {
         Optional<User> user = userDao.updateLastName(userId, newLastName);
@@ -75,6 +81,7 @@ public class UserServiceImpl implements UserService {
         return user.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesn't exist."));
     }
 
+    @Transactional
     @Override
     public User updateEmail(final long userId, final String newEmail) {
         Optional<User> user = userDao.updateEmail(userId, newEmail);

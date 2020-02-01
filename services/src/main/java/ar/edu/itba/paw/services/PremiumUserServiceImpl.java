@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +39,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     @Autowired
     private BCryptPasswordEncoder bcrypt;
 
+    @Transactional
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}",userName);
@@ -55,6 +54,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
@@ -66,6 +66,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public  Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
@@ -77,6 +78,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                               final String email, final String userName,
@@ -97,6 +99,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public boolean remove(final String userName) {
         LOGGER.trace("Looking for user with username: {} to remove", userName);
@@ -110,11 +113,13 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return returnedValue;
     }
 
+    @Transactional
     @Override
     public Optional<byte[]> readImage(final String userName) {
         return premiumUserDao.readImage(userName);
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                       final String newEmail,final String newUserName,
@@ -138,6 +143,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> changePassword(final String newPassword, final String username) {
         Optional <PremiumUser> premiumUser = findByUserName(username);
@@ -153,6 +159,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return user;
     }
 
+    @Transactional
     @Override
     public void addRole(final String username, final int roleId) {
         Optional<Role> role = roleDao.findRoleById(roleId);
@@ -169,6 +176,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         premiumUserDao.addRole(username, roleId);
     }
 
+    @Transactional
     @Override
     public Optional<Boolean> enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
@@ -189,6 +197,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return Optional.of(true);
     }
 
+    @Transactional
     @Override
     public boolean confirmationPath(String path) { //TODO: move to front
         String dataPath = path.replace("/confirm/","");
@@ -204,11 +213,23 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         return enableUser(username, code).get();
     }
 
+    @Transactional
+    @Override
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit) {
+        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
+                maxReputation, minWinRate, maxWinRate, sort);
+        return new Page<>(users, offset, limit);
+    }
+
     private String generatePath(PremiumUser user) {
         return "confirm/" + user.getUserName() + "&" + user.getCode();
     }
 
-    public void sendConfirmationMail(PremiumUser user) {
+    private void sendConfirmationMail(PremiumUser user) {
         emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
     }
 
@@ -256,16 +277,5 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         return -1;
-    }
-
-    @Override
-    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
-                                           final List<String> friendUsernames, final Integer minReputation,
-                                           final Integer maxReputation, final Integer minWinRate,
-                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                           final Integer limit) {
-        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
-                maxReputation, minWinRate, maxWinRate, sort);
-        return new Page<>(users, offset, limit);
     }
 }

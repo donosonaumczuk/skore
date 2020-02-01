@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -60,6 +61,7 @@ public class GameServiceImpl implements GameService {
 
     }
 
+    @Transactional
     @Override
     public Game create(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
@@ -100,6 +102,7 @@ public class GameServiceImpl implements GameService {
         return newGame;
     }
 
+    @Transactional
     @Override
     public Game insertPremiumUserInGame(final String key, final String username) {
         PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO: check
@@ -111,6 +114,7 @@ public class GameServiceImpl implements GameService {
         return insertUserInGame(key, loggedUser.getUser().getUserId());
     }
 
+    @Transactional
     @Override
     public Game insertTemporalUserInGame(final String key, final String code) {
         Game game;
@@ -126,6 +130,7 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Transactional
     @Override
     public boolean deleteUserInGame(final String key, final long userId) {
         Game game = findByKey(key);
@@ -153,6 +158,7 @@ public class GameServiceImpl implements GameService {
         return false;
     }
 
+    @Transactional
     @Override
     public Page<Game> findGamesPage(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
                                     final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
@@ -173,6 +179,7 @@ public class GameServiceImpl implements GameService {
         return new Page<>(games, offset, limit);
     }
 
+    @Transactional
     @Override
     public Game modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final Long minutesOfDuration, final String type, final String result,
@@ -201,6 +208,7 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Transactional
     @Override
     public boolean remove(final String key) {
         GameKey gameKey = getGameKey(key);
@@ -213,6 +221,7 @@ public class GameServiceImpl implements GameService {
         return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
     }
 
+    @Transactional
     @Override
     public Game findByKey(final String key) {
         GameKey gameKey = getGameKey(key);
@@ -223,6 +232,7 @@ public class GameServiceImpl implements GameService {
                 });
     }
 
+    @Transactional
     @Override
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2) {
         Game game = findByKey(key);
@@ -246,7 +256,7 @@ public class GameServiceImpl implements GameService {
         userService.sendConfirmMatchAssistance(newUser, findByKey(key), key);
     }
 
-
+    @Transactional
     @Override
     public List<List<Game>> getGamesThatPlay(final long userId) {
         List<List<Game>> listsOfGames = new LinkedList<>();
