@@ -55,6 +55,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private static final String userRole              = "ROLE_USER";
     private static final int userRoleId               = 0;
 
+    @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         PremiumUser premiumUser = em.find(PremiumUser.class, userName);
 
@@ -66,7 +67,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-
+    @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
                                         final String cellphone, final String birthday,
@@ -93,6 +94,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return Optional.of(newUser);
     }
 
+    @Override
     public boolean remove(final String userName) {
         Optional<PremiumUser> user = findByUserName(userName);
 
@@ -103,6 +105,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return false;
     }
 
+    @Override
     public Optional<byte[]> readImage(final String userName) {
         Optional<PremiumUser> premiumUser = findByUserName(userName);
         if(premiumUser.isPresent()) {
@@ -116,6 +119,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return  Optional.empty();
     }
 
+    @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                                 final String newEmail,final String newUserName,
                                                 final String newCellphone, final String newBirthday,
@@ -159,6 +163,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
                                                 "u.email = :email", PremiumUser.class);
@@ -173,6 +178,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public Optional<PremiumUser> findById(final long userId) {
         final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
                 "u.user.userId = :userId", PremiumUser.class);
@@ -187,6 +193,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public boolean enableUser(final String username, final String code) {
         Optional<PremiumUser> currentUser = findByUserName(username);
 
@@ -201,6 +208,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public boolean addRole(final String username, final int roleId) {
         Optional<Role> role = roleDao.findRoleById(roleId);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -215,6 +223,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return true;
     }
 
+    @Override
     public Set<Role> getRoles(final String username) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
 
@@ -226,8 +235,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return user.getRoles();
     }
 
-
-
+    @Override
     public boolean removeRole(final String username, final int roleId) {
         Role role = em.find(Role.class, roleId);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -247,7 +255,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-
+    @Override
     public boolean addSport(final String username, String sportName) {
         Sport sport = em.find(Sport.class, sportName);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -268,6 +276,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     }
 
+    @Override
     public List<Sport> getSports(String username) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
         if(premiumUser.isPresent()) {
@@ -276,6 +285,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         else return null;
     }
 
+    @Override
     public boolean removeSport(final String username, String sportName) {
         Sport sport = em.find(Sport.class, sportName);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -296,6 +306,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     }
 
+    @Override
     public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                        final List<String> friendUsernames, final Integer minReputation,
                                        final Integer maxReputation, final Integer minWinRate,

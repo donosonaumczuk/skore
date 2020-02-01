@@ -102,6 +102,7 @@ public class TeamHibernateDao implements TeamDao {
         return  Optional.of(team);
     }
 
+    @Override
     public Optional<Team> addPlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)
@@ -126,6 +127,7 @@ public class TeamHibernateDao implements TeamDao {
         return Optional.of(team);
     }
 
+    @Override
     public Optional<Team> removePlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)

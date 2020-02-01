@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     private MessageSource messageSource;
 
     @Autowired
-    public JavaMailSender emailSender;
+    private JavaMailSender emailSender;
 
     /* Production */
     private static String URL_PREFIX = "http://pawserver.it.itba.edu.ar/paw-2018b-04/";
