@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import i18next from 'i18next';
-import Loader from '../../Loader';
+import Loader from '../../../Loader';
 
 class LocationInput extends Component {
     mounted = false;

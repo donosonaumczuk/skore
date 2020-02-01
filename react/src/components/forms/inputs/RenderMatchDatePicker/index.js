@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import PropTypes from 'prop-types';
 
 const RenderMatchDatePicker = ({ input, label, id, required, smallText, meta }) => {
     return (
@@ -19,6 +20,15 @@ const RenderMatchDatePicker = ({ input, label, id, required, smallText, meta }) 
                 </span>}
         </div>
     );  
+}
+
+RenderMatchDatePicker.propTypes = {
+    input: PropTypes.object.isRequired,
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    required: PropTypes.bool,
+    smallText: PropTypes.string.isRequired,
+    meta: PropTypes.object.isRequired
 }
 
 export default RenderMatchDatePicker;

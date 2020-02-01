@@ -1,5 +1,6 @@
 import React from 'react';
-import createRenderer from './CreateRenderer';
+import createRenderer from '../CreateRenderer';
+import PropTypes from 'prop-types';
 
 const RenderInput = createRenderer((input, label, inputType, id, isDisabled, meta) => {
   if (isDisabled) {
@@ -11,5 +12,14 @@ const RenderInput = createRenderer((input, label, inputType, id, isDisabled, met
                                                  className="form-control" />);
   }
 });
+
+RenderInput.propTypes = {
+  input: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
+  inputType: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  isDisabled: PropTypes.bool,
+  meta: PropTypes.object.isRequired
+}
 
 export default RenderInput;

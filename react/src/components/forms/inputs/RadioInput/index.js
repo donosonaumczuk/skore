@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const RadioInput = ({ input, meta, labelStyle, id, labelText, radioValue, showError, ...rest }) => {
+const RadioInput = ({ input, meta, labelStyle, id, labelText,
+                        radioValue, showError, ...rest }) => {
     const checked = input.value === radioValue;
     //TODO update state with selected tab to implement future form with competitive and individual
     return (
@@ -17,4 +19,13 @@ const RadioInput = ({ input, meta, labelStyle, id, labelText, radioValue, showEr
     );
 }
 
-export default RadioInput
+RadioInput.propTypes = {
+    input: PropTypes.object.isRequired,
+    meta: PropTypes.object.isRequired,
+    labelStyle: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    labelText: PropTypes.string.isRequired,
+    radioValue: PropTypes.string.isRequired,
+}
+
+export default RadioInput;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LocationInput from './LocationInput';
-import CreateMatchValidator from '../validators/CreateMatchValidator';
+import LocationInput from '../LocationInput';
+import CreateMatchValidator from '../../validators/CreateMatchValidator';
 
 const MatchLocation = ({ updateLocationAndState, input, meta, errorMessage, location }) => {
     if( !errorMessage) {
@@ -20,7 +20,10 @@ const MatchLocation = ({ updateLocationAndState, input, meta, errorMessage, loca
 
 MatchLocation.propTypes = {
     updateLocationAndState: PropTypes.func.isRequired,
-    meta: PropTypes.object.isRequired
+    input: PropTypes.object.isRequired,
+    meta: PropTypes.object.isRequired,
+    errorMessage: PropTypes.string,
+    location: PropTypes.object.isRequired
 }
 
 export default MatchLocation

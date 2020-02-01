@@ -1,6 +1,6 @@
 import React from 'react';
 import i18next from 'i18next';
-import createRenderer from './CreateRenderer';
+import createRenderer from '../CreateRenderer';
 
 const RenderDatePicker = createRenderer((input, label, inputType, id) => {
     //TODO enable birthday button
@@ -17,5 +17,6 @@ const RenderDatePicker = createRenderer((input, label, inputType, id) => {
     );
 });
 
+//TODO maybe add propTypes
 
 export default RenderDatePicker;

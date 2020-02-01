@@ -13,6 +13,8 @@ const SubmitButton = ({ label, divStyle, buttonStyle, submitting }) => {
 
 SubmitButton.propTypes = {
     label: Proptypes.string.isRequired,
+    divStyle: Proptypes.string.isRequired,
+    buttonStyle: Proptypes.string.isRequired,
     submitting: Proptypes.bool
 }
 

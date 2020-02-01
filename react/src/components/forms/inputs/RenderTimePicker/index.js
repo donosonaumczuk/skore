@@ -1,5 +1,6 @@
 import React from 'react';
 import TimePicker from 'rc-time-picker';
+import PropTypes from 'prop-types';
 
 const RenderTimePicker = ({ input, meta, label, updateTime, ...rest }) => {
     return (
@@ -15,6 +16,13 @@ const RenderTimePicker = ({ input, meta, label, updateTime, ...rest }) => {
                 }
         </div>
     );
+}
+
+RenderTimePicker.propTypes = {
+    input: PropTypes.object.isRequired,
+    meta: PropTypes.object.isRequired,
+    label: PropTypes.string.isRequired,
+    updateTime: PropTypes.func.isRequired
 }
 
 export default RenderTimePicker;

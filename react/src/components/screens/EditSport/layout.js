@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EditSportForm from '../../forms/EditSportForm';
 
-const EditSport = ({ formInitialValues, history }) => 
-    <EditSportForm initialValues={formInitialValues} history={history} />
+const EditSport = ({ initialValues, history }) => 
+    <EditSportForm initialValues={initialValues} history={history} />
 
 EditSport.propTypes = {
-    formInitialValues: PropTypes.object.isRequired,
+    initialValues: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
 }
 

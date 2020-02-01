@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const SuggestionText = ({ suggestion, link, linkText}) => {
     
@@ -11,6 +12,12 @@ const SuggestionText = ({ suggestion, link, linkText}) => {
             </div>
         </div>
     );
+}
+
+SuggestionText.propTypes = {
+    suggestion: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired,
+    linkText: PropTypes.string.isRequired
 }
 
 export default SuggestionText;

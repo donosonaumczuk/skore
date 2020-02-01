@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
-import FormTitle from './inputs/FormTitle';
+import FormTitle from './elements/FormTitle';
 import RenderInput from './inputs/RenderInput';
 import ImageInput from './inputs/ImageInput';
-import SubmitButton from './inputs/SubmitButton';
-import FormComment from './inputs/FormComment';
+import SubmitButton from './elements/SubmitButton';
+import FormComment from './elements/FormComment';
 import CreateSportValidator from './validators/CreateSportValidator';
 import AuthService from '../../services/AuthService';
 import SportService from '../../services/SportService';

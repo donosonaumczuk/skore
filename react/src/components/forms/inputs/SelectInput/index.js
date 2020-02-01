@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const SelectInput = ({ input, label, id, meta, required, defaultText, options, }) => {
+const SelectInput = ({ input, label, id, meta, required, defaultText, options }) => {
     return (
         <div className="form-group" >
             <label htmlFor={id}>
@@ -24,5 +25,14 @@ const SelectInput = ({ input, label, id, meta, required, defaultText, options, }
     );
 }
 
-    
+SelectInput.propTypes = {
+    input: PropTypes.object.isRequired,
+    label: PropTypes.string,
+    id: PropTypes.string,
+    meta: PropTypes.object.isRequired,
+    required: PropTypes.bool,
+    defaultText: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired
+}
+
 export default SelectInput;
