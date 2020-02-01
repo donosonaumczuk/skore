@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 import i18next from 'i18next';
 import UserService from '../../services/UserService';
-import UserData from './UserData';
-import UserImage from './UserImage';
-import UserMatches from './userMatches/UserMatches';
 import Loader from '../Loader';
 import AuthService from '../../services/AuthService';
-import EditUserButton from './EditUserButton';
+import EditUserButton from './components/EditUserButton';
 import ErrorPage from '../ErrorPage';
+import UserProfile from './layout';
 
-class UserProfile extends Component {
+class UserProfileContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -96,6 +94,8 @@ class UserProfile extends Component {
         }
     }
 
+    //TODO replace with getDeriveProperties and component DidMount
+    // https://hackernoon.com/replacing-componentwillreceiveprops-with-getderivedstatefromprops-c3956f7ce607
     async UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = nextProps.match.params;
         if (username !== this.state.username && this.mounted) {
@@ -120,25 +120,11 @@ class UserProfile extends Component {
             return <ErrorPage status={this.state.status} />
         }
         else if (imageUrl == null) {
-            return <Loader />;
+            return <Loader />; //TODO replace with HOC
         }
-        
         return (
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
-                        <UserImage styleClass="profile-pic" imageUrl={imageUrl} />    
-                        <div className="container-fluid profile-container bg-white rounded-border">
-                            <UserData styleClass="profile-name" value={currentUser.firstName + " " + currentUser.lastName} />
-                            <UserData styleClass="profile-username" value={currentUser.username} />
-                            <UserData styleClass="profile-data" tag={this.locationData(currentUser.location)} />
-                            <UserData styleClass="profile-data" tag={this.winRateAndAge(currentUser.winRate, currentUser.age)} />
-                            {editButtons}
-                        </div>
-                        <UserMatches username={this.state.username} />
-                    </div>
-                </div>
-            </div>
+            <UserProfile imageUrl={imageUrl} currentUser={currentUser} editButtons={editButtons}
+            locationData={this.locationData} winRateAndAge={this.winRateAndAge} />
         );
     }
    
@@ -148,8 +134,8 @@ class UserProfile extends Component {
     }
 }
 
-UserProfile.propTypes = {
+UserProfileContainer.propTypes = {
     match: Proptypes.object.isRequired
 }
 
-export default UserProfile;
+export default UserProfileContainer;

@@ -1,11 +1,12 @@
 import React from 'react';
-import CreatorInfo from '../../match/CreatorInfo';
-import SportInfo from '../../match/SportInfo';
-import GameResult from '../../match/GameResult';
-import MatchCompetitivity from '../../match/MatchCompetitivity';
-import MatchDate from '../../match/MatchDate';
-import MatchLocation from '../../match/MatchLocation';
-import UserMatchWithResultPropType from '../../../proptypes/UserMatchWithResultPropType';
+import PropTypes from 'prop-types';
+import CreatorInfo from '../../../match/CreatorInfo';
+import SportInfo from '../../../match/SportInfo';
+import GameResult from '../../../match/GameResult';
+import MatchCompetitivity from '../../../match/MatchCompetitivity';
+import MatchDate from '../../../match/MatchDate';
+import MatchLocation from '../../../match/MatchLocation';
+import UserMatchWithResultPropType from '../../../../proptypes/UserMatchWithResultPropType';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -26,7 +27,6 @@ const getImageUrls = links => {
 }
 
 const UserMatchWithResult = ({ currentMatch, username }) => {
-
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
@@ -50,7 +50,8 @@ const UserMatchWithResult = ({ currentMatch, username }) => {
 }
 
 UserMatchWithResult.propTypes = {
-    currentMatch: UserMatchWithResultPropType.isRequired //TODO implement custom proptype
+    currentMatch: UserMatchWithResultPropType.isRequired,
+    username: PropTypes.string.isRequired
 }
 
 export default UserMatchWithResult;

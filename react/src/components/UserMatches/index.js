@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import UserService from '../../../services/UserService';
-import Loader from '../../Loader';
-import UserMatchWithResult from './UserMatchWithResult';
-import ErrorPage from '../../ErrorPage';
-import Utils from '../../utils/Utils';
+import UserService from '../../services/UserService';
+import Loader from '../Loader';
+import UserMatches from './layout';
+import ErrorPage from '../ErrorPage';
+import Utils from '../utils/Utils';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 1;
 
-class UserMatches extends Component {
+class UserMatchesContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -58,14 +57,8 @@ class UserMatches extends Component {
         const matches = this.state.matches;
         if (matches.length > 0 || !this.state.hasMore) {
             return (
-                <div className="container-fluid mt-4 rounded-border">
-                    <InfiniteScroll dataLength={this.state.matches.length} next={this.getUserMatches}
-                                    loader={<Loader />} hasMore={this.state.hasMore}>
-                    {
-                        matches.map( (match, i) => <UserMatchWithResult key={i} currentMatch={match} username={this.props.username} />)
-                    }
-                    </InfiniteScroll>    
-                </div>
+                <UserMatches matches={matches} getUserMatches={this.getUserMatches}
+                                hasMore={this.state.hasMore} username={this.props.username} />
             );
         }
         else if (this.state.status) {
@@ -75,7 +68,7 @@ class UserMatches extends Component {
         }
         else {
             return (
-                <Loader />
+                <Loader />//TODO improve with HOC
             );
         }
     }
@@ -86,8 +79,8 @@ class UserMatches extends Component {
     }
 }
 
-UserMatches.propTypes = {
+UserMatchesContainer.propTypes = {
     username: Proptypes.string.isRequired
 }
 
-export default UserMatches;
+export default UserMatchesContainer;

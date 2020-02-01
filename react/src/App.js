@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import NavBar from './components/NavBar';
 import CreateUserForm from './components/forms/CreateUserForm';
 import store from "./redux/store";
-import UserProfile from './components/userProfile/UserProfile';
+import UserProfile from './components/UserProfile';
 import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
 import LogOut from './components/LogOut';
