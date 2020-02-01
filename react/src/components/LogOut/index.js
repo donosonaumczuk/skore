@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import AuthService from './../services/AuthService';
-import Loader from './Loader';
+import AuthService from '../../services/AuthService';
+import Loader from '../Loader';
 
 class LogOut extends Component {
     mounted = false;
