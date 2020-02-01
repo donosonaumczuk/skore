@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.UserAlreadyExist;
+import ar.edu.itba.paw.exceptions.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         return user.orElseThrow(() -> {
             LOGGER.trace("Creation fails, user '{}' already exist", email);
-            return new UserAlreadyExist("Creation fails, user '" + email + "' already exist");
+            return UserAlreadyExistException.ofEmail(email);
         });
     }
 

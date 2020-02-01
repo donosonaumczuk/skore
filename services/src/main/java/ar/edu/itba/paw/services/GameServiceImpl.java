@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.ForbiddenException;
-import ar.edu.itba.paw.exceptions.GameAlreadyExist;
+import ar.edu.itba.paw.exceptions.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
 import ar.edu.itba.paw.exceptions.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
@@ -91,7 +91,7 @@ public class GameServiceImpl implements GameService {
                 country, state, city, street, tornamentName, description, title)
                 .orElseThrow(() -> {
                     LOGGER.trace("Creation fails, match '{}' already exist", gameKey.toString());
-                    return new GameAlreadyExist("Creation fails, match '" + gameKey.toString() + "' already exist");
+                    return GameAlreadyExistException.ofKey(gameKey);
                 });
 
         if (isIndividual) {

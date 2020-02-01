@@ -13,6 +13,9 @@ public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotF
 
     @Override
     public Response toResponse(final EntityNotFoundException entityNotFoundException) {
-        return Response.status(Response.Status.NOT_FOUND).entity(ApiErrorDto.of(HttpStatus.NOT_FOUND, entityNotFoundException.getMessage())).build();
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity(ApiErrorDto.of(HttpStatus.NOT_FOUND, entityNotFoundException.getMessage()))
+                .build();
     }
 }
