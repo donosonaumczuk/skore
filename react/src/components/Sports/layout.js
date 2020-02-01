@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Sport from './components/Sport';
 import Loader from '../Loader';
+import SportPropType from '../../proptypes/SportPropType';
 
 const Sports = (props) => {
     const { sports, getSports, hasMore } = props;
@@ -19,7 +20,7 @@ const Sports = (props) => {
 }
 
 Sports.propTypes = {
-    sports: PropTypes.array.isRequired,//TODO make sport array custom proptype
+    sports: PropTypes.arrayOf(SportPropType),
     getSports: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired
 }
