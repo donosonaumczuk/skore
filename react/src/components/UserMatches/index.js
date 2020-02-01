@@ -3,7 +3,7 @@ import Proptypes from 'prop-types';
 import UserService from '../../services/UserService';
 import Loader from '../Loader';
 import UserMatches from './layout';
-import ErrorPage from '../ErrorPage';
+import ErrorPage from '../screens/ErrorPage';
 import Utils from '../utils/Utils';
 
 const INITIAL_OFFSET = 0;

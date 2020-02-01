@@ -9,7 +9,7 @@ import FormComment from './inputs/FormComment';
 import CreateSportValidator from './validators/CreateSportValidator';
 import AuthService from '../../services/AuthService';
 import SportService from '../../services/SportService';
-import ErrorPage from './../ErrorPage';
+import ErrorPage from './../screens/ErrorPage';
 import { SC_FORBIDDEN, SC_CONFLICT } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {

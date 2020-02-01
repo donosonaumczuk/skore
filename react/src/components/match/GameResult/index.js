@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import i18next from 'i18next';
 
 const getResult = gameResult => {
@@ -85,10 +85,10 @@ const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
 }
 
 GameResult.propTypes = {
-    gameResult: Proptypes.string.isRequired,
-    username: Proptypes.string.isRequired,
-    teamOne: Proptypes.array.isRequired,
-    teamTwo: Proptypes.array.isRequired
+    gameResult: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    teamOne: PropTypes.array.isRequired,
+    teamTwo: PropTypes.array.isRequired
 }
 
 export default GameResult;

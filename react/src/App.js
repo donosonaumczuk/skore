@@ -2,25 +2,25 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import i18next from 'i18next';
+import store from "./redux/store";
 import NavBar from './components/NavBar';
 import CreateUserForm from './components/forms/CreateUserForm';
-import store from "./redux/store";
-import UserProfile from './components/UserProfile';
+import UserProfile from './components/screens/UserProfile';
 import LogInForm from './components/forms/LogInForm';
 import Loader from './components/Loader';
 import LogOut from './components/LogOut';
 import AuthService from './services/AuthService';
-import ErrorPage from './components/ErrorPage';
-import Home from './components/Home';
-import Accounts from './components/Accounts';
-import EditUserInfo from './components/EditUserInfo';
-import ChangePassword from './components/ChangePassword';
-import ConfirmAccount from './components/ConfirmAccount';
-import Sports from './components/Sports';
+import ErrorPage from './components/screens/ErrorPage';
+import Home from './components/screens/Home';
+import Accounts from './components/screens/Accounts';
+import EditUserInfo from './components/screens/EditUserInfo';
+import ChangePassword from './components/screens/ChangePassword';
+import ConfirmAccount from './components/screens/ConfirmAccount';
+import Sports from './components/screens/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
-import './css/main.css';
 import CreateSportForm from './components/forms/CreateSportForm';
-import EditSport from './components/EditSport';
+import EditSport from './components/screens/EditSport';
+import './css/main.css';
 
 
 class App extends Component {
