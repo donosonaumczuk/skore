@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import i18next from 'i18next';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import UserService from '../services/UserService';
-import Loader from './Loader';
-import Account from './Account';
-import Utils from './utils/Utils';
-import ErrorPage from './ErrorPage';
+import UserService from '../../services/UserService';
+import Loader from '../Loader';
+import Utils from '../utils/Utils';
+import ErrorPage from '../ErrorPage';
+import Accounts from './layout';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
 
-class Accounts extends Component {
+class AccountsContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -55,22 +53,11 @@ class Accounts extends Component {
             return <ErrorPage status={this.state.status} />;
         }
         else if (this.state.accounts.length === 0 && this.state.hasMore) {
-            return <Loader />;
+            return <Loader />; //TODO use with HOC
         }
         return (
-            <div>
-                <center>
-                    <h1>
-                        {i18next.t('createUserForm.accounts')}
-                    </h1>
-                </center>
-                <div className="container">
-                    <InfiniteScroll dataLength={this.state.accounts.length} next={this.getUsers}
-                                    hasMore={this.state.hasMore} loader={<Loader />} >
-                        {this.state.accounts.map((account, i) => <Account key={i} account={account} />)}
-                    </InfiniteScroll> 
-                </div>
-            </div>
+            <Accounts accounts={this.state.accounts} getUsers={this.getUsers}
+                        hasMore={this.state.hasMore} />
         )
     }
 
@@ -79,4 +66,4 @@ class Accounts extends Component {
     }
 }
 
-export default Accounts;
+export default AccountsContainer;
