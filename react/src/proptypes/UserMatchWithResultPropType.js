@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import DatePropType from './DatePropType';
 import TimePropType from './TimePropType';
 import TeamPropType from './util/TeamPropType';
+import LocationPropType from './LocationPropType';
 
 const UserMatchWithResultPropType = PropTypes.shape(
     {
@@ -11,7 +12,7 @@ const UserMatchWithResultPropType = PropTypes.shape(
         results: PropTypes.string.isRequired,
         competitive: PropTypes.bool.isRequired,
         durationInMinutes: PropTypes.number.isRequired,
-        location: PropTypes.string.isRequired,
+        location: LocationPropType.isRequired,
         date: DatePropType.isRequired,
         time: TimePropType.isRequired,
         team1: TeamPropType.isRequired,
