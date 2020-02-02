@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
-import FormTitle from './inputs/FormTitle';
+import FormTitle from './elements/FormTitle';
 import RenderInput from './inputs/RenderInput';
 import ImageInput from './inputs/ImageInput';
-import SubmitButton from './inputs/SubmitButton';
-import FormComment from './inputs/FormComment';
+import SubmitButton from './elements/SubmitButton';
+import FormComment from './elements/FormComment';
 import CreateSportValidator from './validators/CreateSportValidator';
 import AuthService from '../../services/AuthService';
 import SportService from '../../services/SportService';
-import ErrorPage from './../ErrorPage';
+import ErrorPage from './../screens/ErrorPage';
 import { SC_FORBIDDEN, SC_CONFLICT } from './../../services/constants/StatusCodesConstants';
 
 const validate = values => {
@@ -112,7 +112,7 @@ class CreateSportForm extends Component {
                                     id="playersPerTeam" inputType="text" required={true} component={RenderInput} />
                             <Field name="sportImage" label={i18next.t('createSportForm.sportImage')} type="file"
                                 imageName={imageName} acceptedFormat={i18next.t('createUserForm.imageFormat')}
-                                required={true} component={ImageInput} onChange={this.handleChange} />
+                                required={true} component={ImageInput} checkOnSubmit={true} onChange={this.handleChange} />
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createSportForm.createSportButton')} divStyle="text-center" buttonStyle="btn btn-green mb-2" submitting={submitting} />
                         </form>

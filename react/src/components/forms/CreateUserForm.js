@@ -5,13 +5,13 @@ import i18next from 'i18next';
 import RenderInput from './inputs/RenderInput';
 import ImageInput from './inputs/ImageInput';
 import RenderDatePicker from './inputs/RenderDatePicker';
-import SubmitButton from './inputs/SubmitButton';
-import FormTitle from './inputs/FormTitle';
-import SuggestionText from './inputs/SuggestionText';
+import SubmitButton from './elements/SubmitButton';
+import FormTitle from './elements/FormTitle';
+import SuggestionText from './elements/SuggestionText';
 import AuthService from './../../services/AuthService';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 import UserService from '../../services/UserService';
-import FormComment from './inputs/FormComment';
+import FormComment from './elements/FormComment';
 import LocationInput from './inputs/LocationInput';
 import SubLocationInput from './inputs/SubLocationInput';
 

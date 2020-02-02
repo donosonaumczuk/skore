@@ -2,10 +2,10 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
 import RenderInput from './inputs/RenderInput';
-import SubmitButton from './inputs/SubmitButton';
-import FormTitle from './inputs/FormTitle';
+import SubmitButton from './elements/SubmitButton';
+import FormTitle from './elements/FormTitle';
 import CreateUserFormValidator from './validators/CreateUserValidator';
-import FormComment from './inputs/FormComment';
+import FormComment from './elements/FormComment';
 import UserService from '../../services/UserService';
 
 const validate = values => {
