@@ -1,4 +1,6 @@
-package ar.edu.itba.paw.exceptions;
+package ar.edu.itba.paw.exceptions.notfound;
+
+import ar.edu.itba.paw.exceptions.notfound.EntityNotFoundException;
 
 public class SportNotFoundException extends EntityNotFoundException {
 

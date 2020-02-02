@@ -1,6 +1,6 @@
 package ar.edu.itba.paw;
 
-import ar.edu.itba.paw.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
@@ -52,7 +52,7 @@ public class UserServiceImplTest {
     @Test
     public void getIdFromCodeButIdDoesNotExistInDataBase() {
         exceptionRule.expect(UserNotFoundException.class);
-        exceptionRule.expectMessage("User with id: " + ID + " doesn't exist.");
+        exceptionRule.expectMessage("No User found with id '" + ID + "'");
         when(userDaoMock.findById(ID)).thenReturn(Optional.empty());
 
         userService.getUserFromData(CODE, GAME_KEY);

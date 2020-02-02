@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.exceptions.*;
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.TeamDao;

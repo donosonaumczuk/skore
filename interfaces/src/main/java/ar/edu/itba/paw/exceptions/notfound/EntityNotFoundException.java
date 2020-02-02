@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.exceptions;
+package ar.edu.itba.paw.exceptions.notfound;
 
 public abstract class EntityNotFoundException extends RuntimeException {
 

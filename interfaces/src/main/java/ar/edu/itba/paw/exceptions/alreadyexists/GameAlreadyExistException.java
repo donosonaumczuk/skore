@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.exceptions;
+package ar.edu.itba.paw.exceptions.alreadyexists;
 
 import ar.edu.itba.paw.models.GameKey;
 

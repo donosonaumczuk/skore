@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.exceptions;
+package ar.edu.itba.paw.exceptions.alreadyexists;
 
 public abstract class EntityAlreadyExistsException extends RuntimeException {
 

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.exceptions;
 
-import ar.edu.itba.paw.exceptions.EntityNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.EntityNotFoundException;
 import ar.edu.itba.paw.webapp.dto.ApiErrorDto;
 import org.springframework.http.HttpStatus;
 

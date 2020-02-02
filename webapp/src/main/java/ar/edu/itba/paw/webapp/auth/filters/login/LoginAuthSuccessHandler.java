@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.auth.filters.login;
 
-import ar.edu.itba.paw.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.PremiumUser;

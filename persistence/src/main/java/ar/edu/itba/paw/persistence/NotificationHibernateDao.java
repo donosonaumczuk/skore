@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.NotificationDao;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Notification;

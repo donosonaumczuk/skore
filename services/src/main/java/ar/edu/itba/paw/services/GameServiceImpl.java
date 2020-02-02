@@ -2,9 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.ForbiddenException;
-import ar.edu.itba.paw.exceptions.GameAlreadyExistException;
+import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
-import ar.edu.itba.paw.exceptions.GameNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
