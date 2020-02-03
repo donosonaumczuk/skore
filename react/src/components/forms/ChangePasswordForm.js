@@ -62,7 +62,6 @@ class ChangePasswordForm extends Component {
                 <form onSubmit={handleSubmit(this.onSubmit)} >
                     {this.state.error && <span className="invalid-feedback d-block">
                             {i18next.t('changePasswordForm.passwordError')}</span>}
-
                     <Field name="username" label={i18next.t('createUserForm.username')} 
                             inputType="text" required={false} isDisabled={true}
                             component={RenderInput} />
