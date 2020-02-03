@@ -26,9 +26,19 @@ const buildUrlFromParamQueriesAndTab = (params, currentTab) => {
     return url;
 }
 
+const removeUnknownHomeFilters = filters => {
+    return {
+        country: filters.country,
+        state: filters.state,
+        city: filters.city,
+        sport: filters.sport
+    };
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
-    buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab
+    buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
+    removeUnknownHomeFilters: removeUnknownHomeFilters
 };
 
 export default Utils;

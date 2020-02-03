@@ -96,17 +96,18 @@ class HomeContainer extends Component {
         let response;
         const { currentUser } = this.props;
         const { offset, total, currentTab, filters } = this.state;
+        const newFilters = Utils.removeUnknownHomeFilters(filters);
         if (currentTab === 0) {
-            response = await MatchService.getMatches(offset, total, filters);
+            response = await MatchService.getMatches(offset, total, newFilters);
         }
         else if (currentTab === 1) {
-            response = await MatchService.getMatchesToJoin(currentUser, offset, total, filters);
+            response = await MatchService.getMatchesToJoin(currentUser, offset, total, newFilters);
         }
         else if (currentTab === 2) {
-            response = await MatchService.getMatchesJoinedBy(currentUser, offset, total, filters);
+            response = await MatchService.getMatchesJoinedBy(currentUser, offset, total, newFilters);
         }
         else if (currentTab === 3) {
-            response = await MatchService.getMatchesCreatedBy(currentUser, offset, total, filters);
+            response = await MatchService.getMatchesCreatedBy(currentUser, offset, total, newFilters);
         }
         if (this.mounted) {
             this.updateMatches(response);
