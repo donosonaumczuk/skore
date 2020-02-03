@@ -37,8 +37,8 @@ class EditSportContainer extends Component {
     }
 
     loadFormInitialValues = () => {
-        if (this.state.sport) {
-            const { sport } = this.state;
+        const { sport } = this.state;
+        if (sport) {
             return {
                 "sportName": sport.sportName,
                 "displayName": sport.displayName,

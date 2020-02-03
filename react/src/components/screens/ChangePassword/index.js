@@ -16,7 +16,7 @@ const ChangePassword = (props) => {
         return <Redirect to={`/users/${currentUser}/editUserInfo`} />
     }
     return (
-        <ChangePasswordForm initialValues={{ "username": username }} />
+        <ChangePasswordForm initialValues={{ "username": username }} history={props.history} />
     );
 }
 

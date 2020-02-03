@@ -86,7 +86,7 @@ class LogInForm extends Component {
 
 LogInForm = reduxForm({
     form: 'login',
-    destroyOnUnmount: false, // set to true to remove data on refresh
+    destroyOnUnmount: true,
     validate
 })(LogInForm) 
 

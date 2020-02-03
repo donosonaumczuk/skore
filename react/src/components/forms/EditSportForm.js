@@ -116,7 +116,7 @@ class EditSportForm extends Component {
 
 EditSportForm = reduxForm({
     form: 'editSport',
-    destroyOnUnmount: false,
+    destroyOnUnmount: true,
     validate
 })(EditSportForm)
 
