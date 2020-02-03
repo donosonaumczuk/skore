@@ -23,7 +23,7 @@ public class GameDto {
     private String creator;
     private String tornamentNameThatIsFrom;
     private Boolean individual;
-    private Boolean isCompetitive;
+    private Boolean competitive;
     private String sport;
     private String sportName;
     private DateDto date;
@@ -52,7 +52,7 @@ public class GameDto {
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
         individual = game.getGroupType().equals("Individual");
-        isCompetitive = game.getCompetitiveness().equals("Competitive");
+        competitive = game.getCompetitiveness().equals("Competitive");
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
@@ -102,8 +102,8 @@ public class GameDto {
         return creator;
     }
 
-    public Boolean isCompetitive() {
-        return isCompetitive;
+    public Boolean getCompetitive() {
+        return competitive;
     }
 
     public String getSport() {

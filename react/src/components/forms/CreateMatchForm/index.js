@@ -178,15 +178,13 @@ class CreateMatchFormContainer extends Component {
                 this.setState({ locationError: null });
             }
             let match = this.loadMatch(values, this.state.image);
-            console.log(match);
             const response = await MatchService.createMatch(match);
-            console.log(response);
             if (response.status) {
                 //TODO handle error
             }
             else {
                 const matchKey= response.key;
-                this.props.history.push(`matches/${matchKey}`);
+                this.props.history.push(`match/${matchKey}`);
             }
         }
     }

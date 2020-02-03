@@ -120,7 +120,7 @@ public class GameController {
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
         PlaceDto location = gameDto.getLocation().orElse(PlaceDto.from(new Place(null, null, null, null)));
         Game game = gameService.create(gameDto.getTeamName1(), gameDto.getTeamName2(),
-                    getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.isCompetitive(),
+                    getStartTimeFrom(gameDto), gameDto.getMinutesOfDuration(), gameDto.getCompetitive(),
                     gameDto.isIndividual(),  location.getCountry(), location.getState(), location.getCity(),
                     location.getStreet(), gameDto.getTornamentName(), gameDto.getDescription(), gameDto.getTitle(),
                     gameDto.getSport());

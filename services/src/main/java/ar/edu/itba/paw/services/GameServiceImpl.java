@@ -73,17 +73,17 @@ public class GameServiceImpl implements GameService {
         String type = (isIndividual ? INDIVIDUAL.toString() : GROUP.toString()) + '-' +
                 (isCompetitive ? COMPETITIVE.toString() : FRIENDLY.toString());
         String newTeamName1 = teamName1, newTeamName2 = teamName2;
+
         if (isIndividual) {
+            newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
+            newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
             if (teamName1 != null || teamName2 != null) {
                 LOGGER.trace("Creation fails, match '{}' cannot be individual and add teams to match", gameKey.toString());
                 throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
                         "individual and add teams to match");
             }
-        } else {
-            newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
-                    .getName();
-            newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
-                    .getName();
         }
 
         Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime,

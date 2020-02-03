@@ -111,9 +111,7 @@ class App extends Component {
                         <Route path="/admin">
                             <Admin />
                         </Route>
-                        <Route path="/createMatch">
-                            <CreateMatchForm />
-                        </Route>
+                        <Route path="/createMatch" component={CreateMatchForm} />
                         <Route path="/match/:matchKey" component={MatchPage} />
                         <Route path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
