@@ -37,12 +37,13 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.config"})
+        "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants"})
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:properties/db.properties"),
         @PropertySource(value = "classpath:properties/email.properties"),
         @PropertySource(value = "classpath:properties/url.properties"),
+        @PropertySource(value = "classpath:properties/token.properties"),
         //If is conflict en properties it keep the last one
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
