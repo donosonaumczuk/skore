@@ -42,7 +42,9 @@ public interface GameService {
 
     public Game insertTemporalUserInGame(final String key, final String code, final Locale locale);
 
-    public boolean deleteUserInGame(final String key, final long userId);
+    public boolean deleteUserInGameById(final String key, final long userId);
+
+    public boolean deleteUserInGameByCode(final String key, final String code);
 
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
 

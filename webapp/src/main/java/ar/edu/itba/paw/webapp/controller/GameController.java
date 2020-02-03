@@ -234,16 +234,30 @@ public class GameController {
 
     @DELETE
     @Path("/{key}/players/{id}")
-    public Response removeUserFromGame(@PathParam("key") String key, @PathParam("id") long userId) {
+    public Response removeUserByIdFromGame(@PathParam("key") String key, @PathParam("id") long userId) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         //TODO: maybe validate user id is positive
-        if (!gameService.deleteUserInGame(key, userId)) {
+        if (!gameService.deleteUserInGameById(key, userId)) {
             LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
             throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");
         }
-        //TODO catch TeamNotFoundException, InvalidGameKeyException
+        //TODO catch TeamNotFoundException, InvalidGameKeyException, ForbiddenException, UnauthorizedException
         LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{key}/players/code/{code}")
+    public Response removeUserFromGame(@PathParam("key") String key, @PathParam("code") String code) {
+        GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
+        //TODO: maybe validate user id is positive
+        if (!gameService.deleteUserInGameByCode(key, code)) {
+            LOGGER.trace("Invalid code '{}' for match '{}'", code, key);
+            throw new ApiException(HttpStatus.NOT_FOUND, "Invalid code '" + code + "' for match '" + key + "'");
+        }
+        //TODO catch TeamNotFoundException, InvalidGameKeyException, ForbiddenException, UnauthorizedException
+        LOGGER.trace("User with code '{}' in match '{}' deleted successfully", code, key);
         return Response.noContent().build();
     }
 

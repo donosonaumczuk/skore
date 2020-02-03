@@ -133,29 +133,51 @@ public class GameServiceImpl implements GameService {
 
     @Transactional
     @Override
-    public boolean deleteUserInGame(final String key, final long userId) {
+    public boolean deleteUserInGameById(final String key, final long userId) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+            LOGGER.trace("Delete player from game fails, must be logged");
+            return new ForbiddenException("Delete player from game fails, must be logged");
+        });
         Game game = findByKey(key);
+        if (!game.getTeam1().getLeader().equals(loggedUser) &&
+                loggedUser.getUser().getUserId() != userId) {
+            LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
+            throw new UnauthorizedException("Delete player from game fails, must be leader of match '" + key +
+                    "' or player '" + userId + "'");
+        }
+       return deleteUserInGame(game, userId);
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUserInGameByCode(final String key, final String code){
+        Game game = findByKey(key);
+        User user = userService.getUserFromData(code, key);
+        return deleteUserInGame(game, user.getUserId());
+    }
+
+    private boolean deleteUserInGame(final Game game, final long userIdReceive) {
         for (User user : game.getTeam1().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team1", userId);
-                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
+            if (user.getUserId() == userIdReceive) {
+                LOGGER.trace("Found user: {} in team1", userIdReceive);
+                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userIdReceive));
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
+                    userService.remove(userIdReceive);
                 }
                 return true;
             }
         }
         for (User user : game.getTeam2().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team2", userId);
-                game.setTeam2(teamService.removePlayer(game.team2Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
+            if (user.getUserId() == userIdReceive) {
+                LOGGER.trace("Found user: {} in team2", userIdReceive);
+                game.setTeam2(teamService.removePlayer(game.team2Name(), userIdReceive));
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
+                    userService.remove(userIdReceive);
                 }
                 return true;
             }
         }
-        LOGGER.trace("Not found user: '{}' in match '{}'", userId, key);
+        LOGGER.trace("Not found user: '{}' in match '{}'", userIdReceive, game.getKey());
         return false;
     }
 
