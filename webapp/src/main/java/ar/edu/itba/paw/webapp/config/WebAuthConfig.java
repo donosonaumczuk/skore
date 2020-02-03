@@ -112,7 +112,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RequestMatcher optionalAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
                 new RegexRequestMatcher("/api/matches/temporal/?", "POST"),//TODO: maybe not needed
-                new RegexRequestMatcher("/api/matches/\\w+/players/code/\\w+/?", "POST")
+                new RegexRequestMatcher("/api/matches/\\w+/players/code/\\w+/?", "DELETE")
         );
     }
 
