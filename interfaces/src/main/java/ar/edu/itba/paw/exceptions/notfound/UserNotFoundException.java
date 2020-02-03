@@ -19,4 +19,8 @@ public class UserNotFoundException extends EntityNotFoundException {
     public static UserNotFoundException ofId(final long id) {
         return new UserNotFoundException("id", String.valueOf(id));
     }
+
+    public static UserNotFoundException ofEmail(final String email) {
+        return new UserNotFoundException("email", email);
+    }
 }

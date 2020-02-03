@@ -11,16 +11,16 @@ import java.util.Optional;
 public interface PremiumUserService {
 
     @Transactional
-    Optional<PremiumUser> findByUserName(final String userName);
+    PremiumUser findByUserName(final String userName);
 
     @Transactional
-    Optional<PremiumUser> findByEmail(final String email);
+    PremiumUser findByEmail(final String email);
 
     @Transactional
-    Optional<PremiumUser> findById(final long userId);
+    PremiumUser findById(final long userId);
 
     @Transactional
-    Optional<PremiumUser> create(
+    PremiumUser create(
             final String firstName, final String lastName, final String email, final String userName,
             final String cellphone, final String birthday, final String country, final String state, final String city,
             final String street, final int reputation, final String password, final byte[] file
@@ -33,14 +33,15 @@ public interface PremiumUserService {
     boolean remove(final String userName);
 
     @Transactional
-    Optional<PremiumUser> updateUserInfo(
+    PremiumUser updateUserInfo(
             final String username, final String newFirstName, final String newLastName, final String newEmail,
             final String newCellphone, final String newBirthday, final String newCountry, final String newState,
             final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
-            final String oldPassword, final byte[] file);
+            final String oldPassword, final byte[] file
+    );
 
     @Transactional
-    Optional<Boolean> enableUser(final String username, final String code);
+    boolean enableUser(final String username, final String code);
 
     @Transactional
     boolean confirmationPath(String path);
