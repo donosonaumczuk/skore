@@ -36,7 +36,7 @@ const validateSport = sport => {
 }
 
 const validateDate = date => {
-    const errorBaseLabel = `${ERROR_BASE_LABEL}date`
+    const errorBaseLabel = `${ERROR_BASE_LABEL}date`;
     let errorMessage = validateOnlyRequiredField(date, errorBaseLabel);
     const dateArray = moment(date).format("MM/DD/YYYY").split("/");
     const day = parseInt(dateArray[1]);

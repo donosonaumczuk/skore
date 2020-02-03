@@ -188,7 +188,7 @@ class CreateUserForm extends Component {
 
 CreateUserForm = reduxForm({
     form: 'createUser',
-    destroyOnUnmount: false, // set to true to remove data on refresh
+    destroyOnUnmount: true, // set to true to remove data on refresh
     validate
 })(CreateUserForm)
 
