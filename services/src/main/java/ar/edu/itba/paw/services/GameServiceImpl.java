@@ -8,6 +8,7 @@ import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.GameType.INDIVIDUAL;
@@ -128,28 +130,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public boolean deleteUserInGame(final String key, final long userId) {
-        Game game = findByKey(key);
-        for (User user : game.getTeam1().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team1", userId);
-                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
-                }
-                return true;
-            }
-        }
-        for (User user : game.getTeam2().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team2", userId);
-                game.setTeam2(teamService.removePlayer(game.team2Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
-                }
-                return true;
-            }
-        }
-        LOGGER.trace("Not found user: '{}' in match '{}'", userId, key);
+        //FIXME: removed in other PR, take your changes on conflict :)
         return false;
     }
 
