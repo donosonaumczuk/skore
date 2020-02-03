@@ -3,7 +3,6 @@ import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
-import { buildUrlFromParamQueries } from '../../../services/Util';
 import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import ErrorPage from '../ErrorPage';
@@ -33,7 +32,6 @@ class HomeContainer extends Component {
         super(props);
         const queryParams = queryString.parse(this.props.location.search);
         const currentTab = getCurrentTab(this.props.currentUser, queryParams.tab);
-        console.log(currentTab);
         this.state = {
             currentTab: currentTab,
             filters: queryParams,
@@ -46,12 +44,14 @@ class HomeContainer extends Component {
 
     handleTabChange = tabNumber => {
         if (tabNumber !== this.state.currentTab && this.mounted) {
+            const newUrl = Utils.buildUrlFromParamQueriesAndTab(this.state.filters, tabNumber);
             this.setState({
                 matches: [],
                 offset: INITIAL_OFFSET,
                 hasMore: true,
                 currentTab: tabNumber
-            }, () => { this.getMatches();}); 
+            }, () => { this.getMatches(); }); 
+            this.props.history.push(`/${newUrl}`);
         }
     }
 
@@ -65,14 +65,14 @@ class HomeContainer extends Component {
     }
 
     updateFilters = filters => {
-        const newUrl = buildUrlFromParamQueries(filters);
+        const newUrl = Utils.buildUrlFromParamQueriesAndTab(filters, this.state.currentTab);
         if (this.mounted) {
             this.setState({
                 matches: [],
                 offset: INITIAL_OFFSET,
                 hasMore: true,
                 filters: filters
-            }, () => { this.getMatches();}); 
+            }, () => { this.getMatches(); }); 
             this.props.history.push(`/${newUrl}`);
         }  
     }
