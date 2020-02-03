@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class GameKey {
 
@@ -54,8 +56,20 @@ public class GameKey {
 
     private String dateToString(LocalDateTime localDateTime) {
         return new StringBuilder().append(localDateTime.getYear())
-                .append(localDateTime.getMonthValue()).append(localDateTime.getDayOfMonth())
-                .append(localDateTime.getHour()).append(localDateTime.getMinute()).toString();
+                .append(appendNumberWithTwoDigits(localDateTime.getMonthValue()))
+                .append(appendNumberWithTwoDigits(localDateTime.getDayOfMonth()))
+                .append(appendNumberWithTwoDigits(localDateTime.getHour()))
+                .append(appendNumberWithTwoDigits(localDateTime.getMinute()))
+                .toString();
+    }
+
+    private StringBuilder appendNumberWithTwoDigits(int number) {
+        //Asuming is a valid one or two digit number
+        StringBuilder stringNumber = new StringBuilder();
+        if (number < 10) {
+            stringNumber.append(0);
+        }
+        return stringNumber.append(number);
     }
 
     private String keyDateToKeyDate(final String date) {

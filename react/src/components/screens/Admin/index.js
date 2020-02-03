@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import SportService from '../../../services/SportService';
+import Admin from './layout';
 import Loader from '../../Loader';
 import Utils from './../../utils/Utils';
-import Sports from './layout';
+import SportService from '../../../services/SportService';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
 
-class SportsContainer extends Component {
+class AdminContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -52,7 +52,7 @@ class SportsContainer extends Component {
         else {
             const { sports, hasMore } = this.state;
             return (
-                <Sports sports={sports} getSports={this.getSports} hasMore={hasMore} />
+                <Admin sports={sports} getSports={this.getSports} hasMore={hasMore} />
             );
         }
     }
@@ -60,6 +60,7 @@ class SportsContainer extends Component {
     componentWillUnmount = () => {
         this.mounted = false
     }
+
 }
 
-export default SportsContainer;
+export default AdminContainer;

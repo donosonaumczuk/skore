@@ -39,6 +39,10 @@ class HomeContainer extends Component {
         }
     }
 
+    handleMatchClick = matchKey => {
+        this.props.history.push(`match/${matchKey}`);
+    }
+
     componentDidMount = () => {
         this.mounted = true;
         this.getMatches();
@@ -104,7 +108,9 @@ class HomeContainer extends Component {
             currentMatches = <Loader />;
         }
         else {
-            currentMatches = <HomeMatches matches={matches} hasMore={hasMore} getMatches={this.getMatches} />;
+            currentMatches = <HomeMatches matches={matches} hasMore={hasMore} 
+                                handleMatchClick={this.handleMatchClick}
+                                getMatches={this.getMatches} />;
         }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
