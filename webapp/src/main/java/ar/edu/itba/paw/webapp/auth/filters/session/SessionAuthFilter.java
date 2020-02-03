@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.auth.filters.session;
 
-import ar.edu.itba.paw.exceptions.NoJWTFoundException;
+import ar.edu.itba.paw.exceptions.notfound.NoJWTFoundException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.interfaces.JWTService;
 import ar.edu.itba.paw.webapp.auth.token.JWTUsernamePasswordAuthToken;
