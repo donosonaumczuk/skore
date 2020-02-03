@@ -1,6 +1,7 @@
 import React from 'react';
 import { Field } from 'redux-form';
 import i18next from 'i18next';
+import PropTypes from 'prop-types';
 import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
@@ -79,6 +80,18 @@ const CreateMatchForm = ({ handleSubmit, submitting, onSubmit,
                 </div>
             </div>
     );
+}
+
+CreateMatchForm.propTypes = {
+        handleSubmit: PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
+        sportOptions: PropTypes.array.isRequired,
+        updateTime: PropTypes.func.isRequired,
+        hourOptions: PropTypes.array.isRequired,
+        minuteOptions: PropTypes.array.isRequired,
+        updateLocationAndState: PropTypes.func.isRequired,
+        locationError: PropTypes.string,
+        location: PropTypes.object.isRequired
 }
 
 export default CreateMatchForm;
