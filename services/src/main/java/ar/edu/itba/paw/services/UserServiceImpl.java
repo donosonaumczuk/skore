@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.UserAlreadyExist;
-import ar.edu.itba.paw.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         }
 
         LOGGER.trace("Looking up user with id {}", id);
-        return userDao.findById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " doesn't exist."));
+        return userDao.findById(id).orElseThrow(() -> UserNotFoundException.ofId(id));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         return user.orElseThrow(() -> {
             LOGGER.trace("Creation fails, user '{}' already exist", email);
-            return new UserAlreadyExist("Creation fails, user '" + email + "' already exist");
+            return UserAlreadyExistException.ofEmail(email);
         });
     }
 
@@ -65,21 +65,21 @@ public class UserServiceImpl implements UserService {
     public User updateFirstName(final long userId, final String newFirstName){
         Optional<User> user = userDao.updateFirstName(userId, newFirstName);
 
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesn't exist."));
+        return user.orElseThrow(() -> UserNotFoundException.ofId(userId));
     }
 
     @Override
     public User updateLastName(final long userId, final String newLastName) {
         Optional<User> user = userDao.updateLastName(userId, newLastName);
 
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesn't exist."));
+        return user.orElseThrow(() -> UserNotFoundException.ofId(userId));
     }
 
     @Override
     public User updateEmail(final long userId, final String newEmail) {
         Optional<User> user = userDao.updateEmail(userId, newEmail);
 
-        return user.orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " doesn't exist."));
+        return user.orElseThrow(() -> UserNotFoundException.ofId(userId));
     }
 
     @Override

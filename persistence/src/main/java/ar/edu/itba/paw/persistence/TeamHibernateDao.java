@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.exceptions.*;
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -46,7 +49,7 @@ public class TeamHibernateDao implements TeamDao {
         PremiumUser leader = null;
         if(leaderName != null) {
             leader = premiumUserDao.findByUserName(leaderName)
-                    .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+                    .orElseThrow(() -> UserNotFoundException.ofUsername(leaderName));
         }
         LOGGER.trace("Find leader: {}", leaderName);
         LOGGER.trace("Try to find sport: {}", sportName);
@@ -90,7 +93,7 @@ public class TeamHibernateDao implements TeamDao {
 
         LOGGER.trace("Try to fin new leader: {}", newLeaderName);
         PremiumUser newLeader = premiumUserDao.findByUserName(newLeaderName)
-                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+                .orElseThrow(() -> UserNotFoundException.ofUsername(newLeaderName));
         team.setLeader(newLeader);
 
         LOGGER.trace("Try to fin new sport: {}", newSportName);
@@ -108,7 +111,7 @@ public class TeamHibernateDao implements TeamDao {
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
 
         User user = userDao.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(("User does not exist")));
+                .orElseThrow(() -> UserNotFoundException.ofId(userId));
 
         for (User u:team.getPlayers()) {//TODO: maybe move to service
             if(u.equals(user)) {
@@ -132,7 +135,7 @@ public class TeamHibernateDao implements TeamDao {
                 .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
 
         if(!team.removePlayer(userId)) {
-            throw new UserNotFoundException("User does not exist in the team");
+            throw UserNotFoundException.ofId(userId);
         }
 
         em.merge(team);
