@@ -17,10 +17,9 @@ public class UserHibernateDao implements UserDao {
     public Optional<User> findById(final long userId) {
         final User returnedUser = em.find(User.class, userId);
 
-        if(returnedUser != null) {
+        if (returnedUser != null) {
             return Optional.of(returnedUser);
-        }
-        else {
+        } else {
             return Optional.empty();
         }
     }
@@ -34,7 +33,7 @@ public class UserHibernateDao implements UserDao {
     public boolean remove(final long userId) {
         Optional<User> user = findById(userId);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             em.remove(user.get());
             return true;
         }
@@ -43,25 +42,24 @@ public class UserHibernateDao implements UserDao {
 
     public Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
                                               final String newLastName, final String newEmail) {
-       Optional<User> user = findById(userId);
+        Optional<User> user = findById(userId);
 
-       if(user.isPresent()) {
-           User currentUser = user.get();
-           currentUser.setFirstName(newFirstName);
-           currentUser.setLastName(newLastName);
-           currentUser.setEmail(newEmail);
-           em.merge(currentUser);
-           return Optional.of(currentUser);
-       }
+        if (user.isPresent()) {
+            User currentUser = user.get();
+            currentUser.setFirstName(newFirstName);
+            currentUser.setLastName(newLastName);
+            currentUser.setEmail(newEmail);
+            em.merge(currentUser);
+            return Optional.of(currentUser);
+        }
 
-       return Optional.empty();
-
+        return Optional.empty();
     }
 
     public Optional<User> updateFirstName(final long userId, final String newFirstName) {
         Optional<User> user = findById(userId);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             User currentUser = user.get();
             currentUser.setFirstName(newFirstName);
 
@@ -75,7 +73,7 @@ public class UserHibernateDao implements UserDao {
     public Optional<User> updateLastName(final long userId, final String newLastName) {
         Optional<User> user = findById(userId);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             User currentUser = user.get();
             currentUser.setLastName(newLastName);
 
@@ -89,7 +87,7 @@ public class UserHibernateDao implements UserDao {
     public Optional<User> updateEmail(final long userId, final String newEmail) {
         Optional<User> user = findById(userId);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             User currentUser = user.get();
             currentUser.setEmail(newEmail);
 
@@ -99,5 +97,4 @@ public class UserHibernateDao implements UserDao {
 
         return Optional.empty();
     }
-
 }
