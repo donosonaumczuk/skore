@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.EmailException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -64,11 +65,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendConfirmAccount(PremiumUser user, String url, Locale locale) {
         StringBuilder body = new StringBuilder();
-        Optional<String> templateBodyOptional = readTemplate(confirmAccountTemplate);
-        if (!templateBodyOptional.isPresent()) {
-            return;
-        }
-        String templateBody = templateBodyOptional.get();
+        String templateBody = readTemplate(confirmAccountTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailConfirmAccountClickTo = messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_CLICK_TO,
                 null, locale).split("\\{0}");
@@ -85,11 +82,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendConfirmMatch(User user, Game game, String url, Locale locale) {
         StringBuilder body = new StringBuilder();
-        Optional<String> templateBodyOptional = readTemplate(confirmMatchTemplate);
-        if (!templateBodyOptional.isPresent()) {
-            return;
-        }
-        String templateBody = templateBodyOptional.get();
+        String templateBody = readTemplate(confirmMatchTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailConfirmAssistanceClickTo = messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_CLICK_TO,
                 null, locale).split("\\{0}");
@@ -112,11 +105,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendCancelMatch(User user, Game game, String url, Locale locale) {
         StringBuilder body = new StringBuilder();
-        Optional<String> templateBodyOptional = readTemplate(cancelMatchTemplate);
-        if (!templateBodyOptional.isPresent()) {
-            return;
-        }
-        String templateBody = templateBodyOptional.get();
+        String templateBody = readTemplate(cancelMatchTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailCancelAssistanceClickTo = messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_CLICK_TO,
                 null, locale).split("\\{0}");
@@ -145,17 +134,19 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(body, true);
             emailSender.send(message);
         } catch (MessagingException e) {
-            LOGGER.error("error trying to send mail");//TODO maybe throw exception
+            LOGGER.error("Error trying to send mail");
+            throw new EmailException("Error trying to send mail");
         }
     }
 
-    private Optional<String> readTemplate(Resource resource) {
-        String templateBody = null;
+    private String readTemplate(Resource resource) {
+        String templateBody;
         try {
             templateBody = new String(Files.readAllBytes(Paths.get(resource.getFile().getAbsolutePath())));
         } catch (Exception e) {
-            LOGGER.error("Error trying to read a mail template {}", resource.getFilename()); //TODO maybe throw exception
+            LOGGER.error("Error trying to read a mail template {}", resource.getFilename());
+            throw new EmailException("Error trying to read a mail template " + resource.getFilename());
         }
-        return Optional.ofNullable(templateBody);
+        return templateBody;
     }
 }
