@@ -27,14 +27,11 @@ public interface PremiumUserService {
 
     boolean remove(final String userName);
 
-    Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
-                                         final String newEmail,final String newUserName,
-                                         final String newCellphone, final String newBirthday,
-                                         final String newCountry, final String newState,
-                                         final String newCity, final String newStreet,
-                                         final int newReputation, final String newPassword,
-                                         final byte[] file, final String oldUserName,
-                                         final Locale locales);
+    Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
+                                         final String newEmail, final String newCellphone, final String newBirthday,
+                                         final String newCountry, final String newState, final String newCity,
+                                         final String newStreet, final int newReputation, final String newPassword,
+                                         final String oldPassword, final byte[] file, final Locale locale);
 
     Optional<Boolean> enableUser(final String username, final String code);
 
