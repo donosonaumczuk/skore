@@ -28,7 +28,7 @@ public class GameDto {
     private String sportName;
     private DateDto date;
     private TimeDto time;
-    private Long durationInMinutes;
+    private Long minutesOfDuration;
     private PlaceDto location; //TODO: make a decision about DOCKER
     private Integer totalPlayers;
     private Integer currentPlayers;
@@ -59,7 +59,7 @@ public class GameDto {
         LocalDateTime finishTime = game.getFinishTime();
         date = DateDto.from(LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth()));
         time = TimeDto.from(LocalTime.of(startTime.getHour(), startTime.getMinute()));
-        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
+        minutesOfDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
         tornamentNameThatIsFrom = game.getTornament();
         location = PlaceDto.from(game.getPlace());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
@@ -110,6 +110,10 @@ public class GameDto {
         return sport;
     }
 
+    public Long getMinutesOfDuration() {
+        return minutesOfDuration;
+    }
+
     public String getSportName() {
         return sportName;
     }
@@ -122,9 +126,6 @@ public class GameDto {
         return Optional.ofNullable(time);
     }
 
-    public Long getDurationInMinutes() {
-        return durationInMinutes;
-    }
 
     public Optional<PlaceDto> getLocation() {
         return Optional.ofNullable(location);

@@ -7,6 +7,7 @@ import SportService from '../../../services/SportService';
 import Loader from '../../Loader';
 import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
+import MatchService from '../../../services/MatchService';
 
 var location = {
     "country": null,
@@ -132,7 +133,7 @@ class CreateMatchFormContainer extends Component {
         const durationMinutes = this.getDurationMinutes(values.durationHours, values.durationMinutes);
         const match = {
             "title": values.title,
-            "description": values.description,
+            "description": values.description ? values.description : "",
             "sport": values.sport,
             "date" : {
                 "year": date.year,
@@ -177,8 +178,17 @@ class CreateMatchFormContainer extends Component {
                 this.setState({ locationError: null });
             }
             let match = this.loadMatch(values, this.state.image);
-            console.log(match);//TODO is here just to prevent warning
-        } //TODO implement post to endpoint and then redirect, when ednpoint is created        
+            console.log(match);
+            const response = await MatchService.createMatch(match);
+            console.log(response);
+            if (response.status) {
+                //TODO handle error
+            }
+            else {
+                const matchKey= response.key;
+                this.props.history.push(`matches/${matchKey}`);
+            }
+        }
     }
 
     render() {
@@ -187,7 +197,6 @@ class CreateMatchFormContainer extends Component {
         const currentUser = AuthService.getCurrentUser();
         const hourOptions = this.generateHourOptions();
         const minuteOptions = this.generateMinuteOptions();
-
         if (!currentUser) {
             return <Redirect to="/" />
         }
@@ -195,7 +204,6 @@ class CreateMatchFormContainer extends Component {
             return <Loader />
         }
         const sportOptions = this.generateSportOptions();
-
         return (
             <CreateMatchForm handleSubmit={handleSubmit}
                              submitting={submitting}

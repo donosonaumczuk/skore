@@ -16,7 +16,7 @@ const MatchDuration = ({ hourOptions, minuteOptions }) => {
                 </div>
                 <div className="col-6">
                     <Field name="durationMinutes" required={false} 
-                            defaultText={i18next.t('createMatchForm.chooseMinute')}
+                            defaultText={i18next.t('createMatchForm.chooseMinutes')}
                             options={minuteOptions} component={SelectInput} />  
                 </div>
             </div>
