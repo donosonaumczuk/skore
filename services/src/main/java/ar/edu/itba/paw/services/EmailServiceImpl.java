@@ -30,6 +30,26 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
+    private static final String EMAIL_CONFIRM_ACCOUNT_CLICK_TO = "emailConfirmAccountClickTo";
+    private static final String EMAIL_CONFIRM_ACCOUNT_GREETING = "emailConfirmAccountGreeting";
+    private static final String EMAIL_CONFIRM_ACCOUNT_BUTTON = "emailConfirmAccountButton";
+    private static final String EMAIL_CONFIRM_ACCOUNT_SUBJECT = "emailConfirmAccountSubject";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_CLICK_TO = "emailConfirmAssistanceClickTo";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_GREETING = "emailConfirmAssistanceGreeting";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_START = "emailConfirmAssistanceStart";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_END = "emailConfirmAssistanceEnd";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_LOCATION = "emailConfirmAssistanceLocation";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_BUTTON = "emailConfirmAssistanceButton";
+    private static final String EMAIL_CONFIRM_ASSISTANCE_SUBJECT = "emailConfirmAssistanceSubject";
+    private static final String EMAIL_CANCEL_ASSISTANCE_CLICK_TO = "emailCancelAssistanceClickTo";
+    private static final String EMAIL_CANCEL_ASSISTANCE_GREETING = "emailCancelAssistanceGreeting";
+    private static final String EMAIL_CANCEL_ASSISTANCE_START = "emailCancelAssistanceStart";
+    private static final String EMAIL_CANCEL_ASSISTANCE_END = "emailCancelAssistanceEnd";
+    private static final String EMAIL_CANCEL_ASSISTANCE_LOCATION = "emailCancelAssistanceLocation";
+    private static final String EMAIL_CANCEL_ASSISTANCE_BUTTON = "emailCancelAssistanceButton";
+    private static final String EMAIL_CANCEL_ASSISTANCE_SUBJECT = "emailCancelAssistanceSubject";
+    private static final String DATE_FORMAT = "HH:mm MM/dd/yyyy";
+
     @Autowired
     private MessageSource messageSource;
 
@@ -50,14 +70,14 @@ public class EmailServiceImpl implements EmailService {
         }
         String templateBody = templateBodyOptional.get();
         Formatter formatter = new Formatter(body);
-        String[] emailConfirmAccountClickTo = messageSource.getMessage("emailConfirmAccountClickTo",
+        String[] emailConfirmAccountClickTo = messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_CLICK_TO,
                 null, locale).split("\\{0}");
         Object[] objects = {user.getUser().getFirstName()};
-        formatter.format(templateBody, messageSource.getMessage("emailConfirmAccountGreeting", objects, locale),
+        formatter.format(templateBody, messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_GREETING, objects, locale),
                 emailConfirmAccountClickTo[0], user.getUserName(), emailConfirmAccountClickTo[1], url,
-                messageSource.getMessage("emailConfirmAccountButton", null, locale));
+                messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_BUTTON, null, locale));
 
-        sendMail(messageSource.getMessage("emailConfirmAccountSubject", null, locale),
+        sendMail(messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_SUBJECT, null, locale),
                 body.toString(), user.getEmail());
     }
 
@@ -71,20 +91,20 @@ public class EmailServiceImpl implements EmailService {
         }
         String templateBody = templateBodyOptional.get();
         Formatter formatter = new Formatter(body);
-        String[] emailConfirmAssistanceClickTo = messageSource.getMessage("emailConfirmAssistanceClickTo",
+        String[] emailConfirmAssistanceClickTo = messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_CLICK_TO,
                 null, locale).split("\\{0}");
         Object[] objects = {user.getFirstName()};
-        formatter.format(templateBody, messageSource.getMessage("emailConfirmAssistanceGreeting", objects, locale),
+        formatter.format(templateBody, messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_GREETING, objects, locale),
                 emailConfirmAssistanceClickTo[0], game.getTitle(), emailConfirmAssistanceClickTo[1],
-                messageSource.getMessage("emailConfirmAssistanceStart", null, locale),
-                game.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm MM/dd/yyyy")),
-                messageSource.getMessage("emailConfirmAssistanceEnd", null, locale),
-                game.getFinishTime().format(DateTimeFormatter.ofPattern("HH:mm MM/dd/yyyy")),
-                messageSource.getMessage("emailConfirmAssistanceLocation", null, locale),
+                messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_START, null, locale),
+                game.getStartTime().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_END, null, locale),
+                game.getFinishTime().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_LOCATION, null, locale),
                 game.getPlace().toString(), url,
-                messageSource.getMessage("emailConfirmAssistanceButton", null, locale));
+                messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_BUTTON, null, locale));
 
-        sendMail(messageSource.getMessage("emailConfirmAssistanceSubject", null, locale),
+        sendMail(messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_SUBJECT, null, locale),
                 body.toString(), user.getEmail());
     }
 
@@ -98,20 +118,20 @@ public class EmailServiceImpl implements EmailService {
         }
         String templateBody = templateBodyOptional.get();
         Formatter formatter = new Formatter(body);
-        String[] emailCancelAssistanceClickTo = messageSource.getMessage("emailCancelAssistanceClickTo",
+        String[] emailCancelAssistanceClickTo = messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_CLICK_TO,
                 null, locale).split("\\{0}");
         Object[] objects = {user.getFirstName()};
-        formatter.format(templateBody, messageSource.getMessage("emailCancelAssistanceGreeting", objects, locale),
+        formatter.format(templateBody, messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_GREETING, objects, locale),
                 emailCancelAssistanceClickTo[0], game.getTitle(), emailCancelAssistanceClickTo[1],
-                messageSource.getMessage("emailCancelAssistanceStart", null, locale),
-                game.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm MM/dd/yyyy")),
-                messageSource.getMessage("emailCancelAssistanceEnd", null, locale),
-                game.getFinishTime().format(DateTimeFormatter.ofPattern("HH:mm MM/dd/yyyy")),
-                messageSource.getMessage("emailCancelAssistanceLocation", null, locale),
+                messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_START, null, locale),
+                game.getStartTime().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_END, null, locale),
+                game.getFinishTime().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_LOCATION, null, locale),
                 game.getPlace().toString(), url,
-                messageSource.getMessage("emailCancelAssistanceButton", null, locale));
+                messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_BUTTON, null, locale));
 
-        sendMail(messageSource.getMessage("emailCancelAssistanceSubject", null, locale),
+        sendMail(messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_SUBJECT, null, locale),
                 body.toString(), user.getEmail());
     }
 

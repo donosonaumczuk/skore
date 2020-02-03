@@ -17,11 +17,11 @@ public interface PremiumUserService {
     Optional<PremiumUser> findById(final long userId);
 
     Optional<PremiumUser> create(final String firstName, final String lastName,
-                                 final String email, final String userName,
+                                 final String email, final String username,
                                  final String cellphone, final String birthday,
                                  final String country, final String state, final String city,
                                  final String street, final int reputation, final String password,
-                                 final byte[] file, final Locale locales);
+                                 final byte[] file, final Locale locale);
 
     Optional<byte[]> readImage(final String userName);
 

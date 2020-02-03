@@ -44,7 +44,7 @@ import java.util.Properties;
         @PropertySource(value = "classpath:properties/email.properties"),
         @PropertySource(value = "classpath:properties/url.properties"),
         @PropertySource(value = "classpath:properties/token.properties"),
-        //If is conflict en properties it keep the last one
+        //If it is conflict in properties it keep the last one
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -75,7 +75,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //        return dataSource;
 //    }
 
-    /* Local */
     @Bean
     public DataSource dataSource() {
         String dbHost  = environment.getRequiredProperty("db.host");

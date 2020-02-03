@@ -109,35 +109,35 @@ public class GameHibernateDao implements GameDao {
                                 final List<String> usernamesCreatorsInclude,
                                 final List<String> usernamesCreatorsNotInclude, final GameSort sort,
                                 final Boolean onlyWithResults) {
-        DaoHelper filter = new DaoHelper(QUERY_START);
-        filter.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
-        filter.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
-        filter.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MIN, minFinishTime);
-        filter.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MAX, maxFinishTime);
+        DaoHelper daoHelper = new DaoHelper(QUERY_START);
+        daoHelper.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
+        daoHelper.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
+        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MIN, minFinishTime);
+        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MAX, maxFinishTime);
 
-        filter.addListFilters(true, false, TYPE, TYPE, types);
-        filter.addFilter(QUERY_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
-        filter.addFilter(QUERY_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
+        daoHelper.addListFilters(true, false, TYPE, TYPE, types);
+        daoHelper.addFilter(QUERY_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
+        daoHelper.addFilter(QUERY_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
 
-        filter.addListFilters(false, false, QUERY_SPORT_NAME, SPORT_NAME, sportNames);
-        filter.addListFilters(false, false, COUNTRY, COUNTRY, countries);
-        filter.addListFilters(false, false, STATE, STATE, states);
-        filter.addListFilters(false, false, CITY, CITY, cities);
+        daoHelper.addListFilters(false, false, QUERY_SPORT_NAME, SPORT_NAME, sportNames);
+        daoHelper.addListFilters(false, false, COUNTRY, COUNTRY, countries);
+        daoHelper.addListFilters(false, false, STATE, STATE, states);
+        daoHelper.addListFilters(false, false, CITY, CITY, cities);
 
-        filter.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MIN_FREE_PLACES, minFreePlaces);
-        filter.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MAX_FREE_PLACES, maxFreePlaces);
+        daoHelper.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MIN_FREE_PLACES, minFreePlaces);
+        daoHelper.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MAX_FREE_PLACES, maxFreePlaces);
 
-        filter.addListFilters(true, USERNAME_PI, usernamesPlayersInclude);
-        filter.addListFilters(false, USERNAME_PNI, usernamesPlayersNotInclude);
+        daoHelper.addListFilters(true, USERNAME_PI, usernamesPlayersInclude);
+        daoHelper.addListFilters(false, USERNAME_PNI, usernamesPlayersNotInclude);
 
-        filter.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
-        filter.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
-        filter.addFilterOnlyFinished(onlyWithResults);
+        daoHelper.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
+        daoHelper.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
+        daoHelper.addFilterOnlyFinished(onlyWithResults);
 
-        final TypedQuery<Game> query = em.createQuery(filter.getQuery() +
+        final TypedQuery<Game> query = em.createQuery(daoHelper.getQuery() +
                 (sort != null ? sort.toQuery() : ""), Game.class);
-        List<String> valueName = filter.getValueNames();
-        List<Object> values    = filter.getValues();
+        List<String> valueName = daoHelper.getValueNames();
+        List<Object> values    = daoHelper.getValues();
 
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));

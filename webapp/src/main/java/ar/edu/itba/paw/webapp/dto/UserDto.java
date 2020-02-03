@@ -21,7 +21,7 @@ public class UserDto {
     private String password;
     private String oldPassword;
     private String image;
-    private int reputation;
+    private Integer reputation;
     private Boolean isVerified;
     private List<Link> links;
 

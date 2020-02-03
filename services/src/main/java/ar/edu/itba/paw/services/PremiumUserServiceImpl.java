@@ -13,14 +13,11 @@ import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -39,9 +36,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Autowired
     public EmailService emailSender;
-
-    @Autowired
-    private RoleDao roleDao;
 
     @Autowired
     private BCryptPasswordEncoder bcrypt;
@@ -91,7 +85,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Transactional
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
-                                        final String email, final String userName,
+                                        final String email, final String username,
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
@@ -99,7 +93,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
-        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
+        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, username,
                 cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file);
         LOGGER.trace("Sending confirmation email to {}", email);
@@ -150,7 +144,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 newEmail, username, newCellphone, newBirthday, newCountry, newState,
                 newCity, newStreet, newReputation, encodedPassword, file, username);
 
-        if(user.isPresent() && newEmail != null) {
+        if (user.isPresent() && newEmail != null) {
             emailSender.sendConfirmAccount(user.get(), getConfirmationUrl(user.get()), locale);
         }
 

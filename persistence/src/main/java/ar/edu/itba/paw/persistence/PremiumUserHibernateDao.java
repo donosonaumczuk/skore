@@ -338,18 +338,18 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
         queryStart = queryStart.append(QUERY_PART_4);
 
-        DaoHelper filter = new DaoHelper(queryStart.toString());
-        filter.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
-        filter.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
+        DaoHelper daoHelper = new DaoHelper(queryStart.toString());
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
         //TODO: winrate filter and Sort, need base migration
-        filter.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
-        filter.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
-        filter.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
+        daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        daoHelper.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
+        daoHelper.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
 
-        final TypedQuery<PremiumUser> query = em.createQuery(filter.getQuery() +
+        final TypedQuery<PremiumUser> query = em.createQuery(daoHelper.getQuery() +
                 (sort != null ? sort.toQuery() : ""), PremiumUser.class);
-        List<String> valueName = filter.getValueNames();
-        List<Object> values    = filter.getValues();
+        List<String> valueName = daoHelper.getValueNames();
+        List<Object> values    = daoHelper.getValues();
 
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));
