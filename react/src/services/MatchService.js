@@ -57,11 +57,22 @@ const getMatchesToJoin =  async (username, offset, limit, filters) => {
     }
 }
 
+const getMatchByKey = async matchKey => {
+    try {
+        const res = await api.get(`${MATCHES_ENDPOINT}/${matchKey}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const MatchService = {
     getMatches: getMatches,
     getMatchesCreatedBy: getMatchesCreatedBy,
     getMatchesJoinedBy: getMatchesJoinedBy,
-    getMatchesToJoin: getMatchesToJoin
+    getMatchesToJoin: getMatchesToJoin,
+    getMatchByKey: getMatchByKey
 };
 
 export default MatchService;

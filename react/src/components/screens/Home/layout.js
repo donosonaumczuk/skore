@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import LeftPanel from '../../LeftPanel';
 
 const Home = (props) => {
-    const { currentTab, handleTabChange, filters, updateFilters, currentMatches, currentUser } = props;
+    const { currentTab, handleTabChange, filters, updateFilters,
+            currentMatches, currentUser } = props;
      return (
         <div className="container-fluid">
             <div className="row">

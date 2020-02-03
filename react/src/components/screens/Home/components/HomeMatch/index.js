@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import HomeMatchPropType from '../../../../../proptypes/HomeMatchPropType';
 import HomeMatch from './layout';
 
@@ -20,22 +21,19 @@ const getImageUrls = links => {
     };
 }
 
-const handleClick = () => {
-    //TODO handle click on match redirect to its page when created
-}
-
-const HomeMatchContainer = ({ currentMatch }) => {
+const HomeMatchContainer = ({ currentMatch, handleMatchClick }) => {
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
     return (
         <HomeMatch currentMatch={currentMatch} creatorImageUrl={creatorImageUrl}
-                    sportImageUrl={sportImageUrl} handleClick={handleClick} />
+                    sportImageUrl={sportImageUrl} handleClick={handleMatchClick} />
     );
 }
 
 HomeMatch.propTypes = {
-    currentMatch: HomeMatchPropType.isRequired
+    currentMatch: HomeMatchPropType.isRequired,
+    handleMatchClick: PropTypes.func
 }
 
 export default HomeMatchContainer;

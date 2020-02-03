@@ -22,6 +22,7 @@ import CreateSportForm from './components/forms/CreateSportForm';
 import EditSport from './components/screens/EditSport';
 import './css/main.css';
 import Admin from './components/screens/Admin';
+import MatchPage from './components/screens/MatchPage';
 
 
 class App extends Component {
@@ -113,6 +114,7 @@ class App extends Component {
                         <Route path="/createMatch">
                             <CreateMatchForm />
                         </Route>
+                        <Route path="/match/:matchKey" component={MatchPage} />
                         <Route path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
