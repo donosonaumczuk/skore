@@ -11,13 +11,29 @@ import Home from './layout';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
+const MIN_TAB = 0;
+const MAX_TAB = 3;
+
+const getCurrentTab = (currentUser, tab) => {
+    let currentTab = 0;
+    if (currentUser) {
+        if (tab && tab > MIN_TAB && tab <= MAX_TAB) {
+            currentTab = parseInt(tab);
+        }
+        else {
+            currentTab = 1;
+        }
+    }
+    return currentTab;
+}
 
 class HomeContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        const currentTab = this.props.currentUser ? 1 : 0;
         const queryParams = queryString.parse(this.props.location.search);
+        const currentTab = getCurrentTab(this.props.currentUser, queryParams.tab);
+        console.log(currentTab);
         this.state = {
             currentTab: currentTab,
             filters: queryParams,
