@@ -11,12 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Enumeration;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -38,6 +42,9 @@ public class PremiumUserServiceImpl implements PremiumUserService{
 
     @Autowired
     private BCryptPasswordEncoder bcrypt;
+
+    @Autowired
+    private Environment environment;
 
     @Transactional
     @Override
@@ -81,11 +88,11 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     @Transactional
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
-                              final String email, final String userName,
-                              final String cellphone, final String birthday,
-                              final String country, final String state, final String city,
-                              final String street, final int reputation, final String password,
-                              final byte[] file) {
+                                        final String email, final String userName,
+                                        final String cellphone, final String birthday,
+                                        final String country, final String state, final String city,
+                                        final String street, final int reputation, final String password,
+                                        final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
@@ -93,8 +100,8 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                 cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file);
         LOGGER.trace("Sending confirmation email to {}", email);
-        if(user.isPresent()) {
-            sendConfirmationMail(user.get());
+        if (user.isPresent()) {
+            emailSender.sendConfirmAccount(user.get(), getConfirmationUrl(user.get()), locale);
         }
         return user;
     }
@@ -122,12 +129,13 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     @Transactional
     @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
-                                      final String newEmail,final String newUserName,
-                                      final String newCellphone, final String newBirthday,
-                                      final String newCountry, final String newState,
-                                      final String newCity, final String newStreet,
-                                      final int newReputation, final String newPassword,
-                                      final byte[] file, final String oldUserName) {
+                                                final String newEmail,final String newUserName,
+                                                final String newCellphone, final String newBirthday,
+                                                final String newCountry, final String newState,
+                                                final String newCity, final String newStreet,
+                                                final int newReputation, final String newPassword,
+                                                final byte[] file, final String oldUserName,
+                                                final Locale locale) {
 
         LOGGER.trace("Looking for user with username: {} to update", oldUserName);
 
@@ -137,7 +145,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                 newCity, newStreet, newReputation, encodedPassword, file, oldUserName);
 
         if(user.isPresent() && newEmail != null) {
-            sendConfirmationMail(user.get());
+            emailSender.sendConfirmAccount(user.get(), getConfirmationUrl(user.get()), locale);
         }
 
         return user;
@@ -154,7 +162,8 @@ public class PremiumUserServiceImpl implements PremiumUserService{
                         .getLastName(), currentUser.getEmail(), currentUser.getUserName(), currentUser
                         .getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome()
                         .getCountry(), currentUser.getHome().getState(),currentUser.getHome().getCity(),
-                currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username);
+                currentUser.getHome().getStreet(), currentUser.getReputation(), newPassword, null, username,
+                null);
 
         return user;
     }
@@ -210,7 +219,7 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code).get();
+        return enableUser(username, code).get();//TODO check
     }
 
     @Transactional
@@ -223,14 +232,6 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
                 maxReputation, minWinRate, maxWinRate, sort);
         return new Page<>(users, offset, limit);
-    }
-
-    private String generatePath(PremiumUser user) {
-        return "confirm/" + user.getUserName() + "&" + user.getCode();
-    }
-
-    private void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
     }
 
     private double calculateWinRate(final PremiumUser user) {
@@ -277,5 +278,13 @@ public class PremiumUserServiceImpl implements PremiumUserService{
         }
 
         return -1;
+    }
+
+    private String getConfirmationUrl(PremiumUser user) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter formatter = new Formatter(stringBuilder);
+        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+                user.getUserName() + "&" + user.getCode());
+        return stringBuilder.toString();
     }
 }

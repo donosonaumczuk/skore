@@ -20,7 +20,7 @@ public class UserDto {
     private PlaceDto home;
     private String password;
     private String image;
-    private Integer reputation;
+    private int reputation;
     private Boolean isVerified;
     private List<Link> links;
 

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 public interface GameService {
 
@@ -39,7 +40,7 @@ public interface GameService {
 
     public Game insertPremiumUserInGame(final String key, final String username);
 
-    public Game insertTemporalUserInGame(final String key, final String code);
+    public Game insertTemporalUserInGame(final String key, final String code, final Locale locale);
 
     public boolean deleteUserInGame(final String key, final long userId);
 
@@ -47,5 +48,6 @@ public interface GameService {
 
     public List<List<Game>> getGamesThatPlay(final long userId);
 
-    public void createRequestToJoin(final String key, final String firstName, final String lastName, final String email);
+    public void createRequestToJoin(final String key, final String firstName, final String lastName, final String email,
+                                    final Locale locale);
 }

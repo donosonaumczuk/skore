@@ -3,6 +3,8 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.User;
 
+import java.util.Locale;
+
 public interface UserService {
 
     public User findById(final long id);
@@ -18,9 +20,9 @@ public interface UserService {
 
     public User updateEmail(final long userId, final String newEmail);
 
-    public void sendConfirmMatchAssistance(final User user, final Game game, final String data);
+    public void sendConfirmMatchAssistance(final User user, final Game game, final String data, final Locale locale);
 
     public User getUserFromData(final String data, final String gameData);
 
-    public void sendCancelOptionMatch(final User user, final Game game, final String data);
+    public void sendCancelOptionMatch(final User user, final Game game, final String data, final Locale locale);
 }

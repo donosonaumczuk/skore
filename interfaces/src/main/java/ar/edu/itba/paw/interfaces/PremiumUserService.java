@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.UserSort;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface PremiumUserService {
@@ -20,7 +21,7 @@ public interface PremiumUserService {
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final byte[] file);
+                                        final byte[] file, final Locale locales);
 
     public Optional<byte[]> readImage(final String userName);
 
@@ -32,7 +33,8 @@ public interface PremiumUserService {
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final int newReputation, final String newPassword,
-                                                final byte[] file, final String oldUserName);
+                                                final byte[] file, final String oldUserName,
+                                                final Locale locales);
 
     public Optional<PremiumUser> changePassword(final String newPassword, final String userName);
 

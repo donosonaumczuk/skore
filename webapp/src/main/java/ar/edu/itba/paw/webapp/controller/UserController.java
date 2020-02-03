@@ -19,12 +19,14 @@ import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import com.sun.xml.internal.ws.server.sei.MessageFiller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -52,7 +56,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
@@ -209,12 +215,14 @@ public class UserController {
     @PUT
     @Path("/{username}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody) {
+    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
+                               @Context HttpServletRequest request) {
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
@@ -223,7 +231,7 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), image, username
+                userDto.getReputation(), userDto.getPassword(), image, username, locale
         );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(newPremiumUser);
@@ -233,11 +241,12 @@ public class UserController {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createUser(@RequestBody final String requestBody) {
+    public Response createUser(@RequestBody final String requestBody, @Context HttpServletRequest request) {
         UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
                 userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
@@ -245,13 +254,14 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), image
+                userDto.getReputation(), userDto.getPassword(), image, locale
         ).orElseThrow(() -> {
             LOGGER.trace("User '{}' already exist", userDto.getUsername());
             return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
         });
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
-        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
+        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser))
+                .header("Accept-Language", locale.toString()).build();
     }
 
     @GET

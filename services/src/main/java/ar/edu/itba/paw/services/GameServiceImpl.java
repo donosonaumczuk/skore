@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.GameType.INDIVIDUAL;
@@ -116,12 +117,12 @@ public class GameServiceImpl implements GameService {
 
     @Transactional
     @Override
-    public Game insertTemporalUserInGame(final String key, final String code) {
+    public Game insertTemporalUserInGame(final String key, final String code, final Locale locale) {
         Game game;
         User user = userService.getUserFromData(code, key);
         try {
             game = insertUserInGame(key, user.getUserId());
-            userService.sendCancelOptionMatch(user, game, key);
+            userService.sendCancelOptionMatch(user, game, key, locale);
         }
         catch (Exception e) {
             userService.remove(user.getUserId());
@@ -251,9 +252,9 @@ public class GameServiceImpl implements GameService {
     }
 
     public void createRequestToJoin(final String key, final String firstName, final String lastName,
-                                    final String email) {
+                                    final String email, final Locale locale) {
         User newUser = userService.create(firstName, lastName, email);
-        userService.sendConfirmMatchAssistance(newUser, findByKey(key), key);
+        userService.sendConfirmMatchAssistance(newUser, findByKey(key), key, locale);
     }
 
     @Transactional

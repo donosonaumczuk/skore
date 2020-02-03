@@ -12,9 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Formatter;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -27,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailSender;
+
+    @Autowired
+    private Environment environment;
 
     private SimpleEncrypter encrypter = new SimpleEncrypter();
 
@@ -90,10 +96,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendConfirmMatchAssistance(final User user, final Game game, final String data) {
+    public void sendConfirmMatchAssistance(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendConfirmMatch(user, game, data + "/confirmMatch/" + phrase , LocaleContextHolder.getLocale());
+        emailSender.sendConfirmMatch(user, game, getUrl("url.frontend.confirm.match", data, phrase), locale);
     }
 
     @Override
@@ -122,10 +128,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendCancelOptionMatch(final User user, final Game game, final String data) {
+    public void sendCancelOptionMatch(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendCancelMatch(user, game, data + "/cancelMatch/" + phrase, LocaleContextHolder.getLocale());
+        emailSender.sendCancelMatch(user, game, getUrl("url.frontend.cancel.match", data, phrase), locale);
+    }
+
+    private String getUrl(String urlProperty, String data, String phrase) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter formatter = new Formatter(stringBuilder);
+        formatter.format(environment.getRequiredProperty(urlProperty), data, phrase);
+        return stringBuilder.toString();
     }
 
     private void throwAndLogCodeError(String code) {

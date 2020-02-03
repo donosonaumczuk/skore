@@ -19,6 +19,7 @@ import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidators;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
@@ -31,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,6 +48,7 @@ import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
@@ -90,7 +93,7 @@ public class GameController {
                              @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
-                             @QueryParam("hasResult") String hasResult) {
+                             @QueryParam("hasResult") String hasResult, @Context HttpServletRequest request) {
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
                 QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
@@ -189,36 +192,44 @@ public class GameController {
 
     @POST
     @Path("/{key}/players/requestToJoin")
-    public Response createTemporalUser(@PathParam("key") String key, @RequestBody final String requestBody) {
+    public Response createTemporalUser(@PathParam("key") String key, @RequestBody final String requestBody,
+                                       @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-
-        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail());
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
+                null);
         //TODO catch UserAlreadyExist,
-        return Response.status(HttpStatus.CREATED.value()).build();
+        return Response.status(HttpStatus.CREATED.value()).header("Accept-Language", locale.toString()).build();
     }
 
     @POST
     @Path("/{key}/players")
-    public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody) {
+    public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody,
+                                  @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         PlayerValidators.updateValidatorOf("Add player to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Game game;
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
         if (playerDto.getUsername() != null) {
             game = gameService.insertPremiumUserInGame(key, playerDto.getUsername());
         }
-        else  {
-            game = gameService.insertTemporalUserInGame(key, playerDto.getCode());
+        else {
+            game = gameService.insertTemporalUserInGame(key, playerDto.getCode(), locale);
         }
         //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
         //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
         //TODO maybe delete not premium user if it fails
         LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
-        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
+        Response.ResponseBuilder response = Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+        if (playerDto.getUsername() == null) {
+            response = response.header("Accept-Language", locale.toString());
+        }
+        return response.build();
     }
 
     @DELETE
