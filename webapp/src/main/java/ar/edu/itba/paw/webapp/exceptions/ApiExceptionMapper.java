@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 public class ApiExceptionMapper implements ExceptionMapper<ApiException> {
 
     @Override
-    public Response toResponse(final ApiException e) {
-        return Response.status(e.getStatusCode()).entity(ApiErrorDto.from(e)).build();
+    public Response toResponse(final ApiException apiException) {
+        return Response.status(apiException.getStatusCode()).entity(ApiErrorDto.from(apiException)).build();
     }
 }

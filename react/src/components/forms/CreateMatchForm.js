@@ -3,23 +3,23 @@ import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import i18next from 'i18next';
-import FormTitle from './inputs/FormTitle';
+import FormTitle from './elements/FormTitle';
 import RenderInput from './inputs/RenderInput';
-import SubmitButton from './inputs/SubmitButton';
+import SubmitButton from './elements/SubmitButton';
 import AuthService from '../../services/AuthService';
-import FormComment from './inputs/FormComment';
+import FormComment from './elements/FormComment';
 import RenderSelect from './inputs/SelectInput';
 import SportService from '../../services/SportService';
 import Loader from '../Loader';
 import CompetitiveRadio from '../match/CompetitiveRadio';
 import RenderTextArea from './inputs/RenderTextArea';
-import LocationInput from './inputs/LocationInput';
+import MatchLocation from './inputs/MatchLocation';
 import SubLocationInput from './inputs/SubLocationInput';
 import RenderMatchDatePicker from './inputs/RenderMatchDatePicker';
 import RenderTimePicker from './inputs/RenderTimePicker';
 import CreateMatchValidator from './validators/CreateMatchValidator';
 
-const location = {
+var location = {
     "country": null,
     "state": null,
     "city": null,
@@ -27,17 +27,10 @@ const location = {
     "number": null
 };
 
-const time = {
+var time = {
     "hour": null,
     "minutes": null
 };
-
-//TODO only show them after submit is pressed
-const customErrors = {
-    locationError: null,
-    timeError: null,
-    active: false
-}
 
 const updateLocation = home => {
     location.street = home.street;
@@ -47,10 +40,10 @@ const updateLocation = home => {
     location.number = home.number;
 }
 
-const updateTime = time => {
-    const timeArray = moment(time).format("hh:mm").split(":");
-    location.hour = parseInt(timeArray[0]);
-    location.minutes = parseInt(timeArray[1]);  
+const updateTime = newTime => {
+    const timeArray = moment(newTime).format("hh:mm").split(":");
+    time.hour = parseInt(timeArray[0]);
+    time.minutes = parseInt(timeArray[1]);  
 }
 
 const validate = values => {
@@ -62,8 +55,7 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    customErrors.timeError = CreateMatchValidator.validateTime(time);
-    customErrors.locationError = CreateMatchValidator.validateLocation(location);
+    errors.matchTime = CreateMatchValidator.validateTime(time);
     return errors;
 }
 
@@ -159,15 +151,15 @@ class CreateMatchForm extends Component {
                 "dayOfMonth": date.day,
             },
             "time": {
-                "hour": this.state.hour,
-                "minute": this.state.minutes
+                "hour": time.hour,
+                "minute": time.minutes
             },
             "minutesOfDuration": durationMinutes,
             "location": {
-                "country": this.state.country ? this.state.country : null,
-                "state": this.state.state ? this.state.state : null,
-                "city": this.state.city ? this.state.city : null,
-                "street": "" + this.state.street + " " + this.state.number
+                "country": location.country ? location.country : null,
+                "state": location.state ? location.state : null,
+                "city": location.city ? location.city : null,
+                "street": "" + location.street + " " + location.number
             },
             "individual": true,
             "competitive": values.competitivity === "competitive"
@@ -175,11 +167,29 @@ class CreateMatchForm extends Component {
         return match;
     }
 
+    updateLocationAndState = home => {
+        updateLocation(home);
+        if (this.mounted) {
+            this.setState({
+                modifyingLocation: true
+            });
+        }
+    }
+
     onSubmit = async (values) => {
-        let match = this.loadMatch(values, this.state.image);
-        console.log(match);//TODO is here just to prevent warning
-        //TODO implement post to endpoint and then redirect, when ednpoint is created
-        
+        const locationError = CreateMatchValidator.validateLocation(location);
+        if(locationError) {
+            if (this.mounted) {
+                this.setState({ locationError: locationError });
+            }
+        }
+        else {
+            if (this.mounted) {
+                this.setState({ locationError: null });
+            }
+            let match = this.loadMatch(values, this.state.image);
+            console.log(match);//TODO is here just to prevent warning
+        } //TODO implement post to endpoint and then redirect, when ednpoint is created        
     }
 
     render() {
@@ -216,8 +226,7 @@ class CreateMatchForm extends Component {
                                     <div className="form-row">
                                         <div className="col-12">
                                             <Field name="matchTime" label={i18next.t('createMatchForm.from')} 
-                                                    updateTime={updateTime} errorMessage={customErrors.timeError}
-                                                    component={RenderTimePicker} />
+                                                    updateTime={updateTime} component={RenderTimePicker} />
                                         </div>
                                     </div>
                                 </div>
@@ -239,29 +248,28 @@ class CreateMatchForm extends Component {
                             </div>
                             <Field name="description" label={i18next.t('createMatchForm.description')} 
                                     inputType="text-area" required={false} component={RenderTextArea} />
-                            <LocationInput updateLocation={updateLocation} />
-                            <SubLocationInput label={i18next.t('location.country')} id="country" path="country"
-                                                value={this.state.country ? this.state.country : ""} 
+                            <Field name="matchLocation" updateLocationAndState={this.updateLocationAndState}
+                                    errorMessage={this.state.locationError} location={location} 
+                                    component={MatchLocation} />
+                            <SubLocationInput label={i18next.t('location.country')} id="country"
+                                                value={location.country ? location.country : ""} 
                                                 divStyle="form-group" />
                             <div className="form-row">
                                 <SubLocationInput label={i18next.t('location.street')} id="route"
-                                                value={this.state.street ? this.state.street : ""} 
+                                                value={location.street ? location.street : ""} 
                                                 divStyle="form-group col-9" />
                                 <SubLocationInput label={i18next.t('location.number')} id="number"
-                                                value={this.state.number ? this.state.number : ""} 
+                                                value={location.number ? location.number : ""} 
                                                 divStyle="form-group col-3" />
                             </div>
                             <div className="form-row">
-                                <SubLocationInput label={i18next.t('location.city')} id="locality" path="city" 
-                                                    value={this.state.city ? this.state.city : ""} 
+                                <SubLocationInput label={i18next.t('location.city')} id="locality"
+                                                    value={location.city ? location.city : ""} 
                                                     divStyle="form-group col-6" />
                                 <SubLocationInput label={i18next.t('location.state')} id="administrative_area_level_1"
-                                                    path="state" value={this.state.state ? this.state.state : ""} 
+                                                    value={location.state ? location.state : ""} 
                                                     divStyle="form-group col-6" />
                             </div>
-                            <span className="invalid-feedback d-block">
-                                {customErrors.locationError}
-                            </span>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" 
                                             text={i18next.t('forms.requiredFields')} />
                             <SubmitButton label={i18next.t('createMatchForm.createMatch')} divStyle="text-center" 

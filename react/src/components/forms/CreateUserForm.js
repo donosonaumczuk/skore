@@ -5,13 +5,13 @@ import i18next from 'i18next';
 import RenderInput from './inputs/RenderInput';
 import ImageInput from './inputs/ImageInput';
 import RenderDatePicker from './inputs/RenderDatePicker';
-import SubmitButton from './inputs/SubmitButton';
-import FormTitle from './inputs/FormTitle';
-import SuggestionText from './inputs/SuggestionText';
+import SubmitButton from './elements/SubmitButton';
+import FormTitle from './elements/FormTitle';
+import SuggestionText from './elements/SuggestionText';
 import AuthService from './../../services/AuthService';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 import UserService from '../../services/UserService';
-import FormComment from './inputs/FormComment';
+import FormComment from './elements/FormComment';
 import LocationInput from './inputs/LocationInput';
 import SubLocationInput from './inputs/SubLocationInput';
 
@@ -157,18 +157,18 @@ class CreateUserForm extends Component {
                             <Field name="birthday" label={i18next.t('createUserForm.birthday')} id="birthday"
                                     inputType="text" required={true} component={RenderDatePicker} />
                             <LocationInput updateLocation={this.updateLocation} />
-                            <SubLocationInput label={i18next.t('location.country')} id="country" path="country"
+                            <SubLocationInput label={i18next.t('location.country')} id="country"
                                                 value={this.state.country ? this.state.country : ""} 
                                                 divStyle="form-group" />
-                            <SubLocationInput label={i18next.t('location.street')} id="route" path="street"
+                            <SubLocationInput label={i18next.t('location.street')} id="route"
                                                 value={this.state.street ? this.state.street : ""} 
                                                 divStyle="form-group" />
                             <div className="form-row">
-                                <SubLocationInput label={i18next.t('location.city')} id="locality" path="city" 
+                                <SubLocationInput label={i18next.t('location.city')} id="locality" 
                                                     value={this.state.city ? this.state.city : ""} 
                                                     divStyle="form-group col-6" />
                                 <SubLocationInput label={i18next.t('location.state')} id="administrative_area_level_1"
-                                                    path="state" value={this.state.state ? this.state.state : ""} 
+                                                    value={this.state.state ? this.state.state : ""} 
                                                     divStyle="form-group col-6"/> 
                             </div>
                             <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2" text={i18next.t('forms.requiredFields')} />

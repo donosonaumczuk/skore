@@ -2,9 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.ForbiddenException;
-import ar.edu.itba.paw.exceptions.GameAlreadyExist;
+import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
-import ar.edu.itba.paw.exceptions.GameNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
@@ -94,7 +94,7 @@ public class GameServiceImpl implements GameService {
                 country, state, city, street, tornamentName, description, title)
                 .orElseThrow(() -> {
                     LOGGER.trace("Creation fails, match '{}' already exist", gameKey.toString());
-                    return new GameAlreadyExist("Creation fails, match '" + gameKey.toString() + "' already exist");
+                    return GameAlreadyExistException.ofKey(gameKey);
                 });
 
         if (isIndividual) {
@@ -203,7 +203,7 @@ public class GameServiceImpl implements GameService {
                 result, country, state, city, street, tornamentName, description, title, gameKey.getTeamName1(),
                 gameKey.getStartTime(), gameKey.getFinishTime()).orElseThrow(() -> {
                     LOGGER.trace("Modify fails, match '{}' not found", key);
-                    return new GameNotFoundException("Modify fails, match '" + key + "' not found");
+                    return GameNotFoundException.ofKey(key);
                 });
 
         return game;
@@ -229,7 +229,7 @@ public class GameServiceImpl implements GameService {
         return gameDao.findByKey(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime())
                 .orElseThrow(() -> {
                     LOGGER.trace("Find by key fails, match '{}' not found", key);
-                    return new GameNotFoundException("Find by key fails, match '" + key + "' not found");
+                    return GameNotFoundException.ofKey(key);
                 });
     }
 

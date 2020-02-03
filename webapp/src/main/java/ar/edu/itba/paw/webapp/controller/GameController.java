@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.exceptions.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;

@@ -219,13 +219,13 @@ public class UserController {
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
-                userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
-                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                username, userDto.getFirstName(), userDto.getLastName(),
+                userDto.getEmail(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), image, username, locale
+                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
         );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(newPremiumUser);

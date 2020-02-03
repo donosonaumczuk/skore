@@ -19,6 +19,7 @@ public class UserDto {
     private String cellphone;
     private PlaceDto home;
     private String password;
+    private String oldPassword;
     private String image;
     private int reputation;
     private Boolean isVerified;
@@ -30,17 +31,18 @@ public class UserDto {
 
     private UserDto(PremiumUser premiumUser) {
         this.username = premiumUser.getUserName();
-        this.email      = premiumUser.getEmail();
-        this.firstName  = premiumUser.getUser().getFirstName();
-        this.lastName   = premiumUser.getUser().getLastName();
-        this.birthday   = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.cellphone  = premiumUser.getCellphone();
-        this.home       = PlaceDto.from(premiumUser.getHome());
-        this.password   = null;
-        this.image      = null;
+        this.email = premiumUser.getEmail();
+        this.firstName = premiumUser.getUser().getFirstName();
+        this.lastName = premiumUser.getUser().getLastName();
+        this.birthday = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //TODO: be consistent!
+        this.cellphone = premiumUser.getCellphone();
+        this.home = PlaceDto.from(premiumUser.getHome());
+        this.password = null;
+        this.oldPassword = null;
+        this.image = null;
         this.reputation = premiumUser.getReputation();
         this.isVerified = premiumUser.getEnabled();
-        this.links      = getHateoasLinks(premiumUser);
+        this.links = getHateoasLinks(premiumUser);
     }
 
     private List<Link> getHateoasLinks(PremiumUser premiumUser) {
@@ -87,11 +89,15 @@ public class UserDto {
         return password;
     }
 
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
     public String getImage() {
         return image;
     }
 
-    public int getReputation() {
+    public Integer getReputation() {
         return reputation;
     }
 

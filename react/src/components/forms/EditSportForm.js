@@ -3,9 +3,9 @@ import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
 import RenderInput from './inputs/RenderInput';
 import ImageInput from './inputs/ImageInput';
-import SubmitButton from './inputs/SubmitButton';
-import FormTitle from './inputs/FormTitle';
-import FormComment from './inputs/FormComment';
+import SubmitButton from './elements/SubmitButton';
+import FormTitle from './elements/FormTitle';
+import FormComment from './elements/FormComment';
 import CreateSportValidator from './../forms/validators/CreateSportValidator';
 import SportService from '../../services/SportService';
 

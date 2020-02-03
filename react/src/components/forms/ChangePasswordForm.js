@@ -2,10 +2,11 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import i18next from 'i18next';
 import RenderInput from './inputs/RenderInput';
-import SubmitButton from './inputs/SubmitButton';
-import FormTitle from './inputs/FormTitle';
+import SubmitButton from './elements/SubmitButton';
+import FormTitle from './elements/FormTitle';
 import CreateUserFormValidator from './validators/CreateUserValidator';
-import FormComment from './inputs/FormComment';
+import FormComment from './elements/FormComment';
+import UserService from '../../services/UserService';
 
 const validate = values => {
     const errors = {}
@@ -16,7 +17,23 @@ const validate = values => {
     return errors;
 }
 
+const loadUser = (values) => {
+    const user = {
+        "oldPassword": values.oldPassword,
+        "password": values.newPassword
+    };
+    return user;
+}
+
 const onSubmit = async (values) => {
+    const user = loadUser(values);
+    const response = await UserService.updateUser(user, values.username);
+    if (response.status) {
+       //TODO handle error
+    }
+    else {
+        this.props.history.push(`/${values.username}`);
+    }
     // let user = this.loadUser(values, this.state.image);
     //TODO make post
 }

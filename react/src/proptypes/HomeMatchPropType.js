@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import DatePropType from './DatePropType';
 import TimePropType from './TimePropType';
+import LocationPropType from './LocationPropType';
 
 const HomeMatchPropType = PropTypes.shape(
     {
@@ -9,7 +10,7 @@ const HomeMatchPropType = PropTypes.shape(
         sportName: PropTypes.string.isRequired,
         competitive: PropTypes.bool.isRequired,
         durationInMinutes: PropTypes.number.isRequired,
-        location: PropTypes.string.isRequired,
+        location: LocationPropType.isRequired,
         date: DatePropType.isRequired,
         time: TimePropType.isRequired
     }

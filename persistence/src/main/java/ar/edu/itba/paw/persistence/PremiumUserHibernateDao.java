@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
+import com.google.common.base.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -74,13 +75,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file) {
-        if(findByUserName(userName).isPresent()) {
+        if (findByUserName(userName).isPresent()) {
             return Optional.empty();
         }
 
         final Optional<User> basicUser = userDao.create(firstName, lastName, email);
 
-        if(!basicUser.isPresent()) {
+        if (!basicUser.isPresent()) {
             return Optional.empty();
         }
 
@@ -98,7 +99,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     public boolean remove(final String userName) {
         Optional<PremiumUser> user = findByUserName(userName);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             em.remove(user.get());
             return true;
         }
@@ -108,10 +109,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     @Override
     public Optional<byte[]> readImage(final String userName) {
         Optional<PremiumUser> premiumUser = findByUserName(userName);
-        if(premiumUser.isPresent()) {
+        if (premiumUser.isPresent()) {
             PremiumUser user = premiumUser.get();
             byte image[] = user.getImage();
-            if(image != null) {
+            if (image != null) {
                 return Optional.of(image);
             }
         }
@@ -125,36 +126,53 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                                                 final String newCellphone, final String newBirthday,
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
-                                                final int newReputation, final String newPassword,
+                                                final Integer newReputation, final String newPassword,
                                                 final byte[] file, final String oldUserName) {
         Optional<PremiumUser> currentUser = findByUserName(oldUserName);
 
-        if(currentUser.isPresent()) {
+        if (currentUser.isPresent()) {
             final PremiumUser user = currentUser.get();
-            user.getUser().setFirstName(newFirstName);
-            user.getUser().setLastName(newLastName);
-            if(newEmail != null) {
+            if (newFirstName != null) {
+                user.getUser().setFirstName(newFirstName);
+            }
+            if (newLastName != null) {
+                user.getUser().setLastName(newLastName);
+            }
+            if (newEmail != null) {
                 user.getUser().setEmail(newEmail);
                 user.setEmail(newEmail);
                 user.setEnabled(false);
             }
-            if(newUserName != null) {
+            if (newUserName != null) {
                 user.setUserName(newUserName);
             }
-            user.setCellphone(newCellphone);
-            final Place newHome = new Place(newCountry, newState, newCity, newStreet);
-            user.setHome(newHome);
-            user.setReputation(newReputation);
-            user.setBirthday(LocalDate.parse(newBirthday));
-
-            if(newPassword != null) {
+            if (newCellphone != null) {
+                user.setCellphone(newCellphone);
+            }
+            if (newCountry != null) {
+                user.getHome().setCountry(newCountry);
+            }
+            if (newState != null) {
+                user.getHome().setState(newState);
+            }
+            if (newCity != null) {
+                user.getHome().setCity(newCity);
+            }
+            if (newStreet != null) {
+                user.getHome().setStreet(newStreet);
+            }
+            if (newReputation != null) {
+                user.setReputation(newReputation);
+            }
+            if (newBirthday != null) {
+                user.setBirthday(LocalDate.parse(newBirthday));
+            }
+            if (newPassword != null) {
                 user.setPassword(newPassword);
             }
-
-            if(file != null) {
+            if (file != null) {
                 user.setImage(file);
             }
-
             em.merge(user);
             return Optional.of(user);
         }
