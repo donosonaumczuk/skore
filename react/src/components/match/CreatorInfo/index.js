@@ -26,7 +26,6 @@ const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
             </div>
         </React.Fragment>
     );
-
 }
 
 CreatorInfo.propTypes = {

@@ -1,8 +1,7 @@
 import React from 'react';
 import Proptypes from 'prop-types';
 
-const SportInfo = ({ sportImageUrl, sport }) => {
-    
+const SportInfo = ({ sportImageUrl, sport }) => { 
     return (
         <div className="col-2 col-sm-3">
             <div className="container-fluid pt-2">

@@ -130,7 +130,8 @@
         "changePasswordButton": "CHANGE PASSWORD",
         "oldPassword": "Old password",
         "newPassword": "New password",
-        "repeatNewPassword": "Repeat new password"
+        "repeatNewPassword": "Repeat new password",
+        "passwordError": "Old password is incorrect.\n"
     },
     "sports": {
         "playersPerTeam": "Players per team: "
@@ -218,5 +219,14 @@
                 "invalidImageSize": "Image can not be greater than 1MB.\n"
             }
         }
+    },
+    "admin": {
+        "sportImage": "Image",
+        "sportName": "Sport name",
+        "displayName": "Display name",
+        "playersPerTeam": "Players per team",
+        "createSport": "CREATE SPORT",
+        "editSport": "EDIT",
+        "deleteSport": "DELETE"  
     }
 }

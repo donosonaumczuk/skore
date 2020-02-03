@@ -12,7 +12,8 @@ const HomeMatchPropType = PropTypes.shape(
         durationInMinutes: PropTypes.number.isRequired,
         location: LocationPropType.isRequired,
         date: DatePropType.isRequired,
-        time: TimePropType.isRequired
+        time: TimePropType.isRequired,
+        key: PropTypes.string.isRequired
     }
 );
 

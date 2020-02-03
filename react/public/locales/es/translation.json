@@ -130,7 +130,8 @@
         "changePasswordButton": "CAMBIAR CONTRASEÑA",
         "oldPassword": "Contraseña actual",
         "newPassword": "Contraseña nueva",
-        "repeatNewPassword": "Repita la contraseña nueva"
+        "repeatNewPassword": "Repita la contraseña nueva",
+        "passwordError": "La contraseña actual es incorrecta.\n"
     },
     "sports": {
         "playersPerTeam": "Jugadores por equipo: "
@@ -218,5 +219,14 @@
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             }
         }
+    },
+    "admin": {
+        "sportImage": "Imagen",
+        "sportName": "Nombre",
+        "displayName": "Nombre a mostrar",
+        "playersPerTeam": "Jugadores por equipo",
+        "createSport": "CREAR DEPORTE",
+        "editSport": "EDITAR",
+        "deleteSport": "BORRAR"  
     }
 }

@@ -10,6 +10,7 @@ import FormTitle from './elements/FormTitle';
 import CreateUserFormValidator from './validators/CreateUserValidator';
 import FormComment from './elements/FormComment';
 import UserService from '../../services/UserService';
+import ErrorPage from '../screens/ErrorPage';
 
 const validate = values => {
     const errors = {}
@@ -69,14 +70,19 @@ class EditUserInfoForm extends Component {
 
     loadUser = (values, image) => {
         const birthday = this.getBirthdayWithCorrectFormat(values.birthday);
-        const user = {
+        let user = {
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email,
-            "image": image,
             "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday
         };
+        if (image && image.size > 0) {
+            user = {
+                ...user,
+                "image": image.data
+            };
+        }
         return user;
     }
     
@@ -84,7 +90,7 @@ class EditUserInfoForm extends Component {
         let user = this.loadUser(values, this.state.image);
         const response = await UserService.updateUser(user, this.state.username);
         if (response.status) {
-           //TODO handle error
+            this.setState({ error: response.status });
         }
         else {
             this.props.history.push(`/${this.state.username}`);
@@ -94,6 +100,9 @@ class EditUserInfoForm extends Component {
     render() {
         const { handleSubmit, submitting } = this.props;
         let imageName = "";
+        if (this.state.error) {
+            return <ErrorPage status={this.state.error} />; //TODO maybe improve with hoc
+        }
         if (this.state.image != null) {
             imageName = this.state.image.name;
         }
@@ -146,7 +155,7 @@ EditUserInfoForm.propTypes = {
 
 EditUserInfoForm = reduxForm({
     form: 'editUserInfo',
-    destroyOnUnmount: false,
+    destroyOnUnmount: true,
     validate
 })(EditUserInfoForm)
 
