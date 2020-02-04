@@ -7,9 +7,8 @@ const handleClick = (creator, history) => {
     history.push(`/users/${creator}`);
 }
 
-const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
+const CreatorInfo = ({ creatorImageUrl, creator, title, matchKey }) => {
     const history = useHistory();
-   
     return (
         <React.Fragment>
             <div className="col-2 col-sm-1 pl-0">
@@ -18,7 +17,9 @@ const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
             </div>
             <div className="col-3 col-sm-4">
                 <div className="row">
-                    <p className="name-label">{title}</p>
+                    <Link className="name-label-link" to={`/match/${matchKey}`}>
+                        <p className="name-label">{title}</p>
+                    </Link>
                 </div>
                 <div className="row">
                     <Link className="username-label" to={`/users/${creator}`}>@{creator}</Link>
@@ -32,5 +33,6 @@ CreatorInfo.propTypes = {
     creatorImageUrl: Proptypes.string,
     creator: Proptypes.string.isRequired,
     title: Proptypes.string.isRequired,
+    matchKey: Proptypes.string.isRequired
 }
 export default withRouter(CreatorInfo);

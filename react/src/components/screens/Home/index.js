@@ -56,7 +56,10 @@ class HomeContainer extends Component {
     }
 
     handleMatchClick = matchKey => {
-        this.props.history.push(`match/${matchKey}`);
+        // if (this.props.location.pathname === "/") {
+        //     this.props.history.push(`/match/${matchKey}`);
+        // }
+        //TODO fix is overlapping with username links
     }
 
     componentDidMount = () => {
