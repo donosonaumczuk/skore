@@ -37,10 +37,15 @@ const removeUnknownHomeFilters = filters => {
     };
 }
 
+const deleteMatch = (matches, matchToDelete) => {
+    return matches.filter(match => match.key !== matchToDelete.key);
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
-    removeUnknownHomeFilters: removeUnknownHomeFilters
+    removeUnknownHomeFilters: removeUnknownHomeFilters,
+    deleteMatch: deleteMatch
 };
 
 export default Utils;

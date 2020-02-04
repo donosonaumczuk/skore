@@ -11,7 +11,6 @@ test('buildUrlParam with tab and params', () => {
 
     //after
     expect(actualResult).toBe(expectedResult);
-    expect(true).toBe(true);
 });
 
 test('buildUrlParam without tab and params', () => {
@@ -24,5 +23,60 @@ test('buildUrlParam without tab and params', () => {
 
     //after
     expect(actualResult).toBe(expectedResult);
-    expect(true).toBe(true);
+});
+
+const compareMatchArrays = (firstArray, secondArray) => {
+    const length = firstArray.length;
+    if (length !== secondArray.length) {
+        return false;
+    }
+    for (var i = 0; i < length; i++) {
+        if (firstArray[i].key !== secondArray[i].key) {
+            return false;
+        }
+    }
+    return true;
+}
+
+test('deleteMatch deleting one match', () => {
+    //set up
+    const matches  = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const matchToRemove = { key: "second" };
+
+    // execution
+    const expectedResult = [{ key: "first" }, { key: "third" }];
+    const actualResult = Utils.deleteMatch(matches, matchToRemove);
+
+    //after
+    expect(actualResult.length).toBe(expectedResult.length);
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy;
+});
+
+test('deleteMatch without deleting', () => {
+    //set up
+    const matches  = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const matchToRemove = { key: "fourth" };
+
+    // execution
+    const expectedResult = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const actualResult = Utils.deleteMatch(matches, matchToRemove);
+
+    //after
+    expect(actualResult.length).toBe(expectedResult.length);
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy;
+});
+
+test('deleteMatch deleting more than one match', () => {
+    //set up
+    const matches  = [{ key: "first" }, { key: "keyToDelete" }, { key: "keyToDelete" },
+                        { key: "third" }, { key: "keyToDelete" }];
+    const matchToRemove = { key: "keyToDelete" };
+
+    // execution
+    const expectedResult = [{ key: "first" }, { key: "third" }];
+    const actualResult = Utils.deleteMatch(matches, matchToRemove);
+
+    //after
+    expect(actualResult.length).toBe(expectedResult.length);
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy;
 });

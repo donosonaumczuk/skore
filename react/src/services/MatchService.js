@@ -107,13 +107,18 @@ const createMatch = async match => {
     }
 }
 
-const createMatch = async match => {
+const deleteMatch = async matchKey => {
     try {
-        const res = await api.post(`${MATCHES_ENDPOINT}`, match);
+        const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}`);
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -123,7 +128,8 @@ const MatchService = {
     getMatchesJoinedBy: getMatchesJoinedBy,
     getMatchesToJoin: getMatchesToJoin,
     getMatchByKey: getMatchByKey,
-    createMatch: createMatch
+    createMatch: createMatch,
+    deleteMatch: deleteMatch
 };
 
 export default MatchService;

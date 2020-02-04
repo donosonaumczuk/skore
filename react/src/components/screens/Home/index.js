@@ -114,6 +114,33 @@ class HomeContainer extends Component {
         }
     }
 
+    joinMatch = (e, match) => {
+        e.stopPropagation();
+        console.log("join match: ", match.title);
+        // TODO implement when we have endpoint
+    }
+    
+    cancelMatch = (e, match) => {
+        e.stopPropagation();
+        console.log("cancel match: ", match.title);
+        // TODO implement when we have endpoint
+    }
+    
+    deleteMatch = async (e, match) => {
+        e.stopPropagation();
+        this.setState({ loading: true });
+        const response = await MatchService.deleteMatch(match.key);
+        if (response.status && this.mounted) {
+            this.setState({ stattus: response.status });
+        }
+        else {
+            const newMatches = Utils.deleteMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, loading: false });
+            }
+        }
+    }
+
     render() {
         let { currentTab, matches, hasMore } = this.state;
         const { currentUser } = this.props;
@@ -121,13 +148,16 @@ class HomeContainer extends Component {
         if (this.state.status) {
             currentMatches = <ErrorPage status={this.state.status} />;
         }
-        else if (matches.length === 0 && hasMore) {
+        else if ((matches.length === 0 && hasMore) || this.state.loading) {
             currentMatches = <Loader />;
         }
         else {
             currentMatches = <HomeMatches matches={matches} hasMore={hasMore} 
                                 handleMatchClick={this.handleMatchClick}
-                                getMatches={this.getMatches} />;
+                                getMatches={this.getMatches}
+                                joinMatch={this.joinMatch}
+                                cancelMatch={this.cancelMatch}
+                                deleteMatch={this.deleteMatch} />;
         }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
