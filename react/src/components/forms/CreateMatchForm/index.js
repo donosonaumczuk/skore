@@ -31,9 +31,16 @@ const updateLocation = home => {
 }
 
 const updateTime = newTime => {
-    const timeArray = moment(newTime).format("HH:mm").split(":");
-    time.hour = parseInt(timeArray[0]);
-    time.minutes = parseInt(timeArray[1]);  
+    if (!newTime) {
+        time.hour = null;
+        time.minutes = null;
+    }
+    else {
+        const timeArray = moment(newTime).format("HH:mm").split(":");
+        console.log("update time: ", timeArray);
+        time.hour = parseInt(timeArray[0]);
+        time.minutes = parseInt(timeArray[1]);
+    }
 }
 
 const validate = values => {
@@ -45,7 +52,7 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    errors.matchTime = CreateMatchValidator.validateTime(time);
+    // errors.matchTime = CreateMatchValidator.validateTime(time);
     return errors;
 }
 
@@ -166,6 +173,15 @@ class CreateMatchFormContainer extends Component {
         }
     }
 
+    updateTimeAndState = time => {
+        updateTime(time);
+        if (this.mounted) {
+            this.setState({
+                modifyingTime: true
+            });
+        }
+    }
+
     onSubmit = async (values) => {
         const locationError = CreateMatchValidator.validateLocation(location);
         if(locationError) {
@@ -207,7 +223,8 @@ class CreateMatchFormContainer extends Component {
             <CreateMatchForm handleSubmit={handleSubmit}
                              submitting={submitting}
                              onSubmit={this.onSubmit}
-                             updateTime={updateTime} 
+                             updateTime={updateTime}
+                             currentTime={time} 
                              hourOptions={hourOptions}
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
@@ -219,6 +236,13 @@ class CreateMatchFormContainer extends Component {
 
     componentWillUnmount() {
         this.mounted = false;
+        time.hour = null;
+        time.minutes = null;
+        location.country = null;
+        location.state = null;
+        location.city = null;
+        location.street = null;    
+        location.number = null;
     }
 }
 

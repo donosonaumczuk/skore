@@ -16,7 +16,7 @@ const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick }
             <div className="col">
                 <div className="row mb-4">
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
-                                    title={currentMatch.title} matchKey={currentMatch.key} />
+                                    title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
                     <MatchAvailability currentMatch={currentMatch} />
                 </div>
