@@ -1,6 +1,6 @@
 import api from './../config/Api';
 import { AUTH_ENDPOINT } from './constants/EndpointConstants';
-import { SC_OK, SC_UNAUTHORIZED } from './constants/StatusCodesConstants';
+import { SC_OK, SC_UNAUTHORIZED, SC_TIME_OUT } from './constants/StatusCodesConstants';
 
 const setToken = token => localStorage.setItem('jwt', token);
 
