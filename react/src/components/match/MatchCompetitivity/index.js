@@ -29,7 +29,7 @@ const getTooltipTitle = isCompetitive => {
     }
 }
 
-const MatchCompetitivity = isCompetitive => {
+const MatchCompetitivity = ({ isCompetitive }) => {
     const className = getClassName(isCompetitive);
     const text = getText(isCompetitive);
     const tooltipTitle = getTooltipTitle(isCompetitive);

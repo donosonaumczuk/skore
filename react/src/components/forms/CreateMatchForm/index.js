@@ -31,7 +31,7 @@ const updateLocation = home => {
 }
 
 const updateTime = newTime => {
-    const timeArray = moment(newTime).format("hh:mm").split(":");
+    const timeArray = moment(newTime).format("HH:mm").split(":");
     time.hour = parseInt(timeArray[0]);
     time.minutes = parseInt(timeArray[1]);  
 }
@@ -178,6 +178,7 @@ class CreateMatchFormContainer extends Component {
                 this.setState({ locationError: null });
             }
             let match = this.loadMatch(values, this.state.image);
+            console.log(match);
             const response = await MatchService.createMatch(match);
             if (response.status) {
                 //TODO handle error
