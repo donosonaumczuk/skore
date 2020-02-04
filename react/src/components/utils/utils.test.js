@@ -1,7 +1,4 @@
 import Utils  from './Utils';
-//  hasMorePages,
-// buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
-// removeUnknownHomeFilters: removeUnknownHomeFilters
 
 test('buildUrlParam with tab and params', () => {
     //set up
