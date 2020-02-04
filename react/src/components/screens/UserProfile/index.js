@@ -94,19 +94,26 @@ class UserProfileContainer extends Component {
         }
     }
 
-    //TODO replace with getDeriveProperties and component DidMount
-    // https://hackernoon.com/replacing-componentwillreceiveprops-with-getderivedstatefromprops-c3956f7ce607
-    async UNSAFE_componentWillReceiveProps(nextProps) {
+    static getDerivedStateFromProps(nextProps, prevState) {
         const { username } = nextProps.match.params;
-        if (username !== this.state.username && this.mounted) {
-            this.setState({ username: username,
-                            currentUser: {},
-                            imageUrl: null,
-            });
+        if (username !== prevState.username) {
+            return { 
+                username: username,
+                currentUser: {},
+                imageUrl: null,
+            };
         }
-        let currentUser = await UserService.getProfileByUsername(username);
-        if (this.mounted) {
-            this.updateStateWithUser(currentUser);
+        else return null;
+    }
+     
+    async componentDidUpdate(prevProps, prevState) {
+        const oldUsername = prevState.username;
+        const newUsername = this.props.match.params.username;
+        if (oldUsername !== newUsername) {
+            let currentUser = await UserService.getProfileByUsername(newUsername);
+            if (this.mounted) {
+                this.updateStateWithUser(currentUser);
+            }
         }
     }
 
