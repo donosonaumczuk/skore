@@ -16,11 +16,13 @@ hasMorePages.PropTypes = {
 }
 
 const buildUrlFromParamQueriesAndTab = (params, currentTab) => {
-    if (!params) {
-        params = { tab: `${currentTab}` };
-    }
-    else {
-        params = { ...params, tab: `${currentTab}` };
+    if (currentTab) {
+        if (!params) {
+            params = { tab: `${currentTab}` };
+        }
+        else {
+            params = { ...params, tab: `${currentTab}` };
+        }
     }
     const url = buildUrlFromParamQueries(params);
     return url;
