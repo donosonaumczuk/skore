@@ -38,13 +38,9 @@ public interface GameService {
 
     public Game findByKey(final String key);
 
-    public Game insertPremiumUserInGame(final String key, final String username);
+    public Game insertPlayerInGame(final String key, final long userId, final String code, final Locale locale);
 
-    public Game insertTemporalUserInGame(final String key, final String code, final Locale locale);
-
-    public boolean deleteUserInGameById(final String key, final long userId);
-
-    public boolean deleteUserInGameByCode(final String key, final String code);
+    public boolean deleteUserInGameWithCode(final String key, final long userId, final String code);
 
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
 

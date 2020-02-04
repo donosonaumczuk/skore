@@ -105,55 +105,51 @@ public class GameServiceImpl implements GameService {
 
     @Transactional
     @Override
-    public Game insertPremiumUserInGame(final String key, final String username) {
+    public Game insertPlayerInGame(final String key, final long userId, final String code, final Locale locale) {
         PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO: check
-        if (!loggedUser.getUserName().equals(username)) {
-            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+        if (loggedUser.getUser().getUserId() != userId && code == null) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userId);
             throw new ForbiddenException("User '" + loggedUser.getUserName() +
-                    "' is not user '" + username + "'");
+                    "' is not user '" + userId + "'");
+        }
+        if (code != null) {
+            User user = userService.getUserFromData(code, key);
+            if (user.getUserId() != userId) {
+                LOGGER.trace("Insert player from game fails, code '{}' is invalid for player '{}'", code, userId);
+                throw new UnauthorizedException("Insert player from game fails, code '" + code +
+                        "' is invalid for player '" + userId + "'");
+            }
+            return insertTemporalUserInGame(key, user, locale);
         }
         return insertUserInGame(key, loggedUser.getUser().getUserId());
     }
 
     @Transactional
     @Override
-    public Game insertTemporalUserInGame(final String key, final String code, final Locale locale) {
-        Game game;
-        User user = userService.getUserFromData(code, key);
-        try {
-            game = insertUserInGame(key, user.getUserId());
-            userService.sendCancelOptionMatch(user, game, key, locale);
-        }
-        catch (Exception e) {
-            userService.remove(user.getUserId());
-            throw e;
-        }
-        return game;
-    }
-
-    @Transactional
-    @Override
-    public boolean deleteUserInGameById(final String key, final long userId) {
+    public boolean deleteUserInGameWithCode(final String key, final long userId, final String code) {
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
             LOGGER.trace("Delete player from game fails, must be logged");
             return new ForbiddenException("Delete player from game fails, must be logged");
         });
         Game game = findByKey(key);
+        if (code != null) {
+            User user = userService.getUserFromData(code, key);
+            if (user.getUserId() != userId) {
+                LOGGER.trace("Delete player from game fails, code '{}' is invalid for player '{}'", code, userId);
+                throw new UnauthorizedException("Delete player from game fails, code '" + code +
+                        "' is invalid for player '" + userId + "'");
+            }
+            return deleteUserInGame(game, userId);
+        }
+
         if (!game.getTeam1().getLeader().equals(loggedUser) &&
                 loggedUser.getUser().getUserId() != userId) {
             LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
             throw new UnauthorizedException("Delete player from game fails, must be leader of match '" + key +
                     "' or player '" + userId + "'");
         }
-       return deleteUserInGame(game, userId);
-    }
 
-    @Transactional
-    @Override
-    public boolean deleteUserInGameByCode(final String key, final String code){
-        Game game = findByKey(key);
-        User user = userService.getUserFromData(code, key);
-        return deleteUserInGame(game, user.getUserId());
+        return deleteUserInGame(game, userId);
     }
 
     private boolean deleteUserInGame(final Game game, final long userIdReceive) {
@@ -273,6 +269,8 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Transactional
+    @Override
     public void createRequestToJoin(final String key, final String firstName, final String lastName,
                                     final String email, final Locale locale) {
         User newUser = userService.create(firstName, lastName, email);
@@ -325,5 +323,18 @@ public class GameServiceImpl implements GameService {
         catch (Exception e) {
             throw new InvalidGameKeyException("Invalid key");
         }
+    }
+
+    private Game insertTemporalUserInGame(final String key, final User user, final Locale locale) {
+        Game game;
+        try {
+            game = insertUserInGame(key, user.getUserId());
+            userService.sendCancelOptionMatch(user, game, key, locale);
+        }
+        catch (Exception e) {
+            userService.remove(user.getUserId());
+            throw e;
+        }
+        return game;
     }
 }

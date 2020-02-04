@@ -126,7 +126,7 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGameById(URL, USER_1_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_1_ID, null);
 
         Assert.assertTrue(ans);
     }
@@ -139,7 +139,7 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGameById(URL, USER_2_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_2_ID, null);
 
         Assert.assertTrue(ans);
     }
@@ -150,7 +150,7 @@ public class GameServiceImplTest {
                 .thenReturn(Optional.of(GAME_1));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGameById(URL, USER_3_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_3_ID, null);
 
         Assert.assertFalse(ans);
     }

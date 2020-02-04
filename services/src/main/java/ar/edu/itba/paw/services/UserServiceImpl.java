@@ -99,7 +99,8 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmMatchAssistance(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendConfirmMatch(user, game, getUrl("url.frontend.confirm.match", data, phrase), locale);
+        emailSender.sendConfirmMatch(user, game, getUrl("url.frontend.confirm.match", data,
+                user.getUserId(), phrase), locale);
     }
 
     @Override
@@ -131,13 +132,14 @@ public class UserServiceImpl implements UserService {
     public void sendCancelOptionMatch(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendCancelMatch(user, game, getUrl("url.frontend.cancel.match", data, phrase), locale);
+        emailSender.sendCancelMatch(user, game, getUrl("url.frontend.cancel.match", data,
+                user.getUserId(), phrase), locale);
     }
 
-    private String getUrl(String urlProperty, String data, String phrase) {
+    private String getUrl(String urlProperty, String data, long id, String phrase) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty(urlProperty), data, phrase);
+        formatter.format(environment.getRequiredProperty(urlProperty), data, id, phrase);
         return stringBuilder.toString();
     }
 
