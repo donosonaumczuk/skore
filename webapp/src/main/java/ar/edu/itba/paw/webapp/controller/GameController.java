@@ -61,7 +61,7 @@ public class GameController {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     public static final String BASE_PATH = "matches";
-    private static final String CUSTOM_CODE_HEADER = "X-CODE";
+    private static final String CODE_HEADER = "X-CODE";
 
     @Autowired
     @Qualifier("gameServiceImpl")
@@ -216,7 +216,7 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader(CUSTOM_CODE_HEADER), locale);
+        Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader(CODE_HEADER), locale);
 
         //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
         //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
@@ -235,7 +235,7 @@ public class GameController {
                                            @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         //TODO: maybe validate user id is positive
-        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CUSTOM_CODE_HEADER))) {
+        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CODE_HEADER))) {
             LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
             throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");
