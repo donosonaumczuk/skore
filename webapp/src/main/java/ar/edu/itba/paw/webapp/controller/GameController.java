@@ -42,6 +42,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -60,6 +61,7 @@ public class GameController {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     public static final String BASE_PATH = "matches";
+    private static final String CUSTOM_CODE_HEADER = "X-CODE";
 
     @Autowired
     @Qualifier("gameServiceImpl")
@@ -93,7 +95,7 @@ public class GameController {
                              @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
-                             @QueryParam("hasResult") String hasResult, @Context HttpServletRequest request) {
+                             @QueryParam("hasResult") String hasResult) {
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
                 QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
@@ -202,7 +204,7 @@ public class GameController {
         gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
                 null);
         //TODO catch UserAlreadyExist,
-        return Response.status(HttpStatus.CREATED.value()).header("Accept-Language", locale.toString()).build();
+        return Response.status(HttpStatus.CREATED.value()).header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString()).build();
     }
 
     @POST
@@ -214,7 +216,7 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader("X-CODE"), locale);
+        Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader(CUSTOM_CODE_HEADER), locale);
 
         //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
         //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
@@ -222,7 +224,7 @@ public class GameController {
         LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
         Response.ResponseBuilder response = Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
         if (playerDto.getUsername() == null) {
-            response = response.header("Accept-Language", locale.toString());
+            response = response.header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString());
         }
         return response.build();
     }
@@ -233,7 +235,7 @@ public class GameController {
                                            @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         //TODO: maybe validate user id is positive
-        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader("X-CODE"))) {
+        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CUSTOM_CODE_HEADER))) {
             LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
             throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");

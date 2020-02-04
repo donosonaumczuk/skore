@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.EmailException;
+import ar.edu.itba.paw.exceptions.EmailNotSentException;
+import ar.edu.itba.paw.exceptions.EmailTemplateFileException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.Formatter;
 import java.util.Locale;
-import java.util.Optional;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -50,6 +49,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String EMAIL_CANCEL_ASSISTANCE_BUTTON = "emailCancelAssistanceButton";
     private static final String EMAIL_CANCEL_ASSISTANCE_SUBJECT = "emailCancelAssistanceSubject";
     private static final String DATE_FORMAT = "HH:mm MM/dd/yyyy";
+    private static final String I18N_TEMPLATE_SEQUENCE = "\\{0}";
 
     @Autowired
     private MessageSource messageSource;
@@ -68,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
         String templateBody = readTemplate(confirmAccountTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailConfirmAccountClickTo = messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_CLICK_TO,
-                null, locale).split("\\{0}");
+                null, locale).split(I18N_TEMPLATE_SEQUENCE);
         Object[] objects = {user.getUser().getFirstName()};
         formatter.format(templateBody, messageSource.getMessage(EMAIL_CONFIRM_ACCOUNT_GREETING, objects, locale),
                 emailConfirmAccountClickTo[0], user.getUserName(), emailConfirmAccountClickTo[1], url,
@@ -85,7 +85,7 @@ public class EmailServiceImpl implements EmailService {
         String templateBody = readTemplate(confirmMatchTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailConfirmAssistanceClickTo = messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_CLICK_TO,
-                null, locale).split("\\{0}");
+                null, locale).split(I18N_TEMPLATE_SEQUENCE);
         Object[] objects = {user.getFirstName()};
         formatter.format(templateBody, messageSource.getMessage(EMAIL_CONFIRM_ASSISTANCE_GREETING, objects, locale),
                 emailConfirmAssistanceClickTo[0], game.getTitle(), emailConfirmAssistanceClickTo[1],
@@ -108,7 +108,7 @@ public class EmailServiceImpl implements EmailService {
         String templateBody = readTemplate(cancelMatchTemplate);
         Formatter formatter = new Formatter(body);
         String[] emailCancelAssistanceClickTo = messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_CLICK_TO,
-                null, locale).split("\\{0}");
+                null, locale).split(I18N_TEMPLATE_SEQUENCE);
         Object[] objects = {user.getFirstName()};
         formatter.format(templateBody, messageSource.getMessage(EMAIL_CANCEL_ASSISTANCE_GREETING, objects, locale),
                 emailCancelAssistanceClickTo[0], game.getTitle(), emailCancelAssistanceClickTo[1],
@@ -135,7 +135,7 @@ public class EmailServiceImpl implements EmailService {
             emailSender.send(message);
         } catch (MessagingException e) {
             LOGGER.error("Error trying to send mail");
-            throw new EmailException("Error trying to send mail");
+            throw new EmailNotSentException("Error trying to send mail");
         }
     }
 
@@ -145,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
             templateBody = new String(Files.readAllBytes(Paths.get(resource.getFile().getAbsolutePath())));
         } catch (Exception e) {
             LOGGER.error("Error trying to read a mail template {}", resource.getFilename());
-            throw new EmailException("Error trying to read a mail template " + resource.getFilename());
+            throw new EmailTemplateFileException("Error trying to read a mail template " + resource.getFilename());
         }
         return templateBody;
     }

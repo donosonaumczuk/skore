@@ -44,6 +44,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -187,10 +188,10 @@ public class UserController {
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
-            return Response.ok(getDefaultImage()).header("Content-Type", "image/*").build();
+            return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
         }
         LOGGER.trace("Returning image for {}", username);
-        return Response.ok(media.get()).header("Content-Type", "image/*").build();
+        return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
     }
 
     @DELETE
