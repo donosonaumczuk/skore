@@ -84,6 +84,10 @@ public class GameServiceImpl implements GameService {
                 throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
                         "individual and add teams to match");
             }
+            newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
+            newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
+                    .getName();
         }
 
         Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime,

@@ -107,6 +107,16 @@ const createMatch = async match => {
     }
 }
 
+const createMatch = async match => {
+    try {
+        const res = await api.post(`${MATCHES_ENDPOINT}`, match);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const MatchService = {
     getMatches: getMatches,
     getMatchesCreatedBy: getMatchesCreatedBy,
