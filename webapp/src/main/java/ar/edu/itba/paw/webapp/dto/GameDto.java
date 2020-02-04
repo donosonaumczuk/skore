@@ -23,12 +23,12 @@ public class GameDto {
     private String creator;
     private String tornamentNameThatIsFrom;
     private Boolean individual;
-    private Boolean isCompetitive;
+    private Boolean competitive;
     private String sport;
     private String sportName;
     private DateDto date;
     private TimeDto time;
-    private Long durationInMinutes;
+    private Long minutesOfDuration;
     private PlaceDto location; //TODO: make a decision about DOCKER
     private Integer totalPlayers;
     private Integer currentPlayers;
@@ -52,14 +52,14 @@ public class GameDto {
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
         individual = game.getGroupType().equals("Individual");
-        isCompetitive = game.getCompetitiveness().equals("Competitive");
+        competitive = game.getCompetitiveness().equals("Competitive");
         sportName = game.getTeam1().getSport().getDisplayName();
         sport = game.getTeam1().getSport().getName();
         LocalDateTime startTime = game.getStartTime();
         LocalDateTime finishTime = game.getFinishTime();
         date = DateDto.from(LocalDate.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth()));
         time = TimeDto.from(LocalTime.of(startTime.getHour(), startTime.getMinute()));
-        durationInMinutes = ChronoUnit.MINUTES.between(startTime, finishTime);
+        minutesOfDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
         tornamentNameThatIsFrom = game.getTornament();
         location = PlaceDto.from(game.getPlace());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
@@ -102,12 +102,16 @@ public class GameDto {
         return creator;
     }
 
-    public Boolean isCompetitive() {
-        return isCompetitive;
+    public Boolean getCompetitive() {
+        return competitive;
     }
 
     public String getSport() {
         return sport;
+    }
+
+    public Long getMinutesOfDuration() {
+        return minutesOfDuration;
     }
 
     public String getSportName() {
@@ -122,9 +126,6 @@ public class GameDto {
         return Optional.ofNullable(time);
     }
 
-    public Long getDurationInMinutes() {
-        return durationInMinutes;
-    }
 
     public Optional<PlaceDto> getLocation() {
         return Optional.ofNullable(location);

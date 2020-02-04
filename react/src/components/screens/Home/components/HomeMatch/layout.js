@@ -22,7 +22,7 @@ const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick }
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
-                <MatchDuration durationInMinutes={currentMatch.durationInMinutes} />
+                <MatchDuration durationInMinutes={currentMatch.minutesOfDuration} />
                 <MatchLocation address={address} />
             </div>
         </div>

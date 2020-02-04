@@ -14,7 +14,7 @@ const RenderMatchDatePicker = ({ input, label, id, required, smallText, meta }) 
             </small>
             <DatePicker id={id} selected={input.value || null} onChange={input.onChange}
                         autoComplete="new-password"/>
-            {meta.dirty && meta.error && 
+            {((meta.dirty || meta.submitFailed) && meta.error) && 
                 <span className="invalid-feedback d-block">
                     {meta.error}
                 </span>}
