@@ -57,8 +57,6 @@ class HomeContainer extends Component {
 
     handleMatchClick = matchKey => {
         this.props.history.push(`/match/${matchKey}`);
-        // }
-        console.log("match clicked");
     }
 
     componentDidMount = () => {

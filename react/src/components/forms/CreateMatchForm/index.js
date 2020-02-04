@@ -37,7 +37,6 @@ const updateTime = newTime => {
     }
     else {
         const timeArray = moment(newTime).format("HH:mm").split(":");
-        console.log("update time: ", timeArray);
         time.hour = parseInt(timeArray[0]);
         time.minutes = parseInt(timeArray[1]);
     }
@@ -52,7 +51,7 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    // errors.matchTime = CreateMatchValidator.validateTime(time);
+    errors.matchTime = CreateMatchValidator.validateTime(time);
     return errors;
 }
 
@@ -194,7 +193,6 @@ class CreateMatchFormContainer extends Component {
                 this.setState({ locationError: null });
             }
             let match = this.loadMatch(values, this.state.image);
-            console.log(match);
             const response = await MatchService.createMatch(match);
             if (response.status) {
                 //TODO handle error
@@ -223,7 +221,7 @@ class CreateMatchFormContainer extends Component {
             <CreateMatchForm handleSubmit={handleSubmit}
                              submitting={submitting}
                              onSubmit={this.onSubmit}
-                             updateTime={updateTime}
+                             updateTime={this.updateTimeAndState}
                              currentTime={time} 
                              hourOptions={hourOptions}
                              minuteOptions={minuteOptions}

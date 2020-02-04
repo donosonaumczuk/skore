@@ -60,7 +60,6 @@ const isValidTime = time => {
 const validateTime = time => {
     const errorBaseLabel = `${ERROR_BASE_LABEL}time`
     let errorMessage = ``;
-    console.log(time);
     if (!time || !time.hour || !time.minutes) {
         errorMessage = `${errorMessage} ${i18next.t(`${errorBaseLabel}.required`)}`;
     }

@@ -6,7 +6,6 @@ import CreateMatchValidator from '../../validators/CreateMatchValidator';
 const RenderTimePicker = ({ input, meta, label, updateTime,
                             currentValue, ...rest }) => {
     const errorMessage = CreateMatchValidator.validateTime(currentValue);
-    console.log("errorMessage: ", errorMessage);
     return (
         <div className="form-group">
             <label htmlFor="timepicker-from">{label}<span className="text-muted">*</span></label>

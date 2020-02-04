@@ -36,4 +36,5 @@ CreatorInfo.propTypes = {
     creator: Proptypes.string.isRequired,
     title: Proptypes.string.isRequired,
 }
+
 export default withRouter(CreatorInfo);
