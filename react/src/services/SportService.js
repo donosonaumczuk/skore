@@ -1,5 +1,6 @@
 import api from './../config/Api';
 import { SPORTS_ENDPOINT } from './constants/EndpointConstants';
+import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 
 const getSports = async () => {
     try {
@@ -7,7 +8,12 @@ const getSports = async () => {
         return res.data;
     }
     catch(err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -17,7 +23,12 @@ const getSportByName = async sportName => {
         return res.data;
     }
     catch(err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -27,7 +38,12 @@ const createSport = async sport => {
         return res.data;
     }
     catch(err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -37,7 +53,12 @@ const updateSport = async sport => {
         return res.data;
     }
     catch(err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 

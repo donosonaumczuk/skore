@@ -29,7 +29,12 @@ const logInUser = async user => {
         return { "status": SC_OK };
     }
     catch(err) {
-        return { "status": err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 
     //TODO if error of token expiry remove token and user and catch other errors
@@ -47,7 +52,7 @@ const logOutUser = async () => {
         return { "status": SC_OK };
     }
     catch(err) {
-        if (err.response.status === SC_UNAUTHORIZED) {
+        if (!err.response || err.response.status === SC_UNAUTHORIZED) {
             removeToken();
             removeUser();
             removeAdmin();
@@ -56,7 +61,6 @@ const logOutUser = async () => {
             return { "status": err.response.status };
         }
     }
-    //TODO handle errors using response
 }
 
 const getCurrentUser = () => {

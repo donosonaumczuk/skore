@@ -8,7 +8,12 @@ const getUsers = async (offset, limit) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -18,7 +23,12 @@ const getUser = async username => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -28,7 +38,12 @@ const getProfileByUsername = async username => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -38,7 +53,12 @@ const getUserImage = async username => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
    
@@ -48,7 +68,12 @@ const getUserMatches = async (username, offset, limit) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -58,7 +83,12 @@ const getUserMatchesWithResults = async (username, offset, limit) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
