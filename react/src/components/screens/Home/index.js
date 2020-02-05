@@ -6,7 +6,6 @@ import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
-import ErrorPage from '../ErrorPage';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
 
@@ -14,15 +13,19 @@ const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
 const MIN_TAB = 0;
 const MAX_TAB = 3;
+const NO_TAB = 0;
+const TO_JOIN_TAB = 1;
+const JOINED_TAB = 2;
+const CREATED_TAB = 3;
 
 const getCurrentTab = (currentUser, tab) => {
-    let currentTab = 0;
+    let currentTab = NO_TAB;
     if (currentUser) {
         if (tab && tab > MIN_TAB && tab <= MAX_TAB) {
             currentTab = parseInt(tab);
         }
         else {
-            currentTab = 1;
+            currentTab = TO_JOIN_TAB;
         }
     }
     return currentTab;
@@ -41,6 +44,8 @@ class HomeContainer extends Component {
             offset: INITIAL_OFFSET,
             total: QUERY_QUANTITY,
             hasMore: true,
+            anonymous: false,
+            currentMatch: null
         };
     }
 
@@ -99,16 +104,16 @@ class HomeContainer extends Component {
         const { currentUser } = this.props;
         const { offset, total, currentTab, filters } = this.state;
         const newFilters = Utils.removeUnknownHomeFilters(filters);
-        if (currentTab === 0) {
+        if (currentTab === NO_TAB) {
             response = await MatchService.getMatches(offset, total, newFilters);
         }
-        else if (currentTab === 1) {
+        else if (currentTab === TO_JOIN_TAB) {
             response = await MatchService.getMatchesToJoin(currentUser, offset, total, newFilters);
         }
-        else if (currentTab === 2) {
+        else if (currentTab === JOINED_TAB) {
             response = await MatchService.getMatchesJoinedBy(currentUser, offset, total, newFilters);
         }
-        else if (currentTab === 3) {
+        else if (currentTab === CREATED_TAB) {
             response = await MatchService.getMatchesCreatedBy(currentUser, offset, total, newFilters);
         }
         if (this.mounted) {
@@ -146,6 +151,8 @@ class HomeContainer extends Component {
 
     joinMatchAnonymous = (match) => {
         console.log("join match annonymous: ", match.title); //TODO remove
+        this.props.history.push(`/?matchKey=${match.key}`);
+        this.setState({ anonymous: true, currentMatch: match });
         //TODO implement
     }
     
@@ -156,6 +163,7 @@ class HomeContainer extends Component {
             this.cancelMatchLogged(match, userId);
         }
         else {
+            //TODO should never happen
             this.cancelMatchAnonymous(match);
         }
     }
@@ -173,7 +181,7 @@ class HomeContainer extends Component {
             if (this.mounted) {
                 this.setState({ matches: newMatches, executing: false });
             }
-            this.props.history.push(`/match/${match.key}`);
+            this.handleTabChange(TO_JOIN_TAB);
         }
     }
 
@@ -199,16 +207,26 @@ class HomeContainer extends Component {
         }
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const queryParams = queryString.parse(nextProps.location.search);
+        const matchKey = queryParams.matchKey;
+        if (prevState.currentMatch && !matchKey) {
+            console.log("returning state");
+            return { 
+                ...prevState,
+                currentMatch: null,
+                anonymous: false
+            };
+        }
+        else return null;
+    }
+
     render() {
         let { currentTab, matches, hasMore } = this.state;
         const { currentUser } = this.props;
         let currentMatches;
-        if (this.state.status) {
-            currentMatches = <ErrorPage status={this.state.status} />;//TODO hoc
-        }
-        else if (this.state.executing) {
+        if (this.state.executing) {
             currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
-
         }
         else if (matches.length === 0 && hasMore) {
             currentMatches = <Loader />;//TODO hoc
@@ -224,7 +242,9 @@ class HomeContainer extends Component {
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
                     currentUser={currentUser} filters={this.state.filters}
-                    updateFilters={this.updateFilters} currentMatches={currentMatches} />
+                    updateFilters={this.updateFilters} currentMatches={currentMatches}
+                    anonymous={this.state.anonymous} error={this.state.status} 
+                    currentMatch={this.state.currentMatch} />
         );
     }
 

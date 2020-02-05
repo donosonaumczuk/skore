@@ -94,25 +94,25 @@ class App extends Component {
                         <Route exact path="/sports">
                             <Sports />
                         </Route>
-                        <Route path="/signUp" component={CreateUserForm} />
-                        <Route path="/confirmAccount">
+                        <Route exact path="/signUp" component={CreateUserForm} />
+                        <Route exact path="/confirmAccount">
                             <ConfirmAccount />
                         </Route>
-                        <Route path="/login">
+                        <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} />
                         </Route>
-                        <Route path="/logout">
+                        <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route path="/accounts">
+                        <Route exact path="/accounts">
                             <Accounts />
                         </Route>
-                        <Route path="/admin">
+                        <Route exact path="/admin">
                             <Admin />
                         </Route>
-                        <Route path="/createMatch" component={CreateMatchForm} />
-                        <Route path="/match/:matchKey" component={MatchPage} />
-                        <Route path="/createSport" component={CreateSportForm} />
+                        <Route exact path="/createMatch" component={CreateMatchForm} />
+                        <Route exact path="/match/:matchKey" component={MatchPage} />
+                        <Route exact path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />

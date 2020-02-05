@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LeftPanel from '../../LeftPanel';
+import WithAnonymous from '../../hocs/WithAnonymous';
+import WithError from '../../hocs/WithError';
 
 const Home = (props) => {
     const { currentTab, handleTabChange, filters, updateFilters,
@@ -31,4 +33,4 @@ Home.propTypes = {
     currentUser: PropTypes.string,
 }
 
-export default Home;
+export default WithError(WithAnonymous(Home));
