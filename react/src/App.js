@@ -24,7 +24,6 @@ import './css/main.css';
 import Admin from './components/screens/Admin';
 import MatchPage from './components/screens/MatchPage';
 
-
 class App extends Component {
     constructor(props) {
         super(props);

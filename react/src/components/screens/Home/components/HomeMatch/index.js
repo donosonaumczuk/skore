@@ -21,19 +21,25 @@ const getImageUrls = links => {
     };
 }
 
-const HomeMatchContainer = ({ currentMatch, handleMatchClick }) => {
+const HomeMatchContainer = ({ currentMatch, handleMatchClick, joinMatch, cancelMatch,
+                                deleteMatch }) => {
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
     return (
         <HomeMatch currentMatch={currentMatch} creatorImageUrl={creatorImageUrl}
-                    sportImageUrl={sportImageUrl} handleClick={handleMatchClick} />
+                    sportImageUrl={sportImageUrl} handleClick={handleMatchClick}
+                    joinMatch={joinMatch} cancelMatch={cancelMatch}
+                    deleteMatch={deleteMatch} />
     );
 }
 
 HomeMatch.propTypes = {
     currentMatch: HomeMatchPropType.isRequired,
-    handleMatchClick: PropTypes.func
+    handleMatchClick: PropTypes.func,
+    joinMatch: PropTypes.func.isRequired,
+    cancelMatch: PropTypes.func.isRequired,
+    deleteMatch: PropTypes.func.isRequired
 }
 
 export default HomeMatchContainer;
