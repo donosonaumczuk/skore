@@ -107,6 +107,22 @@ const createMatch = async match => {
     }
 }
 
+const joinMatchWithAccount = async (matchKey, userId) => {
+    try {
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players`, userId);
+        console.log(res);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const deleteMatch = async matchKey => {
     try {
         const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}`);
@@ -129,6 +145,7 @@ const MatchService = {
     getMatchesToJoin: getMatchesToJoin,
     getMatchByKey: getMatchByKey,
     createMatch: createMatch,
+    joinMatchWithAccount: joinMatchWithAccount,
     deleteMatch: deleteMatch
 };
 

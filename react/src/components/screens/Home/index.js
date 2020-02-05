@@ -8,6 +8,7 @@ import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import ErrorPage from '../ErrorPage';
 import Home from './layout';
+import AuthService from '../../../services/AuthService';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -118,17 +119,30 @@ class HomeContainer extends Component {
     joinMatch = (e, match) => {
         e.stopPropagation();
         if (this.props.currentUser) {
-            this.joinMatchLogged(match);
+            const userId = AuthService.getUserId();
+            this.joinMatchLogged(match, userId);
         }
         else {
             this.joinMatchAnonymous(match);
         }
-        // TODO implement when we have endpoint
     }
 
-    joinMatchLogged = (match) => {
+    joinMatchLogged = async (match, userId) => {
         console.log("join match logged: ", match.title);
         //TODO implement
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await MatchService.joinMatchWithAccount(match.key, userId);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status });
+        }
+        else {
+            const newMatches = Utils.replaceWithNewMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, executing: false });
+            }
+        }
     }
 
     joinMatchAnonymous = (match) => {
@@ -139,15 +153,15 @@ class HomeContainer extends Component {
     cancelMatch = (e, match) => {
         e.stopPropagation();
         if (this.props.currentUser) {
-            this.cancelMatchLogged(match);
+            const userId = AuthService.getUserId();
+            this.cancelMatchLogged(match, userId);
         }
         else {
             this.cancelMatchAnonymous(match);
         }
-        // TODO implement when we have endpoint
     }
 
-    cancelMatchLogged = (match) => {
+    cancelMatchLogged = (match, userId) => {
         console.log("cancel match logged: ", match.title);
         //TODO implement
     }
@@ -159,10 +173,12 @@ class HomeContainer extends Component {
     
     deleteMatch = async (e, match) => {
         e.stopPropagation();
-        this.setState({ executing: true });
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await MatchService.deleteMatch(match.key);
         if (response.status && this.mounted) {
-            this.setState({ stattus: response.status });
+            this.setState({ status: response.status });
         }
         else {
             const newMatches = Utils.deleteMatch(this.state.matches, match);

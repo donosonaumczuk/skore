@@ -91,20 +91,52 @@ test('removeUnknownFilters with  unknown filters', () => {
     expect(actualResult.unknownFilter2).toBeUndefined();
 });
 
-//deleteMatch tests
 const compareMatchArrays = (firstArray, secondArray) => {
     const length = firstArray.length;
     if (length !== secondArray.length) {
         return false;
     }
     for (var i = 0; i < length; i++) {
-        if (firstArray[i].key !== secondArray[i].key) {
+        if (firstArray[i].key !== secondArray[i].key ||
+            firstArray[i].value !== secondArray[i].value) {
             return false;
         }
     }
     return true;
 }
 
+//replaceWithNewMatch tests
+test('replaceWithNewMatch with a valid newMatch', () => {
+    //set up
+    const matches  = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const matchToReplace = { key: "second", value: "newValue" };
+
+    //execution
+    const expectedResult = [{ key: "first" }, 
+                            { key: "second", value: "newValue" },
+                            { key: "third" }];
+    const actualResult = Utils.replaceWithNewMatch(matches, matchToReplace);
+
+    //postconditions
+    expect(actualResult.length).toBe(expectedResult.length);
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy();
+});
+
+test('replaceWithNewMatch with invalid newMatch', () => {
+    //set up
+    const matches  = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const matchToReplace = { key: "fourth", value: "newValue" };
+
+    //execution
+    const expectedResult = [{ key: "first" }, { key: "second" }, { key: "third" }];
+    const actualResult = Utils.replaceWithNewMatch(matches, matchToReplace);
+
+    //postconditions
+    expect(actualResult.length).toBe(expectedResult.length);
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy();
+});
+
+//deleteMatch tests
 test('deleteMatch deleting one match', () => {
     //set up
     const matches  = [{ key: "first" }, { key: "second" }, { key: "third" }];
@@ -116,7 +148,7 @@ test('deleteMatch deleting one match', () => {
 
     //postconditions
     expect(actualResult.length).toBe(expectedResult.length);
-    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy;
+    expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy();
 });
 
 test('deleteMatch without deleting', () => {
