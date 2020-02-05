@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.TeamNotCreatedException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -124,10 +125,13 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Map<User, PremiumUser> getAccountsMap(Team team) {
         Map<User, PremiumUser> accountsList = new HashMap<>();
-        if(team != null) {
-            for (User u:team.getPlayers()) {
-                Optional<PremiumUser> account = premiumUserService.findById(u.getUserId());
-                accountsList.put(u, account.orElse(null));
+        if (team != null) {
+            for (User user : team.getPlayers()) {
+                try {
+                    accountsList.put(user, premiumUserService.findById(user.getUserId()));
+                } catch (UserNotFoundException e) {
+                    accountsList.put(user, null);
+                }
             }
         }
         return accountsList;

@@ -51,7 +51,7 @@ public class PremiumUserServiceImplTest {
 
         boolean ans = premiumUserService.confirmationPath(URL);
 
-        Assert.assertEquals(true, ans);
+        Assert.assertTrue(ans);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PremiumUserServiceImplTest {
         boolean ans = premiumUserService.confirmationPath(URL);
 
 
-        Assert.assertEquals(false, ans);
+        Assert.assertFalse(ans);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class PremiumUserServiceImplTest {
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
         LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
-        List<List<Game>> listofList = new LinkedList<>();
+        List<List<Game>> listOfList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
         List<Game> listTeam2 = new LinkedList<>();
         Team team1 = new Team(null, null, null, false,
@@ -91,16 +91,15 @@ public class PremiumUserServiceImplTest {
                 "2-1", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-10", null, null, null));
-        listofList.add(listTeam1);
-        listofList.add(listTeam2);
+        listOfList.add(listTeam1);
+        listOfList.add(listTeam2);
         when(premiumUserDaoMock.findByUserName(USERNAME))
                 .thenReturn(Optional.of(account));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listofList);
+        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
+        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(true, ans.isPresent());
-        Assert.assertEquals(100, ans.get().getWinRate(), 0.00001);
+        Assert.assertEquals(100, ans.getWinRate(), 0.00001);
     }
 
     @Test
@@ -109,7 +108,7 @@ public class PremiumUserServiceImplTest {
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
         LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
-        List<List<Game>> listofList = new LinkedList<>();
+        List<List<Game>> listOfList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
         List<Game> listTeam2 = new LinkedList<>();
         Team team1 = new Team(null, null, null, false,
@@ -122,16 +121,15 @@ public class PremiumUserServiceImplTest {
                 "2-1", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-0", null, null, null));
-        listofList.add(listTeam1);
-        listofList.add(listTeam2);
+        listOfList.add(listTeam1);
+        listOfList.add(listTeam2);
         when(premiumUserDaoMock.findByUserName(USERNAME))
                 .thenReturn(Optional.of(account));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listofList);
+        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
+        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(true, ans.isPresent());
-        Assert.assertEquals(50, ans.get().getWinRate(), 0.00001);
+        Assert.assertEquals(50, ans.getWinRate(), 0.00001);
     }
 
     @Test
@@ -140,7 +138,7 @@ public class PremiumUserServiceImplTest {
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
         LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
-        List<List<Game>> listofList = new LinkedList<>();
+        List<List<Game>> listOfList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
         List<Game> listTeam2 = new LinkedList<>();
         Team team1 = new Team(null, null, null, false,
@@ -153,15 +151,15 @@ public class PremiumUserServiceImplTest {
                 "2-5", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-0", null, null, null));
-        listofList.add(listTeam1);
-        listofList.add(listTeam2);
+        listOfList.add(listTeam1);
+        listOfList.add(listTeam2);
         when(premiumUserDaoMock.findByUserName(USERNAME))
                 .thenReturn(Optional.of(account));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listofList);
+        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
+        Optional<PremiumUser> ans = premiumUserDaoMock.findByUserName(USERNAME);
 
-        Assert.assertEquals(true, ans.isPresent());
+        Assert.assertTrue(ans.isPresent());
         Assert.assertEquals(0, ans.get().getWinRate(), 0.00001);
     }
 
@@ -171,7 +169,7 @@ public class PremiumUserServiceImplTest {
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
         LinkedHashSet<User> playerList = new LinkedHashSet<>();
         playerList.add(account.getUser());
-        List<List<Game>> listofList = new LinkedList<>();
+        List<List<Game>> listOfList = new LinkedList<>();
         List<Game> listTeam1 = new LinkedList<>();
         List<Game> listTeam2 = new LinkedList<>();
         Team team1 = new Team(null, null, null, false,
@@ -184,15 +182,14 @@ public class PremiumUserServiceImplTest {
                 "0-2", null, null, null));
         listTeam2.add(new Game(team2, team1, null, null, null, "Individual-Competitive",
                 "1-1", null, null, null));
-        listofList.add(listTeam1);
-        listofList.add(listTeam2);
+        listOfList.add(listTeam1);
+        listOfList.add(listTeam2);
         when(premiumUserDaoMock.findByUserName(USERNAME))
                 .thenReturn(Optional.of(account));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listofList);
+        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
+        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(true, ans.isPresent());
-        Assert.assertEquals(25, ans.get().getWinRate(), 0.00001);
+        Assert.assertEquals(25, ans.getWinRate(), 0.00001);
     }
 }

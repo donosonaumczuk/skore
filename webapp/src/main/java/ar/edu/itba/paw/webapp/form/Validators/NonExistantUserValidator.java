@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form.Validators;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,10 +21,11 @@ public class NonExistantUserValidator
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context){
-        if(userService.findByUserName(username).isPresent()) {
+        try {
+            userService.findByUserName(username);
+            return true;
+        } catch (UserNotFoundException e) {
             return false;
         }
-
-        return true;
     }
 }

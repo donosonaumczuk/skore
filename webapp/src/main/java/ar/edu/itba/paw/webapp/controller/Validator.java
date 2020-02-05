@@ -56,11 +56,7 @@ public class Validator { //TODO: remove this class later
     }
 
     public Validator userExist(final String username) {
-        premiumUserService.findByUserName(username)
-            .orElseThrow(() -> {
-                LOGGER.trace("Can't get '{}', user not found", username);
-                return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-            });
+        premiumUserService.findByUserName(username);
         return this;
     }
 

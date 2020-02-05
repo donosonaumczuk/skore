@@ -1,5 +1,6 @@
 package ar.edu.itba.paw;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -51,20 +52,20 @@ public class TeamServiceImplTest {
         team.addPlayer(user2);
         PremiumUser account1 = new PremiumUser(FIRSTNAME+ID_1, LASTNAME+ID_1,
                                 EMAIL+ID_1, USERNAME+ID_1);
-        when(premiumUserServiceMock.findById(ID_0)).thenReturn(Optional.empty());
-        when(premiumUserServiceMock.findById(ID_1)).thenReturn(Optional.of(account1));
-        when(premiumUserServiceMock.findById(ID_2)).thenReturn(Optional.empty());
+        when(premiumUserServiceMock.findById(ID_0)).thenThrow(UserNotFoundException.ofId(ID_0));
+        when(premiumUserServiceMock.findById(ID_1)).thenReturn(account1);
+        when(premiumUserServiceMock.findById(ID_2)).thenThrow(UserNotFoundException.ofId(ID_2));
 
         Map<User, PremiumUser> map = teamService.getAccountsMap(team);
 
         Assert.assertNotNull(map);
         Assert.assertEquals(3, map.size());
-        Assert.assertEquals(true , map.containsKey(user0));
-        Assert.assertEquals(null, map.get(user0));
-        Assert.assertEquals(true , map.containsKey(user1));
+        Assert.assertTrue(map.containsKey(user0));
+        Assert.assertNull(map.get(user0));
+        Assert.assertTrue(map.containsKey(user1));
         Assert.assertEquals(account1, map.get(user1));
-        Assert.assertEquals(true , map.containsKey(user2));
-        Assert.assertEquals(null, map.get(user2));
+        Assert.assertTrue(map.containsKey(user2));
+        Assert.assertNull(map.get(user2));
     }
 
     @Test

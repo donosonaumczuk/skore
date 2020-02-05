@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
@@ -9,8 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.util.Optional;
-
 public  abstract class BaseController {
 
     @Autowired
@@ -19,22 +18,18 @@ public  abstract class BaseController {
 
     @ModelAttribute("loggedUser")
     public PremiumUser loggedUser() {
-        if(SecurityContextHolder.getContext() == null) {
+        if (SecurityContextHolder.getContext() == null) {
             return null;
         }
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
-        if(!authentication.isAuthenticated()) {
+        try {
+            return us.findByUserName(authentication.getName());
+        } catch (UserNotFoundException e) {
             return null;
         }
-        final Optional<PremiumUser> user = us.findByUserName(authentication.getName());
-        if(!user.isPresent()) {
-            return null;
-        }
-
-        return user.get();
     }
 
     @ModelAttribute("isLogged")

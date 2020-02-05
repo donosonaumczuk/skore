@@ -174,16 +174,15 @@ public class UserController {
     @GET
     @Path("/{username}/profile")
     public Response getUserProfile(@PathParam("username") String username) {
-        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username);
         LOGGER.trace("'{}' profile successfully gotten", username);
-        return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
+        return Response.ok(ProfileDto.from(premiumUser)).build();
     }
 
     @GET
     @Path("/{username}/image")
     public Response getUserImage(@PathParam("username") String username) {
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
+        //TODO: how to obtain a not found? readImage don't perform a find over users
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
@@ -216,7 +215,7 @@ public class UserController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
-        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
+        PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getCellphone(), userDto.getBirthday(),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
@@ -225,10 +224,8 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(), image
         );
-        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
-                .validate(newPremiumUser);
         LOGGER.trace("User '{}' modified successfully", username);
-        return Response.ok(UserDto.from(newPremiumUser.get())).build();
+        return Response.ok(UserDto.from(updatedPremiumUser)).build();
     }
 
     @POST
@@ -246,10 +243,7 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), image
-        ).orElseThrow(() -> {
-            LOGGER.trace("User '{}' already exist", userDto.getUsername());
-            return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
-        });
+        );
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
     }
@@ -257,11 +251,8 @@ public class UserController {
     @GET
     @Path("/{username}")
     public Response getUser(@PathParam("username") String username) {
-        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
-        LOGGER.trace("User '{}' founded successfully", username);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username);
+        LOGGER.trace("User '{}' found successfully", username);
         return Response.ok(UserDto.from(premiumUser)).build();
     }
 
@@ -270,19 +261,13 @@ public class UserController {
     public Response verifyUser(@PathParam("username") String username, String code) {
         /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
         * TODO|the code is receive in the mail.*/
-        Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
-        if(!result) {
-            LOGGER.trace("User '{}' with code '{}' does not exist", username, code);
+        boolean enablePerformed = premiumUserService.enableUser(username, code);
+        if (!enablePerformed) {
+            LOGGER.trace("User '{}' with code '{}' does not exist", username, code); //TODO: not found already thrown internally...
             throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
         }
         LOGGER.trace("User '{}' verified successfully", username);
-        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
+        PremiumUser premiumUser = premiumUserService.findByUserName(username);
         return Response.ok(UserDto.from(premiumUser)).build();
     }
 
