@@ -106,20 +106,23 @@ public class GameServiceImpl implements GameService {
     @Transactional
     @Override
     public Game insertPlayerInGame(final String key, final long userId, final String code, final Locale locale) {
-        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO: check
-        if (loggedUser.getUser().getUserId() != userId && code == null) {
-            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userId);
-            throw new ForbiddenException("User '" + loggedUser.getUserName() +
-                    "' is not user '" + userId + "'");
-        }
         if (code != null) {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
                 LOGGER.trace("Insert player from game fails, code '{}' is invalid for player '{}'", code, userId);
-                throw new UnauthorizedException("Insert player from game fails, code '" + code +
+                throw new ForbiddenException("Insert player from game fails, code '" + code +
                         "' is invalid for player '" + userId + "'");
             }
             return insertTemporalUserInGame(key, user, locale);
+        }
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+            LOGGER.trace("Insert player from game fails, must be logged or have a code");
+            return new UnauthorizedException("Insert player from game fails, must be logged or have a code");
+        });
+        if (loggedUser.getUser().getUserId() != userId) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userId);
+            throw new ForbiddenException("User '" + loggedUser.getUserName() +
+                    "' is not user '" + userId + "'");
         }
         return insertUserInGame(key, loggedUser.getUser().getUserId());
     }
