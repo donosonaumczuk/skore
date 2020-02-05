@@ -132,7 +132,7 @@ public class GameServiceImpl implements GameService {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
                 LOGGER.trace("Delete player from game fails, code '{}' is invalid for player '{}'", code, userId);
-                throw new UnauthorizedException("Delete player from game fails, code '" + code +
+                throw new ForbiddenException("Delete player from game fails, code '" + code +
                         "' is invalid for player '" + userId + "'");
             }
             return deleteUserInGame(game, userId);
@@ -140,12 +140,12 @@ public class GameServiceImpl implements GameService {
 
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
             LOGGER.trace("Delete player from game fails, must be logged");
-            return new ForbiddenException("Delete player from game fails, must be logged");
+            return new UnauthorizedException("Delete player from game fails, must be logged");
         });
         if (!game.getTeam1().getLeader().equals(loggedUser) &&
                 loggedUser.getUser().getUserId() != userId) {
             LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
-            throw new UnauthorizedException("Delete player from game fails, must be leader of match '" + key +
+            throw new ForbiddenException("Delete player from game fails, must be leader of match '" + key +
                     "' or player '" + userId + "'");
         }
 
