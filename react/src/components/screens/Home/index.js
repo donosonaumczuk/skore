@@ -117,14 +117,44 @@ class HomeContainer extends Component {
 
     joinMatch = (e, match) => {
         e.stopPropagation();
-        console.log("join match: ", match.title);
+        if (this.props.currentUser) {
+            this.joinMatchLogged(match);
+        }
+        else {
+            this.joinMatchAnonymous(match);
+        }
         // TODO implement when we have endpoint
+    }
+
+    joinMatchLogged = (match) => {
+        console.log("join match logged: ", match.title);
+        //TODO implement
+    }
+
+    joinMatchAnonymous = (match) => {
+        console.log("join match annonymous: ", match.title);
+        //TODO implement
     }
     
     cancelMatch = (e, match) => {
         e.stopPropagation();
-        console.log("cancel match: ", match.title);
+        if (this.props.currentUser) {
+            this.cancelMatchLogged(match);
+        }
+        else {
+            this.cancelMatchAnonymous(match);
+        }
         // TODO implement when we have endpoint
+    }
+
+    cancelMatchLogged = (match) => {
+        console.log("cancel match logged: ", match.title);
+        //TODO implement
+    }
+
+    cancelMatchAnonymous = (match) => {
+        console.log("cancel match annonymous: ", match.title);
+        //TODO implement
     }
     
     deleteMatch = async (e, match) => {
