@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -86,7 +87,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String username,
-                                        final String cellphone, final String birthday,
+                                        final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file, final Locale locale) {
@@ -124,7 +125,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Transactional
     @Override
     public Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
-                                                final String newEmail, final String newCellphone, final String newBirthday,
+                                                final String newEmail, final String newCellphone, final LocalDate newBirthday,
                                                 final String newCountry, final String newState, final String newCity,
                                                 final String newStreet, final int newReputation, final String newPassword,
                                                 final String oldPassword, final byte[] file, final Locale locale) {

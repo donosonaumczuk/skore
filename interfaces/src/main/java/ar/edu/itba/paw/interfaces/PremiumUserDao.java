@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.UserSort;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,7 +19,7 @@ public interface PremiumUserDao {
 
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
-                                        final String cellphone, final String birthday,
+                                        final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file);
@@ -29,7 +30,7 @@ public interface PremiumUserDao {
 
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                                 final String newEmail,final String newUserName,
-                                                final String newCellphone, final String newBirthday,
+                                                final String newCellphone, final LocalDate newBirthday,
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final Integer newReputation, final String newPassword,

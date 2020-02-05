@@ -51,6 +51,7 @@ import javax.ws.rs.core.UriInfo;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -221,7 +222,7 @@ public class UserController {
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
@@ -244,7 +245,7 @@ public class UserController {
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
-                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getUsername(), userDto.getCellphone(), getBirthDay(userDto),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
@@ -302,5 +303,10 @@ public class UserController {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
         }
         return bos.toByteArray();
+    }
+
+    private LocalDate getBirthDay(UserDto userDto) {
+        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                userDto.getBirthday().getDayOfMonth());
     }
 }

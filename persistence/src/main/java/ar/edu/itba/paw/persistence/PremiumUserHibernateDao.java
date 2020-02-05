@@ -71,7 +71,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
-                                        final String cellphone, final String birthday,
+                                        final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file) {
@@ -88,7 +88,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
         final Role role = roleDao.findRoleById(userRoleId).get();//should never be empty
         final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
-                basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
+                basicUser.get().getEmail(), userName, cellphone, birthday, new Place(country,
                 state, city, street), reputation, password, code, file);
         newUser.addRole(role);
         em.persist(newUser);
@@ -123,7 +123,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                                 final String newEmail,final String newUserName,
-                                                final String newCellphone, final String newBirthday,
+                                                final String newCellphone, final LocalDate newBirthday,
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final Integer newReputation, final String newPassword,
@@ -165,7 +165,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                 user.setReputation(newReputation);
             }
             if (newBirthday != null) {
-                user.setBirthday(LocalDate.parse(newBirthday));
+                user.setBirthday(newBirthday);
             }
             if (newPassword != null) {
                 user.setPassword(newPassword);

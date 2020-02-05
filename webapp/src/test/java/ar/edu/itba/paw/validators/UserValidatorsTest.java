@@ -124,7 +124,11 @@ public class UserValidatorsTest {
                     "\t\"firstName\" : \"a first name\",\n" +
                     "\t\"lastName\" : \"a last name\",\n" +
                     "\t\"cellphone\" : \"1512345678\",\n" +
-                    "\t\"birthday\" : \"1969-06-25\",\n" +
+                    "\t\"birthday\" : {\n" +
+                    "\t\t\"year\": 1969,\n" +
+                    "\t\t\"monthNumber\": 06,\n" +
+                    "\t\t\"dayOfMonth\": 25\n" +
+                    "\t},\n" +
                     "\t\"email\" : \"an@email.com\",\n" +
                     "\t\"home\" : {\n" +
                     "\t\t\"state\" : \"a state\",\n" +
@@ -165,7 +169,11 @@ public class UserValidatorsTest {
                 "{\n" +
                     "\t\"firstName\" : \"a first name\",\n" +
                     "\t\"lastName\" : \"a last name\",\n" +
-                    "\t\"birthday\" : \"1969-06-25\",\n" +
+                    "\t\"birthday\" : {\n" +
+                    "\t\t\"year\": 1969,\n" +
+                    "\t\t\"monthNumber\": 06,\n" +
+                    "\t\t\"dayOfMonth\": 25\n" +
+                    "\t},\n" +
                     "\t\"email\" : \"an@email.com\"\n" +
                 "}"
                 )
@@ -175,7 +183,7 @@ public class UserValidatorsTest {
     @Test
     public void whenValidatingCreationIfAFieldHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'birthday' must be a date");
+        exceptionRule.expectMessage("Field 'birthday' must be a JSON object");
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                     "\t\"username\" : \"a_Username_69\",\n" +

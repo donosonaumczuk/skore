@@ -136,16 +136,6 @@ public class GameController {
                 .build();
     }
 
-    private LocalDateTime getStartTimeFrom(GameDto gameDto) {
-        if (!gameDto.getDate().isPresent() || !gameDto.getTime().isPresent()) {
-            return null;
-        }
-        DateDto dateDto = gameDto.getDate().get();
-        TimeDto timeDto = gameDto.getTime().get();
-        return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
-                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
-    }
-
     @GET
     @Path("/{key}")
     public Response getGame(@PathParam("key") String key) {
@@ -258,5 +248,15 @@ public class GameController {
         //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException, ForbiddenException
         LOGGER.trace("Match '{}' result added successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
+    }
+
+    private LocalDateTime getStartTimeFrom(GameDto gameDto) {
+        if (!gameDto.getDate().isPresent() || !gameDto.getTime().isPresent()) {
+            return null;
+        }
+        DateDto dateDto = gameDto.getDate().get();
+        TimeDto timeDto = gameDto.getTime().get();
+        return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
+                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
     }
 }
