@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import AnonymousForm from './layout';
+import MatchService from '../../../services/MatchService';
 
 const validate = values => {
     const errors = {}
@@ -12,32 +13,33 @@ const validate = values => {
 }
 
 class AnonymousFormContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            created: false
+        };
+    }
+
     onSubmit = async (values) => {
         const { currentMatch } = this.props;
-        console.log(currentMatch);
-        // const response = await MatchService.joinMatchAnonymous(
-            // {
-            //     "firstName": values.firstName,
-            //     "lastName": values.lastName,
-            //     "email": values.email
-            // }
-        // );
         const user =  {
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email
         };
-        console.log(user);
-        // if (response.status) {
-        //     this.setState({ status: response.status })
-        // }
-        // else {
-           
-        // }
+        const response = await MatchService.joinMatchAnonymous(currentMatch.key, user);
+        
+        if (response.status) {
+            this.setState({ status: response.status })
+        }
+        else {
+           this.setState({ created: true });
+        }
     }
 
     render() {
         const { handleSubmit, submitting } = this.props; 
+        console.log(this.state.created);
         return (
             <AnonymousForm onSubmit={this.onSubmit} handleSubmit={handleSubmit}
                             submitting={submitting} />

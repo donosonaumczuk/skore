@@ -3,7 +3,8 @@ import AnonymousForm from '../../forms/AnonymousForm';
 
 function WithAnonymous(Component) {
     return function Anonymous({ anonymous, currentMatch, ...props }) {
-        return anonymous ? <AnonymousForm currentMatch={currentMatch} /> : <Component {...props} />;
+        return anonymous ? <AnonymousForm currentMatch={currentMatch} /> :
+                            <Component {...props} />;
     };
 }
 

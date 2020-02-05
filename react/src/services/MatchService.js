@@ -123,6 +123,42 @@ const joinMatchWithAccount = async (matchKey, userId) => {
     }
 }
 
+const joinMatchAnonymous = async (matchKey, user) => {
+    try {
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players/requestToJoin`, user);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const confirmAssistance = async (matchKey, userId, code) => {
+    try {
+        const user = { "userId": userId };
+        const config = {
+            headers: {
+                "x-code": code,
+            }
+        };
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players/`,
+                                    user, config);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
 const cancelMatchWithAccount = async (matchKey, userId) => {
     try {
         const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`);
@@ -161,8 +197,10 @@ const MatchService = {
     getMatchByKey: getMatchByKey,
     createMatch: createMatch,
     joinMatchWithAccount: joinMatchWithAccount,
+    joinMatchAnonymous: joinMatchAnonymous,
+    confirmAssistance: confirmAssistance,
     cancelMatchWithAccount: cancelMatchWithAccount,
-    deleteMatch: deleteMatch
+    deleteMatch: deleteMatch,
 };
 
 export default MatchService;
