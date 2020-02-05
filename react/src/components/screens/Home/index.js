@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
@@ -128,7 +129,7 @@ class HomeContainer extends Component {
     
     deleteMatch = async (e, match) => {
         e.stopPropagation();
-        this.setState({ loading: true });
+        this.setState({ executing: true });
         const response = await MatchService.deleteMatch(match.key);
         if (response.status && this.mounted) {
             this.setState({ stattus: response.status });
@@ -136,7 +137,7 @@ class HomeContainer extends Component {
         else {
             const newMatches = Utils.deleteMatch(this.state.matches, match);
             if (this.mounted) {
-                this.setState({ matches: newMatches, loading: false });
+                this.setState({ matches: newMatches, executing: false });
             }
         }
     }
@@ -146,10 +147,14 @@ class HomeContainer extends Component {
         const { currentUser } = this.props;
         let currentMatches;
         if (this.state.status) {
-            currentMatches = <ErrorPage status={this.state.status} />;
+            currentMatches = <ErrorPage status={this.state.status} />;//TODO hoc
         }
-        else if ((matches.length === 0 && hasMore) || this.state.loading) {
-            currentMatches = <Loader />;
+        else if (this.state.executing) {
+            currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
+
+        }
+        else if (matches.length === 0 && hasMore) {
+            currentMatches = <Loader />;//TODO hoc
         }
         else {
             currentMatches = <HomeMatches matches={matches} hasMore={hasMore} 
