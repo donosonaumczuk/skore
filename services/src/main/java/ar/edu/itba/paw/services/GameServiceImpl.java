@@ -127,10 +127,6 @@ public class GameServiceImpl implements GameService {
     @Transactional
     @Override
     public boolean deleteUserInGameWithCode(final String key, final long userId, final String code) {
-        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
-            LOGGER.trace("Delete player from game fails, must be logged");
-            return new ForbiddenException("Delete player from game fails, must be logged");
-        });
         Game game = findByKey(key);
         if (code != null) {
             User user = userService.getUserFromData(code, key);
@@ -142,6 +138,10 @@ public class GameServiceImpl implements GameService {
             return deleteUserInGame(game, userId);
         }
 
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+            LOGGER.trace("Delete player from game fails, must be logged");
+            return new ForbiddenException("Delete player from game fails, must be logged");
+        });
         if (!game.getTeam1().getLeader().equals(loggedUser) &&
                 loggedUser.getUser().getUserId() != userId) {
             LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
