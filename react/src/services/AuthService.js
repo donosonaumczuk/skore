@@ -8,24 +8,24 @@ const getToken = () => localStorage.getItem('jwt');
 
 const removeToken = () => localStorage.removeItem('jwt');
 
-const loadUser = user => localStorage.setItem('currentUser', user);
+const loadUser = (username, isAdmin, userId) => {
+    const user = {
+        username: username,
+        isAdmin: isAdmin,
+        userId: userId,
+    };
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
 
 const removeUser = () => localStorage.removeItem('currentUser');
 
 const getUser = () => localStorage.getItem('currentUser');
 
-const setIsAdmin = isAdmin => localStorage.setItem('isAdmin', isAdmin);
-
-const removeAdmin = () => localStorage.removeItem('isAdmin');
-
-const getIsAdmin = () => localStorage.getItem('isAdmin');
-
 const logInUser = async user => {
     try {
         const response = await api.post(`${AUTH_ENDPOINT}/login`, user);
         setToken(response.headers['x-token']);
-        loadUser(user.username);
-        setIsAdmin(response.data.admin);
+        loadUser(user.username, response.data.admin, response.data.userId);
         return { "status": SC_OK };
     }
     catch(err) {
@@ -47,7 +47,6 @@ const logOutUser = async () => {
         if (getToken) {
             removeToken();
             removeUser(); 
-            removeAdmin(); 
         }
         return { "status": SC_OK };
     }
@@ -55,7 +54,6 @@ const logOutUser = async () => {
         if (!err.response || err.response.status === SC_UNAUTHORIZED) {
             removeToken();
             removeUser();
-            removeAdmin();
         }
         else {
             return { "status": err.response.status };
@@ -65,14 +63,25 @@ const logOutUser = async () => {
 
 const getCurrentUser = () => {
     if (getToken()) {
-        return getUser();
+        const user = JSON.parse(getUser());
+        return user.username;
     }
     return null;
 }
 
 const isAdmin = () => {
     if (getToken()) {
-        return getIsAdmin() === "true" ? true : false;
+        const user = JSON.parse(getUser());
+        return user.isAdmin;
+        // return user.isAdmin === "true" ? true : false;
+    }
+    return null;
+}
+
+const getUserId = () => {
+    if (getToken()) {
+        const user = JSON.parse(getUser());
+        return user.userId;
     }
     return null;
 }
@@ -82,7 +91,8 @@ const AuthService = {
     logInUser: logInUser,
     logOutUser: logOutUser,
     getCurrentUser: getCurrentUser,
-    isAdmin: isAdmin
+    isAdmin: isAdmin,
+    getUserId: getUserId
 };
 
 export default AuthService;
