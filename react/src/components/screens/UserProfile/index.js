@@ -101,6 +101,7 @@ class UserProfileContainer extends Component {
                 username: username,
                 currentUser: {},
                 imageUrl: null,
+                status: null
             };
         }
         else return null;
