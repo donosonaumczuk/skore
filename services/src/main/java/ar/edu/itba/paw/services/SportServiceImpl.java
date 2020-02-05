@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,29 +22,33 @@ public class SportServiceImpl implements SportService {
     @Autowired
     private SportDao sportDao;
 
+    @Transactional
     @Override
     public Optional<Sport> findByName(final String sportName) {
         return sportDao.findByName(sportName);
     }
 
 
+    @Transactional
     @Override
     public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
                         final byte[] file) {
         return sportDao.create(sportName, playerQuantity, displayName, file);
     }
 
+    @Transactional
     @Override
     public Optional<Sport> modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
         return sportDao.modifySport(sportName, displayName, playerQuantity, file);
     }
 
+    @Transactional
     @Override
     public boolean remove(final String sportName) {
         return sportDao.remove(sportName);
     }
 
-
+    @Transactional
     @Override
     public Page<Sport> findSportsPage(final List<String> sportNames, final Integer minQuantity,
                                       final Integer maxQuantity, final SportSort sort,
@@ -51,6 +56,7 @@ public class SportServiceImpl implements SportService {
         return new Page<>(sportDao.findSports(sportNames, minQuantity, maxQuantity, sort), offset, limit);
     }
 
+    @Transactional
     @Override
     public Optional<byte[]> readImage(final String sportName) {
         return sportDao.readImage(sportName);

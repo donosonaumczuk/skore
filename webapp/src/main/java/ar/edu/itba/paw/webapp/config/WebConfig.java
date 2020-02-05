@@ -1,11 +1,15 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -33,9 +37,19 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.config"})
+        "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants"})
 @Configuration
+@PropertySources({
+        @PropertySource(value = "classpath:properties/db.properties"),
+        @PropertySource(value = "classpath:properties/email.properties"),
+        @PropertySource(value = "classpath:properties/url.properties"),
+        @PropertySource(value = "classpath:properties/token.properties"),
+        //If it is conflict in properties it keep the last one
+})
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Autowired
+    private Environment environment;
 
     @Value("classpath:schema.sql")
     private org.springframework.core.io.Resource schemaSQL;
@@ -61,14 +75,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //        return dataSource;
 //    }
 
-    /* Local */
     @Bean
     public DataSource dataSource() {
+        String dbHost  = environment.getRequiredProperty("db.host");
+        Integer dbPort = environment.getRequiredProperty("db.port", Integer.class);
+        String dbName  = environment.getRequiredProperty("db.name");
+        String dbUsername = environment.getRequiredProperty("db.username");
+        String dbPassword = environment.getRequiredProperty("db.pass");
+
         final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(org.postgresql.Driver.class);
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/paw");
-        dataSource.setUsername("pawuser");
-        dataSource.setPassword("paw");
+        dataSource.setUrl("jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName);
+        dataSource.setUsername(dbUsername);
+        dataSource.setPassword(dbPassword);
 
         return dataSource;
     }
@@ -121,8 +140,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("skore.noreply@gmail.com");
-        mailSender.setPassword("skorepaw");
+        mailSender.setUsername(environment.getRequiredProperty("email.username"));
+        mailSender.setPassword(environment.getRequiredProperty("email.pass"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

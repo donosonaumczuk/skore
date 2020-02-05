@@ -49,7 +49,8 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         String username = premiumUser.getUserName();
+        long userId = premiumUser.getUser().getUserId();
         boolean isAdmin = sessionService.isAdmin();
-        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(username, isAdmin));
+        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(username, userId, isAdmin));
     }
 }

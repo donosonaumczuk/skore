@@ -24,10 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.GameType.INDIVIDUAL;
@@ -60,6 +62,7 @@ public class GameServiceImpl implements GameService {
 
     }
 
+    @Transactional
     @Override
     public Game create(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final long durationInMinutes, final boolean isCompetitive, final boolean isIndividual,
@@ -100,59 +103,84 @@ public class GameServiceImpl implements GameService {
         return newGame;
     }
 
+    @Transactional
     @Override
-    public Game insertPremiumUserInGame(final String key, final String username) {
-        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO: check
-        if (!loggedUser.getUserName().equals(username)) {
-            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+    public Game insertPlayerInGame(final String key, final long userId, final String code, final Locale locale) {
+        if (code != null) {
+            User user = userService.getUserFromData(code, key);
+            if (user.getUserId() != userId) {
+                LOGGER.trace("Insert player from game fails, code '{}' is invalid for player '{}'", code, userId);
+                throw new ForbiddenException("Insert player from game fails, code '" + code +
+                        "' is invalid for player '" + userId + "'");
+            }
+            return insertTemporalUserInGame(key, user, locale);
+        }
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+            LOGGER.trace("Insert player from game fails, must be logged or have a code");
+            return new UnauthorizedException("Insert player from game fails, must be logged or have a code");
+        });
+        if (loggedUser.getUser().getUserId() != userId) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userId);
             throw new ForbiddenException("User '" + loggedUser.getUserName() +
-                    "' is not user '" + username + "'");
+                    "' is not user '" + userId + "'");
         }
         return insertUserInGame(key, loggedUser.getUser().getUserId());
     }
 
+    @Transactional
     @Override
-    public Game insertTemporalUserInGame(final String key, final String code) {
-        Game game;
-        User user = userService.getUserFromData(code, key);
-        try {
-            game = insertUserInGame(key, user.getUserId());
-            userService.sendCancelOptionMatch(user, game, key);
+    public boolean deleteUserInGameWithCode(final String key, final long userId, final String code) {
+        Game game = findByKey(key);
+        if (code != null) {
+            User user = userService.getUserFromData(code, key);
+            if (user.getUserId() != userId) {
+                LOGGER.trace("Delete player from game fails, code '{}' is invalid for player '{}'", code, userId);
+                throw new ForbiddenException("Delete player from game fails, code '" + code +
+                        "' is invalid for player '" + userId + "'");
+            }
+            return deleteUserInGame(game, userId);
         }
-        catch (Exception e) {
-            userService.remove(user.getUserId());
-            throw e;
+
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+            LOGGER.trace("Delete player from game fails, must be logged");
+            return new UnauthorizedException("Delete player from game fails, must be logged");
+        });
+        if (!game.getTeam1().getLeader().equals(loggedUser) &&
+                loggedUser.getUser().getUserId() != userId) {
+            LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
+            throw new ForbiddenException("Delete player from game fails, must be leader of match '" + key +
+                    "' or player '" + userId + "'");
         }
-        return game;
+
+        return deleteUserInGame(game, userId);
     }
 
-    @Override
-    public boolean deleteUserInGame(final String key, final long userId) {
-        Game game = findByKey(key);
+    private boolean deleteUserInGame(final Game game, final long userIdReceive) {
         for (User user : game.getTeam1().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team1", userId);
-                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
+            if (user.getUserId() == userIdReceive) {
+                LOGGER.trace("Found user: {} in team1", userIdReceive);
+                game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userIdReceive));
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
+                    userService.remove(userIdReceive);
                 }
                 return true;
             }
         }
         for (User user : game.getTeam2().getPlayers()) {
-            if (user.getUserId() == userId) {
-                LOGGER.trace("Found user: {} in team2", userId);
-                game.setTeam2(teamService.removePlayer(game.team2Name(), userId));
-                if (!premiumUserService.findById(userId).isPresent()) {
-                    userService.remove(userId);
+            if (user.getUserId() == userIdReceive) {
+                LOGGER.trace("Found user: {} in team2", userIdReceive);
+                game.setTeam2(teamService.removePlayer(game.team2Name(), userIdReceive));
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
+                    userService.remove(userIdReceive);
                 }
                 return true;
             }
         }
-        LOGGER.trace("Not found user: '{}' in match '{}'", userId, key);
+        LOGGER.trace("Not found user: '{}' in match '{}'", userIdReceive, game.getKey());
         return false;
     }
 
+    @Transactional
     @Override
     public Page<Game> findGamesPage(final LocalDateTime minStartTime, final LocalDateTime maxStartTime,
                                     final LocalDateTime minFinishTime, final LocalDateTime maxFinishTime,
@@ -173,6 +201,7 @@ public class GameServiceImpl implements GameService {
         return new Page<>(games, offset, limit);
     }
 
+    @Transactional
     @Override
     public Game modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
                        final Long minutesOfDuration, final String type, final String result,
@@ -201,6 +230,7 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Transactional
     @Override
     public boolean remove(final String key) {
         GameKey gameKey = getGameKey(key);
@@ -213,6 +243,7 @@ public class GameServiceImpl implements GameService {
         return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
     }
 
+    @Transactional
     @Override
     public Game findByKey(final String key) {
         GameKey gameKey = getGameKey(key);
@@ -223,6 +254,7 @@ public class GameServiceImpl implements GameService {
                 });
     }
 
+    @Transactional
     @Override
     public Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2) {
         Game game = findByKey(key);
@@ -240,12 +272,15 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Transactional
+    @Override
     public void createRequestToJoin(final String key, final String firstName, final String lastName,
-                                    final String email) {
+                                    final String email, final Locale locale) {
         User newUser = userService.create(firstName, lastName, email);
-        userService.sendConfirmMatchAssistance(newUser, findByKey(key), key);
+        userService.sendConfirmMatchAssistance(newUser, findByKey(key), key, locale);
     }
 
+    @Transactional
     @Override
     public List<List<Game>> getGamesThatPlay(final long userId) {
         List<List<Game>> listsOfGames = new LinkedList<>();
@@ -291,5 +326,18 @@ public class GameServiceImpl implements GameService {
         catch (Exception e) {
             throw new InvalidGameKeyException("Invalid key");
         }
+    }
+
+    private Game insertTemporalUserInGame(final String key, final User user, final Locale locale) {
+        Game game;
+        try {
+            game = insertUserInGame(key, user.getUserId());
+            userService.sendCancelOptionMatch(user, game, key, locale);
+        }
+        catch (Exception e) {
+            userService.remove(user.getUserId());
+            throw e;
+        }
+        return game;
     }
 }

@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.models.Filters;
 import ar.edu.itba.paw.models.Place;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Role;
@@ -57,6 +56,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private static final String userRole              = "ROLE_USER";
     private static final int userRoleId               = 0;
 
+    @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         PremiumUser premiumUser = em.find(PremiumUser.class, userName);
 
@@ -68,10 +68,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-
+    @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
                                         final String email, final String userName,
-                                        final String cellphone, final String birthday,
+                                        final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
                                         final byte[] file) {
@@ -88,13 +88,14 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         final String code = new BCryptPasswordEncoder().encode(userName + email + LocalDateTime.now());
         final Role role = roleDao.findRoleById(userRoleId).get();//should never be empty
         final PremiumUser newUser = new PremiumUser(basicUser.get().getFirstName(), basicUser.get().getLastName(),
-                basicUser.get().getEmail(), userName, cellphone, LocalDate.parse(birthday), new Place(country,
+                basicUser.get().getEmail(), userName, cellphone, birthday, new Place(country,
                 state, city, street), reputation, password, code, file);
         newUser.addRole(role);
         em.persist(newUser);
         return Optional.of(newUser);
     }
 
+    @Override
     public boolean remove(final String userName) {
         Optional<PremiumUser> user = findByUserName(userName);
 
@@ -105,6 +106,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return false;
     }
 
+    @Override
     public Optional<byte[]> readImage(final String userName) {
         Optional<PremiumUser> premiumUser = findByUserName(userName);
         if (premiumUser.isPresent()) {
@@ -118,9 +120,10 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return  Optional.empty();
     }
 
+    @Override
     public Optional<PremiumUser> updateUserInfo(final String newFirstName, final String newLastName,
                                                 final String newEmail,final String newUserName,
-                                                final String newCellphone, final String newBirthday,
+                                                final String newCellphone, final LocalDate newBirthday,
                                                 final String newCountry, final String newState,
                                                 final String newCity, final String newStreet,
                                                 final Integer newReputation, final String newPassword,
@@ -162,7 +165,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
                 user.setReputation(newReputation);
             }
             if (newBirthday != null) {
-                user.setBirthday(LocalDate.parse(newBirthday));
+                user.setBirthday(newBirthday);
             }
             if (newPassword != null) {
                 user.setPassword(newPassword);
@@ -178,6 +181,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
                                                 "u.email = :email", PremiumUser.class);
@@ -192,6 +196,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public Optional<PremiumUser> findById(final long userId) {
         final TypedQuery<PremiumUser> query = em.createQuery("from PremiumUser as u where " +
                 "u.user.userId = :userId", PremiumUser.class);
@@ -206,6 +211,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public boolean enableUser(final String username, final String code) {
         Optional<PremiumUser> currentUser = findByUserName(username);
 
@@ -220,6 +226,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
+    @Override
     public boolean addRole(final String username, final int roleId) {
         Optional<Role> role = roleDao.findRoleById(roleId);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -234,6 +241,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return true;
     }
 
+    @Override
     public Set<Role> getRoles(final String username) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
 
@@ -245,8 +253,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         return user.getRoles();
     }
 
-
-
+    @Override
     public boolean removeRole(final String username, final int roleId) {
         Role role = em.find(Role.class, roleId);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -266,7 +273,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
     }
 
-
+    @Override
     public boolean addSport(final String username, String sportName) {
         Sport sport = em.find(Sport.class, sportName);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -287,6 +294,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     }
 
+    @Override
     public List<Sport> getSports(String username) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
         if(premiumUser.isPresent()) {
@@ -295,6 +303,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         else return null;
     }
 
+    @Override
     public boolean removeSport(final String username, String sportName) {
         Sport sport = em.find(Sport.class, sportName);
         Optional<PremiumUser> premiumUser = findByUserName(username);
@@ -315,6 +324,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     }
 
+    @Override
     public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                        final List<String> friendUsernames, final Integer minReputation,
                                        final Integer maxReputation, final Integer minWinRate,
@@ -328,18 +338,18 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
         queryStart = queryStart.append(QUERY_PART_4);
 
-        Filters  filter = new Filters(queryStart.toString());
-        filter.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
-        filter.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
+        DaoHelper daoHelper = new DaoHelper(queryStart.toString());
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
         //TODO: winrate filter and Sort, need base migration
-        filter.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
-        filter.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
-        filter.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
+        daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        daoHelper.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
+        daoHelper.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
 
-        final TypedQuery<PremiumUser> query = em.createQuery(filter.toString() +
+        final TypedQuery<PremiumUser> query = em.createQuery(daoHelper.getQuery() +
                 (sort != null ? sort.toQuery() : ""), PremiumUser.class);
-        List<String> valueName = filter.getValueNames();
-        List<Object> values    = filter.getValues();
+        List<String> valueName = daoHelper.getValueNames();
+        List<Object> values    = daoHelper.getValues();
 
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));

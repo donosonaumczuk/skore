@@ -4,12 +4,10 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.GameDto;
@@ -17,10 +15,9 @@ import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
-import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
-import ar.edu.itba.paw.webapp.validators.PlayerValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
@@ -34,7 +31,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -45,14 +44,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
@@ -187,10 +189,10 @@ public class UserController {
         Optional<byte[]> media = premiumUserService.readImage(username);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
-            return Response.ok(getDefaultImage()).header("Content-Type", "image/*").build();
+            return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
         }
         LOGGER.trace("Returning image for {}", username);
-        return Response.ok(media.get()).header("Content-Type", "image/*").build();
+        return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
     }
 
     @DELETE
@@ -209,21 +211,23 @@ public class UserController {
     @PUT
     @Path("/{username}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody) {
+    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
+                               @Context HttpServletRequest request) {
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
         Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(), image
+                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
         );
         UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
                 .validate(newPremiumUser);
@@ -233,25 +237,27 @@ public class UserController {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createUser(@RequestBody final String requestBody) {
+    public Response createUser(@RequestBody final String requestBody, @Context HttpServletRequest request) {
         UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
-                userDto.getUsername(), userDto.getCellphone(), userDto.getBirthday(),
+                userDto.getUsername(), userDto.getCellphone(), getBirthDay(userDto),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), image
+                userDto.getReputation(), userDto.getPassword(), image, locale
         ).orElseThrow(() -> {
             LOGGER.trace("User '{}' already exist", userDto.getUsername());
             return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
         });
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
-        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser)).build();
+        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser))
+                .header("Accept-Language", locale.toString()).build();
     }
 
     @GET
@@ -297,5 +303,10 @@ public class UserController {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
         }
         return bos.toByteArray();
+    }
+
+    private LocalDate getBirthDay(UserDto userDto) {
+        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                userDto.getBirthday().getDayOfMonth());
     }
 }

@@ -82,8 +82,7 @@ public class UserValidators {
                 .put(CELLPHONE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(CELLPHONE,
                         Pattern.compile("([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])|( *)"), //TODO: add a better regex
                         "a cellphone number", log)) //TODO: maybe exists an standard pattern for cellphone
-                .put(BIRTHDAY, ValidatorFactory.fieldIsStringAndMatchesRegexOf(BIRTHDAY,
-                        Pattern.compile("[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]"), "a date", log)) //TODO: maybe exists an standard pattern for this date format
+                .put(BIRTHDAY, ValidatorFactory.fieldIsValidObjectValidatorOf(BIRTHDAY, DateValidators.creationValidatorOf(log), log))
                 .put(PASSWORD, ValidatorFactory.fieldIsStringValidatorOf(PASSWORD, log))
                 .put(IMAGE, ValidatorFactory.fieldIsStringValidatorOf(IMAGE, log)); //TODO: call the ImageValidator ?
     }

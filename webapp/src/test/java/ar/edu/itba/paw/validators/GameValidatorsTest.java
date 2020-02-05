@@ -24,7 +24,7 @@ public class GameValidatorsTest {
                                 "\t\t\"monthNumber\": 2,\n" +
                                 "\t\t\"dayOfMonth\": 28\n" +
                             "\t},\n" +
-                            "\t\"time\": {\n" +
+                                "\t\"time\": {\n" +
                                 "\t\t\"hour\": 10,\n" +
                                 "\t\t\"minute\": 9\n" +
                             "\t},\n" +

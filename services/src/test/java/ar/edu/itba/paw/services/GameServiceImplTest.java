@@ -1,7 +1,8 @@
-package ar.edu.itba.paw;
+package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.GameServiceImpl;
@@ -77,8 +78,13 @@ public class GameServiceImplTest {
     @Mock
     private PremiumUserService premiumUserService;
 
+    @Mock
+    private SessionService sessionService;
+
     @InjectMocks
     private GameServiceImpl gameService;
+
+    private PremiumUser leaderTeam1;
 
     @Before
     public void setUp() {
@@ -86,7 +92,7 @@ public class GameServiceImplTest {
 
         Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME, null);
 
-        PremiumUser leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME, LEADER_1_LASTNAME, LEADER_1_EMAIL,
+        leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME, LEADER_1_LASTNAME, LEADER_1_EMAIL,
                                                     LEADER_1_USERNAME);
         Team team1 = new Team(leaderTeam1, TEAM_1_ACRONYM, TEAMNAME_1, TEAM_1_ISTEMP, sport, null);
         team1.addPlayer(leaderTeam1.getUser());
@@ -118,8 +124,9 @@ public class GameServiceImplTest {
                 .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_1, USER_1_ID)).thenReturn(null);
         when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
+        when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGame(URL, USER_1_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_1_ID, null);
 
         Assert.assertTrue(ans);
     }
@@ -130,8 +137,9 @@ public class GameServiceImplTest {
                 .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_2, USER_2_ID)).thenReturn(null);
         when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
+        when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGame(URL, USER_2_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_2_ID, null);
 
         Assert.assertTrue(ans);
     }
@@ -140,8 +148,9 @@ public class GameServiceImplTest {
     public void deleteAUserThatIsNotInTheGame() {
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
+        when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGame(URL, USER_3_ID);
+        boolean ans = gameService.deleteUserInGameWithCode(URL, USER_3_ID, null);
 
         Assert.assertFalse(ans);
     }

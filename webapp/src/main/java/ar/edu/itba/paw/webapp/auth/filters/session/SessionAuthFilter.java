@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,7 +33,6 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionAuthFilter.class);
 
-    private static final String AUTH_HEADER      = "Authorization";
     private static final String AUTH_BEARER_TYPE = "Bearer ";
     private static final String DEFAULT_FILTER   = "/**";
 
@@ -104,7 +104,7 @@ public class SessionAuthFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     private Optional<JWTUsernamePasswordAuthToken> getTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader(AUTH_HEADER);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         JWTUsernamePasswordAuthToken ans = null;
         if (header != null && header.startsWith(AUTH_BEARER_TYPE)) {
             String authToken = header.substring(AUTH_BEARER_TYPE.length());
