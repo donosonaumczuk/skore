@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.SportDao;
-import ar.edu.itba.paw.models.Filters;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.SportSort;
 import org.springframework.stereotype.Repository;
@@ -81,14 +80,14 @@ public class SportHibernateDao implements SportDao {
     @Override
     public List<Sport> findSports(final List<String> sportNames, final Integer minQuantity,
                                   final Integer maxQuantity, final SportSort sort) {
-        Filters filter = new Filters(QUERY_START);
-        filter.addFilter(QUERY_SPORT_NAME, EQUALS, SPORT_NAME, sportNames);
-        filter.addFilter(QUERY_PLAYER_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
-        filter.addFilter(QUERY_PLAYER_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
-        final TypedQuery<Sport> query = em.createQuery(filter.toString() +
+        DaoHelper daoHelper = new DaoHelper(QUERY_START);
+        daoHelper.addFilter(QUERY_SPORT_NAME, EQUALS, SPORT_NAME, sportNames);
+        daoHelper.addFilter(QUERY_PLAYER_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
+        daoHelper.addFilter(QUERY_PLAYER_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
+        final TypedQuery<Sport> query = em.createQuery(daoHelper.getQuery() +
                 (sort != null ? sort.toQuery() : ""), Sport.class);
-        List<String> valueName = filter.getValueNames();
-        List<Object> values    = filter.getValues();
+        List<String> valueName = daoHelper.getValueNames();
+        List<Object> values    = daoHelper.getValues();
 
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));

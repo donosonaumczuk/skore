@@ -14,6 +14,7 @@ public class RoleHibernateDao implements RoleDao {
     @PersistenceContext
     private EntityManager em;
 
+    @Override
     public Optional<Role> findRoleById(final int roleId) {
            final Role returnedRole = em.find(Role.class, roleId);
 
@@ -25,6 +26,7 @@ public class RoleHibernateDao implements RoleDao {
            }
     }
 
+    @Override
     public Optional<Role> create(final String roleName, final int roleId) {
         final Role newRole = new Role(roleName, roleId);
 
@@ -36,6 +38,7 @@ public class RoleHibernateDao implements RoleDao {
         return Optional.of(newRole);
     }
 
+    @Override
     public boolean remove(final int roleId) {
         Optional<Role> role = findRoleById(roleId);
 

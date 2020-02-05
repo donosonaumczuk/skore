@@ -19,6 +19,7 @@ import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.GameValidators;
 import ar.edu.itba.paw.webapp.validators.PlayerValidators;
@@ -31,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -40,12 +42,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
@@ -57,6 +61,7 @@ public class GameController {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     public static final String BASE_PATH = "matches";
+    private static final String CODE_HEADER = "X-CODE";
 
     @Autowired
     @Qualifier("gameServiceImpl")
@@ -131,16 +136,6 @@ public class GameController {
                 .build();
     }
 
-    private LocalDateTime getStartTimeFrom(GameDto gameDto) {
-        if (!gameDto.getDate().isPresent() || !gameDto.getTime().isPresent()) {
-            return null;
-        }
-        DateDto dateDto = gameDto.getDate().get();
-        TimeDto timeDto = gameDto.getTime().get();
-        return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
-                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
-    }
-
     @GET
     @Path("/{key}")
     public Response getGame(@PathParam("key") String key) {
@@ -189,49 +184,53 @@ public class GameController {
 
     @POST
     @Path("/{key}/players/requestToJoin")
-    public Response createTemporalUser(@PathParam("key") String key, @RequestBody final String requestBody) {
+    public Response createTemporalUser(@PathParam("key") String key, @RequestBody final String requestBody,
+                                       @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         PlayerValidators.createValidatorOf("Temporal user creation fails, invalid JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-
-        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail());
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
+                null);
         //TODO catch UserAlreadyExist,
-        return Response.status(HttpStatus.CREATED.value()).build();
+        return Response.status(HttpStatus.CREATED.value()).header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString()).build();
     }
 
     @POST
     @Path("/{key}/players")
-    public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody) {
+    public Response addUserToGame(@PathParam("key") String key, @RequestBody final String requestBody,
+                                  @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         PlayerValidators.updateValidatorOf("Add player to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
-        Game game;
-        if (playerDto.getUsername() != null) {
-            game = gameService.insertPremiumUserInGame(key, playerDto.getUsername());
-        }
-        else  {
-            game = gameService.insertTemporalUserInGame(key, playerDto.getCode());
-        }
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader(CODE_HEADER), locale);
+
         //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
         //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
         //TODO maybe delete not premium user if it fails
         LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
-        return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
+        Response.ResponseBuilder response = Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+        if (playerDto.getUsername() == null) {
+            response = response.header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString());
+        }
+        return response.build();
     }
 
     @DELETE
     @Path("/{key}/players/{id}")
-    public Response removeUserFromGame(@PathParam("key") String key, @PathParam("id") long userId) {
+    public Response removeUserByIdFromGame(@PathParam("key") String key, @PathParam("id") long userId,
+                                           @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
         //TODO: maybe validate user id is positive
-        if (!gameService.deleteUserInGame(key, userId)) {
+        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CODE_HEADER))) {
             LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
             throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");
         }
-        //TODO catch TeamNotFoundException, InvalidGameKeyException
+        //TODO catch TeamNotFoundException, InvalidGameKeyException, ForbiddenException, UnauthorizedException
         LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
         return Response.noContent().build();
     }
@@ -249,5 +248,15 @@ public class GameController {
         //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException, ForbiddenException
         LOGGER.trace("Match '{}' result added successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
+    }
+
+    private LocalDateTime getStartTimeFrom(GameDto gameDto) {
+        if (!gameDto.getDate().isPresent() || !gameDto.getTime().isPresent()) {
+            return null;
+        }
+        DateDto dateDto = gameDto.getDate().get();
+        TimeDto timeDto = gameDto.getTime().get();
+        return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
+                dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
     }
 }

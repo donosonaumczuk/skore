@@ -4,6 +4,8 @@ import ar.edu.itba.paw.models.PremiumUser;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -16,11 +18,13 @@ public class JWTUtility {
 
     private final String secret;
     private final long maxValidTime;
-    private final SecureRandom secureRandom = new SecureRandom();
+    private final SecureRandom secureRandom;
 
-    public JWTUtility() {
-        this.secret = "secret"; //TODO adjust secret
-        this.maxValidTime = 86400000;//One day TODO: adjust
+    @Autowired
+    public JWTUtility(Environment environment) {
+        this.secret = environment.getProperty("token.secret");
+        this.maxValidTime = environment.getProperty("token.time", Integer.class);
+        this.secureRandom = new SecureRandom();
     }
 
     public String createToken(PremiumUser premiumUser) {

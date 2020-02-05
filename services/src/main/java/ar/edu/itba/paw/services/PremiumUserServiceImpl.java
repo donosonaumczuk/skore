@@ -13,11 +13,15 @@ import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -35,11 +39,12 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     public EmailService emailSender;
 
     @Autowired
-    private RoleDao roleDao;
-
-    @Autowired
     private BCryptPasswordEncoder bcrypt;
 
+    @Autowired
+    private Environment environment;
+
+    @Transactional
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
@@ -54,6 +59,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
@@ -65,6 +71,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
@@ -76,48 +83,52 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> create(final String firstName, final String lastName,
-                                        final String email, final String userName,
-                                        final String cellphone, final String birthday,
+                                        final String email, final String username,
+                                        final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final byte[] file) {
+                                        final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
 
-        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
+        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, username,
                 cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file);
         LOGGER.trace("Sending confirmation email to {}", email);
-        user.ifPresent(this::sendConfirmationMail);
+        user.ifPresent(premiumUser -> emailSender.sendConfirmAccount(premiumUser, getConfirmationUrl(premiumUser), locale));
         return user;
     }
 
+    @Transactional
     @Override
     public boolean remove(final String userName) {
         LOGGER.trace("Looking for user with username: {} to remove", userName);
         boolean returnedValue = premiumUserDao.remove(userName);
         if (returnedValue) {
             LOGGER.trace("{} removed", userName);
-        } else {
+        }
+        else {
             LOGGER.trace("{} wasn't removed", userName);
         }
         return returnedValue;
     }
 
+    @Transactional
     @Override
     public Optional<byte[]> readImage(final String userName) {
         return premiumUserDao.readImage(userName);
     }
 
+    @Transactional
     @Override
-    public Optional<PremiumUser> updateUserInfo(
-            final String username, final String newFirstName, final String newLastName, final String newEmail,
-            final String newCellphone, final String newBirthday, final String newCountry, final String newState,
-            final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
-            final String oldPassword, final byte[] file
-    ) {
+    public Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
+                                                final String newEmail, final String newCellphone, final LocalDate newBirthday,
+                                                final String newCountry, final String newState, final String newCity,
+                                                final String newStreet, final int newReputation, final String newPassword,
+                                                final String oldPassword, final byte[] file, final Locale locale) {
 
         LOGGER.trace("Looking for user with username: {} to update", username);
 
@@ -135,12 +146,13 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 newCity, newStreet, newReputation, encodedPassword, file, username);
 
         if (user.isPresent() && newEmail != null) {
-            sendConfirmationMail(user.get());
+            emailSender.sendConfirmAccount(user.get(), getConfirmationUrl(user.get()), locale);
         }
 
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<Boolean> enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
@@ -161,6 +173,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return Optional.of(true);
     }
 
+    @Transactional
     @Override
     public boolean confirmationPath(String path) { //TODO: move to front
         String dataPath = path.replace("/confirm/", "");
@@ -173,15 +186,19 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         }
 
         String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code).get();
+        return enableUser(username, code).get();//TODO check
     }
 
-    private String generatePath(PremiumUser user) {
-        return "confirm/" + user.getUserName() + "&" + user.getCode();
-    }
-
-    public void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
+    @Transactional
+    @Override
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit) {
+        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
+                maxReputation, minWinRate, maxWinRate, sort);
+        return new Page<>(users, offset, limit);
     }
 
     private double calculateWinRate(final PremiumUser user) {
@@ -228,14 +245,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return -1;
     }
 
-    @Override
-    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
-                                           final List<String> friendUsernames, final Integer minReputation,
-                                           final Integer maxReputation, final Integer minWinRate,
-                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                           final Integer limit) {
-        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
-                maxReputation, minWinRate, maxWinRate, sort);
-        return new Page<>(users, offset, limit);
+    private String getConfirmationUrl(PremiumUser user) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter formatter = new Formatter(stringBuilder);
+        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+                user.getUserName() + "&" + user.getCode());
+        return stringBuilder.toString();
     }
 }
