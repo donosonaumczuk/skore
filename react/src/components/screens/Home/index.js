@@ -128,8 +128,6 @@ class HomeContainer extends Component {
     }
 
     joinMatchLogged = async (match, userId) => {
-        console.log("join match logged: ", match.title);
-        //TODO implement
         if (this.mounted) {
             this.setState({ executing: true });
         }
@@ -142,11 +140,12 @@ class HomeContainer extends Component {
             if (this.mounted) {
                 this.setState({ matches: newMatches, executing: false });
             }
+            this.props.history.push(`/match/${match.key}`);
         }
     }
 
     joinMatchAnonymous = (match) => {
-        console.log("join match annonymous: ", match.title);
+        console.log("join match annonymous: ", match.title); //TODO remove
         //TODO implement
     }
     
@@ -161,13 +160,25 @@ class HomeContainer extends Component {
         }
     }
 
-    cancelMatchLogged = (match, userId) => {
-        console.log("cancel match logged: ", match.title);
-        //TODO implement
+    cancelMatchLogged = async (match, userId) => {
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await MatchService.cancelMatchWithAccount(match.key, userId);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status });
+        }
+        else {
+            const newMatches = Utils.replaceWithNewMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, executing: false });
+            }
+            this.props.history.push(`/match/${match.key}`);
+        }
     }
 
     cancelMatchAnonymous = (match) => {
-        console.log("cancel match annonymous: ", match.title);
+        console.log("cancel match annonymous: ", match.title);//TODO remove
         //TODO implement
     }
     

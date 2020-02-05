@@ -109,8 +109,23 @@ const createMatch = async match => {
 
 const joinMatchWithAccount = async (matchKey, userId) => {
     try {
-        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players`, userId);
-        console.log(res);
+        const user = { "userId": userId };
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players`, user);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const cancelMatchWithAccount = async (matchKey, userId) => {
+    try {
+        const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`);
         return res.data;
     }
     catch (err) {
@@ -146,6 +161,7 @@ const MatchService = {
     getMatchByKey: getMatchByKey,
     createMatch: createMatch,
     joinMatchWithAccount: joinMatchWithAccount,
+    cancelMatchWithAccount: cancelMatchWithAccount,
     deleteMatch: deleteMatch
 };
 
