@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
-import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -15,11 +13,15 @@ import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -37,11 +39,12 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     public EmailService emailSender;
 
     @Autowired
-    private RoleDao roleDao; //TODO: This is unused. Maybe an endpoint only for admin users to make other users admin
-
-    @Autowired
     private BCryptPasswordEncoder bcrypt;
 
+    @Autowired
+    private Environment environment;
+
+    @Transactional
     @Override
     public PremiumUser findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
@@ -56,6 +59,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return user;
     }
 
+    @Transactional
     @Override
     public PremiumUser findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
@@ -65,6 +69,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         });
     }
 
+    @Transactional
     @Override
     public PremiumUser findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
@@ -74,13 +79,14 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         });
     }
 
+    @Transactional
     @Override
     public PremiumUser create(final String firstName, final String lastName,
                                         final String email, final String userName,
                                         final String cellphone, final String birthday,
                                         final String country, final String state, final String city,
                                         final String street, final int reputation, final String password,
-                                        final byte[] file) {
+                                        final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Attempting to create user: {}", userName);
         PremiumUser user = premiumUserDao.create(
@@ -91,10 +97,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             return UserAlreadyExistException.ofUsername(userName);
         });
         LOGGER.trace("Sending confirmation email to {}", email);
-        sendConfirmationMail(user);
+        emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         return user;
     }
 
+    @Transactional
     @Override
     public boolean remove(final String userName) {
         LOGGER.trace("Looking for user with username: {} to remove", userName);
@@ -107,17 +114,19 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return removed;
     }
 
+    @Transactional
     @Override
     public Optional<byte[]> readImage(final String userName) {
         return premiumUserDao.readImage(userName);
     }
 
+    @Transactional
     @Override
     public PremiumUser updateUserInfo(
             final String username, final String newFirstName, final String newLastName, final String newEmail,
             final String newCellphone, final String newBirthday, final String newCountry, final String newState,
             final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
-            final String oldPassword, final byte[] file
+            final String oldPassword, final byte[] file, final Locale locale
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
 
@@ -138,12 +147,13 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         });
 
         if (newEmail != null) {
-            sendConfirmationMail(user);
+            emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         }
 
         return user;
     }
 
+	@Transactional
     @Override
     public boolean enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
@@ -158,21 +168,29 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return true;
     }
 
+    @Transactional
     @Override
     public boolean confirmationPath(String path) { //TODO: move to front
         String dataPath = path.replace("/confirm/", "");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
-        String code = dataPath.substring(splitIndex + 1);
+		String code = dataPath.substring(splitIndex + 1);
         return enableUser(username, code);
     }
 
     private String generatePath(PremiumUser user) {
-        return "confirm/" + user.getUserName() + "&" + user.getCode();
-    }
+        return "confirm/" + user.getUserName() + "&" + user.getCode();    }
 
-    public void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
+    @Transactional
+    @Override
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit) {
+        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
+                maxReputation, minWinRate, maxWinRate, sort);
+        return new Page<>(users, offset, limit);
     }
 
     private double calculateWinRate(final PremiumUser user) {
@@ -219,14 +237,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return -1;
     }
 
-    @Override
-    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
-                                           final List<String> friendUsernames, final Integer minReputation,
-                                           final Integer maxReputation, final Integer minWinRate,
-                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                           final Integer limit) {
-        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
-                maxReputation, minWinRate, maxWinRate, sort);
-        return new Page<>(users, offset, limit);
+    private String getConfirmationUrl(PremiumUser user) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter formatter = new Formatter(stringBuilder);
+        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+                user.getUserName() + "&" + user.getCode());
+        return stringBuilder.toString();
     }
 }

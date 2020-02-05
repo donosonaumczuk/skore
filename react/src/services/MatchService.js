@@ -42,7 +42,6 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
     }
 }
 
-
 const getMatchesToJoin =  async (username, offset, limit, filters) => {
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     let paramsUrl =  buildUrlFromParamQueries(paramObject);
@@ -57,11 +56,33 @@ const getMatchesToJoin =  async (username, offset, limit, filters) => {
     }
 }
 
+const getMatchByKey = async matchKey => {
+    try {
+        const res = await api.get(`${MATCHES_ENDPOINT}/${matchKey}`);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
+const createMatch = async match => {
+    try {
+        const res = await api.post(`${MATCHES_ENDPOINT}`, match);
+        return res.data;
+    }
+    catch (err) {
+        return { status: err.response.status }
+    }
+}
+
 const MatchService = {
     getMatches: getMatches,
     getMatchesCreatedBy: getMatchesCreatedBy,
     getMatchesJoinedBy: getMatchesJoinedBy,
-    getMatchesToJoin: getMatchesToJoin
+    getMatchesToJoin: getMatchesToJoin,
+    getMatchByKey: getMatchByKey,
+    createMatch: createMatch
 };
 
 export default MatchService;

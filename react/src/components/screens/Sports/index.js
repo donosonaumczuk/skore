@@ -55,7 +55,6 @@ class SportsContainer extends Component {
                 <Sports sports={sports} getSports={this.getSports} hasMore={hasMore} />
             );
         }
-
     }
 
     componentWillUnmount = () => {

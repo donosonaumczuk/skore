@@ -15,7 +15,7 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
-    private String birthday;
+    private DateDto birthday;
     private String cellphone;
     private PlaceDto home;
     private String password;
@@ -34,7 +34,7 @@ public class UserDto {
         this.email = premiumUser.getEmail();
         this.firstName = premiumUser.getUser().getFirstName();
         this.lastName = premiumUser.getUser().getLastName();
-        this.birthday = premiumUser.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //TODO: be consistent!
+        this.birthday = DateDto.from(premiumUser.getBirthday());
         this.cellphone = premiumUser.getCellphone();
         this.home = PlaceDto.from(premiumUser.getHome());
         this.password = null;
@@ -73,7 +73,7 @@ public class UserDto {
         return lastName;
     }
 
-    public String getBirthday() {
+    public DateDto getBirthday() {
         return birthday;
     }
 

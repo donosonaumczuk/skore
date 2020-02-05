@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.TeamNotCreatedException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
-import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -13,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -35,6 +35,7 @@ public class TeamServiceImpl implements TeamService {
 
     }
 
+    @Transactional
     @Override
     public Team findByTeamName(final String teamName) {
         Optional<Team> team = teamDao.findByTeamName(teamName);
@@ -42,6 +43,7 @@ public class TeamServiceImpl implements TeamService {
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
+    @Transactional
     @Override
     public Team create(final String leaderName, final long leaderId,
                        final String acronym, final String teamName,
@@ -92,11 +94,13 @@ public class TeamServiceImpl implements TeamService {
         return createTempTeam("2.", leaderName, leaderId, sportName);
     }
 
+    @Transactional
     @Override
     public boolean remove(final String teamName) {
         return teamDao.remove(teamName);
     }
 
+    @Transactional
     @Override
     public Team addPlayer(final String teamName, final long userId) {
         Optional<Team> team = teamDao.addPlayer(teamName, userId);
@@ -104,6 +108,7 @@ public class TeamServiceImpl implements TeamService {
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
+    @Transactional
     @Override
     public Team removePlayer(final String teamName, final long userId) {
         Optional<Team> team = teamDao.removePlayer(teamName, userId);
@@ -111,6 +116,7 @@ public class TeamServiceImpl implements TeamService {
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
     }
 
+    @Transactional
     @Override
     public Team updateTeamInfo(final String newTeamName, final String newAcronym,
                                final String newLeaderName, final String newSportName,
@@ -121,7 +127,7 @@ public class TeamServiceImpl implements TeamService {
         return team.orElseThrow(() -> new TeamNotFoundException("Team " + newTeamName + " does not exists"));
     }
 
-
+    @Transactional
     @Override
     public Map<User, PremiumUser> getAccountsMap(Team team) {
         Map<User, PremiumUser> accountsList = new HashMap<>();

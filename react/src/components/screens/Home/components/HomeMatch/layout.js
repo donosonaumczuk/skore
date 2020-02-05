@@ -12,7 +12,7 @@ import MatchAvailability from '../../../../match/MatchAvailability';
 const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick }) => {
     const address = currentMatch.location;
     return (<div>
-        <div className="row p-2 mt-2 match-card rounded-border" onClick ={() => handleClick()}>
+        <div className="row p-2 mt-2 match-card rounded-border" onClick ={() => handleClick(currentMatch.key)}>
             <div className="col">
                 <div className="row mb-4">
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
@@ -22,7 +22,7 @@ const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick }
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
-                <MatchDuration durationInMinutes={currentMatch.durationInMinutes} />
+                <MatchDuration durationInMinutes={currentMatch.minutesOfDuration} />
                 <MatchLocation address={address} />
             </div>
         </div>

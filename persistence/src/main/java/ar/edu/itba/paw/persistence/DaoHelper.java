@@ -1,13 +1,12 @@
-package ar.edu.itba.paw.models;
+package ar.edu.itba.paw.persistence;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Filters {
+public class DaoHelper {
     private StringBuilder start;
     private List<String> valueNames;
     private List<Object>  values;
-    private boolean isFirst;
 
     static private String AND            = " AND ";
     static private String OR             = " OR ";
@@ -31,9 +30,8 @@ public class Filters {
     static private String FINISH_CONDITION_1 = "(games.result IS NOT NULL)";
     static private String FINISH_CONDITION_2 = "(games.result IS NULL)";
 
-    public Filters(String start) {
+    public DaoHelper(String start) {
         this.start      = new StringBuilder(start);
-        this.isFirst    = true;
         this.valueNames = new LinkedList<>();
         this.values     = new LinkedList<>();
     }
@@ -74,11 +72,11 @@ public class Filters {
                            String objectRepresentation, int index, String valueName, String value) {
         if (value != null && !value.isEmpty()) {
             valueNames.add(valueName + index);
-            if (!isCaseSensitive) {
+            if (isCaseSensitive) {
                 values.add(value);
             }
             else {
-                values.add('%' + value + '%');
+                values.add('%' + escapeCharacter(value) + '%');
             }
             if (!isCaseSensitive) {
                 start = start.append(LOWER).append(OPEN_PARENTHESE);
@@ -150,7 +148,7 @@ public class Filters {
         }
     }
 
-    public String toString() {
+    public String getQuery() {
         return start.toString();
     }
 
@@ -173,5 +171,18 @@ public class Filters {
                 start = start.append(FINISH_CONDITION_2);
             }
         }
+    }
+
+    public String escapeCharacter(String s) {
+        final StringBuilder escapedValue = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            final char c = s.charAt(i);
+            if (c == '\\' || c == '%' || c == '_') {
+                escapedValue.append('\\');
+            }
+            escapedValue.append(c);
+        }
+
+        return escapedValue.toString();
     }
 }

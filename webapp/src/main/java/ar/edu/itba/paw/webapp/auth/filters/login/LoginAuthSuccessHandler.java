@@ -41,14 +41,15 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         LOGGER.info("{} has been successfully authenticate", authentication.getName());
 
-        PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName());
+        PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName()); //TODO: if exception?
 
         httpServletResponse.addHeader(TOKEN_HEADER, jwtUtility.createToken(premiumUser));
         httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         String username = premiumUser.getUserName();
+        long userId = premiumUser.getUser().getUserId();
         boolean isAdmin = sessionService.isAdmin();
-        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(username, isAdmin));
+        new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), AuthDto.from(username, userId, isAdmin));
     }
 }

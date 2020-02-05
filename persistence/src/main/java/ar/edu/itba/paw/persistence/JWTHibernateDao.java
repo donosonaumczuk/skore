@@ -29,13 +29,6 @@ public class JWTHibernateDao implements JWTDao {
         return jwt;
     }
 
-    private Optional<JWT> findByToken(String jwtoken) {
-        final TypedQuery<JWT> query = em.createQuery("FROM JWT WHERE token = :token", JWT.class);
-        query.setParameter("token", jwtoken);
-        final List<JWT> list = query.getResultList();
-        return list.stream().findFirst();
-    }
-
     @Override
     public void delete(JWT jwt) {
         if (jwt == null) {
@@ -48,5 +41,12 @@ public class JWTHibernateDao implements JWTDao {
     public List<JWT> getAll() {
         final TypedQuery<JWT> query = em.createQuery("FROM JWT", JWT.class);
         return query.getResultList();
+    }
+
+    private Optional<JWT> findByToken(String jwtoken) {
+        final TypedQuery<JWT> query = em.createQuery("FROM JWT WHERE token = :token", JWT.class);
+        query.setParameter("token", jwtoken);
+        final List<JWT> list = query.getResultList();
+        return list.stream().findFirst();
     }
 }

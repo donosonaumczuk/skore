@@ -155,7 +155,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         //exercise class
         Optional<PremiumUser> returnedValue = premiumUserDao.create(notInsertedUser.getUser().getFirstName(),
                 notInsertedUser.getUser().getLastName(), "newEmail", "newUserName",
-                notInsertedUser.getCellphone(), "1994-12-26", notInsertedUser.getHome().getCountry(),
+                notInsertedUser.getCellphone(), LocalDate.parse("1994-12-26"), notInsertedUser.getHome().getCountry(),
                 notInsertedUser.getHome().getState(), notInsertedUser.getHome().getCity(),
                 notInsertedUser.getHome().getStreet(), notInsertedUser.getReputation(), notInsertedUser.getPassword(),
                 null);
@@ -203,7 +203,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         //exercise class
         premiumUserDao.updateUserInfo("newFirstName", user1.getUser().getLastName(),
                 "newEmail", user1.getUserName(), user1.getCellphone(),
-                user1.getBirthday().toString(), user1.getHome().getCountry(),
+                user1.getBirthday(), user1.getHome().getCountry(),
                 user1.getHome().getState(), user1.getHome().getCity(),
                 user1.getHome().getStreet(), user1.getReputation(),
                 "newPassword",null, user1.getUserName());

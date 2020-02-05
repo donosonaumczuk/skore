@@ -24,12 +24,14 @@ public class UserHibernateDao implements UserDao {
         }
     }
 
+    @Override
     public Optional<User> create(final String firstName, final String lastName, final String email) {
         final User newUser = new User(firstName, lastName, email);
         em.persist(newUser);
         return Optional.of(newUser);
     }
 
+    @Override
     public boolean remove(final long userId) {
         Optional<User> user = findById(userId);
 
@@ -40,6 +42,7 @@ public class UserHibernateDao implements UserDao {
         return false;
     }
 
+    @Override
     public Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
                                               final String newLastName, final String newEmail) {
         Optional<User> user = findById(userId);
@@ -56,6 +59,7 @@ public class UserHibernateDao implements UserDao {
         return Optional.empty();
     }
 
+    @Override
     public Optional<User> updateFirstName(final long userId, final String newFirstName) {
         Optional<User> user = findById(userId);
 
@@ -70,6 +74,7 @@ public class UserHibernateDao implements UserDao {
         return Optional.empty();
     }
 
+    @Override
     public Optional<User> updateLastName(final long userId, final String newLastName) {
         Optional<User> user = findById(userId);
 
@@ -84,6 +89,7 @@ public class UserHibernateDao implements UserDao {
         return Optional.empty();
     }
 
+    @Override
     public Optional<User> updateEmail(final long userId, final String newEmail) {
         Optional<User> user = findById(userId);
 
