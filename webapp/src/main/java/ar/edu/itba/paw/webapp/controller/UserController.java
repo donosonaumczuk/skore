@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.QueryList;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
@@ -112,13 +113,14 @@ public class UserController {
     @GET
     public Response getUsers(@QueryParam("minReputation") String minReputation,
                              @QueryParam("maxReputation") String maxReputation,
-                             @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
-                             @QueryParam("friends") List<String> friendsUsernames,
-                             @QueryParam("sports") List<String> sportsLiked,
-                             @QueryParam("usernames") List<String> usernames,
+                             @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
+                             @QueryParam("friends") QueryList friendsUsernames,
+                             @QueryParam("sports") QueryList sportsLiked,
+                             @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
-        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames, sportsLiked, friendsUsernames,
+        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames.getQueryValues(),
+                sportsLiked.getQueryValues(), friendsUsernames.getQueryValues(),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
@@ -139,29 +141,30 @@ public class UserController {
                                  @QueryParam("maxQuantity") String maxQuantity,
                                  @QueryParam("minFreePlaces") String minFreePlaces,
                                  @QueryParam("maxFreePlaces") String maxFreePlaces,
-                                 @QueryParam("country") List<String> countries,
-                                 @QueryParam("state") List<String> states,
-                                 @QueryParam("city") List<String> cities,
-                                 @QueryParam("sport") List<String> sports,
-                                 @QueryParam("type") List<String> types,
-                                 @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
-                                 @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
-                                 @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
-                                 @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
+                                 @QueryParam("country") QueryList countries,
+                                 @QueryParam("state") QueryList states,
+                                 @QueryParam("city") QueryList cities,
+                                 @QueryParam("sport") QueryList sports,
+                                 @QueryParam("type") QueryList types,
+                                 @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
+                                 @QueryParam("withoutPlayers") QueryList usernamesPlayersNotInclude,
+                                 @QueryParam("createdBy") QueryList usernamesCreatorsInclude,
+                                 @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
                                  @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                                  @QueryParam("hasResult") String hasResult) {
         if (usernamesPlayersInclude == null) {
-            usernamesPlayersInclude = new ArrayList<>();
+            usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
-        usernamesPlayersInclude.add(username);
+        usernamesPlayersInclude.getQueryValues().add(username);
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types.getQueryValues(), sports.getQueryValues(),
                 QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
-                countries, states, cities, QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude,
-                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude,
+                countries.getQueryValues(), states.getQueryValues(), cities.getQueryValues(),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                usernamesPlayersInclude.getQueryValues(), usernamesPlayersNotInclude.getQueryValues(),
+                usernamesCreatorsInclude.getQueryValues(), usernamesCreatorsNotInclude.getQueryValues(),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));

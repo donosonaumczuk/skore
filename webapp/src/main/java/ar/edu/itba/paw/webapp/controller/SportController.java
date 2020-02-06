@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Page;
+import ar.edu.itba.paw.models.QueryList;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.SportSort;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
@@ -81,12 +82,12 @@ public class SportController {
     }
 
     @GET
-    public Response getAllSports(@QueryParam("sportName") List<String> sportNames,
+    public Response getAllSports(@QueryParam("sportName") QueryList sportNames,
                                  @QueryParam("minQuantity") String minQuantity,
                                  @QueryParam("maxQuantity") String maxQuantity,
                                  @QueryParam("limit") String limit, @QueryParam("offSet") String offset,
                                  @QueryParam("sortBy") SportSort sort, @Context UriInfo uriInfo) {
-        Page<SportDto> page = sportService.findSportsPage(sportNames,
+        Page<SportDto> page = sportService.findSportsPage(sportNames.getQueryValues(),
                 QueryParamsUtils.positiveIntegerOrNull(minQuantity),
                 QueryParamsUtils.positiveIntegerOrNull(maxQuantity), sort, QueryParamsUtils.positiveIntegerOrNull(limit),
                 QueryParamsUtils.positiveIntegerOrNull(offset))
