@@ -89,7 +89,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                                         final String email, final String username,
                                         final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
-                                        final String street, final int reputation, final String password,
+                                        final String street, final Integer reputation, final String password,
                                         final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");

@@ -273,7 +273,7 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
         * TODO|the code is receive in the mail.*/
         Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {

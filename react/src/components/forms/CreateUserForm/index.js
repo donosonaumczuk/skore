@@ -59,19 +59,22 @@ class CreateUserFormContainer extends Component {
 
     getBirthdayWithCorrectFormat = birthday => {
         const birthdayInfo = birthday.split("/");
-        let newBirthday = `${birthdayInfo[2]}-${birthdayInfo[0]}-${birthdayInfo[1]}`;
+        let newBirthday = {
+            "year": parseInt(birthdayInfo[2]),
+            "monthNumber": parseInt(birthdayInfo[0]),
+            "dayOfMonth":  parseInt(birthdayInfo[1])
+        }
         return newBirthday;
     }
 
     loadUser = (values, image) => {
         const birthday = this.getBirthdayWithCorrectFormat(values.birthday);
-        const user = {
+        let user = {
             "username": values.username,
             "password": values.password,
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email,
-            "image": image ? image.data : null,
             "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday,
             "home": {
@@ -81,6 +84,10 @@ class CreateUserFormContainer extends Component {
                 "street": this.state.street
             }
         };
+        if (image) {
+            user = { ...user, "image":image.data };
+        }
+        console.log(user);
         return user;
     }
 

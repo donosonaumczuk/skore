@@ -99,7 +99,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RegexRequestMatcher("/api/auth/logout/?", "POST"),
                 new RegexRequestMatcher("/api/users/\\w+/?", "PUT"),
                 new RegexRequestMatcher("/api/users/\\w+/?", "DELETE"),
-                new RegexRequestMatcher("/api/users/\\w+/verification/?", "POST"), //TODO maybe it is not needed
                 new RegexRequestMatcher("/api/matches/?", "POST"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "PUT"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "DELETE"),

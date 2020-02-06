@@ -97,9 +97,7 @@ class App extends Component {
                             <Sports />
                         </Route>
                         <Route exact path="/signUp" component={CreateUserForm} />
-                        <Route exact path="/confirmAccount">
-                            <ConfirmAccount />
-                        </Route>
+                        <Route exact path="/confirmAccount/:code" component={ConfirmAccount} />
                         <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} />
                         </Route>
@@ -121,7 +119,6 @@ class App extends Component {
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />
                         <Route exact path="/confirmMatch" component={ConfirmMatch} />
                         <Route exact path="/cancelMatch" component={CancelMatch} />
-
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>
