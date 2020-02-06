@@ -150,10 +150,8 @@ class HomeContainer extends Component {
     }
 
     joinMatchAnonymous = (match) => {
-        console.log("join match annonymous: ", match.title); //TODO remove
         this.props.history.push(`/?matchKey=${match.key}`);
         this.setState({ anonymous: true, currentMatch: match });
-        //TODO implement
     }
     
     cancelMatch = (e, match) => {
