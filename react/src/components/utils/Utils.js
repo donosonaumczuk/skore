@@ -24,8 +24,8 @@ const buildUrlFromParamQueriesAndTab = (params, currentTab) => {
             params = { ...params, tab: `${currentTab}` };
         }
     }
-    const url = buildUrlFromParamQueries(params);
-    return url;
+    let url = buildUrlFromParamQueries(params);
+    return url.replace(/ /g, "+");
 }
 
 const removeUnknownHomeFilters = filters => {

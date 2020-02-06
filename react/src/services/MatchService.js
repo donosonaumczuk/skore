@@ -1,78 +1,98 @@
 import api from './../config/Api';
 import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
-import { buildUrlFromParamQueries, createObjectFromFiltersAndPaging } from './Util';
-import { SC_TIME_OUT } from './constants/StatusCodesConstants';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
+import { SC_TIME_OUT, SC_CLIENT_CLOSED_REQUEST } from './constants/StatusCodesConstants';
 
-const getMatches = async (offset, limit, filters) => {
+const getMatches = async (offset, limit, filters, token) => {
+    const config = { cancelToken: token };
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    const paramsUrl =  buildUrlFromParamQueries(paramObject);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {
         if (err.response) {
             return { status: err.response.status };
+                
         }
         else {
-            return { status: SC_TIME_OUT };
+            if (err.isAxiosError) {
+                return { status: SC_TIME_OUT };
+            }
+            return { status: SC_CLIENT_CLOSED_REQUEST };
         }
     }
 }
 
-const getMatchesCreatedBy =  async (username, offset, limit, filters) => {
+const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => {
+    const config = { cancelToken: token };
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&createdBy=${username}`:
                                         `?createdBy=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {
         if (err.response) {
             return { status: err.response.status };
+                
         }
         else {
-            return { status: SC_TIME_OUT };
+            if (err.isAxiosError) {
+                return { status: SC_TIME_OUT };
+            }
+            return { status: SC_CLIENT_CLOSED_REQUEST };
         }
     }
 }
 
-const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
+const getMatchesJoinedBy =  async (username, offset, limit, filters, token) => {
+    const config = { cancelToken: token };
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withPlayers=${username}`:
                                         `?withPlayers=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {
         if (err.response) {
             return { status: err.response.status };
+                
         }
         else {
-            return { status: SC_TIME_OUT };
+            if (err.isAxiosError) {
+                return { status: SC_TIME_OUT };
+            }
+            return { status: SC_CLIENT_CLOSED_REQUEST };
         }
     }
 }
 
-const getMatchesToJoin =  async (username, offset, limit, filters) => {
+const getMatchesToJoin =  async (username, offset, limit, filters, token) => {
+    const config = { cancelToken: token };
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamQueries(paramObject);
+    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withoutPlayers=${username}` :
                                         `?withoutPlayers=${username}`;
     try {
-        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`);
+        const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {
         if (err.response) {
             return { status: err.response.status };
+                
         }
         else {
-            return { status: SC_TIME_OUT };
+            if (err.isAxiosError) {
+                return { status: SC_TIME_OUT };
+            }
+            return { status: SC_CLIENT_CLOSED_REQUEST };
         }
     }
 }

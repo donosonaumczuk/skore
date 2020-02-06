@@ -19,6 +19,11 @@ const buildUrlFromParamQueries = params => {
     return paramsUrl;
 }
 
+const buildUrlFromParamsWithCommas = params => {
+    let url = buildUrlFromParamQueries(params);
+    return url = url.replace(/ /g, ",");
+}
+
 const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     let paramObject = {
         "offset": offset,
@@ -35,5 +40,6 @@ const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
 
 export {
     buildUrlFromParamQueries,
+    buildUrlFromParamsWithCommas,
     createObjectFromFiltersAndPaging
 };

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import Axios from 'axios';
 import PropTypes from 'prop-types';
-import Spinner from 'react-spinkit';
+import Spinner from 'react-spinkit'
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
+import { SC_CLIENT_CLOSED_REQUEST } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -45,7 +47,8 @@ class HomeContainer extends Component {
             total: QUERY_QUANTITY,
             hasMore: true,
             anonymous: false,
-            currentMatch: null
+            currentMatch: null,
+            currentSource: null
         };
     }
 
@@ -86,7 +89,13 @@ class HomeContainer extends Component {
 
     updateMatches = response => {
         if (response.status) {
-            this.setState({ status: response.status });
+            if (response.status !== SC_CLIENT_CLOSED_REQUEST) {
+                console.log("status: ", response.status);
+                this.setState({ status: response.status });
+            }
+            else {
+                console.log("match canceled");
+            }
         }
         else {
             const matches = response.matches;
@@ -99,22 +108,41 @@ class HomeContainer extends Component {
         }
     }
 
+    cancelRequestIfPending = () => {
+        if (this.state.currentSource) {
+            this.state.currentSource.cancel();
+            if (this.mounted) {
+                this.setState({ currentSource: null });
+            }
+        }
+    }
+
+    getSourceToken = () => {
+        const newSource = Axios.CancelToken.source();
+        if (this.mounted) {
+            this.setState({ currentSource: newSource });
+        }
+        return newSource.token;
+    }
+
     getMatches = async () => {
         let response;
         const { currentUser } = this.props;
         const { offset, total, currentTab, filters } = this.state;
         const newFilters = Utils.removeUnknownHomeFilters(filters);
+        this.cancelRequestIfPending();
+        const token = this.getSourceToken();
         if (currentTab === NO_TAB) {
-            response = await MatchService.getMatches(offset, total, newFilters);
+            response = await MatchService.getMatches(offset, total, newFilters, token);
         }
         else if (currentTab === TO_JOIN_TAB) {
-            response = await MatchService.getMatchesToJoin(currentUser, offset, total, newFilters);
+            response = await MatchService.getMatchesToJoin(currentUser, offset, total, newFilters, token);
         }
         else if (currentTab === JOINED_TAB) {
-            response = await MatchService.getMatchesJoinedBy(currentUser, offset, total, newFilters);
+            response = await MatchService.getMatchesJoinedBy(currentUser, offset, total, newFilters, token);
         }
         else if (currentTab === CREATED_TAB) {
-            response = await MatchService.getMatchesCreatedBy(currentUser, offset, total, newFilters);
+            response = await MatchService.getMatchesCreatedBy(currentUser, offset, total, newFilters, token);
         }
         if (this.mounted) {
             this.updateMatches(response);
