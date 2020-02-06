@@ -37,7 +37,7 @@ public class SportServiceImpl implements SportService {
                         final byte[] file) {
         return sportDao.create(sportName, playerQuantity, displayName, file).orElseThrow(() -> {
             LOGGER.error("Sport creation failed, sport '{}' already exist", sportName);
-            return SportAlreadyExistException.ofSportId(sportName);
+            return SportAlreadyExistException.ofId(sportName);
         });
     }
 
@@ -47,7 +47,7 @@ public class SportServiceImpl implements SportService {
         LOGGER.trace("Trying to modify sport '{}'", sportName);
         return sportDao.modifySport(sportName, displayName, playerQuantity, file).orElseThrow(() -> {
             LOGGER.error("Modify sport failed, sport '{}' not found", sportName);
-            return SportNotFoundException.ofSportId(sportName);
+            return SportNotFoundException.ofId(sportName);
         });
     }
 

@@ -8,7 +8,7 @@ public class SportAlreadyExistException extends EntityAlreadyExistsException {
         super(ENTITY_NAME, sportId);
     }
 
-    public static SportAlreadyExistException ofSportId(final String sportId) {
+    public static SportAlreadyExistException ofId(final String sportId) {
         return new SportAlreadyExistException(sportId);
     }
 }

@@ -5,10 +5,11 @@ import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface TeamService {
 
-    Team findByTeamName(final String teamName);
+    Optional<Team> findByTeamName(final String teamName);
 
     Team create(final String leaderName, final long leaderId,
                 final String acronym, final String teamName,

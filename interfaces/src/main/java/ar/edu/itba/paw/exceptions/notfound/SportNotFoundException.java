@@ -8,7 +8,7 @@ public class SportNotFoundException extends EntityNotFoundException {
         super(ENTITY_NAME, sportId);
     }
 
-    public static SportNotFoundException ofSportId(final String sportId) {
+    public static SportNotFoundException ofId(final String sportId) {
         return new SportNotFoundException(sportId);
     }
 }

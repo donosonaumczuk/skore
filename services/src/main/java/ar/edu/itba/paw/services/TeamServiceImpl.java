@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.TeamNotCreatedException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
-import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -38,10 +37,8 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional
     @Override
-    public Team findByTeamName(final String teamName) {
-        Optional<Team> team = teamDao.findByTeamName(teamName);
-
-        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
+    public Optional<Team> findByTeamName(final String teamName) {
+        return teamDao.findByTeamName(teamName);
     }
 
     @Transactional
@@ -49,18 +46,17 @@ public class TeamServiceImpl implements TeamService {
     public Team create(final String leaderName, final long leaderId,
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName) {
-
-        Optional<Team> team = Optional.empty();
+        Optional<Team> team;
         try {
             team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
                     sportName, null);
-
-        }catch (IOException e) {
-            LOGGER.error("image corrupted\n");
+        } catch (IOException e) {
+            //TODO: heeeeey! we must throw an special exception here (maybe IOException and map then to a 500 in controller?)
+            //TODO: why image always null? why this exception if image is always null, why not remove the file param?
+            LOGGER.error("Image corrupted\n");
+            team = Optional.empty();
         }
-
-        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
-
+        return team.orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
 
     private Team createTempTeam(final String start, final String leaderName, final long leaderId,
@@ -104,17 +100,15 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     @Override
     public Team addPlayer(final String teamName, final long userId) {
-        Optional<Team> team = teamDao.addPlayer(teamName, userId);
-
-        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
+        return teamDao.addPlayer(teamName, userId)
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
 
     @Transactional
     @Override
     public Team removePlayer(final String teamName, final long userId) {
-        Optional<Team> team = teamDao.removePlayer(teamName, userId);
-
-        return team.orElseThrow(() -> new TeamNotFoundException("Team " + teamName + " does not exists"));
+        return teamDao.removePlayer(teamName, userId)
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
 
     @Transactional
@@ -122,10 +116,10 @@ public class TeamServiceImpl implements TeamService {
     public Team updateTeamInfo(final String newTeamName, final String newAcronym,
                                final String newLeaderName, final String newSportName,
                                final String oldTeamName) {
-        Optional<Team> team = teamDao.updateTeamInfo(newTeamName, newAcronym, newLeaderName,
-                newSportName, oldTeamName);
-
-        return team.orElseThrow(() -> new TeamNotFoundException("Team " + newTeamName + " does not exists"));
+        return teamDao.updateTeamInfo(newTeamName, newAcronym, newLeaderName,
+                newSportName, oldTeamName).orElseThrow(() ->
+                TeamNotFoundException.ofId(oldTeamName)
+        );
     }
 
     @Transactional
