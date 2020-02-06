@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.alreadyexists.SportAlreadyExistException;
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Page;
@@ -31,15 +33,22 @@ public class SportServiceImpl implements SportService {
 
     @Transactional
     @Override
-    public Optional<Sport> create(final String sportName, final int playerQuantity, final String displayName,
+    public Sport create(final String sportName, final int playerQuantity, final String displayName,
                         final byte[] file) {
-        return sportDao.create(sportName, playerQuantity, displayName, file);
+        return sportDao.create(sportName, playerQuantity, displayName, file).orElseThrow(() -> {
+            LOGGER.error("Sport creation failed, sport '{}' already exist", sportName);
+            return SportAlreadyExistException.ofSportId(sportName);
+        });
     }
 
     @Transactional
     @Override
-    public Optional<Sport> modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
-        return sportDao.modifySport(sportName, displayName, playerQuantity, file);
+    public Sport modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
+        LOGGER.trace("Trying to modify sport '{}'", sportName);
+        return sportDao.modifySport(sportName, displayName, playerQuantity, file).orElseThrow(() -> {
+            LOGGER.error("Modify sport failed, sport '{}' not found", sportName);
+            return SportNotFoundException.ofSportId(sportName);
+        });
     }
 
     @Transactional

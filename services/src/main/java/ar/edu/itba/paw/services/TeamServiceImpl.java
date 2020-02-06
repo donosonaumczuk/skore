@@ -134,11 +134,7 @@ public class TeamServiceImpl implements TeamService {
         Map<User, PremiumUser> accountsList = new HashMap<>();
         if (team != null) {
             for (User user : team.getPlayers()) {
-                try {
-                    accountsList.put(user, premiumUserService.findById(user.getUserId()));
-                } catch (UserNotFoundException e) {
-                    accountsList.put(user, null);
-                }
+                accountsList.put(user, premiumUserService.findById(user.getUserId()).orElse(null));
             }
         }
         return accountsList;
