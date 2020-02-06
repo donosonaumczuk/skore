@@ -249,7 +249,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
         formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
-                user.getUserName() + "&" + user.getCode());
+                user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }
 }

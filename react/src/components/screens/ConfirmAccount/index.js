@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import queryString from 'query-string';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
@@ -9,10 +10,14 @@ class ConfirmAccountContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        const { code } = this.props.match.params;;   
+        const queryParams = queryString.parse(props.location.search);
+        const { username, code } = queryParams;   
+        console.log("username: ", username);
+        console.log("code: ", code);
         this.state = {
             status: null,
             isLoading: true,
+            username: username,
             code: code
         };
     }
@@ -53,7 +58,7 @@ class ConfirmAccountContainer extends Component {
 }
 
 ConfirmAccountContainer.propTypes = {
-    match: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired
 }
 
 export default ConfirmAccountContainer;

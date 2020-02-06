@@ -97,7 +97,7 @@ class App extends Component {
                             <Sports />
                         </Route>
                         <Route exact path="/signUp" component={CreateUserForm} />
-                        <Route exact path="/confirmAccount/:code" component={ConfirmAccount} />
+                        <Route exact path="/confirmAccount" component={ConfirmAccount} />
                         <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} />
                         </Route>
