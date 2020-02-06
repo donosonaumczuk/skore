@@ -109,6 +109,7 @@ const createMatch = async match => {
 
 const joinMatchWithAccount = async (matchKey, userId) => {
     try {
+        console.log("in service matchKey: ", matchKey);
         const user = { "userId": userId };
         const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players`, user);
         return res.data;

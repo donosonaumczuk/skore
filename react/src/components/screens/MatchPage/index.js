@@ -9,7 +9,7 @@ class MatchPageContainer extends Component {
         super(props);
         let matchKey;
         if (this.props && this.props.match && this.props.match.params) {
-            matchKey = this.props.match.params;
+            matchKey = this.props.match.params.matchKey;
         }
         else {
             matchKey = this.props.matchKey;
