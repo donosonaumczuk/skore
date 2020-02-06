@@ -17,15 +17,11 @@ public class NonExistantUserValidator
 
     @Override
     public void initialize(NonExistantUser constraintAnnotation) {
+
     }
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context){
-        try {
-            userService.findByUserName(username);
-            return true;
-        } catch (UserNotFoundException e) {
-            return false;
-        }
+        return userService.findByUserName(username).isPresent();
     }
 }

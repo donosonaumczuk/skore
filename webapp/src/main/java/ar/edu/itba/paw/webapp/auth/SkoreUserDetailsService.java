@@ -30,12 +30,8 @@ public class SkoreUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        PremiumUser user;
-        try {
-            user = us.findByUserName(username);
-        } catch (UserNotFoundException e) {
-            throw new UsernameNotFoundException("No user found with username: " + username);
-        }
+        PremiumUser user = us.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         Set<Role> roles = user.getRoles();
         for(Role role : roles) {

@@ -15,16 +15,12 @@ public class NonExistantEmailValidator
 
     @Override
     public void initialize(NonExistantEmail constraintAnnotation) {
+
     }
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context){
-        try {
-            userService.findByEmail(email);
-            return true;
-        } catch (UserNotFoundException e) {
-            return false;
-        }
+        return userService.findByEmail(email).isPresent();
     }
 }
 
