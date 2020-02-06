@@ -1,6 +1,7 @@
 import api from './../config/Api';
 import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
 import { buildUrlFromParamQueries, createObjectFromFiltersAndPaging } from './Util';
+import { SC_TIME_OUT } from './constants/StatusCodesConstants';
 
 const getMatches = async (offset, limit, filters) => {
     const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
@@ -10,7 +11,12 @@ const getMatches = async (offset, limit, filters) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -24,7 +30,12 @@ const getMatchesCreatedBy =  async (username, offset, limit, filters) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -38,7 +49,12 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -52,7 +68,12 @@ const getMatchesToJoin =  async (username, offset, limit, filters) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -62,7 +83,12 @@ const getMatchByKey = async matchKey => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -72,7 +98,58 @@ const createMatch = async match => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status }
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const joinMatchWithAccount = async (matchKey, userId) => {
+    try {
+        const user = { "userId": userId };
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players`, user);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const cancelMatchWithAccount = async (matchKey, userId) => {
+    try {
+        const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const deleteMatch = async matchKey => {
+    try {
+        const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -82,7 +159,10 @@ const MatchService = {
     getMatchesJoinedBy: getMatchesJoinedBy,
     getMatchesToJoin: getMatchesToJoin,
     getMatchByKey: getMatchByKey,
-    createMatch: createMatch
+    createMatch: createMatch,
+    joinMatchWithAccount: joinMatchWithAccount,
+    cancelMatchWithAccount: cancelMatchWithAccount,
+    deleteMatch: deleteMatch
 };
 
 export default MatchService;
