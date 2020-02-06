@@ -22,6 +22,7 @@ import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -53,6 +55,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -67,6 +70,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public static final String BASE_PATH = "users";
+    private static final int ONE_HOUR = 3600;
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
@@ -187,12 +191,18 @@ public class UserController {
     public Response getUserImage(@PathParam("username") String username) {
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
         Optional<byte[]> media = premiumUserService.readImage(username);
+        final CacheControl cache = new CacheControl();
+        cache.setNoTransform(false);
+        cache.setMaxAge(ONE_HOUR);
+        Date expireDate =  DateTime.now().plusSeconds(ONE_HOUR).toDate();
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
-            return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
+            return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*")
+                    .cacheControl(cache).expires(expireDate).build();
         }
         LOGGER.trace("Returning image for {}", username);
-        return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
+        return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").cacheControl(cache)
+                .expires(expireDate).build();
     }
 
     @DELETE

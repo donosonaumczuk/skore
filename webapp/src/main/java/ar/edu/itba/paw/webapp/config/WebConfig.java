@@ -38,7 +38,6 @@ import java.util.Properties;
 
 @EnableAsync
 @EnableTransactionManagement
-@EnableCaching
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
         "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants",})
@@ -110,11 +109,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //        dbp.addScript(schemaSQL);
 //        return dbp;
 //    }
-
-    @Bean
-    public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("addresses");
-    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

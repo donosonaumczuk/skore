@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.SportDto;
 import ar.edu.itba.paw.webapp.dto.SportPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -31,6 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriInfo;
 
+import java.util.Date;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
@@ -43,6 +46,7 @@ public class SportController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SportController.class);
 
     public static final String BASE_PATH = "sports";
+    private static final int ONE_HOUR = 3600;
 
     private static final int MAX_DISPLAY_NAME_LENGTH = 100;
 
@@ -67,8 +71,13 @@ public class SportController {
                     LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
                     return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
+        final CacheControl cache = new CacheControl();
+        cache.setNoTransform(false);
+        cache.setMaxAge(ONE_HOUR);
+        Date expireDate =  DateTime.now().plusSeconds(ONE_HOUR).toDate();
         LOGGER.trace("Sport '{}' image retrieved successfully", sportname);
-        return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, com.google.common.net.MediaType.ANY_IMAGE_TYPE).build();
+        return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, com.google.common.net.MediaType.ANY_IMAGE_TYPE)
+                .cacheControl(cache).expires(expireDate).build();
     }
 
     @GET
