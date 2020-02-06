@@ -3,6 +3,8 @@ import { reduxForm } from 'redux-form';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import AnonymousForm from './layout';
 import MatchService from '../../../services/MatchService';
+import Message from '../../Message';
+import i18next from 'i18next';
 
 const validate = values => {
     const errors = {}
@@ -13,11 +15,16 @@ const validate = values => {
 }
 
 class AnonymousFormContainer extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
             created: false
         };
+    }
+
+    componentDidMount() {
+        this.mounted = true;
     }
 
     onSubmit = async (values) => {
@@ -27,23 +34,36 @@ class AnonymousFormContainer extends Component {
             "lastName": values.lastName,
             "email": values.email
         };
-        const response = await MatchService.joinMatchAnonymous(currentMatch.key, user);
-        
-        if (response.status) {
-            this.setState({ status: response.status })
+        if (this.mounted) {
+            this.setState({ isLoading: true });
         }
-        else {
-           this.setState({ created: true });
+        const response = await MatchService.joinMatchAnonymous(currentMatch.key, user);
+        if (this.mounted) {
+            if (response.status) {
+                this.setState({ status: response.status })
+            }
+            else {
+                this.setState({ created: true });
+            }
         }
     }
 
     render() {
         const { handleSubmit, submitting } = this.props; 
-        console.log(this.state.created);
+        if (this.state.created) {
+            return (
+                <Message message={i18next.t('confirmAsistance.confirm')} />
+            );
+        }
         return (
             <AnonymousForm onSubmit={this.onSubmit} handleSubmit={handleSubmit}
-                            submitting={submitting} />
+                            submitting={submitting} error={this.state.status}
+                            isLoading={this.state.isLoading} />
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 

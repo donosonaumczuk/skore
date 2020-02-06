@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import MatchService from '../../../services/MatchService';
 import ConfirmMatch from './layout';
+import i18next from 'i18next';
 
 class ConfirmMatchContainer extends Component {
     mounted = false;
@@ -34,8 +35,10 @@ class ConfirmMatchContainer extends Component {
 
     render() {
         return (
-            <ConfirmMatch error={this.state.status} isLoading={this.state.loading} />
-        )
+            <ConfirmMatch error={this.state.status} isLoading={this.state.loading} 
+                            message={i18next.t('confirmAsistance.confirmed')}
+                            matchKey={this.state.matchKey} />
+        );
     }
 
     componentWillUnmount = () => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import MatchService from '../../../services/MatchService';
 import CancelMatch from './layout';
 
@@ -34,7 +35,9 @@ class CancelMatchContainer extends Component {
 
     render() {
         return (
-            <CancelMatch error={this.state.status} isLoading={this.state.loading} />
+            <CancelMatch matchKey={this.state.matchKey} error={this.state.status}
+                            message={i18next.t('cancelAsistance.canceled')}
+                            isLoading={this.state.loading} />
         )
     }
 

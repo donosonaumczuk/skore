@@ -2,24 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import WithLoading from '../../hocs/WithLoading';
 import WithError from '../../hocs/WithError';
+import MatchPage from '../MatchPage';
 
-const CancelMatch = ({ message }) => {
+const ConfirmMatch = ({ matchKey, message }) => {
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="container-fluid profile-container bg-white 
-                                rounded-border alert alert-info alert-dismissible
-                                fade show mt-1">
-                    <h1>{message}</h1>
-                </div>
-            </div>
-        </div>
+        <MatchPage matchKey={matchKey} message={message} />    
     );
 }
 
-CancelMatch.propTypes = {
-    message: PropTypes.string.isRequired
+ConfirmMatch.propTypes = {
+    message: PropTypes.string.isRequired,
+    matchKey: PropTypes.string.isRequired
 }
 
 
-export default WithError(WithLoading(CancelMatch));
+export default WithError(WithLoading(ConfirmMatch));

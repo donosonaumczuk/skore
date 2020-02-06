@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MatchPage from './layout';
 import MatchService from '../../../services/MatchService';
-import ErrorPage from '../ErrorPage';
-import Loader from '../../Loader';
 
 class MatchPageContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        const { matchKey } = this.props.match.params;
+        let matchKey;
+        if (this.props && this.props.match && this.props.match.params) {
+            matchKey = this.props.match.params;
+        }
+        else {
+            matchKey = this.props.matchKey;
+        }
         this.state = {
             matchKey: matchKey,
             match: null
@@ -43,8 +47,9 @@ class MatchPageContainer extends Component {
 }
 
 MatchPageContainer.propTypes = {
-    match: PropTypes.object.isRequired,
-    message: PropTypes.string
+    match: PropTypes.object,
+    message: PropTypes.string,
+    matchKey: PropTypes.string,
 }
 
 export default MatchPageContainer;

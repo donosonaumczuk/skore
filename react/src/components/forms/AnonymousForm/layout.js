@@ -6,6 +6,8 @@ import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
 import SuggestionText from '../elements/SuggestionText';
+import WithError from '../../hocs/WithError';
+import WithLoading from '../../hocs/WithLoading';
 
 const AnonymousForm = ({ handleSubmit, onSubmit, submitting }) => {
     return (
@@ -37,4 +39,4 @@ AnonymousForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired
 }
 
-export default AnonymousForm;
+export default WithError(WithLoading(AnonymousForm));
