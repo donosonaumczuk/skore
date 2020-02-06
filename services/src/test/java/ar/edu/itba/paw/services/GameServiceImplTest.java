@@ -110,9 +110,10 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
 
-        Game ans = gameService.findByKey(GAME_KEY);
+        Optional<Game> ans = gameService.findByKey(GAME_KEY);
 
-        Assert.assertEquals(GAME_1, ans);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(GAME_1, ans.get());
     }
 
     @Test
@@ -120,7 +121,7 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_1, USER_1_ID)).thenReturn(null);
-        when(premiumUserService.findById(USER_1_ID)).thenReturn(GAME_1.getTeam1().getLeader());
+        when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(GAME_1.getTeam1().getLeader()));
 
         boolean ans = gameService.deleteUserInGameWithCode(GAME_KEY, USER_1_ID, null);
@@ -133,7 +134,7 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
         when(teamServiceMock.removePlayer(TEAMNAME_2, USER_2_ID)).thenReturn(null);
-        when(premiumUserService.findById(USER_2_ID)).thenReturn(GAME_1.getTeam2().getLeader());
+        when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
         boolean ans = gameService.deleteUserInGameWithCode(GAME_KEY, USER_2_ID, null);

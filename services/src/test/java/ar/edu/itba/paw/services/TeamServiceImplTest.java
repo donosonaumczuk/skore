@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.TeamServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -52,9 +49,9 @@ public class TeamServiceImplTest {
         team.addPlayer(user2);
         PremiumUser account1 = new PremiumUser(FIRSTNAME+ID_1, LASTNAME+ID_1,
                                 EMAIL+ID_1, USERNAME+ID_1);
-        when(premiumUserServiceMock.findById(ID_0)).thenThrow(UserNotFoundException.ofId(ID_0));
-        when(premiumUserServiceMock.findById(ID_1)).thenReturn(account1);
-        when(premiumUserServiceMock.findById(ID_2)).thenThrow(UserNotFoundException.ofId(ID_2));
+        when(premiumUserServiceMock.findById(ID_0)).thenReturn(Optional.empty());
+        when(premiumUserServiceMock.findById(ID_1)).thenReturn(Optional.of(account1));
+        when(premiumUserServiceMock.findById(ID_2)).thenReturn(Optional.empty());
 
         Map<User, PremiumUser> map = teamService.getAccountsMap(team);
 

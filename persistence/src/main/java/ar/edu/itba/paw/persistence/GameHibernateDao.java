@@ -69,11 +69,11 @@ public class GameHibernateDao implements GameDao {
         LOGGER.trace("Try to create game: {} vs {} |starting at {} |finishing at {}",
                 teamName1, teamName2, startTime.toString(), finishTime.toString());
         Team team1 = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName1));
         Team team2;
         if(teamName2 != null) {
             team2 = teamDao.findByTeamName(teamName2)
-                    .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                    .orElseThrow(() -> TeamNotFoundException.ofId(teamName2));
         }
         else {
             team2 = null;
@@ -91,7 +91,7 @@ public class GameHibernateDao implements GameDao {
         LOGGER.trace("Try to find game: {} |starting at {} |finishing at {}", teamName1, startTime.toString(),
                 finishTime.toString());
         Team team1 = teamDao.findByTeamName(teamName1)
-                .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName1));
         Game game = em.find(Game.class, new GamePK(team1, startTime, finishTime));
         LOGGER.trace("Returning what was find");
         return Optional.ofNullable(game);
@@ -197,12 +197,12 @@ public class GameHibernateDao implements GameDao {
         }
         if (teamName1 != null) {
             Team team = teamDao.findByTeamName(teamName1)
-                    .orElseThrow(() -> new TeamNotFoundException("Team1 does not exist"));
+                    .orElseThrow(() -> TeamNotFoundException.ofId(teamName1));
             game.setTeam1(team);
         }
         if (teamName1 != null) {
             Team team = teamDao.findByTeamName(teamName2)
-                    .orElseThrow(() -> new TeamNotFoundException("Team2 does not exist"));
+                    .orElseThrow(() -> TeamNotFoundException.ofId(teamName2));
             game.setTeam2(team);
         }
         if (startTime != null) {

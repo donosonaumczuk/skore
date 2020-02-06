@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -36,12 +35,8 @@ public class SessionServiceImpl implements SessionService {
         String username = getUserName();
         PremiumUser loggedUser = null;
         if (username != null && (currentPremiumUser == null || !currentPremiumUser.getUserName().equals(username))) {
-            try {
-                currentPremiumUser = premiumUserService.findByUserName(username);
-                loggedUser = currentPremiumUser;
-            } catch (UserNotFoundException e) {
-                /* Avoid this exception propagation */
-            }
+            currentPremiumUser = premiumUserService.findByUserName(username).orElse(null); //TODO check
+            loggedUser = currentPremiumUser;
         }
         return Optional.ofNullable(loggedUser);
     }

@@ -97,9 +97,10 @@ public class PremiumUserServiceImplTest {
                 .thenReturn(Optional.of(account));
         when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
+        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(100, ans.getWinRate(), 0.00001);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(100, ans.get().getWinRate(), 0.00001);
     }
 
     @Test
@@ -127,9 +128,10 @@ public class PremiumUserServiceImplTest {
                 .thenReturn(Optional.of(account));
         when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
+        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(50, ans.getWinRate(), 0.00001);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(50, ans.get().getWinRate(), 0.00001);
     }
 
     @Test
@@ -188,8 +190,9 @@ public class PremiumUserServiceImplTest {
                 .thenReturn(Optional.of(account));
         when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(listOfList);
 
-        PremiumUser ans = premiumUserService.findByUserName(USERNAME);
+        Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
 
-        Assert.assertEquals(25, ans.getWinRate(), 0.00001);
+        Assert.assertTrue(ans.isPresent());
+        Assert.assertEquals(25, ans.get().getWinRate(), 0.00001);
     }
 }
