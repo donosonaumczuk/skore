@@ -18,7 +18,7 @@ import MatchDuration from './components/MatchDuration';
 const CreateMatchForm = ({ handleSubmit, submitting, onSubmit, 
                             sportOptions, updateTime, hourOptions,
                             minuteOptions, updateLocationAndState,
-                            locationError, location }) => {
+                            locationError, location, currentTime }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -40,7 +40,7 @@ const CreateMatchForm = ({ handleSubmit, submitting, onSubmit,
                                     smallText={i18next.t('createUserForm.dateFormat')}
                                     component={RenderMatchDatePicker} />
                             <div className="form-row">
-                                <MatchTime updateTime={updateTime} />
+                                <MatchTime updateTime={updateTime} currentValue={currentTime} />
                                 <MatchDuration hourOptions={hourOptions} 
                                                 minuteOptions={minuteOptions} />
                             </div>
@@ -91,7 +91,8 @@ CreateMatchForm.propTypes = {
         minuteOptions: PropTypes.array.isRequired,
         updateLocationAndState: PropTypes.func.isRequired,
         locationError: PropTypes.string,
-        location: PropTypes.object.isRequired
+        location: PropTypes.object.isRequired,
+        currentTime: PropTypes.object
 }
 
 export default CreateMatchForm;
