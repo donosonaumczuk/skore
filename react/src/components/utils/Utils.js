@@ -37,10 +37,25 @@ const removeUnknownHomeFilters = filters => {
     };
 }
 
+const replaceWithNewMatch = (matches, matchToReplace) => {
+    return matches.map(match => {
+        if (match.key === matchToReplace.key) {
+            return matchToReplace;
+        }
+        return match;
+    });
+}
+
+const deleteMatch = (matches, matchToDelete) => {
+    return matches.filter(match => match.key !== matchToDelete.key);
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
-    removeUnknownHomeFilters: removeUnknownHomeFilters
+    removeUnknownHomeFilters: removeUnknownHomeFilters,
+    replaceWithNewMatch: replaceWithNewMatch,
+    deleteMatch: deleteMatch
 };
 
 export default Utils;

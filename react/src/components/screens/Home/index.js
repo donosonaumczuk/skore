@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import ErrorPage from '../ErrorPage';
 import Home from './layout';
+import AuthService from '../../../services/AuthService';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -56,7 +58,7 @@ class HomeContainer extends Component {
     }
 
     handleMatchClick = matchKey => {
-        this.props.history.push(`match/${matchKey}`);
+        this.props.history.push(`/match/${matchKey}`);
     }
 
     componentDidMount = () => {
@@ -114,20 +116,110 @@ class HomeContainer extends Component {
         }
     }
 
+    joinMatch = (e, match) => {
+        e.stopPropagation();
+        if (this.props.currentUser) {
+            const userId = AuthService.getUserId();
+            this.joinMatchLogged(match, userId);
+        }
+        else {
+            this.joinMatchAnonymous(match);
+        }
+    }
+
+    joinMatchLogged = async (match, userId) => {
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await MatchService.joinMatchWithAccount(match.key, userId);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status });
+        }
+        else {
+            const newMatches = Utils.replaceWithNewMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, executing: false });
+            }
+            this.props.history.push(`/match/${match.key}`);
+        }
+    }
+
+    joinMatchAnonymous = (match) => {
+        console.log("join match annonymous: ", match.title); //TODO remove
+        //TODO implement
+    }
+    
+    cancelMatch = (e, match) => {
+        e.stopPropagation();
+        if (this.props.currentUser) {
+            const userId = AuthService.getUserId();
+            this.cancelMatchLogged(match, userId);
+        }
+        else {
+            this.cancelMatchAnonymous(match);
+        }
+    }
+
+    cancelMatchLogged = async (match, userId) => {
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await MatchService.cancelMatchWithAccount(match.key, userId);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status });
+        }
+        else {
+            const newMatches = Utils.replaceWithNewMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, executing: false });
+            }
+            this.props.history.push(`/match/${match.key}`);
+        }
+    }
+
+    cancelMatchAnonymous = (match) => {
+        console.log("cancel match annonymous: ", match.title);//TODO remove
+        //TODO implement
+    }
+    
+    deleteMatch = async (e, match) => {
+        e.stopPropagation();
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await MatchService.deleteMatch(match.key);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status });
+        }
+        else {
+            const newMatches = Utils.deleteMatch(this.state.matches, match);
+            if (this.mounted) {
+                this.setState({ matches: newMatches, executing: false });
+            }
+        }
+    }
+
     render() {
         let { currentTab, matches, hasMore } = this.state;
         const { currentUser } = this.props;
         let currentMatches;
         if (this.state.status) {
-            currentMatches = <ErrorPage status={this.state.status} />;
+            currentMatches = <ErrorPage status={this.state.status} />;//TODO hoc
+        }
+        else if (this.state.executing) {
+            currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
+
         }
         else if (matches.length === 0 && hasMore) {
-            currentMatches = <Loader />;
+            currentMatches = <Loader />;//TODO hoc
         }
         else {
             currentMatches = <HomeMatches matches={matches} hasMore={hasMore} 
                                 handleMatchClick={this.handleMatchClick}
-                                getMatches={this.getMatches} />;
+                                getMatches={this.getMatches}
+                                joinMatch={this.joinMatch}
+                                cancelMatch={this.cancelMatch}
+                                deleteMatch={this.deleteMatch} />;
         }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}

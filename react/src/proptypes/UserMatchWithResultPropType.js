@@ -11,7 +11,7 @@ const UserMatchWithResultPropType = PropTypes.shape(
         sportName: PropTypes.string.isRequired,
         results: PropTypes.string.isRequired,
         competitive: PropTypes.bool.isRequired,
-        durationInMinutes: PropTypes.number.isRequired,
+        minutesOfDuration: PropTypes.number.isRequired,
         location: LocationPropType.isRequired,
         date: DatePropType.isRequired,
         time: TimePropType.isRequired,

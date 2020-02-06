@@ -1,20 +1,9 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import MatchButton from '../MatchButton';
 import i18next from 'i18next';
 
-const joinMatch = () => {
-    // TODO implement when we have endpoint
-}
-
-const cancelMatch = () => {
-    // TODO implement when we have endpoint
-}
-
-const deleteMatch = () => {
-    // TODO implement when we have endpoint
-}
 const isUserInTeam = (currentUser, team) => {
     if (!currentUser || !team) {
         return false;
@@ -39,15 +28,19 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
     return userFound;
 }
 
-const getButton = (currentMatch, currentUser) => {
+const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
     //TODO if finishtime is before date return <React.Fragment></React.Fragment>
     if (currentUser && currentUser === currentMatch.creator) {
-        return <MatchButton buttonStyle="btn btn-negative join-button" handleClick={deleteMatch} 
-                            buttonText={i18next.t('home.deleteMatch')} fontAwesome="fas fa-trash-alt mr-1" />
+        return <MatchButton buttonStyle="btn btn-negative join-button" 
+                            handleClick={deleteMatch} currentMatch={currentMatch}
+                            buttonText={i18next.t('home.deleteMatch')}
+                            fontAwesome="fas fa-trash-alt mr-1" />
     }
     else if (currentUser && isInMatch(currentUser, currentMatch.team1, currentMatch.team2)) {
-        return <MatchButton buttonStyle="btn btn-negative join-button" handleClick={cancelMatch} 
-                             buttonText={i18next.t('home.cancelMatch')} fontAwesome="fas fa-times mr-1" />
+        return <MatchButton buttonStyle="btn btn-negative join-button"
+                            handleClick={cancelMatch} currentMatch={currentMatch}
+                            buttonText={i18next.t('home.cancelMatch')}
+                            fontAwesome="fas fa-times mr-1" />
     }
     else if(currentMatch.totalPlayers > currentMatch.currentPlayers && 
             ((currentUser && currentMatch.isCompetitive) || !currentMatch.isCompetitive)) {
@@ -58,16 +51,18 @@ const getButton = (currentMatch, currentUser) => {
         else {
             buttonText = i18next.t('home.joinMatch');
         }
-        return <MatchButton buttonStyle="btn btn-green join-button" handleClick={joinMatch} 
+        return <MatchButton buttonStyle="btn btn-green join-button"
+                            handleClick={joinMatch} currentMatch={currentMatch} 
                             buttonText={buttonText} fontAwesome="fas fa-plus mr-1" />
     }
   
     return <React.Fragment></React.Fragment>
 }
 
-const MatchAvailability = ({ currentMatch }) => {
+const MatchAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }) => {
     const { currentPlayers, totalPlayers} = currentMatch;
-    let button = getButton(currentMatch, AuthService.getCurrentUser())
+    let button = getButton(currentMatch, AuthService.getCurrentUser(), 
+                            joinMatch, cancelMatch, deleteMatch);
     return (
         <div className="offset-1 col-4 col-sm-3">
             <div className="row text-center">
@@ -86,7 +81,10 @@ const MatchAvailability = ({ currentMatch }) => {
 }
 
 MatchAvailability.propTypes = {
-    currentMatch: Proptypes.object.isRequired
+    currentMatch: PropTypes.object.isRequired,
+    joinMatch: PropTypes.func.isRequired,
+    cancelMatch: PropTypes.func.isRequired,
+    deleteMatch: PropTypes.func.isRequired
 }
 
 export default MatchAvailability;
