@@ -47,37 +47,29 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public PremiumUser findByUserName(final String userName) {
+    public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
-        PremiumUser user = premiumUserDao.findByUserName(userName).orElseThrow(() -> {
-            LOGGER.error("Can't find user with username: {}", userName);
-            return UserNotFoundException.ofUsername(userName);
+        return premiumUserDao.findByUserName(userName).map(user -> {
+            List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
+            user.setGamesInTeam1(games.get(0));
+            user.setGamesInTeam2(games.get(1));
+            user.setWinRate(calculateWinRate(user));
+            return user;
         });
-        List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
-        user.setGamesInTeam1(games.get(0));
-        user.setGamesInTeam2(games.get(1));
-        user.setWinRate(calculateWinRate(user));
-        return user;
     }
 
     @Transactional
     @Override
-    public PremiumUser findByEmail(final String email) {
+    public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
-        return premiumUserDao.findByEmail(email).orElseThrow(() -> {
-            LOGGER.error("Can't find user with email: {}", email);
-            return UserNotFoundException.ofEmail(email);
-        });
+        return premiumUserDao.findByEmail(email); //TODO: why does not include games/matches?
     }
 
     @Transactional
     @Override
-    public PremiumUser findById(final long userId) {
+    public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
-        return premiumUserDao.findById(userId).orElseThrow(() -> {
-            LOGGER.error("Can't find user with id: {}", userId);
-            return UserNotFoundException.ofId(userId);
-        });
+        return premiumUserDao.findById(userId); //TODO: why does not include games/matches?
     }
 
     @Transactional
@@ -94,7 +86,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 firstName, lastName, email, userName, cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file
         ).orElseThrow(() -> {
-            LOGGER.error("Can't find user with username: {}", userName);
+            LOGGER.error("User with username {} already exist", userName);
             return UserAlreadyExistException.ofUsername(userName);
         });
         LOGGER.trace("Sending confirmation email to {}", email);
@@ -132,7 +124,10 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         LOGGER.trace("Looking for user with username: {} to update", username);
 
         if (newPassword != null) {
-            PremiumUser premiumUser = findByUserName(username);
+            PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+                LOGGER.error("Can't find user with username: {}", username);
+                return UserNotFoundException.ofUsername(username);
+            });
             if (oldPassword != null && !bcrypt.matches(oldPassword, premiumUser.getPassword())) {
                 throw WrongOldUserPasswordException.ofUsername(username);
             }
@@ -154,15 +149,18 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return user;
     }
 
-	@Transactional
+    @Transactional
     @Override
     public boolean enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
-        PremiumUser user = findByUserName(username);
+        PremiumUser user = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
 
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {
-            LOGGER.error("Can't find user with username {} and code {}", username, code); //TODO: not found????
+            LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
             return false;
         }
         LOGGER.trace("{} is now enabled", username);
@@ -175,7 +173,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         String dataPath = path.replace("/confirm/", "");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
-		String code = dataPath.substring(splitIndex + 1);
+        String code = dataPath.substring(splitIndex + 1);
         return enableUser(username, code);
     }
 

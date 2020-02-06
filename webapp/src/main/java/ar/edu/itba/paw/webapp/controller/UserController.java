@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
@@ -176,7 +177,10 @@ public class UserController {
     @GET
     @Path("/{username}/profile")
     public Response getUserProfile(@PathParam("username") String username) {
-        PremiumUser premiumUser = premiumUserService.findByUserName(username);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
         LOGGER.trace("'{}' profile successfully gotten", username);
         return Response.ok(ProfileDto.from(premiumUser)).build();
     }
@@ -257,7 +261,10 @@ public class UserController {
     @GET
     @Path("/{username}")
     public Response getUser(@PathParam("username") String username) {
-        PremiumUser premiumUser = premiumUserService.findByUserName(username);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
         LOGGER.trace("User '{}' found successfully", username);
         return Response.ok(UserDto.from(premiumUser)).build();
     }
@@ -269,12 +276,11 @@ public class UserController {
         * TODO|the code is receive in the mail.*/
         boolean enablePerformed = premiumUserService.enableUser(username, code);
         if (!enablePerformed) {
-            LOGGER.trace("User '{}' with code '{}' does not exist", username, code); //TODO: not found already thrown internally...
+            LOGGER.trace("Invalid code '{}' for user {} not exist", code, username);
             throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
         }
         LOGGER.trace("User '{}' verified successfully", username);
-        PremiumUser premiumUser = premiumUserService.findByUserName(username);
-        return Response.ok(UserDto.from(premiumUser)).build();
+        return Response.ok(UserDto.from(premiumUserService.findByUserName(username).get())).build(); //TODO
     }
 
     private byte[] getDefaultImage() {
