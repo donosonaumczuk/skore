@@ -11,11 +11,11 @@ import java.util.Optional;
 
 public interface PremiumUserService {
 
-    PremiumUser findByUserName(final String userName);
+    Optional<PremiumUser> findByUserName(final String userName);
 
-    PremiumUser findByEmail(final String email);
+    Optional<PremiumUser> findByEmail(final String email);
 
-    PremiumUser findById(final long userId);
+    Optional<PremiumUser> findById(final long userId);
 
     PremiumUser create(final String firstName, final String lastName,
 					   final String email, final String username,
