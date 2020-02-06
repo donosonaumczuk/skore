@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
 
 const ConfirmAccount = () => {
@@ -11,8 +12,8 @@ const ConfirmAccount = () => {
         <div className="container-fluid">
             <div className="row">
                 <div className="container-fluid profile-container bg-white rounded-border alert alert-info alert-dismissible fade show mt-1">
-                    <h1>Congratulations!! You have created a new account.</h1>
-                    <h2>An email has been sent to you to confirm your account.</h2>
+                    <h1>{i18next.t('confirmAccount.confirmed')}</h1>
+                    <h2>{i18next.t('confirmAccount.confirmEmail')}</h2>
                 </div>
             </div>
         </div>

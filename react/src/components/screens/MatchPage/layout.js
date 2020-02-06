@@ -1,5 +1,8 @@
 import React from 'react';
 import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
+import WithError from '../../hocs/WithError';
+import WithLoading from '../../hocs/WithLoading';
+import WithMessage from '../../hocs/WithMessage';
 
 //TODO improve layout
 const MatchPage = ({ currentMatch }) => {
@@ -23,4 +26,4 @@ MatchPage.propTypes = {
     currentMatch: HomeMatchPropType.isRequired
 }
 
-export default MatchPage;
+export default WithError(WithLoading(WithMessage(MatchPage)));

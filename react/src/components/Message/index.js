@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import WithLoading from '../../hocs/WithLoading';
-import WithError from '../../hocs/WithError';
 
-const CancelMatch = ({ message }) => {
+const Message = ({ message }) => {
     return (
         <div className="container-fluid">
             <div className="row">
@@ -17,9 +15,8 @@ const CancelMatch = ({ message }) => {
     );
 }
 
-CancelMatch.propTypes = {
+Message.propTypes = {
     message: PropTypes.string.isRequired
 }
 
-
-export default WithError(WithLoading(CancelMatch));
+export default Message;

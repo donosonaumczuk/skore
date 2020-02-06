@@ -159,9 +159,33 @@ const confirmAssistance = async (matchKey, userId, code) => {
         }
     }
 }
+
 const cancelMatchWithAccount = async (matchKey, userId) => {
     try {
         const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const cancelAssistance = async (matchKey, userId, code) => {
+    console.log("entro");
+
+    try {
+        const config = {
+            headers: {
+                "x-code": code,
+            }
+        };
+        const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`, config);
+        console.log(res);
         return res.data;
     }
     catch (err) {
@@ -200,6 +224,7 @@ const MatchService = {
     joinMatchAnonymous: joinMatchAnonymous,
     confirmAssistance: confirmAssistance,
     cancelMatchWithAccount: cancelMatchWithAccount,
+    cancelAssistance: cancelAssistance,
     deleteMatch: deleteMatch,
 };
 

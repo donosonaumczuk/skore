@@ -30,14 +30,10 @@ class MatchPageContainer extends Component {
     }
 
     render() {
-        if (this.state.status) {
-            return <ErrorPage status={this.state.status} /> //TODO improve with HOC
-        }
-        else if (!this.state.match) {
-            return <Loader /> //TODO improve with HOC
-        }
+        const { message } = this.props; 
         return (
-            <MatchPage currentMatch={this.state.match} />
+            <MatchPage currentMatch={this.state.match} error={this.state.status}
+                        isLoading={!this.state.match} message={message} />
         );
     }
 
@@ -47,7 +43,8 @@ class MatchPageContainer extends Component {
 }
 
 MatchPageContainer.propTypes = {
-    match: PropTypes.object.isRequired
+    match: PropTypes.object.isRequired,
+    message: PropTypes.string
 }
 
 export default MatchPageContainer;

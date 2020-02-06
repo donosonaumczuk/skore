@@ -24,6 +24,7 @@ import './css/main.css';
 import Admin from './components/screens/Admin';
 import MatchPage from './components/screens/MatchPage';
 import ConfirmMatch from './components/screens/ConfirmMatch';
+import CancelMatch from './components/screens/CancelMatch';
 
 class App extends Component {
     constructor(props) {
@@ -119,6 +120,8 @@ class App extends Component {
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />
                         <Route exact path="/confirmMatch" component={ConfirmMatch} />
+                        <Route exact path="/cancelMatch" component={CancelMatch} />
+
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>

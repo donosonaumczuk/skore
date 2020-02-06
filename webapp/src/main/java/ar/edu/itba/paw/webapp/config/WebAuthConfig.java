@@ -103,7 +103,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RegexRequestMatcher("/api/matches/?", "POST"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "PUT"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "DELETE"),
-                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/[0-9]+/?", "DELETE"),
                 optionalAuthEndpointsMatcher(),
                 adminAuthEndpointsMatcher()
         );
@@ -114,6 +113,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new OrRequestMatcher( //TODO make list
                 new RegexRequestMatcher("/api/matches/temporal/?", "POST"),//TODO: maybe not needed
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/?", "POST"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/[0-9]+/?", "DELETE"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/code/\\w+/?", "DELETE")
         );
     }

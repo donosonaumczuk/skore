@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import MatchService from '../../../services/MatchService';
-import ConfirmMatch from './layout';
+import CancelMatch from './layout';
 
-class ConfirmMatchContainer extends Component {
+class CancelMatchContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
@@ -23,7 +23,7 @@ class ConfirmMatchContainer extends Component {
     componentDidMount = async () => {
         this.mounted = true;
         const { matchKey, id, code } = this.state;
-        const response = await MatchService.confirmAssistance(matchKey, id, code);
+        const response = await MatchService.cancelAssistance(matchKey, id, code);
         if (response.status && this.mounted) {
             this.setState({ status: response.status, loading: false });
         }
@@ -34,7 +34,7 @@ class ConfirmMatchContainer extends Component {
 
     render() {
         return (
-            <ConfirmMatch error={this.state.status} isLoading={this.state.loading} />
+            <CancelMatch error={this.state.status} isLoading={this.state.loading} />
         )
     }
 
@@ -43,9 +43,9 @@ class ConfirmMatchContainer extends Component {
     }
 }
 
-ConfirmMatchContainer.propTypes = {
+CancelMatchContainer.propTypes = {
     location: PropTypes.object.isRequired
 }
 
-export default ConfirmMatchContainer;
+export default CancelMatchContainer;
 
