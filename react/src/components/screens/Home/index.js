@@ -90,11 +90,7 @@ class HomeContainer extends Component {
     updateMatches = response => {
         if (response.status) {
             if (response.status !== SC_CLIENT_CLOSED_REQUEST) {
-                console.log("status: ", response.status);
                 this.setState({ status: response.status });
-            }
-            else {
-                console.log("match canceled");
             }
         }
         else {
