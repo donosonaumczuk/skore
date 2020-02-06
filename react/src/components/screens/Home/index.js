@@ -162,7 +162,6 @@ class HomeContainer extends Component {
         }
         else {
             //TODO should never happen
-            this.cancelMatchAnonymous(match);
         }
     }
 
@@ -181,11 +180,6 @@ class HomeContainer extends Component {
             }
             this.handleTabChange(TO_JOIN_TAB);
         }
-    }
-
-    cancelMatchAnonymous = (match) => {
-        console.log("cancel match annonymous: ", match.title);//TODO remove
-        //TODO implement
     }
     
     deleteMatch = async (e, match) => {
@@ -209,7 +203,6 @@ class HomeContainer extends Component {
         const queryParams = queryString.parse(nextProps.location.search);
         const matchKey = queryParams.matchKey;
         if (prevState.currentMatch && !matchKey) {
-            console.log("returning state");
             return { 
                 ...prevState,
                 currentMatch: null,
