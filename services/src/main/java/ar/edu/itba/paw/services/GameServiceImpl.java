@@ -157,27 +157,22 @@ public class GameServiceImpl implements GameService {
     }
 
     private boolean deleteUserInGame(final Game game, final long userIdReceive) {
+        premiumUserService.findById(userIdReceive); //TODO: this throws not found exception
         for (User user : game.getTeam1().getPlayers()) {
             if (user.getUserId() == userIdReceive) {
                 LOGGER.trace("Found user: {} in team1", userIdReceive);
                 game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userIdReceive));
-                if (!premiumUserService.findById(userIdReceive).isPresent()) {
-                    userService.remove(userIdReceive);
-                }
-                return true;
+                return userService.remove(userIdReceive); //TODO: before always returns true
             }
         }
         for (User user : game.getTeam2().getPlayers()) {
             if (user.getUserId() == userIdReceive) {
                 LOGGER.trace("Found user: {} in team2", userIdReceive);
                 game.setTeam2(teamService.removePlayer(game.team2Name(), userIdReceive));
-                if (!premiumUserService.findById(userIdReceive).isPresent()) {
-                    userService.remove(userIdReceive);
-                }
-                return true;
+                return userService.remove(userIdReceive); //TODO: before always returns true
             }
         }
-        LOGGER.trace("Not found user: '{}' in match '{}'", userIdReceive, game.getKey());
+        LOGGER.trace("Not found user: '{}' in match '{}'", userIdReceive, game.getKey()); //TODO: will never reach this line
         return false;
     }
 

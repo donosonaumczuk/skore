@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
+import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -82,11 +83,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Transactional
     @Override
     public PremiumUser create(final String firstName, final String lastName,
-                                        final String email, final String userName,
-                                        final String cellphone, final String birthday,
-                                        final String country, final String state, final String city,
-                                        final String street, final int reputation, final String password,
-                                        final byte[] file, final Locale locale) {
+                              final String email, final String userName,
+                              final String cellphone, final LocalDate birthday,
+                              final String country, final String state, final String city,
+                              final String street, final int reputation, final String password,
+                              final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Attempting to create user: {}", userName);
         PremiumUser user = premiumUserDao.create(
@@ -124,7 +125,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Override
     public PremiumUser updateUserInfo(
             final String username, final String newFirstName, final String newLastName, final String newEmail,
-            final String newCellphone, final String newBirthday, final String newCountry, final String newState,
+            final String newCellphone, final LocalDate newBirthday, final String newCountry, final String newState,
             final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
             final String oldPassword, final byte[] file, final Locale locale
     ) {
@@ -177,9 +178,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 		String code = dataPath.substring(splitIndex + 1);
         return enableUser(username, code);
     }
-
-    private String generatePath(PremiumUser user) {
-        return "confirm/" + user.getUserName() + "&" + user.getCode();    }
 
     @Transactional
     @Override
