@@ -313,7 +313,8 @@ public class UserController {
     }
 
     private LocalDate getBirthDay(UserDto userDto) {
-        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
-                userDto.getBirthday().getDayOfMonth());
+        return userDto.getBirthday() != null ?
+                    LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                    userDto.getBirthday().getDayOfMonth()) : null ;
     }
 }

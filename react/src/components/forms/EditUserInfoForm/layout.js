@@ -9,6 +9,7 @@ import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import FormComment from '../elements/FormComment';
 import WithExecuting from '../../hocs/WithExecuting';
+import WithError from '../../hocs/WithError';
 
 const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange }) => {
@@ -62,4 +63,4 @@ EditUserInfoForm.propTypes = {
     handleChange: PropTypes.func.isRequired
 }
 
-export default WithExecuting(EditUserInfoForm);
+export default WithError(WithExecuting(EditUserInfoForm));
