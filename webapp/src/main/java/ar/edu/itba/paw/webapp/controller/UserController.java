@@ -272,8 +272,7 @@ public class UserController {
     @POST
     @Path("/{username}/verification")
     public Response verifyUser(@PathParam("username") String username, String code) {
-        /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
-        * TODO|the code is receive in the mail.*/
+        // TODO: Validate that te user to be delete is the same as the one logged. Maybe it is not need, because the code is receive in the mail...
         boolean enablePerformed = premiumUserService.enableUser(username, code);
         if (!enablePerformed) {
             LOGGER.trace("Invalid code '{}' for user '{}'", code, username);
