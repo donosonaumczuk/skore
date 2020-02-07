@@ -240,5 +240,17 @@
     },
     "cancelAsistance": {
         "canceled": "You have cancelled your asistance to the match."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Team 1 Score ",
+        "teamTwoScore": "Team 2 Score ",
+        "setScoreButton": "SET SCORE",
+        "errors": {
+            "teamScore": {
+                "required": "Team score is required.\n",
+                "invalidSymbols": "Team score must have only numbers.\n",
+                "invalidLength": "Team score must be between one and ten digitis.\n"
+            }
+        }
     }
 }

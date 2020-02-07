@@ -24,8 +24,8 @@ public class ResultValidators {
 
     private static Map<String, Validator<JSONObject>> creationFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(SCORE_TEAM_1, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_1, 1, null, log))
-                .put(SCORE_TEAM_2, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_2, 1, null, log))
+                .put(SCORE_TEAM_1, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_1, 0, null, log))
+                .put(SCORE_TEAM_2, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_2, 0, null, log))
                 .build();
     }
 }

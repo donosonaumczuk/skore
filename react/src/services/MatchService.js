@@ -230,6 +230,21 @@ const deleteMatch = async matchKey => {
     }
 }
 
+const setScore = async (matchKey, score) => {
+    try {
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/result`, score);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const MatchService = {
     getMatches: getMatches,
     getMatchesCreatedBy: getMatchesCreatedBy,
@@ -243,6 +258,7 @@ const MatchService = {
     cancelMatchWithAccount: cancelMatchWithAccount,
     cancelAssistance: cancelAssistance,
     deleteMatch: deleteMatch,
+    setScore: setScore
 };
 
 export default MatchService;

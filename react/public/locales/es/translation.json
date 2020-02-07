@@ -241,5 +241,17 @@
     },
     "cancelAsistance": {
         "canceled": "Cancelaste tu asistencia al partido."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Resultado del equipo 1 ",
+        "teamTwoScore": "Resultado del equipo 2 ",
+        "setScoreButton": "ACTUALIZAR RESULTADO",
+        "errors": {
+            "teamScore": {
+                "required": "Resultado del equipo es obligatorio\n",
+                "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+            }
+        }
     }
 }

@@ -1,11 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import i18next from 'i18next';
+import MatchButton from '../../match/MatchButton';
 import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
 import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
 
 //TODO improve layout
-const MatchPage = ({ currentMatch }) => {
+const MatchPage = ({ currentMatch, updateMatchScore }) => {
     return (
         <div className="container-fluid">
             <div className="row">
@@ -16,6 +19,10 @@ const MatchPage = ({ currentMatch }) => {
                             <h1>{currentMatch.title}</h1>
                         </div>
                     </div>
+                    <MatchButton buttonStyle="btn btn-green join-button"
+                            handleClick={updateMatchScore} currentMatch={currentMatch}
+                            buttonText={i18next.t('setMatchScoreForm.setScoreButton')}
+                            fontAwesome="fas fa-times mr-1" />
                 </div>
             </div>
         </div>
@@ -23,7 +30,8 @@ const MatchPage = ({ currentMatch }) => {
 }
 
 MatchPage.propTypes = {
-    currentMatch: HomeMatchPropType.isRequired
+    currentMatch: HomeMatchPropType.isRequired,
+    updateMatchScore: PropTypes.func.isRequired
 }
 
 export default WithError(WithLoading(WithMessage(MatchPage)));

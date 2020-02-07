@@ -20,6 +20,10 @@ class MatchPageContainer extends Component {
         };
     }
 
+    updateMatchScore = (e, match) => {
+        this.props.history.push(`/setMatchScore/${match.creator}/${match.key}`);
+    }
+
     componentDidMount = async () => {
         this.mounted = true;
         const response = await MatchService.getMatchByKey(this.state.matchKey);
@@ -37,7 +41,8 @@ class MatchPageContainer extends Component {
         const { message } = this.props; 
         return (
             <MatchPage currentMatch={this.state.match} error={this.state.status}
-                        isLoading={!this.state.match} message={message} />
+                        isLoading={!this.state.match} message={message}
+                        updateMatchScore={this.updateMatchScore} />
         );
     }
 
