@@ -188,9 +188,8 @@ public class UserController {
     @GET
     @Path("/{username}/image")
     public Response getUserImage(@PathParam("username") String username) {
-        //TODO: how to obtain a not found? readImage don't perform a find over users
         Optional<byte[]> media = premiumUserService.readImage(username);
-        if(!media.isPresent()) {
+        if (!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
             return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*").build();
         }

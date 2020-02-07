@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -107,16 +108,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     @Override
     public Optional<byte[]> readImage(final String userName) {
-        Optional<PremiumUser> premiumUser = findByUserName(userName);
-        if (premiumUser.isPresent()) {
-            PremiumUser user = premiumUser.get();
-            byte image[] = user.getImage();
-            if (image != null) {
-                return Optional.of(image);
-            }
-        }
-
-        return  Optional.empty();
+        return Optional.ofNullable(
+                findByUserName(userName)
+                        .orElseThrow(() -> UserNotFoundException.ofUsername(userName))
+                        .getImage()
+        );
     }
 
     @Override
