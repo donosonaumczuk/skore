@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
 import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import Message from '../../Message';
+import ErrorPage from '../ErrorPage';
 
 class ConfirmAccountContainer extends Component {
     mounted = false;
@@ -38,8 +42,16 @@ class ConfirmAccountContainer extends Component {
         if (AuthService.getCurrentUser()) {
             return <Redirect to="/" />
         }
+        const { status } = this.state;
+        if (status) {
+            if (status === SC_CONFLICT) {
+                return <Message message={i18next.t('confirmAccount.alreadyConfirmed')} />
+            }
+            else {
+                return <ErrorPage error={status} />
+            }
+        }
         return <Loader />;
-        
     }
 
     componentWillUnmount = () => {
