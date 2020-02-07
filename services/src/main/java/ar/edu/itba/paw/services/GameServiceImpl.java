@@ -165,9 +165,7 @@ public class GameServiceImpl implements GameService {
             if (user.getUserId() == userIdReceive) {
                 LOGGER.trace("Found user: {} in team1", userIdReceive);
                 game.getPrimaryKey().setTeam1(teamService.removePlayer(game.team1Name(), userIdReceive));
-                try {
-                    premiumUserService.findById(userIdReceive);
-                } catch (UserNotFoundException e) {
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
                     userService.remove(userIdReceive);
                 }
                 return true;
@@ -177,9 +175,7 @@ public class GameServiceImpl implements GameService {
             if (user.getUserId() == userIdReceive) {
                 LOGGER.trace("Found user: {} in team2", userIdReceive);
                 game.setTeam2(teamService.removePlayer(game.team2Name(), userIdReceive));
-                try {
-                    premiumUserService.findById(userIdReceive);
-                } catch (UserNotFoundException e) {
+                if (!premiumUserService.findById(userIdReceive).isPresent()) {
                     userService.remove(userIdReceive);
                 }
                 return true;

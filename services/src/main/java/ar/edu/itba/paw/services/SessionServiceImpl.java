@@ -34,8 +34,10 @@ public class SessionServiceImpl implements SessionService {
     public Optional<PremiumUser> getLoggedUser() {
         String username = getUserName();
         PremiumUser loggedUser = null;
-        if (username != null && (currentPremiumUser == null || !currentPremiumUser.getUserName().equals(username))) {
-            currentPremiumUser = premiumUserService.findByUserName(username).orElse(null); //TODO check
+        if (username != null) {
+            if (currentPremiumUser == null || !currentPremiumUser.getUserName().equals(username)) {
+                currentPremiumUser = premiumUserService.findByUserName(username).orElse(null);
+            }
             loggedUser = currentPremiumUser;
         }
         return Optional.ofNullable(loggedUser);
