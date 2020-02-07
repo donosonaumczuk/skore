@@ -111,10 +111,9 @@ const createUser = async user => {
 const verifyUser = async (username, code) => {
     try {
         const res = await api.post(`${USERS_ENDPOINT}/${username}/verification`, code);
-        // TODO uncoment when token is received
-        // const token = res.headers['x-token']; 
-        // const userId = res.data.userId;
-        // AuthService.autoLogin(token, username, userId);
+        const token = res.headers['x-token']; 
+        const userId = res.data.userId;
+        AuthService.autoLogin(token, username, userId);
         return res.data;
     }
     catch (err) {

@@ -29,7 +29,7 @@ class ConfirmAccountContainer extends Component {
         }
         else {
             this.setState({ status: response.status, isLoading: false });
-            this.updateUser({ username: username });
+            this.props.updateUser({ username: username });
             this.props.history.push(`/users/${username}`);
         }
     }
