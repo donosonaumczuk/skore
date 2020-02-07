@@ -7,7 +7,7 @@ import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
 
-//TODO improve layout
+//TODO improve layout and make update result button only appears when match has been played
 const MatchPage = ({ currentMatch, updateMatchScore }) => {
     return (
         <div className="container-fluid">
