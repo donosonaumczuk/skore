@@ -276,11 +276,18 @@ public class UserController {
         * TODO|the code is receive in the mail.*/
         boolean enablePerformed = premiumUserService.enableUser(username, code);
         if (!enablePerformed) {
-            LOGGER.trace("Invalid code '{}' for user {} not exist", code, username);
+            LOGGER.trace("Invalid code '{}' for user '{}'", code, username);
             throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
         }
         LOGGER.trace("User '{}' verified successfully", username);
-        return Response.ok(UserDto.from(premiumUserService.findByUserName(username).get())).build(); //TODO
+        //TODO: Below, change the .get for a .orElseThrow, but take in account that the user was enabled successfully.
+        // So, what to do or what http code? Maybe the premiumUserService.enableUser must return Optional<PremiumUser> instead of boolean!
+        // Then we have three kind of possible scenarios:
+        // 1. UserNotFoundException thrown ==> Automatically mapped to a 404
+        // 2. Empty optional returned ==> Invalid code!
+        // 3. Non empty optional returned ==> Everything was right, and the .get now is safe!
+        // PD: The 2nd case maybe can be replaced by an InvalidConfirmationCodeException, and the method returns PremiumUser, or throws exceptions
+        return Response.ok(UserDto.from(premiumUserService.findByUserName(username).get())).build();
     }
 
     private byte[] getDefaultImage() {
