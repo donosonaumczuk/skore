@@ -1,22 +1,70 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import queryString from 'query-string';
+import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
+import UserService from '../../../services/UserService';
+import Loader from '../../Loader';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import Message from '../../Message';
+import ErrorPage from '../ErrorPage';
 
-const ConfirmAccount = () => {
-    //TODO improve layout
-    if (AuthService.getCurrentUser()) {
-        return <Redirect to="/" />
+class ConfirmAccountContainer extends Component {
+    mounted = false;
+    constructor(props) {
+        super(props);
+        const queryParams = queryString.parse(props.location.search);
+        const { username, code } = queryParams;   
+        this.state = {
+            status: null,
+            isLoading: true,
+            username: username,
+            code: code
+        };
     }
-    return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="container-fluid profile-container bg-white rounded-border alert alert-info alert-dismissible fade show mt-1">
-                    <h1>Congratulations!! You have created a new account.</h1>
-                    <h2>An email has been sent to you to confirm your account.</h2>
-                </div>
-            </div>
-        </div>
-    );
+
+    componentDidMount = async () => {
+        this.mounted = true;
+        const { username, code } = this.state;
+        const response = await UserService.verifyUser(username, code);
+        if (response.status && this.mounted) {
+            this.setState({ status: response.status, isLoading: false });
+        }
+        else {
+            if (this.mounted) {
+                this.setState({ isLoading: false });
+                this.props.updateUser({ username: username });
+                this.props.history.push(`/users/${username}`);
+            }
+        }
+    }
+
+    render() {
+        if (AuthService.getCurrentUser()) {
+            return <Redirect to="/" />
+        }
+        const { status } = this.state;
+        if (status) {
+            if (status === SC_CONFLICT) {
+                return <Message message={i18next.t('confirmAccount.alreadyConfirmed')} />
+            }
+            else {
+                return <ErrorPage error={status} />
+            }
+        }
+        return <Loader />;
+    }
+
+    componentWillUnmount = () => {
+        this.mounted =false;
+    }
 }
 
-export default ConfirmAccount;
+ConfirmAccountContainer.propTypes = {
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    updateUser: PropTypes.func.isRequired
+}
+
+export default ConfirmAccountContainer;

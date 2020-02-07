@@ -9,7 +9,9 @@ import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
+import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
@@ -57,6 +59,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -82,6 +85,9 @@ public class UserController {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private JWTUtility jwtUtility;
 
     private static Resource defaultImage = new ClassPathResource("user-default.png");
 
@@ -273,7 +279,7 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
         * TODO|the code is receive in the mail.*/
         Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
@@ -289,7 +295,8 @@ public class UserController {
             LOGGER.trace("User '{}' does not exist", username);
             return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
         });
-        return Response.ok(UserDto.from(premiumUser)).build();
+
+        return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
     }
 
     private byte[] getDefaultImage() {

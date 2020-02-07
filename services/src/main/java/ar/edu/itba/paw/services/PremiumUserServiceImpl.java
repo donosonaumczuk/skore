@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -89,10 +90,19 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                                         final String email, final String username,
                                         final String cellphone, final LocalDate birthday,
                                         final String country, final String state, final String city,
-                                        final String street, final int reputation, final String password,
+                                        final String street, final Integer reputation, final String password,
                                         final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Creating user");
+
+        if (premiumUserDao.findByEmail(email).isPresent()) {
+            LOGGER.trace("User with email {} already exist", email);
+            throw UserAlreadyExistException.ofEmail(email);
+        }
+        if (premiumUserDao.findByUserName(username).isPresent()) {
+            LOGGER.trace("User with username {} already exist", username);
+            throw UserAlreadyExistException.ofUsername(username);
+        }
 
         Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, username,
                 cellphone, birthday, country, state, city, street, reputation,
@@ -164,6 +174,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         }
 
         PremiumUser currentUser = user.get();
+
+        if (currentUser.getEnabled()) {
+            LOGGER.error("Can't enable user with username {}, is already enable", username);
+            throw UserAlreadyExistException.ofUsername(username);//TODO something similar
+        }
 
         if (!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
             LOGGER.error("Can't find user with username {} and code {}", username, code);
@@ -249,7 +264,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
         formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
-                user.getUserName() + "&" + user.getCode());
+                user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
 import LogInValidator from '../validators/LogInValidator';
@@ -74,7 +74,7 @@ LogInFormContainer = reduxForm({
 })(LogInFormContainer) 
 
 LogInFormContainer.propTypes = {
-    updateUser: Proptypes.func.isRequired
+    updateUser: PropTypes.func.isRequired
 }
 
 export default LogInFormContainer;

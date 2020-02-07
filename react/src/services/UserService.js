@@ -1,6 +1,7 @@
 import api from './../config/Api';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
+import AuthService from './AuthService';
 
 const getUsers = async (offset, limit) => {
     try {
@@ -98,9 +99,33 @@ const createUser = async user => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status };
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
+
+const verifyUser = async (username, code) => {
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/verification`, code);
+        const token = res.headers['x-token']; 
+        const userId = res.data.userId;
+        AuthService.autoLogin(token, username, userId);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 
 const updateUser = async (user, username) => {
     try {
@@ -108,7 +133,12 @@ const updateUser = async (user, username) => {
         return res.data;
     }
     catch (err) {
-        return { status: err.response.status };
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
     }
 }
 
@@ -120,6 +150,7 @@ const UserService = {
     getUserMatches: getUserMatches,
     getUserMatchesWithResults: getUserMatchesWithResults,
     createUser: createUser,
+    verifyUser: verifyUser,
     updateUser: updateUser
 };
 

@@ -51,6 +51,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.CODE_HEADER;
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
 @Controller
@@ -61,7 +62,6 @@ public class GameController {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     public static final String BASE_PATH = "matches";
-    private static final String CODE_HEADER = "X-CODE";
 
     @Autowired
     @Qualifier("gameServiceImpl")
