@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
@@ -96,15 +97,14 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public boolean remove(final String userName) {
+    public void remove(final String userName) {
         LOGGER.trace("Looking for user with username: {} to remove", userName);
-        boolean removed = premiumUserDao.remove(userName); //TODO: a false implies a not found??
-        if (removed) {
+        if (premiumUserDao.remove(userName)) {
             LOGGER.trace("{} removed", userName);
         } else {
             LOGGER.error("{} wasn't removed", userName);
+            throw UserNotFoundException.ofUsername(userName);
         }
-        return removed;
     }
 
     @Transactional
@@ -145,13 +145,13 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         if (newEmail != null) {
             emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         }
-
+        LOGGER.trace("User '{}' modified successfully", username);
         return user;
     }
 
     @Transactional
     @Override
-    public boolean enableUser(final String username, final String code) {
+    public PremiumUser enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
         PremiumUser user = findByUserName(username).orElseThrow(() -> {
@@ -161,10 +161,10 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {
             LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
-            return false;
+            throw InvalidUserCodeException.of(username, code);
         }
         LOGGER.trace("{} is now enabled", username);
-        return true;
+        return user;
     }
 
     @Transactional
@@ -174,7 +174,8 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
         String code = dataPath.substring(splitIndex + 1);
-        return enableUser(username, code);
+        enableUser(username, code);
+        return true;
     }
 
     @Transactional

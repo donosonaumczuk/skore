@@ -97,13 +97,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     @Override
     public boolean remove(final String userName) {
-        Optional<PremiumUser> user = findByUserName(userName);
-
-        if (user.isPresent()) {
-            em.remove(user.get());
-            return true;
-        }
-        return false;
+        final Optional<PremiumUser> userOptional = findByUserName(userName);
+        userOptional.ifPresent(user -> em.remove(user));
+        return userOptional.isPresent();
     }
 
     @Override

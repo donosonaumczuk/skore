@@ -202,10 +202,7 @@ public class UserController {
     public Response deleteUser(@PathParam("username") String username) {
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
-        if (!premiumUserService.remove(username)) {
-            LOGGER.trace("User '{}' does not exist", username);
-            throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        }
+        premiumUserService.remove(username);
         LOGGER.trace("User '{}' deleted successfully", username);
         return Response.noContent().build();
     }
@@ -215,6 +212,7 @@ public class UserController {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
                                @Context HttpServletRequest request) {
+        LOGGER.trace("Trying to update '{}' user", username);
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
@@ -231,7 +229,6 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
         );
-        LOGGER.trace("User '{}' modified successfully", username);
         return Response.ok(UserDto.from(updatedPremiumUser)).build();
     }
 
@@ -271,21 +268,8 @@ public class UserController {
     @POST
     @Path("/{username}/verification")
     public Response verifyUser(@PathParam("username") String username, String code) {
-        // TODO: Validate that te user to be delete is the same as the one logged. Maybe it is not need, because the code is receive in the mail...
-        boolean enablePerformed = premiumUserService.enableUser(username, code);
-        if (!enablePerformed) {
-            LOGGER.trace("Invalid code '{}' for user '{}'", code, username);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
-        }
-        LOGGER.trace("User '{}' verified successfully", username);
-        //TODO: Below, change the .get for a .orElseThrow, but take in account that the user was enabled successfully.
-        // So, what to do or what http code? Maybe the premiumUserService.enableUser must return Optional<PremiumUser> instead of boolean!
-        // Then we have three kind of possible scenarios:
-        // 1. UserNotFoundException thrown ==> Automatically mapped to a 404
-        // 2. Empty optional returned ==> Invalid code!
-        // 3. Non empty optional returned ==> Everything was right, and the .get now is safe!
-        // PD: The 2nd case maybe can be replaced by an InvalidConfirmationCodeException, and the method returns PremiumUser, or throws exceptions
-        return Response.ok(UserDto.from(premiumUserService.findByUserName(username).get())).build();
+        LOGGER.trace("Trying to verify '{}' user", username);
+        return Response.ok(UserDto.from(premiumUserService.enableUser(username, code))).build();
     }
 
     private byte[] getDefaultImage() {

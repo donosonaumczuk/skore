@@ -26,7 +26,7 @@ public interface PremiumUserService {
 
     Optional<byte[]> readImage(final String userName);
 
-    boolean remove(final String userName);
+    void remove(final String userName);
 
     PremiumUser updateUserInfo(final String username, final String newFirstName, final String newLastName,
                                final String newEmail, final String newCellphone, final LocalDate newBirthday,
@@ -34,7 +34,7 @@ public interface PremiumUserService {
                                final String newStreet, final Integer newReputation, final String newPassword,
                                final String oldPassword, final byte[] file, final Locale locale);
 
-    boolean enableUser(final String username, final String code);
+    PremiumUser enableUser(final String username, final String code);
 
     boolean confirmationPath(String path);
 
