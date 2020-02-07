@@ -175,6 +175,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
         PremiumUser currentUser = user.get();
 
+        if (currentUser.getEnabled()) {
+            LOGGER.error("Can't enable user with username {}, is already enable", username);
+            throw UserAlreadyExistException.ofUsername(username);//TODO something similar
+        }
+
         if (!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
             LOGGER.error("Can't find user with username {} and code {}", username, code);
             return Optional.of(false);
