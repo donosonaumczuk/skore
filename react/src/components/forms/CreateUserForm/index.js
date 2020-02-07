@@ -109,7 +109,7 @@ class CreateUserFormContainer extends Component {
            //TODO handle error
         }
         else {
-            this.props.history.push(`/confirmAccount`);
+            this.props.history.push(`/createdAccount`);
         }
     }
 
