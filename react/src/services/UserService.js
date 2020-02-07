@@ -1,6 +1,7 @@
 import api from './../config/Api';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
+import AuthService from './AuthService';
 
 const getUsers = async (offset, limit) => {
     try {
@@ -107,9 +108,13 @@ const createUser = async user => {
     }
 }
 
-const verifyUser = async code => {
+const verifyUser = async (username, code) => {
     try {
-        const res = await api.post(`${USERS_ENDPOINT}/verification`, code);
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/verification`, code);
+        // TODO uncoment when token is received
+        // const token = res.headers['x-token']; 
+        // const userId = res.data.userId;
+        // AuthService.autoLogin(token, username, userId);
         return res.data;
     }
     catch (err) {

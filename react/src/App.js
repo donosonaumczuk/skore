@@ -25,6 +25,7 @@ import Admin from './components/screens/Admin';
 import MatchPage from './components/screens/MatchPage';
 import ConfirmMatch from './components/screens/ConfirmMatch';
 import CancelMatch from './components/screens/CancelMatch';
+import CreatedAccount from './components/screens/CreatedAccount';
 
 class App extends Component {
     constructor(props) {
@@ -97,7 +98,11 @@ class App extends Component {
                             <Sports />
                         </Route>
                         <Route exact path="/signUp" component={CreateUserForm} />
-                        <Route exact path="/confirmAccount" component={ConfirmAccount} />
+                        <Route exact path="/createdAccount">
+                            <CreatedAccount />
+                        </Route>
+                        <Route exact path="/confirmAccount" render={(props) => 
+                                <ConfirmAccount {...props} updateUser={this.updateUser} />} />
                         <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} />
                         </Route>

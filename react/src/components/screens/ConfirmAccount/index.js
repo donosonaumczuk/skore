@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
-import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import UserService from '../../../services/UserService';
+import Loader from '../../Loader';
 
 class ConfirmAccountContainer extends Component {
     mounted = false;
@@ -12,8 +12,6 @@ class ConfirmAccountContainer extends Component {
         super(props);
         const queryParams = queryString.parse(props.location.search);
         const { username, code } = queryParams;   
-        console.log("username: ", username);
-        console.log("code: ", code);
         this.state = {
             status: null,
             isLoading: true,
@@ -24,32 +22,24 @@ class ConfirmAccountContainer extends Component {
 
     componentDidMount = async () => {
         this.mounted = true;
-        const response = await UserService.verifyUser(this.state.code);
+        const { username, code } = this.state;
+        const response = await UserService.verifyUser(username, code);
         if (response.status && this.mounted) {
-            this.setState({ status: response.status });
+            this.setState({ status: response.status, isLoading: false });
         }
         else {
-            console.log(response);
+            this.setState({ status: response.status, isLoading: false });
+            this.updateUser({ username: username });
+            this.props.history.push(`/users/${username}`);
         }
     }
 
     render() {
-        //TODO improve layout
         if (AuthService.getCurrentUser()) {
             return <Redirect to="/" />
         }
-        //login
-        return (
-            //redirect to userprofile
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="container-fluid profile-container bg-white rounded-border alert alert-info alert-dismissible fade show mt-1">
-                        <h1>{i18next.t('confirmAccount.confirmed')}</h1>
-                        <h2>{i18next.t('confirmAccount.confirmEmail')}</h2>
-                    </div>
-                </div>
-            </div>
-        );
+        return <Loader />;
+        
     }
 
     componentWillUnmount = () => {
@@ -58,7 +48,9 @@ class ConfirmAccountContainer extends Component {
 }
 
 ConfirmAccountContainer.propTypes = {
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    updateUser: PropTypes.func.isRequired
 }
 
 export default ConfirmAccountContainer;
