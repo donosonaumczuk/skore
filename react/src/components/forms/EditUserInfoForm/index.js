@@ -58,7 +58,11 @@ class EditUserInfoFormContainer extends Component {
 
     getBirthdayWithCorrectFormat = birthday => {
         const birthdayInfo = birthday.split("/");
-        let newBirthday = `${birthdayInfo[2]}-${birthdayInfo[0]}-${birthdayInfo[1]}`;
+        let newBirthday = {
+            "year": parseInt(birthdayInfo[2]),
+            "monthNumber": parseInt(birthdayInfo[0]),
+            "dayOfMonth":  parseInt(birthdayInfo[1])
+        }
         return newBirthday;
     }
 
@@ -82,12 +86,17 @@ class EditUserInfoFormContainer extends Component {
     
     onSubmit = async (values) => {
         let user = this.loadUser(values, this.state.image);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await UserService.updateUser(user, this.state.username);
         if (response.status) {
-            this.setState({ error: response.status });
+            if (this.mounted) {
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
-            this.props.history.push(`/${this.state.username}`);
+            this.props.history.push(`/users/${this.state.username}`);
         }
     }
     
@@ -103,7 +112,8 @@ class EditUserInfoFormContainer extends Component {
         return (
             <EditUserInfoForm handleSubmit={handleSubmit} submitting={submitting}
                                 onSubmit={this.onSubmit} imageName={imageName}
-                                handleChange={this.handleChange} />
+                                handleChange={this.handleChange} 
+                                isExecuting={this.state.executing} />
         );
     }
 

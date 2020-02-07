@@ -31,7 +31,7 @@ public interface PremiumUserService {
     Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
                                          final String newEmail, final String newCellphone, final LocalDate newBirthday,
                                          final String newCountry, final String newState, final String newCity,
-                                         final String newStreet, final int newReputation, final String newPassword,
+                                         final String newStreet, final Integer newReputation, final String newPassword,
                                          final String oldPassword, final byte[] file, final Locale locale);
 
     Optional<Boolean> enableUser(final String username, final String code);
