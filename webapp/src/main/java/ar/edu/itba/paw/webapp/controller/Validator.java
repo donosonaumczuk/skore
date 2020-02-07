@@ -40,10 +40,6 @@ public class Validator { //TODO: remove this class later
             "image/jpg", MediaType.IMAGE_PNG_VALUE);
     private static final int MEGABYTE = 1024 * 1024;
 
-    @Autowired
-    @Qualifier("premiumUserServiceImpl")
-    private PremiumUserService premiumUserService;
-
     private Validator() {
         //Singleton
     }
@@ -53,11 +49,6 @@ public class Validator { //TODO: remove this class later
             validator = new Validator();
         }
         return validator;
-    }
-
-    public Validator userExist(final String username) {
-        premiumUserService.findByUserName(username);
-        return this;
     }
 
     public Validator fieldHasData(final String field, final String fieldName) {

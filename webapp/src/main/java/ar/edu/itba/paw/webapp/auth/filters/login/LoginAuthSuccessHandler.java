@@ -41,7 +41,8 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         LOGGER.info("{} has been successfully authenticate", authentication.getName());
 
-        PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName()); //TODO: if exception?
+        PremiumUser premiumUser = premiumUserService.findByUserName(authentication.getName())
+                .orElseThrow(()-> UserNotFoundException.ofUsername(authentication.getName())); //Should never happend
 
         httpServletResponse.addHeader(TOKEN_HEADER, jwtUtility.createToken(premiumUser));
         httpServletResponse.setStatus(HttpStatus.OK.value());
