@@ -32,9 +32,11 @@ class ConfirmAccountContainer extends Component {
             this.setState({ status: response.status, isLoading: false });
         }
         else {
-            this.setState({ status: response.status, isLoading: false });
-            this.props.updateUser({ username: username });
-            this.props.history.push(`/users/${username}`);
+            if (this.mounted) {
+                this.setState({ isLoading: false });
+                this.props.updateUser({ username: username });
+                this.props.history.push(`/users/${username}`);
+            }
         }
     }
 
