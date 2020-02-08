@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.SportDto;
 import ar.edu.itba.paw.webapp.dto.SportPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -72,10 +73,8 @@ public class SportController {
                     LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
                     return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
-        final CacheControl cache = new CacheControl();
-        cache.setNoTransform(false);
-        cache.setMaxAge(ONE_HOUR);
-        Date expireDate =  DateTime.now().plusSeconds(ONE_HOUR).toDate();
+        CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
+        Date expireDate = CacheUtils.getExpire(ONE_HOUR);
         LOGGER.trace("Sport '{}' image retrieved successfully", sportname);
         return Response.ok(media).header(HttpHeaders.CONTENT_TYPE, com.google.common.net.MediaType.ANY_IMAGE_TYPE)
                 .cacheControl(cache).expires(expireDate).build();

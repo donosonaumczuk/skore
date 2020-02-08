@@ -17,6 +17,7 @@ import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
@@ -194,10 +195,9 @@ public class UserController {
     public Response getUserImage(@PathParam("username") String username) {
         UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
         Optional<byte[]> media = premiumUserService.readImage(username);
-        final CacheControl cache = new CacheControl();
-        cache.setNoTransform(false);
-        cache.setMaxAge(ONE_HOUR);
-        Date expireDate =  DateTime.now().plusSeconds(ONE_HOUR).toDate();
+
+        CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
+        Date expireDate = CacheUtils.getExpire(ONE_HOUR);
         if(!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
             return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*")
