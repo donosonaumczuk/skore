@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Place;
+import ar.edu.itba.paw.models.QueryList;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.DateDto;
@@ -86,27 +87,28 @@ public class GameController {
                              @QueryParam("maxQuantity") String maxQuantity,
                              @QueryParam("minFreePlaces") String minFreePlaces,
                              @QueryParam("maxFreePlaces") String maxFreePlaces,
-                             @QueryParam("country") List<String> countries,
-                             @QueryParam("state") List<String> states,
-                             @QueryParam("city") List<String> cities,
-                             @QueryParam("sport") List<String> sports,
-                             @QueryParam("type") List<String> types,
-                             @QueryParam("withPlayers") List<String> usernamesPlayersInclude,
-                             @QueryParam("withoutPlayers") List<String> usernamesPlayersNotInclude,
-                             @QueryParam("createdBy") List<String> usernamesCreatorsInclude,
-                             @QueryParam("notCreatedBy") List<String> usernamesCreatorsNotInclude,
+                             @QueryParam("country") QueryList countries,
+                             @QueryParam("state") QueryList states,
+                             @QueryParam("city") QueryList cities,
+                             @QueryParam("sport") QueryList sports,
+                             @QueryParam("type") QueryList types,
+                             @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
+                             @QueryParam("withoutPlayers") QueryList usernamesPlayersNotInclude,
+                             @QueryParam("createdBy") QueryList usernamesCreatorsInclude,
+                             @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                              @QueryParam("hasResult") String hasResult) {
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types, sports,
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types.getQueryValues(), sports.getQueryValues(),
                 QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
-                countries, states, cities, QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude,
-                usernamesPlayersNotInclude, usernamesCreatorsInclude, usernamesCreatorsNotInclude,
-                QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
-                QueryParamsUtils.booleanOrNull(hasResult))
+                countries.getQueryValues(), states.getQueryValues(), cities.getQueryValues(),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude.getQueryValues(),
+                usernamesPlayersNotInclude.getQueryValues(), usernamesCreatorsInclude.getQueryValues(),
+                usernamesCreatorsNotInclude.getQueryValues(), QueryParamsUtils.positiveIntegerOrNull(limit),
+                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
