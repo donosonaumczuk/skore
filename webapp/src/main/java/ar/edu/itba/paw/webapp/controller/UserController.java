@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
@@ -190,21 +191,21 @@ public class UserController {
     @GET
     @Path("/{username}/profile")
     public Response getUserProfile(@PathParam("username") String username) {
-        Optional<PremiumUser> premiumUserOptional = premiumUserService.findByUserName(username);
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' profile").validate(premiumUserOptional);
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
         LOGGER.trace("'{}' profile successfully gotten", username);
-        return Response.ok(ProfileDto.from(premiumUserOptional.get())).build();
+        return Response.ok(ProfileDto.from(premiumUser)).build();
     }
 
     @GET
     @Path("/{username}/image")
     public Response getUserImage(@PathParam("username") String username) {
-        UserValidators.existenceValidatorOf(username, "Can't get '" + username + "' image").validate(premiumUserService.findByUserName(username));
         Optional<byte[]> media = premiumUserService.readImage(username);
-
         CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
         Date expireDate = CacheUtils.getExpire(ONE_HOUR);
-        if(!media.isPresent()) {
+        if (!media.isPresent()) {
             LOGGER.trace("Returning default image: {} has not set an image yet", username);
             return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*")
                     .cacheControl(cache).expires(expireDate).build();
@@ -219,10 +220,7 @@ public class UserController {
     public Response deleteUser(@PathParam("username") String username) {
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
-        if (!premiumUserService.remove(username)) {
-            LOGGER.trace("User '{}' does not exist", username);
-            throw new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        }
+        premiumUserService.remove(username);
         LOGGER.trace("User '{}' deleted successfully", username);
         return Response.noContent().build();
     }
@@ -232,6 +230,7 @@ public class UserController {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
                                @Context HttpServletRequest request) {
+        LOGGER.trace("Trying to update '{}' user", username);
         UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
                 + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
@@ -239,7 +238,7 @@ public class UserController {
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
-        Optional<PremiumUser> newPremiumUser = premiumUserService.updateUserInfo(
+        PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
                 userDto.getHome().map(PlaceDto::getCountry).orElse(null),
@@ -248,10 +247,7 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
         );
-        UserValidators.existenceValidatorOf(username,"User update fails, user '" + username + "' does not exist")
-                .validate(newPremiumUser);
-        LOGGER.trace("User '{}' modified successfully", username);
-        return Response.ok(UserDto.from(newPremiumUser.get())).build();
+        return Response.ok(UserDto.from(updatedPremiumUser)).build();
     }
 
     @POST
@@ -270,10 +266,7 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
                 userDto.getReputation(), userDto.getPassword(), image, locale
-        ).orElseThrow(() -> {
-            LOGGER.trace("User '{}' already exist", userDto.getUsername());
-            return new ApiException(HttpStatus.CONFLICT, "User '" + userDto.getUsername() + "' already exist");
-        });
+        );
         LOGGER.trace("User '{}' created successfully", userDto.getUsername());
         return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser))
                 .header("Accept-Language", locale.toString()).build();
@@ -283,33 +276,18 @@ public class UserController {
     @Path("/{username}")
     public Response getUser(@PathParam("username") String username) {
         PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
         });
-        LOGGER.trace("User '{}' founded successfully", username);
+        LOGGER.trace("User '{}' found successfully", username);
         return Response.ok(UserDto.from(premiumUser)).build();
     }
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
-        /*TODO| Validate that te user to be delete is the same as the one logged. Maybe it is not need, because
-        * TODO|the code is receive in the mail.*/
-        Boolean result = premiumUserService.enableUser(username, code).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
-        if(!result) {
-            LOGGER.trace("User '{}' with code '{}' does not exist", username, code);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid verification code for user '" + username + "'");
-        }
-        LOGGER.trace("User '{}' verified successfully", username);
-        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
-            LOGGER.trace("User '{}' does not exist", username);
-            return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-        });
-
-        return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
+    public Response verifyUser(@PathParam("username") String username, String code) {
+        LOGGER.trace("Trying to verify '{}' user", username);
+        return Response.ok(UserDto.from(premiumUserService.enableUser(username, code))).build();
     }
 
     private byte[] getDefaultImage() {

@@ -107,7 +107,7 @@ public class UserValidatorsTest {
     @Test
     public void whenValidatingUpdateIfHasOldPasswordButNotPasswordThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("This is for testing!"); //TODO: update
+        exceptionRule.expectMessage("Field 'oldPassword' known but other field values turn it unaccepted");
         UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                         "\t\"oldPassword\" : \"myOldPassword\",\n" +

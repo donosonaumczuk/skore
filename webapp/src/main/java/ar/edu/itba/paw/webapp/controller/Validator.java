@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
@@ -10,8 +9,6 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,10 +37,6 @@ public class Validator { //TODO: remove this class later
             "image/jpg", MediaType.IMAGE_PNG_VALUE);
     private static final int MEGABYTE = 1024 * 1024;
 
-    @Autowired
-    @Qualifier("premiumUserServiceImpl")
-    private PremiumUserService premiumUserService;
-
     private Validator() {
         //Singleton
     }
@@ -53,15 +46,6 @@ public class Validator { //TODO: remove this class later
             validator = new Validator();
         }
         return validator;
-    }
-
-    public Validator userExist(final String username) {
-        premiumUserService.findByUserName(username)
-            .orElseThrow(() -> {
-                LOGGER.trace("Can't get '{}', user not found", username);
-                return new ApiException(HttpStatus.NOT_FOUND, "User '" + username + "' does not exist");
-            });
-        return this;
     }
 
     public Validator fieldHasData(final String field, final String fieldName) {

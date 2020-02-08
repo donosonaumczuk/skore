@@ -5,18 +5,19 @@ import ar.edu.itba.paw.models.User;
 import java.util.Optional;
 
 public interface UserDao {
-    public Optional<User> findById(final long userId);
 
-    public Optional<User> create(final String firstName, final String lastName, final String email);
+    Optional<User> findById(final long userId);
 
-    public boolean remove(final long userId);
+    Optional<User> create(final String firstName, final String lastName, final String email);
 
-    public Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
-                                              final String newLastName, final String newEmail);
+    boolean remove(final long userId);
 
-    public Optional<User> updateFirstName(final long userId, final String newFirstName);
+    Optional<User> updateBasicUserInfo(final long userId, final String newFirstName,
+                                       final String newLastName, final String newEmail);
 
-    public Optional<User> updateLastName(final long userId, final String newLastName);
+    Optional<User> updateFirstName(final long userId, final String newFirstName);
 
-    public Optional<User> updateEmail(final long userId, final String newEmail);
+    Optional<User> updateLastName(final long userId, final String newLastName);
+
+    Optional<User> updateEmail(final long userId, final String newEmail);
 }

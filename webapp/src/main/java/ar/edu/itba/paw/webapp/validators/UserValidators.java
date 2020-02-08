@@ -67,8 +67,7 @@ public class UserValidators {
                         "provide an '" + OLD_PASSWORD + "' field with the old password");
             }
             else if (!jsonObject.has(PASSWORD)) {
-                //TODO: replace the following line with a call to ValidatorFactory::forbiddenValidatorOf over OLD_PASSWORD
-                if (jsonObject.has(OLD_PASSWORD)) throw new ApiException(HttpStatus.BAD_REQUEST, "This is for testing!");
+                ValidatorFactory.forbiddenFieldsValidatorOf(ImmutableSet.of(OLD_PASSWORD), log).validate(jsonObject);
             }
         };
     }

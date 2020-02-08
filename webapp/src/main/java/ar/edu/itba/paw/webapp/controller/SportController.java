@@ -122,13 +122,7 @@ public class SportController {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
         byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
-
-        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getPlayerQuantity(),
-                imageBytes)
-                .orElseThrow(() -> {
-                    LOGGER.trace("Sport '{}' does not exist", sportname);
-                    return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
-                });
+        Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getPlayerQuantity(), imageBytes);
         LOGGER.trace("Sport '{}' modified successfully", sportname);
         return Response.ok(SportDto.from(newSport)).build();
     }
@@ -138,14 +132,8 @@ public class SportController {
     public Response createASport(final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
         Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");
         byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
-
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
-                sportDto.getDisplayName(), imageBytes)
-                .orElseThrow(() -> {
-                    LOGGER.trace("Sport '{}' already exist", sportDto.getSportName());
-                    return new ApiException(HttpStatus.CONFLICT, "Sport '" +
-                            sportDto.getSportName() + "' already exist");
-                });
+                sportDto.getDisplayName(), imageBytes);
         LOGGER.trace("Sport '{}' created successfully", sportDto.getSportName());
         return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
     }
