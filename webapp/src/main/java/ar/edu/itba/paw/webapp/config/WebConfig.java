@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,7 +40,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants"})
+        "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants",})
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:properties/db.properties"),
@@ -109,9 +112,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/static/media/**").addResourceLocations("/media/");
+        registry.addResourceHandler("/static/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/static/js/**").addResourceLocations("/js/");
     }
 
     @Bean
