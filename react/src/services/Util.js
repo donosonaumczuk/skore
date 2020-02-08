@@ -45,8 +45,8 @@ const getStringWithTwoDigits = number => {
 
 const getDateWithParamFormat = date => {
     const year = date.getFullYear()
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    const month = getStringWithTwoDigits(date.getMonth() + 1);
+    const day = getStringWithTwoDigits(date.getDate());
     const hours = getStringWithTwoDigits(date.getHours());
     const minutes = getStringWithTwoDigits(date.getMinutes());
     return `${year}-${month}-${day}T${hours}:${minutes}`;

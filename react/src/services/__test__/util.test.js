@@ -37,7 +37,41 @@ test('getDateWithParamFormat with incomplete date and time', () => {
     expect(actualResult).toBe(expectedResult);
 });
 
-test('getDateWithParamFormat with incomplete date', () => {
+test('getDateWithParamFormat with incomplete month', () => {
+    //set up
+    const year = 1994;
+    const month = 8; //use month number -1
+    const day = 26;
+    const hours = 9;
+    const minutes = 5;
+    const date = new Date(year, month, day, hours, minutes);
+    const expectedResult = "1994-09-26T09:05";
+
+    //execution
+    const actualResult = getDateWithParamFormat(date);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('getDateWithParamFormat with incomplete day', () => {
+    //set up
+    const year = 1994;
+    const month = 11; //use month number -1
+    const day = 6;
+    const hours = 9;
+    const minutes = 5;
+    const date = new Date(year, month, day, hours, minutes);
+    const expectedResult = "1994-12-06T09:05";
+
+    //execution
+    const actualResult = getDateWithParamFormat(date);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('getDateWithParamFormat with incomplete hour', () => {
     //set up
     const year = 1994;
     const month = 11; //use month number -1
@@ -54,7 +88,7 @@ test('getDateWithParamFormat with incomplete date', () => {
     expect(actualResult).toBe(expectedResult);
 });
 
-test('getDateWithParamFormat with incomplete time', () => {
+test('getDateWithParamFormat with incomplete minutes', () => {
     //set up
     const year = 1994;
     const month = 11; //use month number -1
@@ -63,6 +97,23 @@ test('getDateWithParamFormat with incomplete time', () => {
     const minutes = 5;
     const date = new Date(year, month, day, hours, minutes);
     const expectedResult = "1994-12-26T23:05";
+
+    //execution
+    const actualResult = getDateWithParamFormat(date);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('getDateWithParamFormat with incomplete date and time', () => {
+    //set up
+    const year = 1994;
+    const month = 8; //use month number -1
+    const day = 6;
+    const hours = 4;
+    const minutes = 5;
+    const date = new Date(year, month, day, hours, minutes);
+    const expectedResult = "1994-09-06T04:05";
 
     //execution
     const actualResult = getDateWithParamFormat(date);

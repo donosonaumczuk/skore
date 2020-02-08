@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.utils;
 
+import ar.edu.itba.paw.models.QueryList;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class QueryParamsUtils {
 
@@ -43,5 +46,9 @@ public class QueryParamsUtils {
 
     public static LocalDateTime localDateTimeOrNull(String s) {
         return localDateTimeOrElse(s, null);
+    }
+
+    public static List<String> getQueryListOrNull(QueryList list) {
+        return list != null ? list.getQueryValues() : null;
     }
 }
