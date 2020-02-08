@@ -1,4 +1,6 @@
-import { getDateWithParamFormat, addFutureMinTimeToParams } from '../Util';
+import { getDateWithParamFormat, addFutureMinTimeToParams,
+        addMinFreePlacesToParams, buildUrlFromParamQueries,
+        buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from '../Util';
 
 //getDateWithParamFormat tests
 test('getDateWithParamFormat with complete date and time', () => {
@@ -81,7 +83,6 @@ test('addFutureMinTimeToParams with empty param', () => {
     expect(actualResult.minStartTime).toBeDefined();
 });
 
-//addFutureMinTimeToParams tests
 test('addFutureMinTimeToParams with nonempty param', () => {
     //set up
     const param = { key1: "value1", key2: "value2" };
@@ -93,4 +94,134 @@ test('addFutureMinTimeToParams with nonempty param', () => {
     expect(actualResult.key1).toBeDefined();
     expect(actualResult.key2).toBeDefined();
     expect(actualResult.minStartTime).toBeDefined();
+});
+
+//addMinFreePlacesToParams tests
+test('addMinFreePlacesToParams with empty param', () => {
+    //set up
+    const param = {};
+
+    //execution
+    const actualResult = addMinFreePlacesToParams(param);
+
+    //postconditions
+    expect(actualResult.minFreePlaces).toBeDefined();
+});
+
+test('addMinFreePlacesToParams with nonempty param', () => {
+    //set up
+    const param = { key1: "value1", key2: "value2" };
+
+    //execution
+    const actualResult = addMinFreePlacesToParams(param);
+
+    //postconditions
+    expect(actualResult.key1).toBeDefined();
+    expect(actualResult.key2).toBeDefined();
+    expect(actualResult.minFreePlaces).toBeDefined();
+});
+
+//buildUrlFromParamQueries tests
+test('buildUrlFromParamQueries with params', () => {
+    //set up
+    const params = { "country": "Argentina", "sport": "Padle" };
+    const expectedResult = "?country=Argentina&sport=Padle";
+
+    //execution
+    const actualResult = buildUrlFromParamQueries(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('buildUrlFromParamQueries with empty params', () => {
+    //set up
+    const params = { };
+    const expectedResult = "";
+
+    //execution
+    const actualResult = buildUrlFromParamQueries(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('buildUrlFromParamQueries with params with list', () => {
+    //set up
+    const params = { "country": "Argentina", "sport": "Padle Futbol" };
+    const expectedResult = "?country=Argentina&sport=Padle Futbol";
+
+    //execution
+    const actualResult = buildUrlFromParamQueries(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+//buildUrlFromParamsWithCommas tests
+test('buildUrlFromParamsWithCommas with params without list', () => {
+    //set up
+    const params = { "country": "Argentina", "sport": "Padle" };
+    const expectedResult = "?country=Argentina&sport=Padle";
+
+    //execution
+    const actualResult = buildUrlFromParamsWithCommas(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('buildUrlFromParamsWithCommas with params with list', () => {
+    //set up
+    const params = { "country": "Argentina", "sport": "Padle Futbol" };
+    const expectedResult = "?country=Argentina&sport=Padle,Futbol";
+
+    //execution
+    const actualResult = buildUrlFromParamsWithCommas(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+test('buildUrlFromParamsWithCommas with empty params', () => {
+    //set up
+    const params = { };
+    const expectedResult = "";
+
+    //execution
+    const actualResult = buildUrlFromParamsWithCommas(params);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+//createObjectFromFiltersAndPaging tests
+test('createObjectFromFiltersAndPaging without filters', () => {
+    //set up
+    const offset = 0;
+    const limit = 10;
+    const filters = {};
+
+    //execution
+    const actualResult = createObjectFromFiltersAndPaging(offset, limit, filters);
+
+    //postconditions
+    expect(actualResult.offset).toEqual(offset);
+    expect(actualResult.limit).toEqual(limit);
+});
+
+test('createObjectFromFiltersAndPaging with filters', () => {
+    //set up
+    const offset = 0;
+    const limit = 10;
+    const filters = { "country": "Argentina", "sports": "Padle"};
+
+    //execution
+    const actualResult = createObjectFromFiltersAndPaging(offset, limit, filters);
+
+    //postconditions
+    expect(actualResult.offset).toEqual(offset);
+    expect(actualResult.limit).toEqual(limit);
+    expect(actualResult.country).toEqual("Argentina");
+    expect(actualResult.sports).toEqual("Padle");
 });

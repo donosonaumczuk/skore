@@ -56,7 +56,14 @@ const addFutureMinTimeToParams = params => {
     const minStartTime = getDateWithParamFormat(new Date());
     return {
         ...params,
-        minStartTime: minStartTime
+        "minStartTime": minStartTime
+    };
+}
+
+const addMinFreePlacesToParams = params => {
+    return { 
+        ...params,
+        "minFreePlaces": 1
     };
 }
 
@@ -80,4 +87,5 @@ export {
     createObjectFromFiltersAndPaging,
     getDateWithParamFormat,
     addFutureMinTimeToParams,
+    addMinFreePlacesToParams,
 };
