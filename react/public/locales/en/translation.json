@@ -94,9 +94,13 @@
         "login": "log in",
         "newUser": "are you new? ",
         "errors": {
-            "invalidUsernameOrPassword": "Invalid username or password",
-            "requiredUsername": "Username is required.",
-            "requiredPassword":"Password is required."
+            "username": {
+                "required": "Username is required."
+            },
+            "password": {
+                "required":"Password is required."
+            },
+            "invalidUsernameOrPassword": "Invalid username or password"
         }
     },
     "home": {

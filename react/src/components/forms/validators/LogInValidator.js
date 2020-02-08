@@ -1,17 +1,10 @@
-import i18next from 'i18next';
+import { validateOnlyRequiredField } from './utils/RequiredFieldValidators';
 
-const validateOnlyRequiredField = (fieldValue, errorLabel) => {
-    //TODO make breakline appear between errors, i do not know why it is not working
-    let errorMessage = ``;
-    if (!fieldValue) {
-        errorMessage = i18next.t(`${errorLabel}`);
-    }
-    return errorMessage;
-}
+const ERROR_BASE_LABEL = 'login.errors.'
 
-const validateUsername = username => validateOnlyRequiredField(username, 'login.errors.requiredUsername');
+const validateUsername = username => validateOnlyRequiredField(username, `${ERROR_BASE_LABEL}username`);
 
-const validatePassword = password => validateOnlyRequiredField(password, 'login.errors.requiredPassword');
+const validatePassword = password => validateOnlyRequiredField(password, `${ERROR_BASE_LABEL}password`);
 
 const LogInValidator = {
     validateUsername,

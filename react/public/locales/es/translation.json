@@ -94,9 +94,13 @@
         "login": "ingresar",
         "newUser": "eres nuevo? ",
         "errors": {
-            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto.",
-            "requiredUsername": "El nombre de usuario es obligatorio.",
-            "requiredPassword": "La contraseña es obligatoria."
+            "username": {
+                "required": "El nombre de usuario es obligatorio."
+            },
+            "password": {
+                "required": "La contraseña es obligatoria."
+            },
+            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto."
         }
     },
     "home": {

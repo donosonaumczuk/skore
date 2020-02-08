@@ -1,4 +1,4 @@
-import { hasStringInvalidSymbols, isStringAlpha, isStringAlphaOrSpaces, isStringNumeric, isStringAlphaNumeric, isStringAlphaNumericOrSpaces, isStringValidEmail } from '../StringValidators';
+import { hasStringInvalidSymbols, isStringAlpha, isStringAlphaOrSpaces, isStringNumeric, isStringAlphaNumeric, isStringAlphaNumericOrSpaces, isStringValidEmail, isStringLengthBetween } from '../StringValidators';
 
 //hasStringInvalidSymbols tests
 test('hasStringInvalidSymbols with all valid Symbols', () => {
@@ -24,6 +24,36 @@ test('hasStringInvalidSymbols with invalid Symbols', () => {
     //postconditions
     expect(actualResult).toBeTruthy();
 });
+
+//isStringLengthBetween tests
+test('isStringLengthBetween with valid values', () => {
+    //set up
+    const text = "test";
+    const length = text.length;
+
+    //execution
+    const actualResult = isStringLengthBetween(text, length, length);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+})
+
+//isStringLengthBetween tests
+test('isStringLengthBetween with invalid values', () => {
+    //set up
+    const text = "test";
+    const length = text.length;
+
+    //execution
+    const actualResult1 = isStringLengthBetween(text, length + 1, length + 1);
+    const actualResult2 = isStringLengthBetween(text, length + 1, length);
+    const actualResult3 = isStringLengthBetween(text, length, length - 1);
+
+    //postconditions
+    expect(actualResult1).toBeFalsy();
+    expect(actualResult2).toBeFalsy();
+    expect(actualResult3).toBeFalsy();
+})
 
 //isStringAlpha tests
 test('isStringAlpha with valid values', () => {
