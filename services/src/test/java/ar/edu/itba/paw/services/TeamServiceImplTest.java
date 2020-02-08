@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.TeamDao;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.TeamServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,12 +57,12 @@ public class TeamServiceImplTest {
 
         Assert.assertNotNull(map);
         Assert.assertEquals(3, map.size());
-        Assert.assertEquals(true , map.containsKey(user0));
-        Assert.assertEquals(null, map.get(user0));
-        Assert.assertEquals(true , map.containsKey(user1));
+        Assert.assertTrue(map.containsKey(user0));
+        Assert.assertNull(map.get(user0));
+        Assert.assertTrue(map.containsKey(user1));
         Assert.assertEquals(account1, map.get(user1));
-        Assert.assertEquals(true , map.containsKey(user2));
-        Assert.assertEquals(null, map.get(user2));
+        Assert.assertTrue(map.containsKey(user2));
+        Assert.assertNull(map.get(user2));
     }
 
     @Test

@@ -17,24 +17,24 @@ public interface PremiumUserService {
 
     Optional<PremiumUser> findById(final long userId);
 
-    Optional<PremiumUser> create(final String firstName, final String lastName,
-                                 final String email, final String username,
-                                 final String cellphone, final LocalDate birthday,
-                                 final String country, final String state, final String city,
-                                 final String street, final Integer reputation, final String password,
-                                 final byte[] file, final Locale locale);
+    PremiumUser create(final String firstName, final String lastName,
+					   final String email, final String username,
+                       final String cellphone, final LocalDate birthday,
+                       final String country, final String state, final String city,
+                       final String street, final int reputation, final String password,
+                       final byte[] file, final Locale locale);
 
     Optional<byte[]> readImage(final String userName);
 
-    boolean remove(final String userName);
+    void remove(final String userName);
 
-    Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
-                                         final String newEmail, final String newCellphone, final LocalDate newBirthday,
-                                         final String newCountry, final String newState, final String newCity,
-                                         final String newStreet, final Integer newReputation, final String newPassword,
-                                         final String oldPassword, final byte[] file, final Locale locale);
+    PremiumUser updateUserInfo(final String username, final String newFirstName, final String newLastName,
+                               final String newEmail, final String newCellphone, final LocalDate newBirthday,
+                               final String newCountry, final String newState, final String newCity,
+                               final String newStreet, final Integer newReputation, final String newPassword,
+                               final String oldPassword, final byte[] file, final Locale locale);
 
-    Optional<Boolean> enableUser(final String username, final String code);
+    PremiumUser enableUser(final String username, final String code);
 
     boolean confirmationPath(String path);
 

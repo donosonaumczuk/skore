@@ -234,7 +234,7 @@
         "deleteSport": "DELETE"  
     },
     "confirmAccount": {
-        "confirmed": "Congratulations!! You have created a new account.",
+        "confirmed": "Congratulations! You have created a new account.",
         "confirmEmail": "An email has been sent to you to confirm your account.",
         "alreadyConfirmed": "Your account has already been confirmed."
     },

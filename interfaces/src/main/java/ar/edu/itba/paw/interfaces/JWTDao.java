@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JWTDao {
+
     boolean isInBlacklist(String jwtoken);
 
     JWT addBlacklist(String jwtoken, LocalDateTime expiry);

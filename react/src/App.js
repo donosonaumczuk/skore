@@ -28,6 +28,7 @@ import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import './css/main.css';
 
+
 class App extends Component {
     constructor(props) {
         super(props);

@@ -54,7 +54,7 @@ public class TeamHibernateDao implements TeamDao {
         LOGGER.trace("Find leader: {}", leaderName);
         LOGGER.trace("Try to find sport: {}", sportName);
         Sport sport = sportDao.findByName(sportName)
-                .orElseThrow(() -> new SportNotFoundException("Sport does not exist"));
+                .orElseThrow(() -> SportNotFoundException.ofId(sportName));
         LOGGER.trace("Find sport: {}", sportName);
 
         Team team = new Team(leader, acronym, teamName, isTemp, sport, ((file==null)?null:file.getBytes()));
@@ -87,7 +87,7 @@ public class TeamHibernateDao implements TeamDao {
                                          final String oldTeamName) {
         LOGGER.trace("Try to modify: {}", oldTeamName);
         Team team = findByTeamName(oldTeamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(oldTeamName));
         team.setName(newTeamName);
         team.setAcronym(newAcronym);
 
@@ -98,7 +98,7 @@ public class TeamHibernateDao implements TeamDao {
 
         LOGGER.trace("Try to fin new sport: {}", newSportName);
         Sport newSport = sportDao.findByName(newSportName)
-                .orElseThrow(() -> new SportNotFoundException("Sport does not exist"));
+                .orElseThrow(() -> SportNotFoundException.ofId(newSportName));
         team.setSport(newSport);
 
         em.merge(team);
@@ -109,7 +109,7 @@ public class TeamHibernateDao implements TeamDao {
     public Optional<Team> addPlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
 
         User user = userDao.findById(userId)
                 .orElseThrow(() -> UserNotFoundException.ofId(userId));
@@ -134,7 +134,7 @@ public class TeamHibernateDao implements TeamDao {
     public Optional<Team> removePlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
 
         if(!team.removePlayer(userId)) {
             throw UserNotFoundException.ofId(userId);
