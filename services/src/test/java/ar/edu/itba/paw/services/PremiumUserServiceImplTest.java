@@ -1,21 +1,26 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.PremiumUserServiceImpl;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -39,6 +44,9 @@ public class PremiumUserServiceImplTest {
     @InjectMocks
     private PremiumUserServiceImpl premiumUserService;
 
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
     @Test
     public void confirmationPathFinishTest() {
         List<List<Game>> list = new LinkedList<>();
@@ -56,6 +64,8 @@ public class PremiumUserServiceImplTest {
 
     @Test
     public void confirmationPathExceptionTest() {
+        exceptionRule.expect(InvalidUserCodeException.class);
+        exceptionRule.expectMessage("Invalid code '" + CODE + "' for user '" + USERNAME + "'");
         PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
         List<List<Game>> list = new LinkedList<>();
