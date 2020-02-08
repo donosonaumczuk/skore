@@ -32,19 +32,15 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Optional<PremiumUser> getLoggedUser() {
-        PremiumUser ans;
         String username = getUserName();
-        if (username == null) {
-            ans = null;
-        }
-        else {
+        PremiumUser loggedUser = null;
+        if (username != null) {
             if (currentPremiumUser == null || !currentPremiumUser.getUserName().equals(username)) {
                 currentPremiumUser = premiumUserService.findByUserName(username).orElse(null);
             }
-            ans = currentPremiumUser;
+            loggedUser = currentPremiumUser;
         }
-
-        return Optional.ofNullable(ans);
+        return Optional.ofNullable(loggedUser);
     }
 
     @Override

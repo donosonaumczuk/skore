@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
@@ -51,6 +52,7 @@ import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
 
@@ -132,7 +134,6 @@ public class GameController {
                     location.getStreet(), gameDto.getTornamentName(), gameDto.getDescription(), gameDto.getTitle(),
                     gameDto.getSport());
         //TODO catch exception TeamNotFoundException, GameAlreadyExist, InvalidGameKeyException (should never happend)
-
         return Response.status(HttpStatus.CREATED.value())
                 .entity(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
                 .build();
@@ -142,7 +143,10 @@ public class GameController {
     @Path("/{key}")
     public Response getGame(@PathParam("key") String key) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
-        Game game = gameService.findByKey(key);
+        Game game = gameService.findByKey(key).orElseThrow(() -> {
+            LOGGER.error("Get game failed because there is no game '{}'", key);
+            return GameNotFoundException.ofKey(key);
+        });
         //TODO catch exception GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' founded successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();

@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
+import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -48,72 +50,61 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
-
-        Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
-        if (user.isPresent()) {
-            List<List<Game>> listsOfgames = gameService.getGamesThatPlay(user.get().getUser().getUserId());
-            user.get().setGamesInTeam1(listsOfgames.get(0));
-            user.get().setGamesInTeam2(listsOfgames.get(1));
-            user.get().setWinRate(calculateWinRate(user.get()));
-        }
-        return user;
+        return premiumUserDao.findByUserName(userName).map(user -> {
+            List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
+            user.setGamesInTeam1(games.get(0));
+            user.setGamesInTeam2(games.get(1));
+            user.setWinRate(calculateWinRate(user));
+            return user;
+        });
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
-        Optional<PremiumUser> user = premiumUserDao.findByEmail(email);
-
-        if (!user.isPresent()) {
-            LOGGER.error("Can't find user with email: {}", email);
-        }
-        return user;
+        return premiumUserDao.findByEmail(email); //TODO: why does not include games/matches?
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
-        Optional<PremiumUser> user = premiumUserDao.findById(userId);
-
-        if (!user.isPresent()) {
-            LOGGER.error("Can't find user with id: {}", userId);
-        }
-        return user;
+        return premiumUserDao.findById(userId); //TODO: why does not include games/matches?
     }
 
     @Transactional
     @Override
-    public Optional<PremiumUser> create(final String firstName, final String lastName,
-                                        final String email, final String username,
-                                        final String cellphone, final LocalDate birthday,
-                                        final String country, final String state, final String city,
-                                        final String street, final int reputation, final String password,
-                                        final byte[] file, final Locale locale) {
+    public PremiumUser create(final String firstName, final String lastName,
+                              final String email, final String userName,
+                              final String cellphone, final LocalDate birthday,
+                              final String country, final String state, final String city,
+                              final String street, final int reputation, final String password,
+                              final byte[] file, final Locale locale) {
         final String encodedPassword = bcrypt.encode(password);
-        LOGGER.trace("Creating user");
-
-        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, username,
-                cellphone, birthday, country, state, city, street, reputation,
-                encodedPassword, file);
+        LOGGER.trace("Attempting to create user: {}", userName);
+        PremiumUser user = premiumUserDao.create(
+                firstName, lastName, email, userName, cellphone, birthday, country, state, city, street, reputation,
+                encodedPassword, file
+        ).orElseThrow(() -> {
+            LOGGER.error("User with username {} already exist", userName);
+            return UserAlreadyExistException.ofUsername(userName);
+        });
         LOGGER.trace("Sending confirmation email to {}", email);
-        user.ifPresent(premiumUser -> emailSender.sendConfirmAccount(premiumUser, getConfirmationUrl(premiumUser), locale));
+        emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         return user;
     }
 
     @Transactional
     @Override
-    public boolean remove(final String userName) {
+    public void remove(final String userName) {
         LOGGER.trace("Looking for user with username: {} to remove", userName);
-        boolean returnedValue = premiumUserDao.remove(userName);
-        if (returnedValue) {
+        if (premiumUserDao.remove(userName)) {
             LOGGER.trace("{} removed", userName);
+        } else {
+            LOGGER.error("{} wasn't removed", userName);
+            throw UserNotFoundException.ofUsername(userName);
         }
-        else {
-            LOGGER.trace("{} wasn't removed", userName);
-        }
-        return returnedValue;
     }
 
     @Transactional
@@ -124,53 +115,56 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public Optional<PremiumUser> updateUserInfo(final String username, final String newFirstName, final String newLastName,
-                                                final String newEmail, final String newCellphone, final LocalDate newBirthday,
-                                                final String newCountry, final String newState, final String newCity,
-                                                final String newStreet, final int newReputation, final String newPassword,
-                                                final String oldPassword, final byte[] file, final Locale locale) {
-
+    public PremiumUser updateUserInfo(
+            final String username, final String newFirstName, final String newLastName, final String newEmail,
+            final String newCellphone, final LocalDate newBirthday, final String newCountry, final String newState,
+            final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
+            final String oldPassword, final byte[] file, final Locale locale
+    ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
 
         if (newPassword != null) {
-            //TODO: validations like != ""
-            PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> UserNotFoundException.ofUsername(username)); //TODO: this will be improved in other PR
+            PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+                LOGGER.error("Can't find user with username: {}", username);
+                return UserNotFoundException.ofUsername(username);
+            });
             if (oldPassword != null && !bcrypt.matches(oldPassword, premiumUser.getPassword())) {
-                throw new IllegalArgumentException("Wrong old password"); //TODO: discuss! Will be improved in other PR
+                throw WrongOldUserPasswordException.ofUsername(username);
             }
         }
 
         final String encodedPassword = (newPassword == null) ? null : bcrypt.encode(newPassword);
-        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
-                newEmail, username, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, encodedPassword, file, username);
+        PremiumUser user = premiumUserDao.updateUserInfo(
+                newFirstName, newLastName, newEmail, username, newCellphone, newBirthday, newCountry, newState, newCity,
+                newStreet, newReputation, encodedPassword, file, username
+        ).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
 
-        if (user.isPresent() && newEmail != null) {
-            emailSender.sendConfirmAccount(user.get(), getConfirmationUrl(user.get()), locale);
+        if (newEmail != null) {
+            emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         }
-
+        LOGGER.trace("User '{}' modified successfully", username);
         return user;
     }
 
     @Transactional
     @Override
-    public Optional<Boolean> enableUser(final String username, final String code) {
+    public PremiumUser enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
 
-        Optional<PremiumUser> user = findByUserName(username);
-        if (!user.isPresent()) {
-            LOGGER.error("Can't find user with username {}", username);
-            return Optional.empty();
-        }
+        PremiumUser user = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
 
-        PremiumUser currentUser = user.get();
-
-        if (!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
-            LOGGER.error("Can't find user with username {} and code {}", username, code);
-            return Optional.of(false);
+        if (!premiumUserDao.enableUser(user.getUserName(), code)) {
+            LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
+            throw InvalidUserCodeException.of(username, code);
         }
         LOGGER.trace("{} is now enabled", username);
-        return Optional.of(true);
+        return user;
     }
 
     @Transactional
@@ -179,14 +173,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         String dataPath = path.replace("/confirm/", "");
         int splitIndex = dataPath.indexOf('&');
         String username = dataPath.substring(0, splitIndex);
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-
-        if (!premiumUser.isPresent()) {
-            return false;
-        }
-
-        String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code).get();//TODO check
+        String code = dataPath.substring(splitIndex + 1);
+        enableUser(username, code);
+        return true;
     }
 
     @Transactional

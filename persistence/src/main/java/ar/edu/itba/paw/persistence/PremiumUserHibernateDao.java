@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.RoleDao;
 import ar.edu.itba.paw.interfaces.UserDao;
@@ -9,7 +10,6 @@ import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSort;
-import com.google.common.base.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -97,27 +97,18 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
 
     @Override
     public boolean remove(final String userName) {
-        Optional<PremiumUser> user = findByUserName(userName);
-
-        if (user.isPresent()) {
-            em.remove(user.get());
-            return true;
-        }
-        return false;
+        final Optional<PremiumUser> userOptional = findByUserName(userName);
+        userOptional.ifPresent(user -> em.remove(user));
+        return userOptional.isPresent();
     }
 
     @Override
     public Optional<byte[]> readImage(final String userName) {
-        Optional<PremiumUser> premiumUser = findByUserName(userName);
-        if (premiumUser.isPresent()) {
-            PremiumUser user = premiumUser.get();
-            byte image[] = user.getImage();
-            if (image != null) {
-                return Optional.of(image);
-            }
-        }
-
-        return  Optional.empty();
+        return Optional.ofNullable(
+                findByUserName(userName)
+                        .orElseThrow(() -> UserNotFoundException.ofUsername(userName))
+                        .getImage()
+        );
     }
 
     @Override
