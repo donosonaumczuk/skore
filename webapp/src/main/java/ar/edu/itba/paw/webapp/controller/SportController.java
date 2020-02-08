@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.QueryList;
@@ -10,8 +11,10 @@ import ar.edu.itba.paw.webapp.dto.SportDto;
 import ar.edu.itba.paw.webapp.dto.SportPageDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.CacheUtils;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
-import org.joda.time.DateTime;
+import ar.edu.itba.paw.webapp.validators.ImageValidators;
+import ar.edu.itba.paw.webapp.validators.SportValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -36,7 +40,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriInfo;
 
 import java.util.Date;
-import java.util.List;
 
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
@@ -49,8 +52,6 @@ public class SportController {
 
     public static final String BASE_PATH = "sports";
     private static final int ONE_HOUR = 3600;
-
-    private static final int MAX_DISPLAY_NAME_LENGTH = 100;
 
     @Autowired
     @Qualifier("sportServiceImpl")
@@ -68,11 +69,10 @@ public class SportController {
     @Path("/{sportname}/image")
     public Response getImageSport(@PathParam("sportname") String sportname) {
         LOGGER.trace("Trying to retrieve image of sport '{}'", sportname);
-        byte[] media = sportService.readImage(sportname)
-                .orElseThrow(()-> {
-                    LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
-                    return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
-                });
+        byte[] media = sportService.readImage(sportname).orElseThrow(() -> {
+            LOGGER.trace("Sport '{}' image does not exist", sportname);
+            return new ApiException(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
         CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
         Date expireDate = CacheUtils.getExpire(ONE_HOUR);
         LOGGER.trace("Sport '{}' image retrieved successfully", sportname);
@@ -100,7 +100,7 @@ public class SportController {
     public Response getASport(@PathParam("sportname") String sportname) {
         Sport sport = sportService.findByName(sportname).orElseThrow(() -> {
             LOGGER.trace("Sport '{}' does not exist", sportname);
-            return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+            return SportNotFoundException.ofId(sportname);
         });
         LOGGER.trace("Sport '{}' founded successfully", sportname);
         return Response.ok(SportDto.from(sport)).build();
@@ -109,10 +109,7 @@ public class SportController {
     @DELETE
     @Path("/{sportname}")
     public Response deleteASport(@PathParam("sportname") String sportname) {
-        if (!sportService.remove(sportname)) {
-            LOGGER.trace("Sport '{}' does not exist", sportname);
-            throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
-        }
+        sportService.remove(sportname);
         LOGGER.trace("Sport '{}' deleted successfully", sportname);
         return Response.noContent().build();
     }
@@ -120,8 +117,11 @@ public class SportController {
     @PUT
     @Path("/{sportname}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response modifyASport(@PathParam("sportname") String sportname, final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
-        byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
+    public Response modifyASport(@PathParam("sportname") String sportname, @RequestBody final String requestBody) {
+        SportValidators.updateValidatorOf("Sport '" + sportname + "' update failed, invalid update JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final SportDto sportDto = JSONUtils.jsonToObject(requestBody, SportDto.class);
+        byte[] imageBytes = ImageValidators.validateAndProcessImage(sportDto.getImageSport());
         Sport newSport = sportService.modifySport(sportname, sportDto.getDisplayName(), sportDto.getPlayerQuantity(), imageBytes);
         LOGGER.trace("Sport '{}' modified successfully", sportname);
         return Response.ok(SportDto.from(newSport)).build();
@@ -129,21 +129,13 @@ public class SportController {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createASport(final SportDto sportDto) { //TODO: this must receive @RequestBody String requestBody, not a DTO!
-        Validator.getValidator().fieldHasData(sportDto.getImageSport(), "image");
-        byte[] imageBytes = validateAndProcessSportDto(sportDto); //FIXME
+    public Response createASport(@RequestBody final String requestBody) {
+        SportValidators.creationValidatorOf("Sport creation fails, invalid creation JSON");
+        final SportDto sportDto = JSONUtils.jsonToObject(requestBody, SportDto.class);
+        byte[] imageBytes = ImageValidators.validateAndProcessImage(sportDto.getImageSport());
         Sport newSport = sportService.create(sportDto.getSportName(), sportDto.getPlayerQuantity(),
                 sportDto.getDisplayName(), imageBytes);
         LOGGER.trace("Sport '{}' created successfully", sportDto.getSportName());
         return Response.status(HttpStatus.CREATED.value()).entity(SportDto.from(newSport)).build();
-    }
-
-    //TODO: remove this, create SportValidators class and migrate the logic to the new request validation style
-    private byte[] validateAndProcessSportDto(SportDto sportDto) {
-        return Validator.getValidator()
-                .isAlphaNumericorSpacesAndLessThan(sportDto.getDisplayName(), "displayName", MAX_DISPLAY_NAME_LENGTH)
-                .isAlphaNumericAndLessThan(sportDto.getSportName(), "sportName", MAX_DISPLAY_NAME_LENGTH)
-                .isNumberGreaterThanZero(sportDto.getPlayerQuantity(), "playerQuantity")
-                .validateAndProcessImage(sportDto.getImageSport());
     }
 }

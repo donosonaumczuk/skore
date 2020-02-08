@@ -83,7 +83,7 @@ public class UserValidators {
                         "a cellphone number", log)) //TODO: maybe exists an standard pattern for cellphone
                 .put(BIRTHDAY, ValidatorFactory.fieldIsValidObjectValidatorOf(BIRTHDAY, DateValidators.creationValidatorOf(log), log))
                 .put(PASSWORD, ValidatorFactory.fieldIsStringValidatorOf(PASSWORD, log))
-                .put(IMAGE, ValidatorFactory.fieldIsStringValidatorOf(IMAGE, log)); //TODO: call the ImageValidator ?
+                .put(IMAGE, ValidatorFactory.fieldIsStringValidatorOf(IMAGE, log));
     }
 
     private static Map<String, Validator<JSONObject>> updateFieldValidatorMapOf(final String log) {

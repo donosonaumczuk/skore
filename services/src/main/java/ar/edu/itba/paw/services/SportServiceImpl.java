@@ -35,6 +35,10 @@ public class SportServiceImpl implements SportService {
     @Override
     public Sport create(final String sportName, final int playerQuantity, final String displayName,
                         final byte[] file) {
+        if (findByName(sportName).isPresent()) {
+            LOGGER.trace("Sport with name {} already exist", sportName);
+            throw SportAlreadyExistException.ofId(sportName);
+        }
         return sportDao.create(sportName, playerQuantity, displayName, file).orElseThrow(() -> {
             LOGGER.error("Sport creation failed, sport '{}' already exist", sportName);
             return SportAlreadyExistException.ofId(sportName);
@@ -45,6 +49,10 @@ public class SportServiceImpl implements SportService {
     @Override
     public Sport modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
         LOGGER.trace("Trying to modify sport '{}'", sportName);
+        if (findByName(sportName).isPresent()) {
+            LOGGER.trace("Sport with name {} already exist", sportName);
+            throw SportAlreadyExistException.ofId(sportName);
+        }
         return sportDao.modifySport(sportName, displayName, playerQuantity, file).orElseThrow(() -> {
             LOGGER.error("Modify sport failed, sport '{}' not found", sportName);
             return SportNotFoundException.ofId(sportName);
@@ -53,8 +61,14 @@ public class SportServiceImpl implements SportService {
 
     @Transactional
     @Override
-    public boolean remove(final String sportName) {
-        return sportDao.remove(sportName);
+    public void remove(final String sportName) {
+        LOGGER.trace("Looking for sport with name: {} to remove", sportName);
+        if (sportDao.remove(sportName)) {
+            LOGGER.trace("{} removed", sportName);
+        } else {
+            LOGGER.error("{} wasn't removed", sportName);
+            throw SportNotFoundException.ofId(sportName);
+        }
     }
 
     @Transactional

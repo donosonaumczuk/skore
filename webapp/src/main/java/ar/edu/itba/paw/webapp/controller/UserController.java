@@ -13,7 +13,6 @@ import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
-import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
@@ -23,11 +22,11 @@ import ar.edu.itba.paw.webapp.dto.UserPageDto;
 import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.ImageValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +60,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -237,7 +234,7 @@ public class UserController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
         PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
@@ -256,7 +253,7 @@ public class UserController {
         UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
-        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.UserAlreadyIsEnableException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
@@ -82,8 +83,17 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                               final String country, final String state, final String city,
                               final String street, final int reputation, final String password,
                               final byte[] file, final Locale locale) {
-        final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Attempting to create user: {}", userName);
+        if (premiumUserDao.findByEmail(email).isPresent()) {
+            LOGGER.trace("User with email {} already exist", email);
+            throw UserAlreadyExistException.ofEmail(email);
+        }
+        if (premiumUserDao.findByUserName(userName).isPresent()) {
+            LOGGER.trace("User with username {} already exist", userName);
+            throw UserAlreadyExistException.ofUsername(userName);
+        }
+
+        final String encodedPassword = bcrypt.encode(password);
         PremiumUser user = premiumUserDao.create(
                 firstName, lastName, email, userName, cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file
@@ -123,6 +133,10 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             final String oldPassword, final byte[] file, final Locale locale
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
+        if (premiumUserDao.findByEmail(newEmail).isPresent()) {
+            LOGGER.trace("User with email {} already exist", newEmail);
+            throw UserAlreadyExistException.ofEmail(newEmail);
+        }
 
         if (newPassword != null) {
             PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
@@ -159,7 +173,12 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             LOGGER.error("Can't find user with username: {}", username);
             return UserNotFoundException.ofUsername(username);
         });
-      
+
+        if (user.getEnabled()) {
+            LOGGER.error("Can't enable user with username {}, is already enable", username);
+            throw UserAlreadyIsEnableException.ofUsername(username);
+        }
+
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {
             LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
             throw InvalidUserCodeException.of(username, code);
