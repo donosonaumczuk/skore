@@ -230,8 +230,8 @@
         "deleteSport": "BORRAR"  
     },
     "confirmAccount": {
-        "confirmed": "Felicitaciones!! Creaste una cuenta.",
-        "confirmEmail": "Se te ha enviado un email para confirmar la cuenta.",
+        "confirmed": "Felicitaciones! Creaste una cuenta.",
+        "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
 
     },
