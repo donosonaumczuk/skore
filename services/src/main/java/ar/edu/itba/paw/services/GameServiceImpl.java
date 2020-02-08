@@ -3,7 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
-import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
+import ar.edu.itba.paw.exceptions.GameNotPlayedYetException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
@@ -277,7 +277,7 @@ public class GameServiceImpl implements GameService {
                     "' must be the creator of '" + key + "' match");
         }
         if (game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
-            throw new GameHasNotBeenPlayException("The match has not been played yet");
+            throw new GameNotPlayedYetException("The match has not been played yet");
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 
