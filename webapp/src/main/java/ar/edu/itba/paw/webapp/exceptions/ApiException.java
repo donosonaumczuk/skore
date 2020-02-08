@@ -15,15 +15,15 @@ public class ApiException extends RuntimeException {
     }
 
     public static ApiException of(final HttpStatus statusCode, final String errorCode, final String message) {
-        return ApiException.of(statusCode, errorCode, message);
+        return new ApiException(statusCode, errorCode, message);
     }
 
     public static ApiException of(final HttpStatus statusCode, final String message) {
-        return ApiException.of(statusCode, statusCode.name(), message);
+        return new ApiException(statusCode, statusCode.name(), message);
     }
 
     public static ApiException of(final HttpStatus statusCode) {
-        return ApiException.of(statusCode, statusCode.name(), statusCode.getReasonPhrase());
+        return new ApiException(statusCode, statusCode.name(), statusCode.getReasonPhrase());
     }
 
     public int getStatusCode() {
