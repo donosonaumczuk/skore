@@ -23,7 +23,7 @@ public final class JSONUtils {
             return OBJECT_MAPPER.readValue(json, classToConvertTo);
         } catch (IOException e) {
             LOGGER.error("Error when converting JSON to " + classToConvertTo.getName() + " object", e);
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurs when parsing JSON");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurs when parsing JSON");
         }
     }
 

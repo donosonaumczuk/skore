@@ -58,7 +58,7 @@ public class GameValidators {
     public static Validator<String> keyValidator(final String log) {
         return (string) -> {
             if (Pattern.compile(KEY_REGEX).matcher(string).matches()) {
-                ApiException apiException = new ApiException(HttpStatus.NOT_FOUND, "Match '" + string + "' does not exist");
+                ApiException apiException = ApiException.of(HttpStatus.NOT_FOUND, "Match '" + string + "' does not exist");
                 LOGGER.error(log, apiException);
                 throw apiException;
             }
@@ -73,7 +73,7 @@ public class GameValidators {
                                                               final String log) {
         return (optionalPremiumUser) -> {
             if (!creatorUsername.equals(optionalPremiumUser.getUserName())) {
-                ApiException apiException = new ApiException(HttpStatus.UNAUTHORIZED, "Must be creator of match '" + key
+                ApiException apiException = ApiException.of(HttpStatus.UNAUTHORIZED, "Must be creator of match '" + key
                         + "' in order to perform this operation");
                 LOGGER.error(log, apiException);
                 throw apiException;

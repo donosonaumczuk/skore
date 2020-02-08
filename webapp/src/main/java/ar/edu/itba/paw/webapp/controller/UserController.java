@@ -298,7 +298,7 @@ public class UserController {
             ImageIO.write(bImage, "png", bos);
         }
         catch (IOException e) {
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
         }
         return bos.toByteArray();
     }

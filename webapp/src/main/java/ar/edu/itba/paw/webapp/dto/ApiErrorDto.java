@@ -20,7 +20,7 @@ public class ApiErrorDto {
     }
 
     public static ApiErrorDto of(final HttpStatus statusCode, final String message) {
-        return new ApiErrorDto(statusCode.value(), statusCode.toString(), message);
+        return new ApiErrorDto(statusCode.value(), statusCode.name(), message);
     }
 
     public static ApiErrorDto of(final HttpStatus statusCode, final String errorCode, final String message) {
