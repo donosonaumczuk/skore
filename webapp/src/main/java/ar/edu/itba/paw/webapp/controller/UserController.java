@@ -285,9 +285,10 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         LOGGER.trace("Trying to verify '{}' user", username);
-        return Response.ok(UserDto.from(premiumUserService.enableUser(username, code))).build();
+        PremiumUser userVerified = premiumUserService.enableUser(username, code);
+        return Response.ok(AuthDto.from(userVerified)).header(TOKEN_HEADER, jwtUtility.createToken(userVerified)).build();
     }
 
     private byte[] getDefaultImage() {
