@@ -3,7 +3,11 @@ package ar.edu.itba.paw.webapp.utils;
 import java.util.Enumeration;
 import java.util.Locale;
 
-public class LocaleUtils {
+public final class LocaleUtils {
+
+    private LocaleUtils() {
+        /* Utility class */
+    }
 
     private static final String SPANISH = "es";
     private static final String ENGLISH = "en";

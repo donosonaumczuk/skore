@@ -7,16 +7,17 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.core.UriBuilder;
 
 @Component
-public class URLConstants {
+public final class URLConstants {
+
+    private URLConstants() {
+        /* Utility class */
+    }
 
     public static String BASE_URL;
-
     public static final String API_PATH = "api/";
-
-    private static UriBuilder BASE_URL_BUILDER;
-
     public static String API_BASE_URL;
 
+    private static UriBuilder BASE_URL_BUILDER;
     private static UriBuilder API_BASE_URL_BUILDER;
 
     public static UriBuilder getApiBaseUrlBuilder() {

@@ -9,7 +9,11 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
-public class JSONUtils {
+public final class JSONUtils {
+
+    private JSONUtils() {
+        /* Utility class */
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONUtils.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
