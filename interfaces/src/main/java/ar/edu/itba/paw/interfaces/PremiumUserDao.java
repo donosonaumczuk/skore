@@ -20,7 +20,7 @@ public interface PremiumUserDao {
                                  final String email, final String userName,
                                  final String cellphone, final LocalDate birthday,
                                  final String country, final String state, final String city,
-                                 final String street, final int reputation, final String password,
+                                     final String street, final Integer reputation, final String password,
                                  final byte[] file);
 
     boolean remove(final String userName);
