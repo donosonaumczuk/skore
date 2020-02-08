@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
+
 @Component
 public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -33,8 +35,6 @@ public class LoginAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private SessionService sessionService;
-
-    private static final String TOKEN_HEADER = "X-TOKEN";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,

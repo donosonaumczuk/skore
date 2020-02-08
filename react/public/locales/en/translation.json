@@ -228,5 +228,17 @@
         "createSport": "CREATE SPORT",
         "editSport": "EDIT",
         "deleteSport": "DELETE"  
+    },
+    "confirmAccount": {
+        "confirmed": "Congratulations! You have created a new account.",
+        "confirmEmail": "An email has been sent to you to confirm your account.",
+        "alreadyConfirmed": "Your account has already been confirmed."
+    },
+    "confirmAsistance": {
+        "confirm": "An email has been sent to you to confirm your assistance.",
+        "confirmed": "You have confirmed your assistance to the match.\nAn email has been sent to you to cancel your assistance."
+    },
+    "cancelAsistance": {
+        "canceled": "You have cancelled your asistance to the match."
     }
 }

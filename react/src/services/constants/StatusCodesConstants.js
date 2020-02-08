@@ -17,6 +17,8 @@ const SC_TIME_OUT = 408;
 
 const SC_CONFLICT = 409;
 
+const SC_CLIENT_CLOSED_REQUEST = 499;
+
 export {
     SC_OK,
     SC_CREATED,
@@ -26,5 +28,6 @@ export {
     SC_FORBIDDEN,
     SC_NOT_FOUND,
     SC_TIME_OUT,
-    SC_CONFLICT
+    SC_CONFLICT,
+    SC_CLIENT_CLOSED_REQUEST
 };

@@ -228,5 +228,18 @@
         "createSport": "CREAR DEPORTE",
         "editSport": "EDITAR",
         "deleteSport": "BORRAR"  
+    },
+    "confirmAccount": {
+        "confirmed": "Felicitaciones! Creaste una cuenta.",
+        "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
+        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
+
+    },
+    "confirmAsistance": {
+        "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
+        "confirmed": "Confirmaste tu asistencia al partido.\nSe te ha enviado un email para cancelar tu asistencia al partido."
+    },
+    "cancelAsistance": {
+        "canceled": "Cancelaste tu asistencia al partido."
     }
 }

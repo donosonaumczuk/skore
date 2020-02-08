@@ -23,6 +23,9 @@ import EditSport from './components/screens/EditSport';
 import './css/main.css';
 import Admin from './components/screens/Admin';
 import MatchPage from './components/screens/MatchPage';
+import ConfirmMatch from './components/screens/ConfirmMatch';
+import CancelMatch from './components/screens/CancelMatch';
+import CreatedAccount from './components/screens/CreatedAccount';
 
 class App extends Component {
     constructor(props) {
@@ -94,29 +97,33 @@ class App extends Component {
                         <Route exact path="/sports">
                             <Sports />
                         </Route>
-                        <Route path="/signUp" component={CreateUserForm} />
-                        <Route path="/confirmAccount">
-                            <ConfirmAccount />
+                        <Route exact path="/signUp" component={CreateUserForm} />
+                        <Route exact path="/createdAccount">
+                            <CreatedAccount />
                         </Route>
-                        <Route path="/login">
+                        <Route exact path="/confirmAccount" render={(props) => 
+                                <ConfirmAccount {...props} updateUser={this.updateUser} />} />
+                        <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} />
                         </Route>
-                        <Route path="/logout">
+                        <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route path="/accounts">
+                        <Route exact path="/accounts">
                             <Accounts />
                         </Route>
-                        <Route path="/admin">
+                        <Route exact path="/admin">
                             <Admin />
                         </Route>
-                        <Route path="/createMatch" component={CreateMatchForm} />
-                        <Route path="/match/:matchKey" component={MatchPage} />
-                        <Route path="/createSport" component={CreateSportForm} />
+                        <Route exact path="/createMatch" component={CreateMatchForm} />
+                        <Route exact path="/match/:matchKey" component={MatchPage} />
+                        <Route exact path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />
+                        <Route exact path="/confirmMatch" component={ConfirmMatch} />
+                        <Route exact path="/cancelMatch" component={CancelMatch} />
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>

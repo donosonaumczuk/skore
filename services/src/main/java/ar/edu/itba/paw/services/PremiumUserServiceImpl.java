@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
@@ -158,7 +159,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             LOGGER.error("Can't find user with username: {}", username);
             return UserNotFoundException.ofUsername(username);
         });
-
+      
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {
             LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
             throw InvalidUserCodeException.of(username, code);
@@ -238,7 +239,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
         formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
-                user.getUserName() + "&" + user.getCode());
+                user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }
 }

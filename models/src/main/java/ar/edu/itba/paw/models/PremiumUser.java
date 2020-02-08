@@ -26,7 +26,7 @@ public class PremiumUser {
     private Place home;
 
     @Column(name = "reputation")
-    private int reputation;
+    private Integer reputation;
 
     @Column(length = 100, nullable = false)
     private String password;
@@ -80,7 +80,7 @@ public class PremiumUser {
 
     public PremiumUser(String firstName, String lastName, String email,
                        String userName, String cellphone, LocalDate birthday,
-                       Place home, int reputation, String password, String code,
+                       Place home, Integer reputation, String password, String code,
                        byte image[]) {
         this.user           = new User(firstName, lastName, email);
         this.userName       = userName;
@@ -160,11 +160,11 @@ public class PremiumUser {
         this.home = home;
     }
 
-    public int getReputation() {
+    public Integer getReputation() {
         return reputation;
     }
 
-    public void setReputation(final int reputation) {
+    public void setReputation(final Integer reputation) {
         this.reputation = reputation;
     }
 

@@ -41,6 +41,11 @@ const logInUser = async user => {
     //TODO token expiry should be controlled on every get or post that uses authentication
 }
 
+const autoLogin = (token, username, userId) => {
+    setToken(token);
+    loadUser(username, false, userId);
+}
+
 const logOutUser = async () => {
     try {
         await api.post(`${AUTH_ENDPOINT}/logout`);
@@ -89,6 +94,7 @@ const getUserId = () => {
 const AuthService = {
     getToken: getToken,
     logInUser: logInUser,
+    autoLogin: autoLogin,
     logOutUser: logOutUser,
     getCurrentUser: getCurrentUser,
     isAdmin: isAdmin,
