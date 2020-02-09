@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import RenderInput from '../inputs/RenderInput';
 import ImageInput from '../inputs/ImageInput';
-import RenderDatePicker from '../inputs/RenderDatePicker';
+// import RenderDatePicker from '../inputs/RenderDatePicker';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import SuggestionText from '../elements/SuggestionText';
