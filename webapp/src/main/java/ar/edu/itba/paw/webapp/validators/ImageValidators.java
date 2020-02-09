@@ -52,12 +52,12 @@ public class ImageValidators {
 
         if(!mimeType.equals(mimeTypeFromBytes)) {
             LOGGER.trace("Mismatch header mime-type with data mime-type");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Mismatch header mime-type with data mime-type");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Mismatch header mime-type with data mime-type");
         }
 
         if(imageBytes.length > MEGABYTE) {
             LOGGER.trace("Image is bigger than {} bytes", MEGABYTE);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Image is bigger than " + MEGABYTE + " bytes");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Image is bigger than " + MEGABYTE + " bytes");
         }
         return imageBytes;
     }
@@ -65,7 +65,7 @@ public class ImageValidators {
     private static void fieldHasData(final String field) {
         if(field == null || field.isEmpty()) {
             LOGGER.trace("No data in field '{}'", "image");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "No data in field '" + "image" + "'");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "No data in field '" + "image" + "'");
         }
     }
 
@@ -82,7 +82,7 @@ public class ImageValidators {
                 }
                 exceptionError.append(mediatype);
             }
-            throw new ApiException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exceptionError.toString());
+            throw ApiException.of(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exceptionError.toString());
 
         }
     }
@@ -90,7 +90,7 @@ public class ImageValidators {
     private static void splitimageHasBase64Format(final String[] splitImage) {
         if (splitImage.length != 2 || !splitImage[0].matches("data:image/(\\w+);base64")) {
             LOGGER.trace("Image is not in base64 format");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Image must be in base64 format");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Image must be in base64 format");
         }
     }
 
@@ -99,7 +99,7 @@ public class ImageValidators {
             return DatatypeConverter.parseBase64Binary(imageDataBase64);
         } catch (IllegalArgumentException e) {
             LOGGER.trace("Cannot process image bytes");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image bytes");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Invalid image bytes");
         }
     }
 
@@ -108,7 +108,7 @@ public class ImageValidators {
             return getMimeType(imageBytes);
         } catch (IOException | TikaException | SAXException e) {
             LOGGER.error("Error processing image mime-type");
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image mime-type");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image mime-type");
         }
     }
 

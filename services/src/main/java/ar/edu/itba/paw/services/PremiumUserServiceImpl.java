@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.services;
 
-
-import ar.edu.itba.paw.exceptions.ForbiddenException;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.UserAlreadyIsEnableException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
@@ -121,7 +120,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
         if (!loggedUser.getUserName().equals(userName)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userName);
-            throw new ForbiddenException("User '" + userName + "' deletion failed, unauthorized");
+            throw new LackOfPermissionsException("User '" + userName + "' deletion failed, unauthorized");
         }
         LOGGER.trace("Looking for user with username: {} to remove", userName);
         if (premiumUserDao.remove(userName)) {
@@ -150,7 +149,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
         if (!loggedUser.getUserName().equals(username)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
-            throw new ForbiddenException("User '" + username + "' update failed, unauthorized");
+            throw new LackOfPermissionsException("User '" + username + "' update failed, unauthorized");
         }
 
         if (premiumUserDao.findByEmail(newEmail).isPresent()) {
