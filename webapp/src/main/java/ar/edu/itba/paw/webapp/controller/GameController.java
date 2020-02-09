@@ -161,7 +161,7 @@ public class GameController {
         GameValidators.keyValidator("Invalid '" + key + "' key for a match").validate(key);
         if (!gameService.remove(key)) {
             LOGGER.trace("Match '{}' does not exist", key);
-            throw new ApiException(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
+            throw ApiException.of(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
         }
         //TODO catch ForbiddenException, GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' deleted successfully", key);
@@ -184,7 +184,7 @@ public class GameController {
                     gameDto.getTitle(), key);
         }
         catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException, ForbiddenException
-            throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw ApiException.of(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         LOGGER.trace("Match '{}' modified successfully", key);
         return Response.ok(GameDto.from(newGame, getTeam(newGame.getTeam1()),
@@ -236,7 +236,7 @@ public class GameController {
         //TODO: maybe validate user id is positive
         if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CODE_HEADER))) {
             LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
-            throw new ApiException(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
+            throw ApiException.of(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
                     key + "'");
         }
         //TODO catch TeamNotFoundException, InvalidGameKeyException, ForbiddenException, UnauthorizedException

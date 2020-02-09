@@ -71,7 +71,7 @@ public class SportController {
         byte[] media = sportService.readImage(sportname)
                 .orElseThrow(()-> {
                     LOGGER.trace("Can't get '{}' sport image, sport does not exist", sportname);
-                    return new ApiException(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
+                    return ApiException.of(HttpStatus.BAD_REQUEST, "Sport '" + sportname + "' does not exist");
                 });
         CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
         Date expireDate = CacheUtils.getExpire(ONE_HOUR);
@@ -100,7 +100,7 @@ public class SportController {
     public Response getASport(@PathParam("sportname") String sportname) {
         Sport sport = sportService.findByName(sportname).orElseThrow(() -> {
             LOGGER.trace("Sport '{}' does not exist", sportname);
-            return new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+            return ApiException.of(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         });
         LOGGER.trace("Sport '{}' founded successfully", sportname);
         return Response.ok(SportDto.from(sport)).build();
@@ -111,7 +111,7 @@ public class SportController {
     public Response deleteASport(@PathParam("sportname") String sportname) {
         if (!sportService.remove(sportname)) {
             LOGGER.trace("Sport '{}' does not exist", sportname);
-            throw new ApiException(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
+            throw ApiException.of(HttpStatus.NOT_FOUND, "Sport '" + sportname + "' does not exist");
         }
         LOGGER.trace("Sport '{}' deleted successfully", sportname);
         return Response.noContent().build();

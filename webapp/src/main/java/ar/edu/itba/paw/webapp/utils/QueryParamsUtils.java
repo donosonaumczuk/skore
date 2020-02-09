@@ -5,7 +5,11 @@ import ar.edu.itba.paw.models.QueryList;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class QueryParamsUtils {
+public final class QueryParamsUtils {
+
+    private QueryParamsUtils() {
+        /* Utility class */
+    }
 
     public static Integer positiveIntegerOrElse(String s, Integer i) {
         Integer integer;
