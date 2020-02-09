@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import MatchButton from '../MatchButton';
@@ -28,7 +28,19 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
     return userFound;
 }
 
+const matchHasStarted = currentMatch => {
+    const startTime = currentMatch.startTime;
+    const currentTime = new Date();
+
+    console.log("startTime: ", startTime);
+    console.log("currentTime: ", currentTime);
+    return false;
+}
+
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
+    if (matchHasStarted(currentMatch)) {
+        return <Fragment></Fragment>;
+    }
     //TODO if finishtime is before date return <React.Fragment></React.Fragment>
     if (currentUser && currentUser === currentMatch.creator) {
         return <MatchButton buttonStyle="btn btn-negative join-button" 
@@ -42,8 +54,8 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={i18next.t('home.cancelMatch')}
                             fontAwesome="fas fa-times mr-1" />
     }
-    else if(currentMatch.totalPlayers > currentMatch.currentPlayers && 
-            ((currentUser && currentMatch.isCompetitive) || !currentMatch.isCompetitive)) {
+    else if(currentMatch.totalPlayers > currentMatch.currentPlayers) {// TODO check if appearing to everyone && 
+            // ((currentUser && currentMatch.isCompetitive) || !currentMatch.isCompetitive)) {
         let buttonText;        
         if (currentMatch.isCompetitive) {
             buttonText = i18next.t('home.joinCompetitiveMatch');
@@ -56,7 +68,7 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={buttonText} fontAwesome="fas fa-plus mr-1" />
     }
   
-    return <React.Fragment></React.Fragment>
+    return <Fragment></Fragment>
 }
 
 const MatchAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }) => {
