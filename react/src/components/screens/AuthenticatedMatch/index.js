@@ -5,6 +5,7 @@ import Spinner from '../../Spinner';
 import MatchService from '../../../services/MatchService';
 import ErrorPage from '../ErrorPage';
 import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
+import WithAuthentication from '../../hocs/WithAuthenticatication';
 
 class AuthenticatedMatch extends Component {
     mounted = false;
@@ -51,4 +52,4 @@ AuthenticatedMatch.propTypes = {
     history: PropTypes.object.isRequired,
 }
 
-export default AuthenticatedMatch;
+export default WithAuthentication(AuthenticatedMatch);

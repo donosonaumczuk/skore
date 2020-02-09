@@ -179,6 +179,8 @@ class HomeContainer extends Component {
             this.setState({ competitiveJoin: true, joinMatch: match });
         }
         else if ( this.mounted) {
+            console.log("entro al else");
+
             this.props.history.push(`/?matchKey=${match.key}`);
             this.setState({ anonymous: true, currentMatch: match });
         }
