@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.webapp.constants.MessageConstants;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
@@ -151,7 +152,7 @@ public class Validator { //TODO: remove this class later
             return getMimeType(imageBytes);
         } catch (IOException | TikaException | SAXException e) {
             LOGGER.error("Error processing image mime-type");
-            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image mime-type");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
     }
 

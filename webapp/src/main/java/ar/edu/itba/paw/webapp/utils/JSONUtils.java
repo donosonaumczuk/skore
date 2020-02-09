@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.utils;
 
+import ar.edu.itba.paw.webapp.constants.MessageConstants;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ public final class JSONUtils {
             return OBJECT_MAPPER.readValue(json, classToConvertTo);
         } catch (IOException e) {
             LOGGER.error("Error when converting JSON to " + classToConvertTo.getName() + " object", e);
-            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurs when parsing JSON");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
     }
 
