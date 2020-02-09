@@ -65,22 +65,6 @@ public class GameValidators {
         };
     }
 
-    public static Validator<Optional<Game>> existenceValidatorOf(final String key, final String log) {
-        return ValidatorFactory.existenceValidatorOf("Match", key, log);
-    }
-
-    public static Validator<PremiumUser> isCreatorValidatorOf(final String key, final String creatorUsername,
-                                                              final String log) {
-        return (optionalPremiumUser) -> {
-            if (!creatorUsername.equals(optionalPremiumUser.getUserName())) {
-                ApiException apiException = new ApiException(HttpStatus.UNAUTHORIZED, "Must be creator of match '" + key
-                        + "' in order to perform this operation");
-                LOGGER.error(log, apiException);
-                throw apiException;
-            }
-        };
-    }
-
     private static ImmutableList.Builder<Pair<String, Validator<JSONObject>>> baseFieldValidatorListOf(final String log) {
         return new ImmutableList.Builder<Pair<String, Validator<JSONObject>>>()
                 .add(Pair.of(TITLE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TITLE, Pattern.compile(TITLE_REGEX),

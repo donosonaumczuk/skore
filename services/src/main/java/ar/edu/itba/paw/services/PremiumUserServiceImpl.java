@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
 
+import ar.edu.itba.paw.exceptions.ForbiddenException;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.UserAlreadyIsEnableException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
@@ -10,6 +12,7 @@ import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -41,6 +44,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Autowired
     public EmailService emailSender;
+
+    @Autowired
+    public SessionService sessionService;
 
     @Autowired
     private BCryptPasswordEncoder bcrypt;
@@ -109,6 +115,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Transactional
     @Override
     public void remove(final String userName) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(userName)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userName);
+            throw new ForbiddenException("User '" + userName + "' deletion failed, unauthorized");
+        }
         LOGGER.trace("Looking for user with username: {} to remove", userName);
         if (premiumUserDao.remove(userName)) {
             LOGGER.trace("{} removed", userName);
@@ -133,6 +144,12 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             final String oldPassword, final byte[] file, final Locale locale
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new ForbiddenException("User '" + username + "' update failed, unauthorized");
+        }
+
         if (premiumUserDao.findByEmail(newEmail).isPresent()) {
             LOGGER.trace("User with email {} already exist", newEmail);
             throw UserAlreadyExistException.ofEmail(newEmail);

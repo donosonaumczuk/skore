@@ -35,10 +35,6 @@ public class UserValidators {
             CELLPHONE, BIRTHDAY, HOME, PASSWORD, OLD_PASSWORD, IMAGE);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    public static Validator<Optional<PremiumUser>> existenceValidatorOf(final String username, final String log) {
-        return ValidatorFactory.existenceValidatorOf("User", username, log);
-    }
-
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
                 creationFieldValidatorMapOf(log), log);
@@ -47,16 +43,6 @@ public class UserValidators {
     public static Validator<JSONObject> updateValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS, UPDATE_REQUIRED_FIELDS,
                 updateFieldValidatorMapOf(log), log).and(passwordUpdateValidatorOf(log));
-    }
-
-    public static Validator<Optional<PremiumUser>> isAuthorizedForUpdateValidatorOf(final String username,
-                                                                                     final String log) {
-        return loggedUserOptional -> {
-            if (!loggedUserOptional.isPresent() || !loggedUserOptional.get().getUserName().equals(username)) {
-                LOGGER.error(log);
-                throw new ApiException(HttpStatus.FORBIDDEN, "Only '" + username + "' can update his own user");
-            }
-        };
     }
 
     private static Validator<JSONObject> passwordUpdateValidatorOf(final String log) {

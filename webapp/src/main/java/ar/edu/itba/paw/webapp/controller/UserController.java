@@ -13,6 +13,7 @@ import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
@@ -63,6 +64,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -86,9 +88,6 @@ public class UserController {
     @Autowired
     @Qualifier("teamServiceImpl")
     private TeamService teamService;
-
-    @Autowired
-    private SessionService sessionService;
 
     @Autowired
     private JWTUtility jwtUtility;
@@ -215,8 +214,6 @@ public class UserController {
     @DELETE
     @Path("/{username}")
     public Response deleteUser(@PathParam("username") String username) {
-        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
-                + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
         premiumUserService.remove(username);
         LOGGER.trace("User '{}' deleted successfully", username);
         return Response.noContent().build();
@@ -228,8 +225,6 @@ public class UserController {
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
                                @Context HttpServletRequest request) {
         LOGGER.trace("Trying to update '{}' user", username);
-        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
-                + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
@@ -284,7 +279,8 @@ public class UserController {
     @Path("/{username}/verification")
     public Response verifyUser(@PathParam("username") String username, String code) {
         LOGGER.trace("Trying to verify '{}' user", username);
-        return Response.ok(UserDto.from(premiumUserService.enableUser(username, code))).build();
+        PremiumUser premiumUser = premiumUserService.enableUser(username, code);
+        return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
     }
 
     private byte[] getDefaultImage() {
