@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.ForbiddenException;
 import ar.edu.itba.paw.exceptions.GameHasAlreadyStartException;
+import ar.edu.itba.paw.exceptions.GameNotFullException;
 import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
@@ -287,6 +288,11 @@ public class GameServiceImpl implements GameService {
         });
         PremiumUser premiumUser = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to update match result"));
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() <
+                game.getTeam1().getSport().getQuantity() * 2) {
+            LOGGER.trace("Update game failed, game '{}' is not full", key);
+            throw new GameNotFullException("Update game failed, game '" + key + "' is not full");
+        }
         if (!game.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("Update game failed, user '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
             throw new ForbiddenException("User '" + premiumUser.getUserName() +

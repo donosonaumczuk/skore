@@ -31,9 +31,8 @@ import static org.mockito.Mockito.when;
 public class GameServiceImplTest {
     private static final String  TEAMNAME_1          = "teamname1";
     private static final String  TEAMNAME_2          = "teamname2";
-    private static final String  STARTTIME_1         = "2018-12-12T00:00";
-    private static final String  FINISHTIME_1        = "2018-12-13T00:00";
-    private static final String  GAME_KEY            = "201812120000teamname1201812130000";
+    private static final String  STARTTIME_1         = LocalDateTime.now().plusMinutes(60).toString().substring(0,16);
+    private static final String  FINISHTIME_1        = LocalDateTime.now().plusMinutes(80).toString().substring(0,16);
 
     private static final String  SPORTNAME           = "sPoRtNaMe";
     private static final int     SPORTQUANTITY       = 10;
@@ -116,7 +115,7 @@ public class GameServiceImplTest {
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
 
-        Optional<Game> ans = gameService.findByKey(GAME_KEY);
+        Optional<Game> ans = gameService.findByKey(GAME_1.getKey());
 
         Assert.assertTrue(ans.isPresent());
         Assert.assertEquals(GAME_1, ans.get());
@@ -130,7 +129,7 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(GAME_1.getTeam1().getLeader()));
 
-        gameService.deleteUserInGameWithCode(GAME_KEY, USER_1_ID, null);
+        gameService.deleteUserInGameWithCode(GAME_1.getKey(), USER_1_ID, null);
 
         //No exception
     }
@@ -143,7 +142,7 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        gameService.deleteUserInGameWithCode(GAME_KEY, USER_2_ID, null);
+        gameService.deleteUserInGameWithCode(GAME_1.getKey(), USER_2_ID, null);
 
         //No exception
     }
@@ -157,6 +156,6 @@ public class GameServiceImplTest {
                 .thenReturn(Optional.of(GAME_1));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        gameService.deleteUserInGameWithCode(GAME_KEY, USER_3_ID, null);
+        gameService.deleteUserInGameWithCode(GAME_1.getKey(), USER_3_ID, null);
     }
 }
