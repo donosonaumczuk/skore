@@ -11,6 +11,7 @@ import SuggestionText from '../elements/SuggestionText';
 import FormComment from '../elements/FormComment';
 import LocationInput from '../inputs/LocationInput';
 import SubLocationInput from '../inputs/SubLocationInput';
+import BirthdayInput from '../inputs/BirthdayInput';
 
 const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, updateLocation,
@@ -49,9 +50,10 @@ const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             <Field name="cellphone" id="cellphone" inputType="text"
                                     label={i18next.t('createUserForm.cellphone')} 
                                     required={false} component={RenderInput} />
-                            <Field name="birthday" id="birthday" inputType="text"
+                            {/* <Field name="birthday" id="birthday" inputType="text"
                                     label={i18next.t('createUserForm.birthday')} 
-                                    required={true} component={RenderDatePicker} />
+                                    required={true} component={RenderDatePicker} /> */}
+                            <BirthdayInput />
                             <LocationInput updateLocation={updateLocation} />
                             <SubLocationInput label={i18next.t('location.country')}
                                                 id="country" divStyle="form-group"
