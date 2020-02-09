@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change} from 'redux-form';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
@@ -118,7 +119,7 @@ class CreateUserFormContainer extends Component {
     }
 
     render() {
-        const { handleSubmit, submitting } = this.props;
+        const { handleSubmit, submitting, birthday, change } = this.props;
         const { country, state, city, street } = this.state;
         let imageName = "";
         const currentUser = AuthService.getCurrentUser();
@@ -135,7 +136,8 @@ class CreateUserFormContainer extends Component {
                             handleChange={this.handleChange}
                             updateLocation={this.updateLocation}
                             country={country} state={state} city={city}
-                            street={street} />
+                            street={street} birthday={birthday} 
+                            changeFieldValues={change} />
         );
     }
 
@@ -144,10 +146,41 @@ class CreateUserFormContainer extends Component {
     }
 }               
 
+const mapStateToProps = (state) => {
+    const { values } = state.form.createUser;
+    if (values) {
+        return (
+            {
+                birthday: {
+                    year: values.year,
+                    month: values.month,
+                    day: values.day,
+                }
+
+            }
+        );
+    }
+    else {
+        return {
+            birthday: {
+                year: null,
+                month: null,
+                day: null,
+            }
+        };
+    }
+};
+
+CreateUserFormContainer = connect(
+    mapStateToProps,
+    null
+)(CreateUserFormContainer);
+
 CreateUserFormContainer = reduxForm({
     form: 'createUser',
     destroyOnUnmount: true,
-    validate
+    validate,
+    change
 })(CreateUserFormContainer)
 
 export default CreateUserFormContainer;

@@ -15,7 +15,8 @@ import BirthdayInput from '../inputs/BirthdayInput';
 
 const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, updateLocation,
-                            country, state, city, street }) => {
+                            country, state, city, street, birthday,
+                            changeFieldValues }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -53,7 +54,8 @@ const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             {/* <Field name="birthday" id="birthday" inputType="text"
                                     label={i18next.t('createUserForm.birthday')} 
                                     required={true} component={RenderDatePicker} /> */}
-                            <BirthdayInput />
+                            <BirthdayInput required={true} birthday={birthday}
+                                            changeFieldValues={changeFieldValues} />
                             <LocationInput updateLocation={updateLocation} />
                             <SubLocationInput label={i18next.t('location.country')}
                                                 id="country" divStyle="form-group"
@@ -94,7 +96,8 @@ CreateUserForm.propTypes = {
     country: PropTypes.string,
     state: PropTypes.string,
     city: PropTypes.string,
-    street: PropTypes.string
+    street: PropTypes.string,
+    birthday: PropTypes.object.isRequired
 }
 
 export default CreateUserForm;
