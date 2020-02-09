@@ -86,10 +86,9 @@ public class SportController {
                                  @QueryParam("maxQuantity") String maxQuantity,
                                  @QueryParam("limit") String limit, @QueryParam("offSet") String offset,
                                  @QueryParam("sortBy") SportSort sort, @Context UriInfo uriInfo) {
-        Page<SportDto> page = sportService.findSportsPage(sportNames.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minQuantity),
-                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), sort, QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset))
+        Page<SportDto> page = sportService.findSportsPage( QueryParamsUtils.getQueryListOrNull(sportNames),
+                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
+                sort, QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset))
                 .map(SportDto::from);
         LOGGER.trace("Sports successfully gotten");
         return Response.ok(SportPageDto.from(page, uriInfo)).build();

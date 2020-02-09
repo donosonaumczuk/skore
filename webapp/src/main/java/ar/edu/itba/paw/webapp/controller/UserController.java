@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
@@ -117,14 +116,13 @@ public class UserController {
     @GET
     public Response getUsers(@QueryParam("minReputation") String minReputation,
                              @QueryParam("maxReputation") String maxReputation,
-                             @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
                              @QueryParam("friends") QueryList friendsUsernames,
                              @QueryParam("sports") QueryList sportsLiked,
                              @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
-        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames.getQueryValues(),
-                sportsLiked.getQueryValues(), friendsUsernames.getQueryValues(),
+        Page<UserDto> userPage = premiumUserService.findUsersPage( QueryParamsUtils.getQueryListOrNull(usernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(friendsUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
@@ -163,25 +161,19 @@ public class UserController {
         usernamesPlayersInclude.getQueryValues().add(username);
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types.getQueryValues(), sports.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
-                countries.getQueryValues(), states.getQueryValues(), cities.getQueryValues(),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime),  QueryParamsUtils.getQueryListOrNull(types),
+                QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
+                QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
                 QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                usernamesPlayersInclude.getQueryValues(), usernamesPlayersNotInclude.getQueryValues(),
-                usernamesCreatorsInclude.getQueryValues(), usernamesCreatorsNotInclude.getQueryValues(),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),  QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),  QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
-    }
-
-    private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
     @GET
@@ -277,7 +269,7 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         LOGGER.trace("Trying to verify '{}' user", username);
         PremiumUser premiumUser = premiumUserService.enableUser(username, code);
         return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
@@ -297,7 +289,17 @@ public class UserController {
     }
 
     private LocalDate getBirthDay(UserDto userDto) {
+        if (userDto.getBirthday() == null) {
+            return null;
+        }
         return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
                 userDto.getBirthday().getDayOfMonth());
+    }
+
+    private TeamDto getTeam(Team team) {
+        if (team == null) {
+            return null;
+        }
+        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 }

@@ -101,25 +101,19 @@ public class GameController {
                              @QueryParam("hasResult") String hasResult) {
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types.getQueryValues(), sports.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
-                countries.getQueryValues(), states.getQueryValues(), cities.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces), usernamesPlayersInclude.getQueryValues(),
-                usernamesPlayersNotInclude.getQueryValues(), usernamesCreatorsInclude.getQueryValues(),
-                usernamesCreatorsNotInclude.getQueryValues(), QueryParamsUtils.positiveIntegerOrNull(limit),
-                QueryParamsUtils.positiveIntegerOrNull(offset), sort, QueryParamsUtils.booleanOrNull(hasResult))
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
+                QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
+                QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude), QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude), QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
+                QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
+                QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
-    }
-
-    private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
     @POST
@@ -264,5 +258,12 @@ public class GameController {
         TimeDto timeDto = gameDto.getTime().get();
         return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
                 dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
+    }
+
+    private TeamDto getTeam(Team team) {
+        if (team == null) {
+            return null;
+        }
+        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 }
