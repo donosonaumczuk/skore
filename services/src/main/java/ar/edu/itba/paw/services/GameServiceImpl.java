@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.ForbiddenException;
+import ar.edu.itba.paw.exceptions.GameHasAlreadyStartException;
 import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
@@ -132,6 +133,12 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Delete player from game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
+
+        if (game.getStartTime().isBefore(LocalDateTime.now())) {
+            LOGGER.trace("Delete player from game failed, game '{}' has already started", key);
+            throw new GameHasAlreadyStartException("Delete player from game failed, game '" + key + "' has already started");
+        }
+
         if (code != null) {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
@@ -252,6 +259,10 @@ public class GameServiceImpl implements GameService {
             throw new ForbiddenException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
+        if (game.getStartTime().isBefore(LocalDateTime.now())) {
+            LOGGER.trace("Delete game failed, game '{}' has already started", key);
+            throw new GameHasAlreadyStartException("Delete game failed, game '" + key + "' has already started");
+        }
         if (gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime())) {
             LOGGER.trace("{} removed", key);
         } else {
@@ -281,7 +292,7 @@ public class GameServiceImpl implements GameService {
             throw new ForbiddenException("User '" + premiumUser.getUserName() +
                     "' must be the creator of '" + key + "' match");
         }
-        if (game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
+        if (game.getFinishTime().isAfter(LocalDateTime.now())) {
             throw new GameHasNotBeenPlayException("The match has not been played yet");
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
@@ -315,6 +326,12 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Insert user in game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
+
+        if (game.getStartTime().isBefore(LocalDateTime.now())) {
+            LOGGER.trace("Insert player in game failed, game '{}' has already started", key);
+            throw new GameHasAlreadyStartException("Insert player in game failed, game '" + key + "' has already started");
+        }
+
         try {
             game = insertUserInGameTeam(game, userId, true);
         }
