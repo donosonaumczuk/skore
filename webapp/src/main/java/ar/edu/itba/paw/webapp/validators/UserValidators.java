@@ -54,7 +54,7 @@ public class UserValidators {
         return loggedUserOptional -> {
             if (!loggedUserOptional.isPresent() || !loggedUserOptional.get().getUserName().equals(username)) {
                 LOGGER.error(log);
-                throw new ApiException(HttpStatus.FORBIDDEN, "Only '" + username + "' can update his own user");
+                throw ApiException.of(HttpStatus.FORBIDDEN, "Only '" + username + "' can update his own user");
             }
         };
     }
@@ -63,7 +63,7 @@ public class UserValidators {
         return jsonObject -> {
             if (jsonObject.has(PASSWORD) && !jsonObject.has(OLD_PASSWORD)) {
                 LOGGER.error(log);
-                throw new ApiException(HttpStatus.BAD_REQUEST, "To update '" + PASSWORD + "' field you must " +
+                throw ApiException.of(HttpStatus.BAD_REQUEST, "To update '" + PASSWORD + "' field you must " +
                         "provide an '" + OLD_PASSWORD + "' field with the old password");
             }
             else if (!jsonObject.has(PASSWORD)) {

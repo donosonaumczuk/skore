@@ -2,7 +2,11 @@ package ar.edu.itba.paw.webapp.utils;
 
 import java.time.LocalDateTime;
 
-public class QueryParamsUtils {
+public final class QueryParamsUtils {
+
+    private QueryParamsUtils() {
+        /* Utility class */
+    }
 
     public static Integer positiveIntegerOrElse(String s, Integer i) {
         Integer integer;

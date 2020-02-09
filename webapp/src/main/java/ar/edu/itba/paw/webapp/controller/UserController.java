@@ -12,22 +12,21 @@ import ar.edu.itba.paw.models.QueryList;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
+import ar.edu.itba.paw.webapp.constants.MessageConstants;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
-import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.CacheUtils;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
-import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.exceptions.ApiException;
-import ar.edu.itba.paw.webapp.utils.JSONUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +60,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -298,7 +295,7 @@ public class UserController {
             ImageIO.write(bImage, "png", bos);
         }
         catch (IOException e) {
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail to process default image");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
         return bos.toByteArray();
     }

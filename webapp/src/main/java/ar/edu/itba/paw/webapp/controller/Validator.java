@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.webapp.constants.MessageConstants;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
@@ -51,7 +52,7 @@ public class Validator { //TODO: remove this class later
     public Validator fieldHasData(final String field, final String fieldName) {
         if(field == null || field.isEmpty()) {
             LOGGER.trace("No data in field '{}'", fieldName);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "No data in field '" + fieldName + "'");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "No data in field '" + fieldName + "'");
         }
         return this;
     }
@@ -73,12 +74,12 @@ public class Validator { //TODO: remove this class later
 
         if(!mimeType.equals(mimeTypeFromBytes)) {
             LOGGER.trace("Mismatch header mime-type with data mime-type");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Mismatch header mime-type with data mime-type");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Mismatch header mime-type with data mime-type");
         }
 
         if(imageBytes.length > MEGABYTE) {
             LOGGER.trace("Image is bigger than {} bytes", MEGABYTE);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Image is bigger than " + MEGABYTE + " bytes");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Image is bigger than " + MEGABYTE + " bytes");
         }
         return imageBytes;
     }
@@ -86,7 +87,7 @@ public class Validator { //TODO: remove this class later
     public Validator isAlphaNumericAndLessThan(final String string, final String fieldName, final int maxsize) {
         if (string == null || !string.matches("[a-zA-Z0-9]+") || string.length() > maxsize || string.isEmpty()) {
             LOGGER.trace("The field '{}' must be alphanumeric and less than {} characters", fieldName, maxsize);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric and less than"
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric and less than"
                     + maxsize + " characters");
         }
         return this;
@@ -95,7 +96,7 @@ public class Validator { //TODO: remove this class later
     public Validator isAlphaNumericorSpacesAndLessThan(final String string, final String fieldName, final int maxsize) {
         if (string == null || !string.matches("[a-zA-Z0-9 ]+") || string.length() > maxsize || string.isEmpty()) {
             LOGGER.trace("The field '{}' must be alphanumeric or spaces and less than {} characters", fieldName, maxsize);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric or spaces and less than"
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be alphanumeric or spaces and less than"
                     + maxsize + " characters");
         }
         return this;
@@ -104,7 +105,7 @@ public class Validator { //TODO: remove this class later
     public Validator isNumberGreaterThanZero(final int number, final String fieldName) {
         if(number < 0) {
             LOGGER.trace("The field '{}' must be a integer number greater than zero", fieldName);
-            throw new ApiException(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be integer number " +
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "The field '" + fieldName + "' must be integer number " +
                     "greater than zero");
         }
         return this;
@@ -123,7 +124,7 @@ public class Validator { //TODO: remove this class later
                 }
                 exceptionError.append(mediatype);
             }
-            throw new ApiException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exceptionError.toString());
+            throw ApiException.of(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exceptionError.toString());
 
         }
         return this;
@@ -132,7 +133,7 @@ public class Validator { //TODO: remove this class later
     private Validator splitimageHasBase64Format(final String[] splitImage) {
         if (splitImage.length != 2 || !splitImage[0].matches("data:image/(\\w+);base64")) {
             LOGGER.trace("Image is not in base64 format");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Image must be in base64 format");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Image must be in base64 format");
         }
         return this;
     }
@@ -142,7 +143,7 @@ public class Validator { //TODO: remove this class later
             return DatatypeConverter.parseBase64Binary(imageDataBase64);
         } catch (IllegalArgumentException e) {
             LOGGER.trace("Cannot process image bytes");
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image bytes");
+            throw ApiException.of(HttpStatus.BAD_REQUEST, "Invalid image bytes");
         }
     }
 
@@ -151,7 +152,7 @@ public class Validator { //TODO: remove this class later
             return getMimeType(imageBytes);
         } catch (IOException | TikaException | SAXException e) {
             LOGGER.error("Error processing image mime-type");
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image mime-type");
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
     }
 
