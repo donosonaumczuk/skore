@@ -100,7 +100,7 @@
             "password": {
                 "required":"Password is required."
             },
-            "invalidUsernameOrPassword": "Invalid username or password"
+            "invalidUsernameOrPassword": "Invalid username or password."
         }
     },
     "home": {
