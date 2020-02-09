@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.TeamNotCreatedException;
+import ar.edu.itba.paw.exceptions.TemporalTeamNotCreatedException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -68,7 +68,7 @@ public class TeamServiceImpl implements TeamService {
             i++;
         }
         if(aux) {
-            throw new TeamNotCreatedException("Could not generate team");
+            throw new TemporalTeamNotCreatedException("Could not generate team");
         }
         return team;
     }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
-import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
@@ -19,7 +18,6 @@ import ar.edu.itba.paw.webapp.dto.ResultDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
-import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
@@ -50,9 +48,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.constants.HeaderConstants.CODE_HEADER;
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;

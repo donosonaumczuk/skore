@@ -41,6 +41,7 @@ import javax.ws.rs.core.UriInfo;
 
 import java.util.Date;
 
+import static ar.edu.itba.paw.webapp.constants.MessageConstants.SERVER_ERROR_GENERIC_MESSAGE;
 import static ar.edu.itba.paw.webapp.controller.SportController.BASE_PATH;
 
 @Controller
@@ -71,7 +72,7 @@ public class SportController {
         LOGGER.trace("Trying to retrieve image of sport '{}'", sportname);
         byte[] media = sportService.readImage(sportname).orElseThrow(() -> {
             LOGGER.trace("Sport '{}' image does not exist", sportname);
-            return new ApiException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, SERVER_ERROR_GENERIC_MESSAGE);
         });
         CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
         Date expireDate = CacheUtils.getExpire(ONE_HOUR);

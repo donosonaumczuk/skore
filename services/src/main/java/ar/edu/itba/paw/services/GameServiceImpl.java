@@ -1,16 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
-import ar.edu.itba.paw.exceptions.ForbiddenException;
 import ar.edu.itba.paw.exceptions.GameHasAlreadyStartException;
 import ar.edu.itba.paw.exceptions.GameNotFullException;
-import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
+import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
-import ar.edu.itba.paw.exceptions.GameHasNotBeenPlayException;
+import ar.edu.itba.paw.exceptions.GameNotPlayedYetException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
-import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
+import ar.edu.itba.paw.exceptions.MalformedGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
+import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -110,7 +110,7 @@ public class GameServiceImpl implements GameService {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
                 LOGGER.trace("Insert player from game fails, code '{}' is invalid for player '{}'", code, userId);
-                throw new ForbiddenException("Insert player from game fails, code '" + code +
+                throw new LackOfPermissionsException("Insert player from game fails, code '" + code +
                         "' is invalid for player '" + userId + "'");
             }
             return insertTemporalUserInGame(key, user, locale);
@@ -121,7 +121,7 @@ public class GameServiceImpl implements GameService {
         });
         if (loggedUser.getUser().getUserId() != userId) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userId);
-            throw new ForbiddenException("User '" + loggedUser.getUserName() +
+            throw new LackOfPermissionsException("User '" + loggedUser.getUserName() +
                     "' is not user '" + userId + "'");
         }
         return insertUserInGame(key, loggedUser.getUser().getUserId());
@@ -144,7 +144,7 @@ public class GameServiceImpl implements GameService {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
                 LOGGER.trace("Delete player from game fails, code '{}' is invalid for player '{}'", code, userId);
-                throw new ForbiddenException("Delete player from game fails, code '" + code +
+                throw new LackOfPermissionsException("Delete player from game fails, code '" + code +
                         "' is invalid for player '" + userId + "'");
             }
             deleteUserInGame(game, userId);
@@ -157,7 +157,7 @@ public class GameServiceImpl implements GameService {
             if (!game.getTeam1().getLeader().equals(loggedUser) &&
                     loggedUser.getUser().getUserId() != userId) {
                 LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
-                throw new ForbiddenException("Delete player from game fails, must be leader of match '" + key +
+                throw new LackOfPermissionsException("Delete player from game fails, must be leader of match '" + key +
                         "' or player '" + userId + "'");
             }
             deleteUserInGame(game, userId);
@@ -227,7 +227,7 @@ public class GameServiceImpl implements GameService {
 
         if (!gameOld.getTeam1().getLeader().equals(loggedUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
-            throw new ForbiddenException("User '" + loggedUser.getUserName() +
+            throw new LackOfPermissionsException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
         if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL.toString())) {
@@ -257,7 +257,7 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to delete match"));
         if (!game.getPrimaryKey().getTeam1().getLeader().equals(loggedUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
-            throw new ForbiddenException("User '" + loggedUser.getUserName() +
+            throw new LackOfPermissionsException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
         if (game.getStartTime().isBefore(LocalDateTime.now())) {
@@ -295,11 +295,11 @@ public class GameServiceImpl implements GameService {
         }
         if (!game.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("Update game failed, user '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
-            throw new ForbiddenException("User '" + premiumUser.getUserName() +
+            throw new LackOfPermissionsException("User '" + premiumUser.getUserName() +
                     "' must be the creator of '" + key + "' match");
         }
         if (game.getFinishTime().isAfter(LocalDateTime.now())) {
-            throw new GameHasNotBeenPlayException("The match has not been played yet");
+            throw new GameNotPlayedYetException("The match has not been played yet");
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 
@@ -371,7 +371,7 @@ public class GameServiceImpl implements GameService {
             return new GameKey(key);
         }
         catch (Exception e) {
-            throw new InvalidGameKeyException("Invalid key");
+            throw new MalformedGameKeyException("Invalid key");
         }
     }
 

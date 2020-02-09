@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class HateoasUtils {
+public final class HateoasUtils {
+
+    private HateoasUtils() {
+        /* Utility class */
+    }
 
     public static List<Link> getHateoasForPageLinks(Page page, String query, String base) {
         ImmutableList.Builder<Link> builder = ImmutableList.builder();
