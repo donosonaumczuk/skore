@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
@@ -8,7 +9,9 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.GameServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -83,6 +86,9 @@ public class GameServiceImplTest {
 
     private PremiumUser leaderTeam1;
 
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -124,9 +130,9 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_1_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam1().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(GAME_1.getTeam1().getLeader()));
 
-        boolean ans = gameService.deleteUserInGameWithCode(GAME_KEY, USER_1_ID, null);
+        gameService.deleteUserInGameWithCode(GAME_KEY, USER_1_ID, null);
 
-        Assert.assertTrue(ans);
+        //No exception
     }
 
     @Test
@@ -137,19 +143,20 @@ public class GameServiceImplTest {
         when(premiumUserService.findById(USER_2_ID)).thenReturn(Optional.ofNullable(GAME_1.getTeam2().getLeader()));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGameWithCode(GAME_KEY, USER_2_ID, null);
+        gameService.deleteUserInGameWithCode(GAME_KEY, USER_2_ID, null);
 
-        Assert.assertTrue(ans);
+        //No exception
     }
 
     @Test
     public void deleteAUserThatIsNotInTheGame() {
+        exceptionRule.expect(PlayerNotFoundException.class);
+        exceptionRule.expectMessage("No Player found with id '" + USER_3_ID + "'");
+
         when(gameDaoMock.findByKey(GAME_1.getTeam1().getName(), GAME_1.getStartTime(), GAME_1.getFinishTime()))
                 .thenReturn(Optional.of(GAME_1));
         when(sessionService.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        boolean ans = gameService.deleteUserInGameWithCode(GAME_KEY, USER_3_ID, null);
-
-        Assert.assertFalse(ans);
+        gameService.deleteUserInGameWithCode(GAME_KEY, USER_3_ID, null);
     }
 }

@@ -48,41 +48,6 @@ public class PremiumUserServiceImplTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
-    public void confirmationPathFinishTest() {
-        List<List<Game>> list = new LinkedList<>();
-        list.add(new LinkedList<>());
-        list.add(new LinkedList<>());
-        when(premiumUserDaoMock.enableUser(USERNAME, CODE)).thenReturn(true);
-        when(premiumUserDaoMock.findByUserName(USERNAME))
-                .thenReturn(Optional.of(new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME)));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(list);
-
-        boolean ans = premiumUserService.confirmationPath(URL);
-
-        Assert.assertTrue(ans);
-    }
-
-    @Test
-    public void confirmationPathExceptionTest() {
-        exceptionRule.expect(InvalidUserCodeException.class);
-        exceptionRule.expectMessage("Invalid code '" + CODE + "' for user '" + USERNAME + "'");
-        PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
-        account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));
-        List<List<Game>> list = new LinkedList<>();
-        list.add(new LinkedList<>());
-        list.add(new LinkedList<>());
-        when(premiumUserDaoMock.enableUser(USERNAME, CODE)).thenReturn(false);
-        when(premiumUserDaoMock.findByUserName(USERNAME))
-                .thenReturn(Optional.of(account));
-        when(gameServiceMock.getGamesThatPlay(ID)).thenReturn(list);
-
-        boolean ans = premiumUserService.confirmationPath(URL);
-
-
-        Assert.assertFalse(ans);
-    }
-
-    @Test
     public void findByKeyTestWinAll() {
         PremiumUser account = new PremiumUser(FIRSTNAME, LASTNAME, EMAIL, USERNAME);
         account.setUser(new User(FIRSTNAME, LASTNAME, EMAIL, ID));

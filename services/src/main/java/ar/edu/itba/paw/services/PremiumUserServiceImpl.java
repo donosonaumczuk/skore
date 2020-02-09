@@ -30,6 +30,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class PremiumUserServiceImpl implements PremiumUserService {
@@ -54,31 +55,33 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Autowired
     private Environment environment;
 
+    private Function<PremiumUser, PremiumUser> loadUserGames = user -> {
+        List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
+        user.setGamesInTeam1(games.get(0));
+        user.setGamesInTeam2(games.get(1));
+        user.setWinRate(PremiumUserServiceImpl.this.calculateWinRate(user));
+        return user;
+    };
+
     @Transactional
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
-        return premiumUserDao.findByUserName(userName).map(user -> {
-            List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
-            user.setGamesInTeam1(games.get(0));
-            user.setGamesInTeam2(games.get(1));
-            user.setWinRate(calculateWinRate(user));
-            return user;
-        });
+        return premiumUserDao.findByUserName(userName).map(loadUserGames);
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
-        return premiumUserDao.findByEmail(email); //TODO: why does not include games/matches?
+        return premiumUserDao.findByEmail(email).map(loadUserGames);
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
-        return premiumUserDao.findById(userId); //TODO: why does not include games/matches?
+        return premiumUserDao.findById(userId).map(loadUserGames);
     }
 
     @Transactional
@@ -202,17 +205,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         }
         LOGGER.trace("{} is now enabled", username);
         return user;
-    }
-
-    @Transactional
-    @Override
-    public boolean confirmationPath(String path) { //TODO: move to front
-        String dataPath = path.replace("/confirm/", "");
-        int splitIndex = dataPath.indexOf('&');
-        String username = dataPath.substring(0, splitIndex);
-        String code = dataPath.substring(splitIndex + 1);
-        enableUser(username, code);
-        return true;
     }
 
     @Transactional

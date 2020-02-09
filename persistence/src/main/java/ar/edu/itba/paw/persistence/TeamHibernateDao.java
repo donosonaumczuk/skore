@@ -44,7 +44,7 @@ public class TeamHibernateDao implements TeamDao {
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName,
-                                 final MultipartFile file) throws IOException {
+                                 final byte[] file) {
         LOGGER.trace("Try to find leader: {}", leaderName);
         PremiumUser leader = null;
         if(leaderName != null) {
@@ -57,7 +57,7 @@ public class TeamHibernateDao implements TeamDao {
                 .orElseThrow(() -> SportNotFoundException.ofId(sportName));
         LOGGER.trace("Find sport: {}", sportName);
 
-        Team team = new Team(leader, acronym, teamName, isTemp, sport, ((file==null)?null:file.getBytes()));
+        Team team = new Team(leader, acronym, teamName, isTemp, sport, file);
         em.persist(team);
         return Optional.of(team);
     }

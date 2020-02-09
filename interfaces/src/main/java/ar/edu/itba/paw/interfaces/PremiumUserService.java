@@ -36,8 +36,6 @@ public interface PremiumUserService {
 
     PremiumUser enableUser(final String username, final String code);
 
-    boolean confirmationPath(String path);
-
     Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
                                     final List<String> friendUsernames, final Integer minReputation,
                                     final Integer maxReputation, final Integer minWinRate,

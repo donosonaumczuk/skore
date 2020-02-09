@@ -47,15 +47,7 @@ public class TeamServiceImpl implements TeamService {
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName) {
         Optional<Team> team;
-        try {
-            team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
-                    sportName, null);
-        } catch (IOException e) {
-            //TODO: heeeeey! we must throw an special exception here (maybe IOException and map then to a 500 in controller?)
-            //TODO: why image always null? why this exception if image is always null, why not remove the file param?
-            LOGGER.error("Image corrupted\n");
-            team = Optional.empty();
-        }
+        team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp, sportName, null);
         return team.orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
 

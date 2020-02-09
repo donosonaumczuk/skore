@@ -28,8 +28,8 @@ public class GameValidators {
     private static final String LOCATION    = "location";
     private static final String DATE        = "date";
     private static final String TIME        = "time";
-    private static final String TEAM_NAME_1 = "teamName1";//TODO: map dto
-    private static final String TEAM_NAME_2 = "teamName2";//TODO: map dto
+    private static final String TEAM_NAME_1 = "teamName1";
+    private static final String TEAM_NAME_2 = "teamName2";
     private static final Set<String> CREATION_KNOWN_FIELDS = ImmutableSet.of(TITLE, DESCRIPTION, SPORT, DURATION,
             INDIVIDUAL, COMPETITIVE, DATE, TIME, LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(TITLE, SPORT, DURATION, INDIVIDUAL,
