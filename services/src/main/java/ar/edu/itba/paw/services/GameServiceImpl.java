@@ -5,7 +5,7 @@ import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.GameNotPlayedYetException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
-import ar.edu.itba.paw.exceptions.InvalidGameKeyException;
+import ar.edu.itba.paw.exceptions.MalformedGameKeyException;
 import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.interfaces.GameDao;
@@ -343,7 +343,7 @@ public class GameServiceImpl implements GameService {
             return new GameKey(key);
         }
         catch (Exception e) {
-            throw new InvalidGameKeyException("Invalid key");
+            throw new MalformedGameKeyException("Invalid key");
         }
     }
 
