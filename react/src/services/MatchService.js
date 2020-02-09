@@ -1,11 +1,15 @@
 import api from './../config/Api';
 import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
-import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging,
+            addFutureMinTimeToParams, addMinFreePlacesToParams,
+            addCreatedByToParams, addWithoutPlayersToParams, addWithPlayersToParams } from './Util';
 import { SC_TIME_OUT, SC_CLIENT_CLOSED_REQUEST } from './constants/StatusCodesConstants';
 
 const getMatches = async (offset, limit, filters, token) => {
     const config = { cancelToken: token };
-    const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    paramObject = addFutureMinTimeToParams(paramObject);
+    paramObject = addMinFreePlacesToParams(paramObject);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
@@ -13,8 +17,7 @@ const getMatches = async (offset, limit, filters, token) => {
     }
     catch (err) {
         if (err.response) {
-            return { status: err.response.status };
-                
+            return { status: err.response.status };  
         }
         else {
             if (err.isAxiosError) {
@@ -27,10 +30,11 @@ const getMatches = async (offset, limit, filters, token) => {
 
 const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
-    const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
-    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&createdBy=${username}`:
-                                        `?createdBy=${username}`;
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    paramObject = addFutureMinTimeToParams(paramObject);
+    paramObject = addMinFreePlacesToParams(paramObject);
+    paramObject = addCreatedByToParams(paramObject, username);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
@@ -51,10 +55,11 @@ const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => 
 
 const getMatchesJoinedBy =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
-    const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
-    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withPlayers=${username}`:
-                                        `?withPlayers=${username}`;
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    paramObject = addFutureMinTimeToParams(paramObject);
+    paramObject = addMinFreePlacesToParams(paramObject);
+    paramObject = addWithPlayersToParams(paramObject, username);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;
@@ -75,10 +80,11 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters, token) => {
 
 const getMatchesToJoin =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
-    const paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    let paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
-    paramsUrl = paramsUrl.length > 0 ? `${paramsUrl}&withoutPlayers=${username}` :
-                                        `?withoutPlayers=${username}`;
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    paramObject = addFutureMinTimeToParams(paramObject);
+    paramObject = addMinFreePlacesToParams(paramObject);
+    paramObject = addWithoutPlayersToParams(paramObject, username);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
         return res.data;

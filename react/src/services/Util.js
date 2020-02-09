@@ -52,6 +52,27 @@ const getDateWithParamFormat = date => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+const addCreatedByToParams = (params, username) => {
+    return {
+        ...params,
+        "createdBy": `${username}`
+    };
+}
+
+const addWithPlayersToParams = (params, username) => {
+    return {
+        ...params,
+        "withPlayers": `${username}`
+    }
+}
+
+const addWithoutPlayersToParams = (params, username) => {
+    return {
+        ...params,
+        "withoutPlayers": `${username}`
+    }
+}
+
 const addFutureMinTimeToParams = params => {
     const minStartTime = getDateWithParamFormat(new Date());
     return {
@@ -63,14 +84,14 @@ const addFutureMinTimeToParams = params => {
 const addMinFreePlacesToParams = params => {
     return { 
         ...params,
-        "minFreePlaces": 1
+        "minFreePlaces": "1"
     };
 }
 
 const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     let paramObject = {
-        "offset": offset,
-        "limit": limit,
+        "offset": `${offset}`,
+        "limit": `${limit}`,
     }
     if (filters) {
         paramObject = {
@@ -86,6 +107,9 @@ export {
     buildUrlFromParamsWithCommas,
     createObjectFromFiltersAndPaging,
     getDateWithParamFormat,
+    addCreatedByToParams,
+    addWithPlayersToParams,
+    addWithoutPlayersToParams,
     addFutureMinTimeToParams,
     addMinFreePlacesToParams,
 };

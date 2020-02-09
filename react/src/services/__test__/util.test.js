@@ -1,6 +1,8 @@
 import { getDateWithParamFormat, addFutureMinTimeToParams,
         addMinFreePlacesToParams, buildUrlFromParamQueries,
-        buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from '../Util';
+        buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging,
+        addCreatedByToParams, addWithoutPlayersToParams,
+        addWithPlayersToParams } from '../Util';
 
 //getDateWithParamFormat tests
 test('getDateWithParamFormat with complete date and time', () => {
@@ -257,8 +259,8 @@ test('createObjectFromFiltersAndPaging without filters', () => {
     const actualResult = createObjectFromFiltersAndPaging(offset, limit, filters);
 
     //postconditions
-    expect(actualResult.offset).toEqual(offset);
-    expect(actualResult.limit).toEqual(limit);
+    expect(actualResult.offset).toEqual(`${offset}`);
+    expect(actualResult.limit).toEqual(`${limit}`);
 });
 
 test('createObjectFromFiltersAndPaging with filters', () => {
@@ -271,8 +273,89 @@ test('createObjectFromFiltersAndPaging with filters', () => {
     const actualResult = createObjectFromFiltersAndPaging(offset, limit, filters);
 
     //postconditions
-    expect(actualResult.offset).toEqual(offset);
-    expect(actualResult.limit).toEqual(limit);
+    expect(actualResult.offset).toEqual(`${offset}`);
+    expect(actualResult.limit).toEqual(`${limit}`);
     expect(actualResult.country).toEqual("Argentina");
     expect(actualResult.sports).toEqual("Padle");
+});
+
+//addCreatedByToParams tests
+test('addCreatedByToParams with empty param', () => {
+    //set up
+    const param = {};
+    const username = "username";
+
+    //execution
+    const actualResult = addCreatedByToParams(param, username);
+
+    //postconditions
+    expect(actualResult.createdBy).toBe(username);
+});
+
+test('addCreatedByToParams with nonempty param', () => {
+    //set up
+    const param = { key1: "value1", key2: "value2" };
+    const username = "username";
+
+    //execution
+    const actualResult = addCreatedByToParams(param, username);
+
+    //postconditions
+    expect(actualResult.key1).toBe("value1");
+    expect(actualResult.key2).toBe("value2");
+    expect(actualResult.createdBy).toBe(username);
+});
+
+//addWithoutPlayersToParams tests
+test('addWithoutPlayersToParams with empty param', () => {
+    //set up
+    const param = {};
+    const username = "username";
+
+    //execution
+    const actualResult = addWithoutPlayersToParams(param, username);
+
+    //postconditions
+    expect(actualResult.withoutPlayers).toBe(username);
+});
+
+test('addWithoutPlayersToParams with nonempty param', () => {
+    //set up
+    const param = { key1: "value1", key2: "value2" };
+    const username = "username";
+
+    //execution
+    const actualResult = addWithoutPlayersToParams(param, username);
+
+    //postconditions
+    expect(actualResult.key1).toBe("value1");
+    expect(actualResult.key2).toBe("value2");
+    expect(actualResult.withoutPlayers).toBe(username);
+});
+
+//addWithPlayersToParams tests
+test('addWithPlayersToParams with empty param', () => {
+    //set up
+    const param = {};
+    const username = "username";
+
+    //execution
+    const actualResult = addWithPlayersToParams(param, username);
+
+    //postconditions
+    expect(actualResult.withPlayers).toBe(username);
+})
+
+test('addWithPlayersToParams with nonempty param', () => {
+    //set up
+    const param = { key1: "value1", key2: "value2" };
+    const username = "username";
+
+    //execution
+    const actualResult = addWithPlayersToParams(param, username);
+
+    //postconditions
+    expect(actualResult.key1).toBe("value1");
+    expect(actualResult.key2).toBe("value2");
+    expect(actualResult.withPlayers).toBe(username);
 });
