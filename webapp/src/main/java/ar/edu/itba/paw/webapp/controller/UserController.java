@@ -127,8 +127,8 @@ public class UserController {
                              @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
-        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames.getQueryValues(),
-                sportsLiked.getQueryValues(), friendsUsernames.getQueryValues(),
+        Page<UserDto> userPage = premiumUserService.findUsersPage(QueryParamsUtils.getQueryListOrNull(usernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked), QueryParamsUtils.getQueryListOrNull(friendsUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))

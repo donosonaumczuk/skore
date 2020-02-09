@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SportService from '../../../services/SportService';
-import Loader from '../../Loader';
 import Utils from './../../utils/Utils';
 import Sports from './layout';
 
@@ -33,6 +32,7 @@ class SportsContainer extends Component {
     getSports = async () => {
         const response = await SportService.getSports();
         if (response.status) {
+            this.setState({ status: response.status });
             //TODO handle error
         }
         else if (this.mounted) {
@@ -46,15 +46,13 @@ class SportsContainer extends Component {
     }
 
     render() {
-        if (this.state.sports.length === 0 && this.state.hasMore) {
-            return <Loader />;
-        }
-        else {
-            const { sports, hasMore } = this.state;
-            return (
-                <Sports sports={sports} getSports={this.getSports} hasMore={hasMore} />
-            );
-        }
+        const { sports, hasMore, status } = this.state;
+        const isLoading = sports.length === 0 && hasMore
+        return (
+            <Sports sports={sports} getSports={this.getSports} hasMore={hasMore}
+                    isLoading={isLoading} error={status} />
+        );
+        
     }
 
     componentWillUnmount = () => {

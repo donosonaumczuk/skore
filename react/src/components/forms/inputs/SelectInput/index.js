@@ -12,8 +12,6 @@ const SelectInput = ({ input, label, id, meta, required, defaultText, options })
                 <select {...input} id={id} className="form-control">
                     <option value="">{defaultText}</option>
                     {options}
-                    {/* TODO receive the array of options in option an mapper function in mapper */}
-                    {/* {options.map( option => mapper(option))} */}
                 </select>
                 {meta.error &&
                 meta.touched &&
