@@ -102,6 +102,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RegexRequestMatcher("/api/matches/?", "POST"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "PUT"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "DELETE"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/result/?", "POST"),
                 optionalAuthEndpointsMatcher(),
                 adminAuthEndpointsMatcher()
         );

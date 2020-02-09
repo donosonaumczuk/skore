@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
 import ar.edu.itba.paw.webapp.constants.MessageConstants;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
@@ -63,6 +64,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
 @Controller
@@ -282,9 +284,10 @@ public class UserController {
 
     @POST
     @Path("/{username}/verification")
-    public Response verifyUser(@PathParam("username") String username, String code) {
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         LOGGER.trace("Trying to verify '{}' user", username);
-        return Response.ok(UserDto.from(premiumUserService.enableUser(username, code))).build();
+        PremiumUser userVerified = premiumUserService.enableUser(username, code);
+        return Response.ok(AuthDto.from(userVerified)).header(TOKEN_HEADER, jwtUtility.createToken(userVerified)).build();
     }
 
     private byte[] getDefaultImage() {
@@ -301,7 +304,8 @@ public class UserController {
     }
 
     private LocalDate getBirthDay(UserDto userDto) {
-        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
-                userDto.getBirthday().getDayOfMonth());
+        return userDto.getBirthday() != null ?
+                    LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                    userDto.getBirthday().getDayOfMonth()) : null ;
     }
 }

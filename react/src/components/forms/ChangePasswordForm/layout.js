@@ -6,8 +6,10 @@ import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import FormComment from '../elements/FormComment';
+import WithExecuting from '../../hocs/WithExecuting';
+import WithError from '../../hocs/WithError';
 
-const ChangePasswordForm = ({ handleSubmit, submitting, onSubmit, error }) => {
+const ChangePasswordForm = ({ handleSubmit, submitting, onSubmit, errorMessage }) => {
     return  (
         <div className="container-fluid">
             <div className="row">
@@ -16,7 +18,7 @@ const ChangePasswordForm = ({ handleSubmit, submitting, onSubmit, error }) => {
                                 col-lg-6 offset-xl-4 col-xl-4">
                     <FormTitle />
                     <form onSubmit={handleSubmit(onSubmit)} >
-                        {error && <span className="invalid-feedback d-block">
+                        {errorMessage && <span className="invalid-feedback d-block">
                                 {i18next.t('changePasswordForm.passwordError')}</span>}
                         <Field name="username" label={i18next.t('createUserForm.username')} 
                                 inputType="text" required={false} isDisabled={true}
@@ -45,7 +47,7 @@ const ChangePasswordForm = ({ handleSubmit, submitting, onSubmit, error }) => {
 ChangePasswordForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string, 
+    errorMessage: PropTypes.string, 
 }
 
-export default ChangePasswordForm;
+export default WithError(WithExecuting(ChangePasswordForm));

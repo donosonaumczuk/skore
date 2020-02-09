@@ -20,12 +20,14 @@ import Sports from './components/screens/Sports';
 import CreateMatchForm from './components/forms/CreateMatchForm';
 import CreateSportForm from './components/forms/CreateSportForm';
 import EditSport from './components/screens/EditSport';
-import './css/main.css';
 import Admin from './components/screens/Admin';
 import MatchPage from './components/screens/MatchPage';
 import ConfirmMatch from './components/screens/ConfirmMatch';
 import CancelMatch from './components/screens/CancelMatch';
 import CreatedAccount from './components/screens/CreatedAccount';
+import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
+import './css/main.css';
+
 
 class App extends Component {
     constructor(props) {
@@ -124,6 +126,7 @@ class App extends Component {
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />
                         <Route exact path="/confirmMatch" component={ConfirmMatch} />
                         <Route exact path="/cancelMatch" component={CancelMatch} />
+                        <Route exact path="/setMatchScore/:creator/:matchKey" component={SetMatchScoreForm} />
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>
