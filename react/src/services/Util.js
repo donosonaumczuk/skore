@@ -1,3 +1,7 @@
+const MIN_THREE_DIGIT_NUMBER = 100;
+const ZERO = 0;
+const MIN_TWO_DIGIT_NUMBER = 10;
+
 const buildUrlFromParamQueries = params => {
     if (!params) {
         return '';
@@ -24,6 +28,45 @@ const buildUrlFromParamsWithCommas = params => {
     return url = url.replace(/ /g, ",");
 }
 
+const getStringWithTwoDigits = number => {
+    if (number >= MIN_THREE_DIGIT_NUMBER) {
+        return `${number % MIN_THREE_DIGIT_NUMBER}`;
+    }
+    else if (number <= ZERO) {
+        return "00";
+    }
+    else if (number < MIN_TWO_DIGIT_NUMBER) {
+        return `0${number}`;
+    }
+    else {
+        return `${number}`;
+    }
+}
+
+const getDateWithParamFormat = date => {
+    const year = date.getFullYear()
+    const month = getStringWithTwoDigits(date.getMonth() + 1);
+    const day = getStringWithTwoDigits(date.getDate());
+    const hours = getStringWithTwoDigits(date.getHours());
+    const minutes = getStringWithTwoDigits(date.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+const addFutureMinTimeToParams = params => {
+    const minStartTime = getDateWithParamFormat(new Date());
+    return {
+        ...params,
+        "minStartTime": minStartTime
+    };
+}
+
+const addMinFreePlacesToParams = params => {
+    return { 
+        ...params,
+        "minFreePlaces": 1
+    };
+}
+
 const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     let paramObject = {
         "offset": offset,
@@ -41,5 +84,8 @@ const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
 export {
     buildUrlFromParamQueries,
     buildUrlFromParamsWithCommas,
-    createObjectFromFiltersAndPaging
+    createObjectFromFiltersAndPaging,
+    getDateWithParamFormat,
+    addFutureMinTimeToParams,
+    addMinFreePlacesToParams,
 };

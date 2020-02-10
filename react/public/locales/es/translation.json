@@ -94,9 +94,13 @@
         "login": "ingresar",
         "newUser": "eres nuevo? ",
         "errors": {
-            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto.",
-            "requiredUsername": "El nombre de usuario es obligatorio.",
-            "requiredPassword": "La contraseña es obligatoria."
+            "username": {
+                "required": "El nombre de usuario es obligatorio."
+            },
+            "password": {
+                "required": "La contraseña es obligatoria."
+            },
+            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto."
         }
     },
     "home": {
@@ -233,7 +237,6 @@
         "confirmed": "Felicitaciones! Creaste una cuenta.",
         "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
-
     },
     "confirmAsistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
@@ -241,5 +244,17 @@
     },
     "cancelAsistance": {
         "canceled": "Cancelaste tu asistencia al partido."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Resultado del equipo 1 ",
+        "teamTwoScore": "Resultado del equipo 2 ",
+        "setScoreButton": "ACTUALIZAR RESULTADO",
+        "errors": {
+            "teamScore": {
+                "required": "Resultado del equipo es obligatorio.\n",
+                "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+            }
+        }
     }
 }

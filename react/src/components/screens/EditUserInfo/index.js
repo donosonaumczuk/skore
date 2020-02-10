@@ -17,9 +17,8 @@ class EditUserInfoContainer extends Component {
         };
     }
 
-    getBirthdayWithFormat = birthday => {
-        const birthdayArray = birthday.split("-");
-        return `${birthdayArray[1]}/${birthdayArray[2]}/${birthdayArray[0]}`;
+    getBirthdayWithFormat = birthday => { 
+        return `${birthday.monthNumber}/${birthday.dayOfMonth}/${birthday.year}`;
     }
 
     updateStateWithUser = currentUser => {

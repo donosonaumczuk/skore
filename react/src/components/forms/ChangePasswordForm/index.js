@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
-import ErrorPage from '../../screens/ErrorPage';
 import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import ChangePasswordForm from './layout';
 
@@ -16,6 +15,7 @@ const validate = values => {
 }
 
 class ChangePasswordFormContainer extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -33,9 +33,14 @@ class ChangePasswordFormContainer extends Component {
 
     onSubmit = async (values) => {
         const user = this.loadUser(values);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await UserService.updateUser(user, values.username);
         if (response.status) {
-            this.setState({ error: response.status });
+            if (this.mounted) {
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             this.props.history.push(`/users/${values.username}`);
@@ -44,15 +49,23 @@ class ChangePasswordFormContainer extends Component {
         //TODO make post
     }
 
+    componentDidMount() {
+        this.mounted = true;
+    }
+
     render() {
         const { handleSubmit, submitting } = this.props;
-        if (this.state.error && this.state.error !== SC_CONFLICT) {
-            return <ErrorPage status={this.state.error} />
-        }
+        const hasError = this.state.error && this.state.error !== SC_CONFLICT;
         return (
             <ChangePasswordForm handleSubmit={handleSubmit} submitting={submitting}
-                                onSubmit={this.onSubmit} error={this.state.error} />
+                                onSubmit={this.onSubmit} errorMessage={this.state.error} 
+                                isExecuting={this.state.executing} 
+                                error={hasError ? this.state.error : null} />
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 

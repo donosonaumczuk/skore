@@ -187,7 +187,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Override
     public PremiumUser enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
-
         PremiumUser user = findByUserName(username).orElseThrow(() -> {
             LOGGER.error("Can't find user with username: {}", username);
             return UserNotFoundException.ofUsername(username);

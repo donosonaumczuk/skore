@@ -94,9 +94,13 @@
         "login": "log in",
         "newUser": "are you new? ",
         "errors": {
-            "invalidUsernameOrPassword": "Invalid username or password",
-            "requiredUsername": "Username is required.",
-            "requiredPassword":"Password is required."
+            "username": {
+                "required": "Username is required."
+            },
+            "password": {
+                "required":"Password is required."
+            },
+            "invalidUsernameOrPassword": "Invalid username or password."
         }
     },
     "home": {
@@ -240,5 +244,17 @@
     },
     "cancelAsistance": {
         "canceled": "You have cancelled your asistance to the match."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Team 1 Score ",
+        "teamTwoScore": "Team 2 Score ",
+        "setScoreButton": "SET SCORE",
+        "errors": {
+            "teamScore": {
+                "required": "Team score is required.\n",
+                "invalidSymbols": "Team score must have only numbers.\n",
+                "invalidLength": "Team score must be between one and ten digitis.\n"
+            }
+        }
     }
 }
