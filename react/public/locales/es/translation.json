@@ -77,13 +77,13 @@
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
             },
             "year": {
-                "required": "Año es obligatorio.\n"
+                "required": "El año es obligatorio.\n"
             },
             "month": {
-                "required": "Mes es obligatorio.\n"
+                "required": "El mes es obligatorio.\n"
             },
             "day": {
-                "required": "Día es obligatorio.\n"
+                "required": "El día es obligatorio.\n"
             }
         }
     },
