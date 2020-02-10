@@ -50,7 +50,6 @@ const getIsDayDisabled = (isMonthDisabled, birthday) => {
 }
 
 const changeValueIfNeeded = (birthday, dayOptions, changeFieldsValue, touchField) => {
-    console.log("changeFieldValues: ",changeFieldsValue);
     if (birthday.day > dayOptions.length ||
         (!birthday.month && birthday.day)) {
             changeFieldsValue('day', null);
