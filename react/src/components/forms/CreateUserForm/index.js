@@ -139,7 +139,7 @@ class CreateUserFormContainer extends Component {
                             updateLocation={this.updateLocation}
                             country={country} state={state} city={city}
                             street={street} birthday={birthday} 
-                            changeFieldValues={change}
+                            changeFieldsValue={change}
                             touchField={touch} />
         );
     }

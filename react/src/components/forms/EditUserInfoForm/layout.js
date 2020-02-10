@@ -45,7 +45,7 @@ const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                                 label={i18next.t('createUserForm.cellphone')}
                                 component={RenderInput} />
                         <BirthdayInput required={true} birthday={birthday}
-                                        changeFieldValues={changeFieldsValue}
+                                        changeFieldsValue={changeFieldsValue}
                                         touchField={touchField} />
                         <Field name="home" changeFieldsValue={changeFieldsValue}
                                 touchField={touchField} component={HomeLocation} />

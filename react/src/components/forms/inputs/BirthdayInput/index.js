@@ -49,32 +49,32 @@ const getIsDayDisabled = (isMonthDisabled, birthday) => {
     return birthday.month ? false : true;
 }
 
-const changeValueIfNeeded = (birthday, dayOptions, changeFieldValues, touchField) => {
-    console.log("changeFieldValues: ",changeFieldValues);
+const changeValueIfNeeded = (birthday, dayOptions, changeFieldsValue, touchField) => {
+    console.log("changeFieldValues: ",changeFieldsValue);
     if (birthday.day > dayOptions.length ||
         (!birthday.month && birthday.day)) {
-        changeFieldValues('day', null);
+            changeFieldsValue('day', null);
         touchField('day');
     }
     if (!birthday.year) {
         if (birthday.month) {
-            changeFieldValues('month', null);
+            changeFieldsValue('month', null);
             touchField('month');
         }
         if (birthday.day) {
-            changeFieldValues('day', null);
+            changeFieldsValue('day', null);
             touchField('day');
         }
     }
 }
 
-const BirthdayInput = ({ required, birthday, changeFieldValues, touchField }) => {
+const BirthdayInput = ({ required, birthday, changeFieldsValue, touchField }) => {
     const yearOptions = getYearOptions();
     const monthOptions = getMonthOptions();
     const dayOptions = getDayOptions(birthday.month, birthday.year);
     const isMonthDisabled = birthday.year ? false : true;
     const isDayDisabled = getIsDayDisabled(isMonthDisabled, birthday);
-    changeValueIfNeeded(birthday, dayOptions, changeFieldValues, touchField);
+    changeValueIfNeeded(birthday, dayOptions, changeFieldsValue, touchField);
     return (
         <div>
             <label>
@@ -108,7 +108,7 @@ const BirthdayInput = ({ required, birthday, changeFieldValues, touchField }) =>
 BirthdayInput.propTypes = {
     required: PropTypes.bool,
     birthday: PropTypes.object.isRequired,
-    changeFieldValues: PropTypes.func.isRequired
+    changeFieldsValue: PropTypes.func.isRequired
 }
 
 export default BirthdayInput;
