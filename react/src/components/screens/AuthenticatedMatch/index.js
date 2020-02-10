@@ -11,9 +11,9 @@ class AuthenticatedMatch extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        const { match } = this.props;
+        const { param } = this.props;
         this.state = {
-            match: match,
+            matchKey: param,
             status: null
         }
     }
@@ -21,15 +21,15 @@ class AuthenticatedMatch extends Component {
     componentDidMount = async () => {
         this.mounted = true;
         const userId = AuthService.getUserId();
-        const { match } = this.state;
-        const response = MatchService.joinMatchWithAccount(match.key, userId);
+        const { matchKey } = this.state;
+        const response = MatchService.joinMatchWithAccount(matchKey, userId);
         if (response.status) {
             if (this.mounted) {
                 this.setState({ status: response.status });
             }
         }
         else {
-            this.props.history.push(`/match/${match.key}`);
+            this.props.history.push(`/match/${matchKey}`);
         }
     }
 

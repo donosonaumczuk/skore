@@ -176,7 +176,8 @@ class HomeContainer extends Component {
 
     joinMatchAnonymous = (match) => {
         if (match.competitive && this.mounted) {
-            this.setState({ competitiveJoin: true, joinMatch: match });
+            // this.setState({ competitiveJoin: true, joinMatch: match });
+            this.props.history.push(`/authenticatedJoin/match.key`);
         }
         else if ( this.mounted) {
             this.props.history.push(`/?matchKey=${match.key}`);
@@ -246,7 +247,7 @@ class HomeContainer extends Component {
         let { currentTab, matches, hasMore, competitiveJoin, joinMatch } = this.state;
         const { currentUser, updateUser, history } = this.props;
         let currentMatches;
-        const needsAuthentication = !currentUser;
+        // const needsAuthentication = !currentUser;
         if (this.state.executing) {
             currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
         }
@@ -261,12 +262,12 @@ class HomeContainer extends Component {
                                 cancelMatch={this.cancelMatch}
                                 deleteMatch={this.deleteMatch} />;
         }
-        if (competitiveJoin) {
-            return <AuthenticatedMatch needsAuthentication={needsAuthentication}
-                                        updateUser={updateUser} 
-                                        url={`/match/${joinMatch.key}`}
-                                        match={joinMatch} history={history} />
-        }
+        // if (competitiveJoin) {
+        //     return <AuthenticatedMatch needsAuthentication={needsAuthentication}
+        //                                 updateUser={updateUser} 
+        //                                 url={`/match/${joinMatch.key}`}
+        //                                 match={joinMatch} history={history} />
+        // }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
                     currentUser={currentUser} filters={this.state.filters}
