@@ -22,6 +22,7 @@ class AuthenticatedMatch extends Component {
         this.mounted = true;
         const userId = AuthService.getUserId();
         const { matchKey } = this.state;
+        console.log("component mounted and going to request");
         const response = await MatchService.joinMatchWithAccount(matchKey, userId);
         if (response.status) {
             if (this.mounted) {
