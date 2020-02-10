@@ -175,7 +175,7 @@ class HomeContainer extends Component {
 
     joinMatchAnonymous = (match) => {
         if (match.competitive && this.mounted) {
-            this.props.history.push(`/authenticatedJoin/match.key`);
+            this.props.history.push(`/authenticatedJoin/${match.key}`);
         }
         else if ( this.mounted) {
             this.props.history.push(`/?matchKey=${match.key}`);
