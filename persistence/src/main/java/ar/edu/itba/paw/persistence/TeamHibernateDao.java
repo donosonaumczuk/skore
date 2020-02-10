@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.exceptions.*;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
@@ -113,17 +114,6 @@ public class TeamHibernateDao implements TeamDao {
 
         User user = userDao.findById(userId)
                 .orElseThrow(() -> UserNotFoundException.ofId(userId));
-
-        for (User u:team.getPlayers()) {//TODO: maybe move to service
-            if(u.equals(user)) {
-                throw new AlreadyJoinedToMatchException("User already joined to match");
-            }
-        }
-
-        if(team.getPlayers().size() >= team.getSport().getQuantity()) {//TODO: maybe move to service
-            LOGGER.error("The team: {} is full", teamName);
-            throw new TeamFullException("The team " + teamName + "is full");
-        }
 
         team.addPlayer(user);
         em.merge(team);

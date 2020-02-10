@@ -3,9 +3,9 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
-import ar.edu.itba.paw.exceptions.UserAlreadyIsEnableException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
+import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -195,7 +195,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
         if (user.getEnabled()) {
             LOGGER.error("Can't enable user with username {}, is already enable", username);
-            throw UserAlreadyIsEnableException.ofUsername(username);
+            throw UserInvalidStateException.ofUserAlreadyEnable(username);
         }
 
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {

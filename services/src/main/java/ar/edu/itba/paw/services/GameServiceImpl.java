@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
-import ar.edu.itba.paw.exceptions.GameHasAlreadyStartException;
-import ar.edu.itba.paw.exceptions.GameNotFullException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
-import ar.edu.itba.paw.exceptions.GameNotPlayedYetException;
+import ar.edu.itba.paw.exceptions.invalidstate.GameInvalidStateException;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.MalformedGameKeyException;
-import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
@@ -137,7 +134,7 @@ public class GameServiceImpl implements GameService {
 
         if (game.getStartTime().isBefore(LocalDateTime.now())) {
             LOGGER.trace("Delete player from game failed, game '{}' has already started", key);
-            throw new GameHasAlreadyStartException("Delete player from game failed, game '" + key + "' has already started");
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
 
         if (code != null) {
@@ -262,7 +259,7 @@ public class GameServiceImpl implements GameService {
         }
         if (game.getStartTime().isBefore(LocalDateTime.now())) {
             LOGGER.trace("Delete game failed, game '{}' has already started", key);
-            throw new GameHasAlreadyStartException("Delete game failed, game '" + key + "' has already started");
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
         if (gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime())) {
             LOGGER.trace("{} removed", key);
@@ -291,7 +288,7 @@ public class GameServiceImpl implements GameService {
         if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() <
                 game.getTeam1().getSport().getQuantity() * 2) {
             LOGGER.trace("Update game failed, game '{}' is not full", key);
-            throw new GameNotFullException("Update game failed, game '" + key + "' is not full");
+            throw GameInvalidStateException.ofGameFull(key);
         }
         if (!game.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("Update game failed, user '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
@@ -299,7 +296,7 @@ public class GameServiceImpl implements GameService {
                     "' must be the creator of '" + key + "' match");
         }
         if (game.getFinishTime().isAfter(LocalDateTime.now())) {
-            throw new GameNotPlayedYetException("The match has not been played yet");
+            throw GameInvalidStateException.ofGameNotPlayedYet(key);
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 
@@ -335,13 +332,13 @@ public class GameServiceImpl implements GameService {
 
         if (game.getStartTime().isBefore(LocalDateTime.now())) {
             LOGGER.trace("Insert player in game failed, game '{}' has already started", key);
-            throw new GameHasAlreadyStartException("Insert player in game failed, game '" + key + "' has already started");
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
 
         try {
             game = insertUserInGameTeam(game, userId, true);
         }
-        catch (TeamFullException e) {
+        catch (TeamInvalidStateException e) {
             game = insertUserInGameTeam(game, userId, false);
         }
         return game;
@@ -352,14 +349,14 @@ public class GameServiceImpl implements GameService {
             if(!game.getTeam1().getPlayers().stream()
                     .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
                 LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw new AlreadyJoinedToMatchException("User already joined to match");
+                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
             }
             game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
         } else {
             if(game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
                     .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
                 LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw new AlreadyJoinedToMatchException("User already joined to match");
+                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
             }
             game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
         }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.TemporalTeamNotCreatedException;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -92,6 +93,14 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     @Override
     public Team addPlayer(final String teamName, final long userId) {
+        Team team = findByTeamName(teamName).orElseThrow(() -> {
+            LOGGER.trace("Insert user in team failed, team '{}' not found", teamName);
+            return TeamNotFoundException.ofId(teamName);
+        });
+        if(team.getPlayers().size() >= team.getSport().getQuantity()) {
+            LOGGER.error("The team: {} is full", teamName);
+            throw TeamInvalidStateException.ofTeamAlreadyFull(teamName);
+        }
         return teamDao.addPlayer(teamName, userId)
                 .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
