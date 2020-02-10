@@ -9,6 +9,6 @@ public class UserInvalidStateException extends EntityInvalidStateException {
     }
 
     public static UserInvalidStateException ofUserAlreadyEnable(final String username) {
-        return new UserInvalidStateException(username, "is already enable");
+        return new UserInvalidStateException(username, "is already enabled");
     }
 }
