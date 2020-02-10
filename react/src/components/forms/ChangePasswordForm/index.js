@@ -51,6 +51,10 @@ class ChangePasswordFormContainer extends Component {
         this.mounted = true;
     }
 
+    componentDidMount() {
+        this.mounted = true;
+    }
+
     render() {
         const { handleSubmit, submitting } = this.props;
         const hasError = this.state.error && this.state.error !== SC_CONFLICT;

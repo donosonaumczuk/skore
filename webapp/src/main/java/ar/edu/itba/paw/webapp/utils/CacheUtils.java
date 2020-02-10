@@ -5,7 +5,11 @@ import org.joda.time.DateTime;
 import javax.ws.rs.core.CacheControl;
 import java.util.Date;
 
-public class CacheUtils {
+public final class CacheUtils {
+
+    private CacheUtils() {
+        /* Utility class */
+    }
 
     public static CacheControl getCacheControl(final int time) {
         final CacheControl cache = new CacheControl();

@@ -41,7 +41,7 @@ public class ValidatorFactory {
             try {
                 jsonObject.getString(field);
             } catch (JSONException e) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '"
                         + field + "' must be a string"));
             }
         };
@@ -59,7 +59,7 @@ public class ValidatorFactory {
             try {
                 jsonObject.getInt(field);
             } catch (JSONException e) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '"
                         + field + "' must be a integer"));
             }
         };
@@ -77,7 +77,7 @@ public class ValidatorFactory {
             try {
                 jsonObject.getBoolean(field);
             } catch (JSONException e) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '"
                         + field + "' must be a boolean"));
             }
         };
@@ -97,7 +97,7 @@ public class ValidatorFactory {
         return fieldIsIntegerValidatorOf(field, log).and(jsonObject -> {
                     if ((max != null && jsonObject.getInt(field) > max) ||
                             (min != null && jsonObject.getInt(field) < min)) {
-                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                        logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '" + field
                                 + "' must belong to [" + (min == null ? "-Inf" : min) + "," +
                                 (max == null ? "Inf" : max) + "]"));
                     }
@@ -135,7 +135,7 @@ public class ValidatorFactory {
                                                                          final Integer max, final String log) {
         return (string) -> {
             if ((max != null && string.length() > max) || (min != null && string.length() < min)) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '" + field
                         + "' length must belong to [" + (min == null ? "-Inf" : min) + "," +
                         (max == null ? "Inf" : max) + "]"));
             }
@@ -155,7 +155,7 @@ public class ValidatorFactory {
                                                                        final String regexDescription, final String log) {
         return fieldIsStringValidatorOf(field, log).and(jsonObject -> {
                     if (!regex.matcher(jsonObject.getString(field)).matches()) {
-                        logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field
+                        logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '" + field
                                 + "' must be " + regexDescription));
                     }
                 }
@@ -178,7 +178,7 @@ public class ValidatorFactory {
             try {
                 fieldObject = jsonObject.getJSONObject(field);
             } catch (JSONException e) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.BAD_REQUEST, "Field '"
+                logAndThrowApiException(log, ApiException.of(HttpStatus.BAD_REQUEST, "Field '"
                         + field + "' must be a JSON object"));
             }
             fieldObjectValidator.validate(fieldObject);
@@ -210,7 +210,7 @@ public class ValidatorFactory {
                     .filter(forbiddenFields::contains)
                     .findFirst();
             forbiddenField.ifPresent(field -> logAndThrowApiException(log,
-                    new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field + "' known but other field values " +
+                    ApiException.of(HttpStatus.BAD_REQUEST, "Field '" + field + "' known but other field values " +
                             "turn it unaccepted")));
         };
     }
@@ -228,7 +228,7 @@ public class ValidatorFactory {
                                                                   final String log) {
         return optional -> {
             if (!optional.isPresent()) {
-                logAndThrowApiException(log, new ApiException(HttpStatus.NOT_FOUND, resourceType
+                logAndThrowApiException(log, ApiException.of(HttpStatus.NOT_FOUND, resourceType
                         + (resourceId != null ? " '" + resourceId + "'" : "") + " not found"));
             }
         };
@@ -316,7 +316,7 @@ public class ValidatorFactory {
         final Set<String> jsonFields = jsonObject.keySet();
         Optional<String> unknownField = jsonFields.stream().filter(field -> !knownFields.contains(field)).findFirst();
         unknownField.ifPresent(field -> logAndThrowApiException(log,
-                new ApiException(HttpStatus.BAD_REQUEST, "Field '" + field + "' is unknown or unaccepted")));
+                ApiException.of(HttpStatus.BAD_REQUEST, "Field '" + field + "' is unknown or unaccepted")));
     }
 
     private static void validateAllRequiredFieldsArePresent(final JSONObject jsonObject,
@@ -326,7 +326,7 @@ public class ValidatorFactory {
                 .filter(field -> !jsonFields.contains(field))
                 .findFirst();
         missingField.ifPresent(field -> logAndThrowApiException(log,
-                new ApiException(HttpStatus.BAD_REQUEST, "Missing required '" + field + "' field")));
+                ApiException.of(HttpStatus.BAD_REQUEST, "Missing required '" + field + "' field")));
     }
 
     private static void logAndThrowApiException(final String log, final ApiException apiException) {
