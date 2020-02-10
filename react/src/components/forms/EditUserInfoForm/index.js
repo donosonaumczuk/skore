@@ -12,7 +12,9 @@ const validate = values => {
     errors.lastName = CreateUserFormValidator.validateLastName(values.lastName);
     errors.image = CreateUserFormValidator.validateImage(values.image);
     errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
-    // errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
+    errors.year = CreateUserFormValidator.validateYear(values.year);
+    errors.month = CreateUserFormValidator.validateMonth(values.month);
+    errors.day = CreateUserFormValidator.validateDay(values.day);
     return errors;
 }
 

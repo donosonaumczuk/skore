@@ -10,7 +10,6 @@ import Loader from '../../Loader';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
 import { SC_CLIENT_CLOSED_REQUEST } from '../../../services/constants/StatusCodesConstants';
-import AuthenticatedMatch from '../AuthenticatedMatch';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -176,7 +175,6 @@ class HomeContainer extends Component {
 
     joinMatchAnonymous = (match) => {
         if (match.competitive && this.mounted) {
-            // this.setState({ competitiveJoin: true, joinMatch: match });
             this.props.history.push(`/authenticatedJoin/match.key`);
         }
         else if ( this.mounted) {
@@ -244,8 +242,8 @@ class HomeContainer extends Component {
     }
 
     render() {
-        let { currentTab, matches, hasMore, competitiveJoin, joinMatch } = this.state;
-        const { currentUser, updateUser, history } = this.props;
+        let { currentTab, matches, hasMore } = this.state;
+        const { currentUser } = this.props;
         let currentMatches;
         // const needsAuthentication = !currentUser;
         if (this.state.executing) {
@@ -262,12 +260,6 @@ class HomeContainer extends Component {
                                 cancelMatch={this.cancelMatch}
                                 deleteMatch={this.deleteMatch} />;
         }
-        // if (competitiveJoin) {
-        //     return <AuthenticatedMatch needsAuthentication={needsAuthentication}
-        //                                 updateUser={updateUser} 
-        //                                 url={`/match/${joinMatch.key}`}
-        //                                 match={joinMatch} history={history} />
-        // }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
                     currentUser={currentUser} filters={this.state.filters}
@@ -287,7 +279,6 @@ HomeContainer.propTypes = {
     currentUser: PropTypes.string,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    updateUser: PropTypes.func.isRequired
 }
 
 export default HomeContainer;
