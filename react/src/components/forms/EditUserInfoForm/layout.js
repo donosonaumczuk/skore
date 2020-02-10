@@ -65,7 +65,6 @@ const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                                                 value={state ? state : ""} 
                                                 divStyle="form-group col-6"/> 
                         </div>
-                        {/* TODO address with all of its fields and make them autoload as on deploy */}
                         <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2"
                                         text={i18next.t('forms.requiredFields')} />
                         <SubmitButton label={i18next.t('editUserInfoForm.updateInfoButton')}
