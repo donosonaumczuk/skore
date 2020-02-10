@@ -164,11 +164,9 @@ public class UserController {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
         usernamesPlayersInclude.getQueryValues().add(username);
-        Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime + ":00"),
-                QueryParamsUtils.localDateTimeOrNull(maxStartTime + ":00"),
-                QueryParamsUtils.localDateTimeOrNull(minFinishTime + ":00"),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime + ":00"),
-                QueryParamsUtils.getQueryListOrNull(types),
+        Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
+                QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
                 QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
                 QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
                 QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
