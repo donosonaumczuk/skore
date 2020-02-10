@@ -176,7 +176,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             return UserNotFoundException.ofUsername(username);
         });
 
-        if (newEmail != null) {
+        if (newEmail != null && !loggedUser.getEmail().equals(newEmail)) {
             emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         }
         LOGGER.trace("User '{}' modified successfully", username);
