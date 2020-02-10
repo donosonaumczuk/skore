@@ -6,7 +6,6 @@ import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
 import EditUserInfo from './layout';
 
-
 class EditUserInfoContainer extends Component {
     mounted = false;
     constructor(props) {
@@ -42,17 +41,35 @@ class EditUserInfoContainer extends Component {
         }
     }
 
+    loadHome = home => {
+        if (home) {
+            const { country, state, city, street } = home;
+            return {
+                "country": country ? country : "",
+                "state": state ? state : "",
+                "city": city ? city : "",
+                "street": street ? street : ""
+            };
+        }
+        return null;
+    }
+    
     loadFormInitialValues = () => {
         if (this.state.currentUser) {
             const { currentUser } = this.state;
-            return {
+            const home = this.loadHome(currentUser.home);
+            let newUser = {
                 "username": currentUser.username,
                 "email": currentUser.email,
                 "firstName": currentUser.firstName,
                 "lastName": currentUser.lastName,
                 "birthday": this.getBirthdayWithFormat(currentUser.birthday),
-                "cellphone": currentUser.cellphone
+                "cellphone": currentUser.cellphone,
             }
+            if (home) {
+                newUser = { ...newUser, "home": home };
+            }
+            return newUser;
         }
         return {};
     }

@@ -22,7 +22,6 @@ const validate = values => {
     errors.description = CreateMatchValidator.validateDescription(values.description);
     errors.matchTime = CreateMatchValidator.validateTime(values.matchTime);
     errors.matchLocation = CreateMatchValidator.validateLocation(values.matchLocation);
-    console.log("is called"); //TODO check problem with time and hour = 0
     return errors;
 }
 

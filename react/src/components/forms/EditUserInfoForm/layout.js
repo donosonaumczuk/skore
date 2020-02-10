@@ -7,12 +7,16 @@ import ImageInput from '../inputs/ImageInput';
 import RenderDatePicker from '../inputs/RenderDatePicker';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
+import SubLocationInput from '../inputs/SubLocationInput';
 import FormComment from '../elements/FormComment';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithError from '../../hocs/WithError';
+import HomeLocation from '../inputs/HomeLocation';
 
 const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
-                            imageName, handleChange }) => {
+                            imageName, handleChange, home,
+                            changeFieldsValue, touchField }) => {
+    const { country, state, city, street } = home;
     return (
         <div className="container-fluid">
             <div className="row">
@@ -43,6 +47,24 @@ const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                         <Field name="birthday" inputType="text" required={true}
                                 label={i18next.t('createUserForm.birthday')}
                                 component={RenderDatePicker} />
+                        <Field name="home" changeFieldsValue={changeFieldsValue}
+                                touchField={touchField} component={HomeLocation} />
+                        <SubLocationInput label={i18next.t('location.country')}
+                                        id="country" divStyle="form-group"
+                                        value={country ? country : ""} />
+                        <SubLocationInput label={i18next.t('location.street')} 
+                                        id="route" divStyle="form-group"
+                                        value={street ? street : ""} />
+                        <div className="form-row">
+                        <SubLocationInput label={i18next.t('location.city')}
+                                                id="locality" 
+                                                value={city ? city : ""} 
+                                                divStyle="form-group col-6" />
+                        <SubLocationInput label={i18next.t('location.state')} 
+                                                id="administrative_area_level_1"
+                                                value={state ? state : ""} 
+                                                divStyle="form-group col-6"/> 
+                        </div>
                         {/* TODO address with all of its fields and make them autoload as on deploy */}
                         <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2"
                                         text={i18next.t('forms.requiredFields')} />
