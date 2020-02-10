@@ -264,7 +264,9 @@ public class GameServiceImpl implements GameService {
             throw new LackOfPermissionsException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
-        if (game.getStartTime().isBefore(LocalDateTime.now())) {
+        if (game.getStartTime().isBefore(LocalDateTime.now())
+                && (game.getTeam1().getPlayers().size() + game.getTeam1().getPlayers().size() ==
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS)) {
             LOGGER.trace("Delete game failed, game '{}' has already started", key);
             throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
