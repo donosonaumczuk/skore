@@ -12,7 +12,7 @@ const validate = values => {
     errors.lastName = CreateUserFormValidator.validateLastName(values.lastName);
     errors.image = CreateUserFormValidator.validateImage(values.image);
     errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
-    errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
+    // errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
     return errors;
 }
 
@@ -115,7 +115,7 @@ class EditUserInfoFormContainer extends Component {
     }
     
     render() {
-        const { handleSubmit, submitting, home, change, touch } = this.props;
+        const { handleSubmit, submitting, home, birthday, change, touch } = this.props;
         let imageName = "";
         if (this.state.image != null) {
             imageName = this.state.image.name;
@@ -125,8 +125,9 @@ class EditUserInfoFormContainer extends Component {
                                 onSubmit={this.onSubmit} imageName={imageName}
                                 changeFieldsValue={change} touchField={touch}
                                 handleChange={this.handleChange} 
-                                home={home} error={this.state.error}
-                                isExecuting={this.state.executing} />
+                                home={home} birthday={birthday}
+                                isExecuting={this.state.executing}
+                                error={this.state.error} />
         );
     }
 
@@ -150,7 +151,10 @@ EditUserInfoFormContainer = reduxForm({
 const selector = formValueSelector('editUserInfo');
 
 EditUserInfoFormContainer = connect(state => {    
-    let home = selector(state, 'home')
+    let home = selector(state, 'home');
+    const year = selector(state, 'year');
+    const month = selector(state, 'month');
+    const day = selector(state, 'day');
     if (!home) {
         home = {
             "country": null,
@@ -160,7 +164,12 @@ EditUserInfoFormContainer = connect(state => {
         }
     }
     return {
-      home: home
+        home: home,
+        birthday: {
+            "year": year,
+            "month": month,
+            "day": day
+        }
     }
 })(EditUserInfoFormContainer)  
 

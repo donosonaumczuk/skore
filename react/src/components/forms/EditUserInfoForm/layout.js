@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import RenderInput from '../inputs/RenderInput';
 import ImageInput from '../inputs/ImageInput';
-import RenderDatePicker from '../inputs/RenderDatePicker';
+import BirthdayInput from '../inputs/BirthdayInput';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import SubLocationInput from '../inputs/SubLocationInput';
@@ -14,7 +14,7 @@ import WithError from '../../hocs/WithError';
 import HomeLocation from '../inputs/HomeLocation';
 
 const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
-                            imageName, handleChange, home,
+                            imageName, handleChange, home, birthday,
                             changeFieldsValue, touchField }) => {
     const { country, state, city, street } = home;
     return (
@@ -44,9 +44,9 @@ const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                         <Field name="cellphone" inputType="text" required={false}
                                 label={i18next.t('createUserForm.cellphone')}
                                 component={RenderInput} />
-                        <Field name="birthday" inputType="text" required={true}
-                                label={i18next.t('createUserForm.birthday')}
-                                component={RenderDatePicker} />
+                        <BirthdayInput required={true} birthday={birthday}
+                                        changeFieldValues={changeFieldsValue}
+                                        touchField={touchField} />
                         <Field name="home" changeFieldsValue={changeFieldsValue}
                                 touchField={touchField} component={HomeLocation} />
                         <SubLocationInput label={i18next.t('location.country')}

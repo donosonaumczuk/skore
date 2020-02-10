@@ -16,10 +16,6 @@ class EditUserInfoContainer extends Component {
         };
     }
 
-    getBirthdayWithFormat = birthday => { 
-        return `${birthday.monthNumber}/${birthday.dayOfMonth}/${birthday.year}`;
-    }
-
     updateStateWithUser = currentUser => {
         if (currentUser.status) {
             this.setState({ status: currentUser.status });
@@ -53,7 +49,7 @@ class EditUserInfoContainer extends Component {
         }
         return null;
     }
-    
+
     loadFormInitialValues = () => {
         if (this.state.currentUser) {
             const { currentUser } = this.state;
@@ -63,7 +59,9 @@ class EditUserInfoContainer extends Component {
                 "email": currentUser.email,
                 "firstName": currentUser.firstName,
                 "lastName": currentUser.lastName,
-                "birthday": this.getBirthdayWithFormat(currentUser.birthday),
+                "year": currentUser.birthday.year,
+                "month": currentUser.birthday.monthNumber,
+                "day": currentUser.birthday.dayOfMonth,
                 "cellphone": currentUser.cellphone,
             }
             if (home) {
