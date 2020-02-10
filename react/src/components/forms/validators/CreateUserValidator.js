@@ -3,8 +3,10 @@ import { hasStringValidSymbols, isStringAlphaNumeric,
          isStringValidEmail, isStringNumeric, 
          isStringAlphaOrSpaces} from './utils/StringValidators';
 import { isValidPastDate } from './utils/DateValidators';
-import { validateRequiredField } from './utils/RequiredFieldValidators';
+import { validateRequiredField, validateOnlyRequiredField } from './utils/RequiredFieldValidators';
 import { validImageFormats } from './utils/ImageValidators';
+
+const ERROR_BASE_LEVEL = "createUserForm.errors.";
 
 //username constants
 const MIN_USERNAME_LENGTH = 4;
@@ -31,34 +33,34 @@ const dateInvalidSymbols= /[^0-9/]/;
 
 const hasUsernameValidSymbols = username => hasStringValidSymbols(username, usernameInvalidSymbols);
 
-const validateUsername = username => validateRequiredField(username, "createUserForm.errors.username",
+const validateUsername = username => validateRequiredField(username, `${ERROR_BASE_LEVEL}username`,
                                                                 hasUsernameValidSymbols, MIN_USERNAME_LENGTH,
                                                                 MAX_USERNAME_LENGTH);
 
-const validatePassword = password => validateRequiredField(password, "createUserForm.errors.password",
+const validatePassword = password => validateRequiredField(password, `${ERROR_BASE_LEVEL}password`,
                                                                 isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
                                                                 MAX_PASSWORD_LENGTH);
 
 const validateRepeatedPassword = (repeatedPassword, password) => {
-    let errorMessage = validateRequiredField(repeatedPassword, "createUserForm.errors.repeatedPassword",
+    let errorMessage = validateRequiredField(repeatedPassword, `${ERROR_BASE_LEVEL}repeatedPassword`,
                                                 isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
                                                 MAX_PASSWORD_LENGTH);
     if (repeatedPassword !== password) {
-        errorMessage =`${errorMessage} ${i18next.t('createUserForm.errors.repeatedPassword.passwordDoesNotMatch')}`;
+        errorMessage =`${errorMessage} ${i18next.t(`${ERROR_BASE_LEVEL}repeatedPassword.passwordDoesNotMatch`)}`;
     }
     return errorMessage;
 }
 
-const validateFirstName = firstName => validateRequiredField(firstName, "createUserForm.errors.firstName",
+const validateFirstName = firstName => validateRequiredField(firstName, `${ERROR_BASE_LEVEL}firstName`,
                                                                 isStringAlphaOrSpaces, MIN_NAME_LENGTH,
                                                                 MAX_NAME_LENGTH);
 
-const validateLastName = lastName => validateRequiredField(lastName, "createUserForm.errors.lastName",
+const validateLastName = lastName => validateRequiredField(lastName, `${ERROR_BASE_LEVEL}lastName`,
                                                                 isStringAlphaOrSpaces, MIN_NAME_LENGTH,
                                                                 MAX_NAME_LENGTH);
 
 const validateEmail = email => {
-    let errorLabelBase = `createUserForm.errors.email`;
+    let errorLabelBase = `${ERROR_BASE_LEVEL}email`;
     let errorMessage = ``;
     if (!email) {
         errorMessage = i18next.t(`${errorLabelBase}.required`);
@@ -70,7 +72,7 @@ const validateEmail = email => {
 }
 
 const validateImage = image => {
-    let errorLabelBase = `createUserForm.errors.image`;
+    let errorLabelBase = `${ERROR_BASE_LEVEL}image`;
     let errorMessage = ``;
     if (image && !validImageFormats(image.type)) {
         errorMessage = i18next.t(`${errorLabelBase}.invalidImageFormat`);
@@ -83,7 +85,7 @@ const validateImage = image => {
 
 const validateCellphone = cellphone => {
     if (cellphone && (cellphone.length !== CELLPHONE_LENGTH || !isStringNumeric(cellphone))) {
-        return i18next.t(`createUserForm.errors.cellphone.invalidCellphone`);
+        return i18next.t(`${ERROR_BASE_LEVEL}cellphone.invalidCellphone`);
     }
 }
 
@@ -104,8 +106,8 @@ const validatePastDate = date => {
 }
 
 const validateDate = date => {
-    let errorLabelBase = `createUserForm.errors.birthday`;
-    let errorMessage = validateRequiredField(date, "createUserForm.errors.birthday",
+    let errorLabelBase = `${ERROR_BASE_LEVEL}birthday`;
+    let errorMessage = validateRequiredField(date, `${ERROR_BASE_LEVEL}birthday`,
                                                 hasStringValidDateSymbols, BIRTHDAY_LENGTH,
                                                 BIRTHDAY_LENGTH);
     
@@ -114,6 +116,12 @@ const validateDate = date => {
     }
     return errorMessage;
 }
+
+const validateYear = year => validateOnlyRequiredField(year, `${ERROR_BASE_LEVEL}year`);
+
+const validateMonth = month => validateOnlyRequiredField(month, `${ERROR_BASE_LEVEL}month`);
+
+const validateDay = day => validateOnlyRequiredField(day, `${ERROR_BASE_LEVEL}day`);
 
 const CreateUserFormValidator = {
     validateUsername: validateUsername,
@@ -124,7 +132,10 @@ const CreateUserFormValidator = {
     validateEmail: validateEmail,
     validateImage: validateImage,
     validateCellphone: validateCellphone,
-    validateDate: validateDate
+    validateDate: validateDate,
+    validateYear: validateYear,
+    validateMonth: validateMonth,
+    validateDay: validateDay,
 }
 
 export default CreateUserFormValidator; 

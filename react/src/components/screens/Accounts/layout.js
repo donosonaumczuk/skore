@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import Loader from '../../Loader';
 import Account from './components/Account';
 import AccountPropType from '../../../proptypes/AccountPropType';
+import WithError from '../../hocs/WithError';
+import WithLoading from '../../hocs/WithLoading';
 
 const Accounts = ({ accounts, getUsers, hasMore }) => {
     return (
@@ -30,4 +32,4 @@ Accounts.propTypes = {
     hasMore: PropTypes.bool.isRequired
 }
 
-export default Accounts;
+export default WithError(WithLoading(Accounts));

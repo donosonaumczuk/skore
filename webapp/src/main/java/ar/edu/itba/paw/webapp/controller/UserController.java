@@ -126,8 +126,8 @@ public class UserController {
                              @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
-        Page<UserDto> userPage = premiumUserService.findUsersPage(usernames.getQueryValues(),
-                sportsLiked.getQueryValues(), friendsUsernames.getQueryValues(),
+        Page<UserDto> userPage = premiumUserService.findUsersPage(QueryParamsUtils.getQueryListOrNull(usernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked), QueryParamsUtils.getQueryListOrNull(friendsUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
@@ -166,12 +166,16 @@ public class UserController {
         usernamesPlayersInclude.getQueryValues().add(username);
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), types.getQueryValues(), sports.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
-                countries.getQueryValues(), states.getQueryValues(), cities.getQueryValues(),
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                usernamesPlayersInclude.getQueryValues(), usernamesPlayersNotInclude.getQueryValues(),
-                usernamesCreatorsInclude.getQueryValues(), usernamesCreatorsNotInclude.getQueryValues(),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
+                QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
+                QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
+                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));

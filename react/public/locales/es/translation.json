@@ -25,6 +25,9 @@
         "imageFormat": "Formatos aceptados: png, jpeg or jpg",
         "cellphone": "Celular ",
         "birthday": "Fecha de nacimiento ",
+        "year": "Año ",
+        "month": "Mes ",
+        "day": "Día ",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
         "signUpButton": "REGISTRARSE",
@@ -72,6 +75,15 @@
                 "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
+            },
+            "year": {
+                "required": "El año es obligatorio.\n"
+            },
+            "month": {
+                "required": "El mes es obligatorio.\n"
+            },
+            "day": {
+                "required": "El día es obligatorio.\n"
             }
         }
     },

@@ -4,17 +4,19 @@ import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import RenderInput from '../inputs/RenderInput';
 import ImageInput from '../inputs/ImageInput';
-import RenderDatePicker from '../inputs/RenderDatePicker';
+// import RenderDatePicker from '../inputs/RenderDatePicker';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import SuggestionText from '../elements/SuggestionText';
 import FormComment from '../elements/FormComment';
 import LocationInput from '../inputs/LocationInput';
 import SubLocationInput from '../inputs/SubLocationInput';
+import BirthdayInput from '../inputs/BirthdayInput';
 
 const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, updateLocation,
-                            country, state, city, street }) => {
+                            country, state, city, street, birthday,
+                            changeFieldValues, touchField }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -49,9 +51,9 @@ const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             <Field name="cellphone" id="cellphone" inputType="text"
                                     label={i18next.t('createUserForm.cellphone')} 
                                     required={false} component={RenderInput} />
-                            <Field name="birthday" id="birthday" inputType="text"
-                                    label={i18next.t('createUserForm.birthday')} 
-                                    required={true} component={RenderDatePicker} />
+                            <BirthdayInput required={true} birthday={birthday}
+                                            changeFieldValues={changeFieldValues}
+                                            touchField={touchField} />
                             <LocationInput updateLocation={updateLocation} />
                             <SubLocationInput label={i18next.t('location.country')}
                                                 id="country" divStyle="form-group"
@@ -92,7 +94,8 @@ CreateUserForm.propTypes = {
     country: PropTypes.string,
     state: PropTypes.string,
     city: PropTypes.string,
-    street: PropTypes.string
+    street: PropTypes.string,
+    birthday: PropTypes.object.isRequired
 }
 
 export default CreateUserForm;

@@ -28,7 +28,6 @@ import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import './css/main.css';
 
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -95,7 +94,8 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/" render={(props) => <Home {...props} 
-                                currentUser={this.state.currentUser.username} />} />
+                                currentUser={this.state.currentUser.username}
+                                updateUser={this.updateUser} />} />
                         <Route exact path="/sports">
                             <Sports />
                         </Route>
