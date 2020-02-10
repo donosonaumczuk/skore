@@ -21,6 +21,6 @@ public class GameInvalidStateException extends EntityInvalidStateException {
     }
 
     public static GameInvalidStateException ofGameAlreadyJoined(final String key, final long userId) {
-        return new GameInvalidStateException(key, "user '" + userId + "' is already joined");
+        return new GameInvalidStateException(key, "already has the user '" + userId + "' joined as player");
     }
 }
