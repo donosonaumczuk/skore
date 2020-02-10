@@ -4,6 +4,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Sport from './components/Sport';
 import Loader from '../../Loader';
 import SportPropType from '../../../proptypes/SportPropType';
+import WithError from '../../hocs/WithError';
+import WithLoading from '../../hocs/WithLoading';
 
 const Sports = (props) => {
     const { sports, getSports, hasMore } = props;
@@ -25,4 +27,4 @@ Sports.propTypes = {
     hasMore: PropTypes.bool.isRequired
 }
 
-export default Sports;
+export default WithError(WithLoading(Sports));

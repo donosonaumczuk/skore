@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import UserService from '../../../services/UserService';
-import Loader from '../../Loader';
 import Utils from '../../utils/Utils';
-import ErrorPage from '../ErrorPage';
 import Accounts from './layout';
 
 const INITIAL_OFFSET = 0;
@@ -49,15 +47,11 @@ class AccountsContainer extends Component {
     }
 
     render() {
-        if (this.state.status) {
-            return <ErrorPage status={this.state.status} />;
-        }
-        else if (this.state.accounts.length === 0 && this.state.hasMore) {
-            return <Loader />; //TODO use with HOC
-        }
+        const isLoading = this.state.accounts.length === 0 && this.state.hasMore;
         return (
             <Accounts accounts={this.state.accounts} getUsers={this.getUsers}
-                        hasMore={this.state.hasMore} />
+                        hasMore={this.state.hasMore} isLoading={isLoading}
+                        error={this.state.status} />
         )
     }
 

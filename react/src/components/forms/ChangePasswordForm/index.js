@@ -45,8 +45,10 @@ class ChangePasswordFormContainer extends Component {
         else {
             this.props.history.push(`/users/${values.username}`);
         }
-        // let user = this.loadUser(values, this.state.image);
-        //TODO make post
+    }
+
+    componentDidMount() {
+        this.mounted = true;
     }
 
     componentDidMount() {

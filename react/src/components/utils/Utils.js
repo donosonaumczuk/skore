@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { buildUrlFromParamQueries } from '../../services/Util';
 
@@ -50,12 +51,21 @@ const deleteMatch = (matches, matchToDelete) => {
     return matches.filter(match => match.key !== matchToDelete.key);
 }
 
+const generateOptionsForSelectBetweenValues = (minValue, maxValue) => {
+    let options = [];
+    for (var i = minValue; i <= maxValue; i++) {
+        options.push(<option key={i} value={i}>{i}</option>);
+    }
+    return options;
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
     removeUnknownHomeFilters: removeUnknownHomeFilters,
     replaceWithNewMatch: replaceWithNewMatch,
-    deleteMatch: deleteMatch
+    deleteMatch: deleteMatch,
+    generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues
 };
 
 export default Utils;

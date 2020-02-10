@@ -6,6 +6,7 @@ import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
 import SuggestionText from '../elements/SuggestionText';
+import WithExecuting from '../../hocs/WithExecuting';
 
 const LogInForm = ({ handleSubmit, onSubmit, submitting, errorMessage }) => {
     return (
@@ -36,4 +37,4 @@ LogInForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired
 }
 
-export default LogInForm;
+export default WithExecuting(LogInForm);

@@ -25,6 +25,9 @@
         "imageFormat": "Accepted formats: png, jpeg or jpg",
         "cellphone": "Cellphone ",
         "birthday": "Birthday ",
+        "year": "Year ",
+        "month": "Month ",
+        "day": "Day ",
         "dateFormat": "Date format: MM/DD/YYYY",
         "signUp": "Sign Up",
         "signUpButton": "SIGN UP",
@@ -72,6 +75,15 @@
                 "invalidSymbols": "Birthday can only contains digits and slash('/').\n",
                 "invalidLength": "Birthday must have exactly ten characters.\n",
                 "invalidPastDate": "Birthday must be a valid past date.\n"
+            },
+            "year": {
+                "required": "Year is required.\n"
+            },
+            "month": {
+                "required": "Month is required.\n"
+            },
+            "day": {
+                "required": "Day is required.\n"
             }
         }
     },

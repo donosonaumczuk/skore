@@ -31,8 +31,8 @@ public class GameHibernateDao implements GameDao {
             "SELECT games " +
             "FROM Game as games, Team t " +
             "WHERE teamName1 = t.teamName";
-    private static final String GREATER_THAN           = ">";
-    private static final String LESS_THAN              = "<";
+    private static final String GREATER_OR_EQUAL_TO    = ">=";
+    private static final String LESS_OR_EQUAL_TO       = "<=";
     private static final String START_TIME_MAX         = "startTimeMax";
     private static final String FINISH_TIME_MIN        = "finishTimeMin";
     private static final String FINISH_TIME_MAX        = "finishTimeMax";
@@ -110,22 +110,22 @@ public class GameHibernateDao implements GameDao {
                                 final List<String> usernamesCreatorsNotInclude, final GameSort sort,
                                 final Boolean onlyWithResults) {
         DaoHelper daoHelper = new DaoHelper(QUERY_START);
-        daoHelper.addFilter(QUERY_START_TIME_NAME, LESS_THAN, START_TIME_MIN, minStartTime);
-        daoHelper.addFilter(QUERY_START_TIME_NAME, GREATER_THAN, START_TIME_MAX, maxStartTime);
-        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, LESS_THAN, FINISH_TIME_MIN, minFinishTime);
-        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, GREATER_THAN, FINISH_TIME_MAX, maxFinishTime);
+        daoHelper.addFilter(QUERY_START_TIME_NAME, LESS_OR_EQUAL_TO, START_TIME_MIN, minStartTime);
+        daoHelper.addFilter(QUERY_START_TIME_NAME, GREATER_OR_EQUAL_TO, START_TIME_MAX, maxStartTime);
+        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, LESS_OR_EQUAL_TO, FINISH_TIME_MIN, minFinishTime);
+        daoHelper.addFilter(QUERY_FINISH_TIME_NAME, GREATER_OR_EQUAL_TO, FINISH_TIME_MAX, maxFinishTime);
 
         daoHelper.addListFilters(true, false, TYPE, TYPE, types);
-        daoHelper.addFilter(QUERY_QUANTITY, LESS_THAN, MIN_QUANTITY, minQuantity);
-        daoHelper.addFilter(QUERY_QUANTITY, GREATER_THAN, MAX_QUANTITY, maxQuantity);
+        daoHelper.addFilter(QUERY_QUANTITY, LESS_OR_EQUAL_TO, MIN_QUANTITY, minQuantity);
+        daoHelper.addFilter(QUERY_QUANTITY, GREATER_OR_EQUAL_TO, MAX_QUANTITY, maxQuantity);
 
         daoHelper.addListFilters(false, false, QUERY_SPORT_NAME, SPORT_NAME, sportNames);
         daoHelper.addListFilters(false, false, COUNTRY, COUNTRY, countries);
         daoHelper.addListFilters(false, false, STATE, STATE, states);
         daoHelper.addListFilters(false, false, CITY, CITY, cities);
 
-        daoHelper.addFilter(QUERY_FREE_QUANTITY, LESS_THAN, MIN_FREE_PLACES, minFreePlaces);
-        daoHelper.addFilter(QUERY_FREE_QUANTITY, GREATER_THAN, MAX_FREE_PLACES, maxFreePlaces);
+        daoHelper.addFilter(QUERY_FREE_QUANTITY, LESS_OR_EQUAL_TO, MIN_FREE_PLACES, minFreePlaces);
+        daoHelper.addFilter(QUERY_FREE_QUANTITY, GREATER_OR_EQUAL_TO, MAX_FREE_PLACES, maxFreePlaces);
 
         daoHelper.addListFilters(true, USERNAME_PI, usernamesPlayersInclude);
         daoHelper.addListFilters(false, USERNAME_PNI, usernamesPlayersNotInclude);

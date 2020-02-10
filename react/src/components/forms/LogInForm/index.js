@@ -16,6 +16,7 @@ const validate = values => {
 }
 
 class LogInFormContainer extends Component {
+    mounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -24,6 +25,9 @@ class LogInFormContainer extends Component {
     }
 
     onSubmit = async (values) => {
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await AuthService.logInUser(
             {
                 "username": values.username,
@@ -31,10 +35,15 @@ class LogInFormContainer extends Component {
             }
         );
         if (response.status === SC_UNAUTHORIZED) {
-            const errorMessage = i18next.t('login.errors.invalidUsernameOrPassword')
-            this.setState({ errorMessage: errorMessage })
+            const errorMessage = i18next.t('login.errors.invalidUsernameOrPassword');
+            if (this.mounted) {
+                this.setState({ errorMessage: errorMessage, executing: false });
+            }
         }
         else {
+            if (this.mounted) {
+                this.setState({ executing: false });
+            }
             //TODO handle other error status maybe?
             const isAdmin = AuthService.isAdmin();
             this.props.updateUser({
@@ -53,17 +62,29 @@ class LogInFormContainer extends Component {
         return <React.Fragment></React.Fragment>;
     }
 
+    componentDidMount() {
+        this.mounted = true;
+    }
+
     render() {
-        const { handleSubmit, submitting } = this.props; 
+        const { handleSubmit, submitting, url } = this.props; 
         const currentUser = AuthService.getCurrentUser();
         const errorMessage = this.getErrorMessage();
-        if (currentUser) {
+        if (currentUser && !url) {
             return <Redirect to={`/users/${currentUser}`} />
+        }
+        else if (currentUser && url) {
+            return <Redirect to={`${url}`} />
         }
         return (
             <LogInForm onSubmit={this.onSubmit} errorMessage={errorMessage}
-                        handleSubmit={handleSubmit} submitting={submitting} />
+                        handleSubmit={handleSubmit} submitting={submitting}
+                        isExecuting={this.state.executing} />
         );
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import MatchButton from '../MatchButton';
@@ -28,8 +28,18 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
     return userFound;
 }
 
+const matchHasStarted = currentMatch => {
+    const date = currentMatch.date;
+    const time = currentMatch.time;
+    const startTime = new Date(date.year, date.monthNumber -1, date.dayOfMonth, time.hour, time.minute);
+    const currentTime = new Date();
+    return startTime <= currentTime;
+}
+
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
-    //TODO if finishtime is before date return <React.Fragment></React.Fragment>
+    if (matchHasStarted(currentMatch)) {
+        return <Fragment></Fragment>;
+    }
     if (currentUser && currentUser === currentMatch.creator) {
         return <MatchButton buttonStyle="btn btn-negative join-button" 
                             handleClick={deleteMatch} currentMatch={currentMatch}
@@ -42,8 +52,8 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={i18next.t('home.cancelMatch')}
                             fontAwesome="fas fa-times mr-1" />
     }
-    else if(currentMatch.totalPlayers > currentMatch.currentPlayers && 
-            ((currentUser && currentMatch.isCompetitive) || !currentMatch.isCompetitive)) {
+    else if(currentMatch.totalPlayers > currentMatch.currentPlayers &&
+            ((currentUser && currentMatch.competitive) || !currentMatch.competitive)) {
         let buttonText;        
         if (currentMatch.isCompetitive) {
             buttonText = i18next.t('home.joinCompetitiveMatch');
@@ -56,7 +66,7 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={buttonText} fontAwesome="fas fa-plus mr-1" />
     }
   
-    return <React.Fragment></React.Fragment>
+    return <Fragment></Fragment>
 }
 
 const MatchAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }) => {

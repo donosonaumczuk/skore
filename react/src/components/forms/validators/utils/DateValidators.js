@@ -86,5 +86,6 @@ const isValidFutureDate = (day, month, year) => {
 export {
     isValidDate,
     isValidPastDate,
-    isValidFutureDate
+    isValidFutureDate,
+    isLeapYear
 }

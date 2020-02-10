@@ -29,7 +29,6 @@ class LogOut extends Component {
             return (<Redirect to="/" />);
         }
         else {
-            //TODO improve with better spinner on popup
             return (<Loader />);
         }
     }
