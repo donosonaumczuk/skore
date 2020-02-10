@@ -26,8 +26,8 @@ import ConfirmMatch from './components/screens/ConfirmMatch';
 import CancelMatch from './components/screens/CancelMatch';
 import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
-import './css/main.css';
 import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
+import './css/main.css';
 
 class App extends Component {
     constructor(props) {

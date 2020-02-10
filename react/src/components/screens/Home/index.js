@@ -10,6 +10,7 @@ import Loader from '../../Loader';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
 import { SC_CLIENT_CLOSED_REQUEST } from '../../../services/constants/StatusCodesConstants';
+import AuthenticatedMatch from '../AuthenticatedMatch';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -242,10 +243,9 @@ class HomeContainer extends Component {
     }
 
     render() {
-        let { currentTab, matches, hasMore } = this.state;
-        const { currentUser } = this.props;
+        let { currentTab, matches, hasMore, competitiveJoin, joinMatch } = this.state;
+        const { currentUser, updateUser, history } = this.props;
         let currentMatches;
-        // const needsAuthentication = !currentUser;
         if (this.state.executing) {
             currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
         }
@@ -259,6 +259,12 @@ class HomeContainer extends Component {
                                 joinMatch={this.joinMatch}
                                 cancelMatch={this.cancelMatch}
                                 deleteMatch={this.deleteMatch} />;
+        }
+        if (competitiveJoin) {
+            return <AuthenticatedMatch needsAuthentication={needsAuthentication}
+                                        updateUser={updateUser} 
+                                        url={`/match/${joinMatch.key}`}
+                                        match={joinMatch} history={history} />
         }
         return (
             <Home currentTab={currentTab} handleTabChange={this.handleTabChange}
@@ -278,7 +284,7 @@ class HomeContainer extends Component {
 HomeContainer.propTypes = {
     currentUser: PropTypes.string,
     location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 export default HomeContainer;
