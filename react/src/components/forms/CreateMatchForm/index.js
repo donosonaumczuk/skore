@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change, touch } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import AuthService from '../../../services/AuthService';
@@ -17,29 +17,12 @@ var location = {
     "number": null
 };
 
-var time = {
-    "hour": null,
-    "minutes": null
-};
-
 const updateLocation = home => {
     location.street = home.street;
     location.city = home.city;
     location.state = home.state;
     location.country = home.country;
     location.number = home.number;
-}
-
-const updateTime = newTime => {
-    if (!newTime) {
-        time.hour = null;
-        time.minutes = null;
-    }
-    else {
-        const timeArray = moment(newTime).format("HH:mm").split(":");
-        time.hour = parseInt(timeArray[0]);
-        time.minutes = parseInt(timeArray[1]);
-    }
 }
 
 const validate = values => {
@@ -51,7 +34,8 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    errors.matchTime = CreateMatchValidator.validateTime(time);
+    errors.matchTime = CreateMatchValidator.validateTime(values.matchTime);
+    console.log("is called");
     return errors;
 }
 
@@ -147,8 +131,8 @@ class CreateMatchFormContainer extends Component {
                 "dayOfMonth": date.day,
             },
             "time": {
-                "hour": time.hour,
-                "minute": time.minutes
+                "hour": values.matchTime.hour,
+                "minute": values.matchTime.minutes
             },
             "minutesOfDuration": durationMinutes,
             "location": {
@@ -172,40 +156,32 @@ class CreateMatchFormContainer extends Component {
         }
     }
 
-    updateTimeAndState = time => {
-        updateTime(time);
-        if (this.mounted) {
-            this.setState({
-                modifyingTime: true
-            });
-        }
-    }
-
     onSubmit = async (values) => {
-        const locationError = CreateMatchValidator.validateLocation(location);
-        if(locationError) {
-            if (this.mounted) {
-                this.setState({ locationError: locationError });
-            }
-        }
-        else {
-            if (this.mounted) {
-                this.setState({ locationError: null });
-            }
-            let match = this.loadMatch(values, this.state.image);
-            const response = await MatchService.createMatch(match);
-            if (response.status) {
-                //TODO handle error
-            }
-            else {
-                const matchKey= response.key;
-                this.props.history.push(`match/${matchKey}`);
-            }
-        }
+        // const locationError = CreateMatchValidator.validateLocation(location);
+        console.log(this.loadMatch(values, this.state.image));
+        // if(locationError) {
+        //     if (this.mounted) {
+        //         this.setState({ locationError: locationError });
+        //     }
+        // }
+        // else {
+        //     if (this.mounted) {
+        //         this.setState({ locationError: null });
+        //     }
+        //     let match = this.loadMatch(values, this.state.image);
+        //     const response = await MatchService.createMatch(match);
+        //     if (response.status) {
+        //         //TODO handle error
+        //     }
+        //     else {
+        //         const matchKey= response.key;
+        //         this.props.history.push(`match/${matchKey}`);
+        //     }
+        // }
     }
 
     render() {
-        const { handleSubmit, submitting } = this.props; 
+        const { handleSubmit, submitting, change, touch } = this.props; 
         const { locationError } = this.state;
         const currentUser = AuthService.getCurrentUser();
         const hourOptions = this.generateHourOptions();
@@ -221,21 +197,18 @@ class CreateMatchFormContainer extends Component {
             <CreateMatchForm handleSubmit={handleSubmit}
                              submitting={submitting}
                              onSubmit={this.onSubmit}
-                             updateTime={this.updateTimeAndState}
-                             currentTime={time} 
                              hourOptions={hourOptions}
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
                              updateLocationAndState={this.updateLocationAndState}
                              locationError={locationError}
-                             location={location} />
+                             location={location} changeFieldsValue={change}
+                             touchField={touch} />
         );
     }
 
     componentWillUnmount() {
         this.mounted = false;
-        time.hour = null;
-        time.minutes = null;
         location.country = null;
         location.state = null;
         location.city = null;
@@ -247,7 +220,9 @@ class CreateMatchFormContainer extends Component {
 CreateMatchFormContainer = reduxForm({
     form: 'createMatch',
     destroyOnUnmount: true,
-    validate
+    validate,
+    change,
+    touch
 })(CreateMatchFormContainer)
 
 export default CreateMatchFormContainer;
