@@ -50,17 +50,19 @@ const getIsDayDisabled = (isMonthDisabled, birthday) => {
 }
 
 const changeValueIfNeeded = (birthday, dayOptions, changeFieldValues, touchField) => {
-    if (birthday.day > dayOptions.length) {
-        changeFieldValues('day', undefined);
+    console.log("changeFieldValues: ",changeFieldValues);
+    if (birthday.day > dayOptions.length ||
+        (!birthday.month && birthday.day)) {
+        changeFieldValues('day', null);
         touchField('day');
     }
     if (!birthday.year) {
         if (birthday.month) {
-            changeFieldValues('month', undefined);
+            changeFieldValues('month', null);
             touchField('month');
         }
         if (birthday.day) {
-            changeFieldValues('day', undefined);
+            changeFieldValues('day', null);
             touchField('day');
         }
     }
