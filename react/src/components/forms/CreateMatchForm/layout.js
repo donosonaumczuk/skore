@@ -16,10 +16,8 @@ import MatchTime from './components/MatchTime';
 import MatchDuration from './components/MatchDuration';
 
 const CreateMatchForm = ({ handleSubmit, submitting, onSubmit, 
-                            sportOptions, updateTime, hourOptions,
-                            minuteOptions, updateLocationAndState,
-                            locationError, location, currentTime,
-                            changeFieldsValue, touchField }) => {
+                            sportOptions, hourOptions, minuteOptions,
+                            location, changeFieldsValue, touchField }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -49,9 +47,8 @@ const CreateMatchForm = ({ handleSubmit, submitting, onSubmit,
                             <Field name="description" inputType="text-area"
                                     label={i18next.t('createMatchForm.description')} 
                                     required={false} component={RenderTextArea} />
-                            <Field name="matchLocation" errorMessage={locationError}
-                                    updateLocationAndState={updateLocationAndState}
-                                    location={location} component={MatchLocation} />
+                            <Field name="matchLocation" changeFieldsValue={changeFieldsValue}
+                                    touchField={touchField} component={MatchLocation} />
                             <SubLocationInput label={i18next.t('location.country')}
                                                 id="country" divStyle="form-group"
                                                 value={location.country ? location.country : ""} />
@@ -90,8 +87,6 @@ CreateMatchForm.propTypes = {
         sportOptions: PropTypes.array.isRequired,
         hourOptions: PropTypes.array.isRequired,
         minuteOptions: PropTypes.array.isRequired,
-        updateLocationAndState: PropTypes.func.isRequired,
-        locationError: PropTypes.string,
         location: PropTypes.object.isRequired,
         changeFieldsValue: PropTypes.func.isRequired,
         touchField: PropTypes.func.isRequired

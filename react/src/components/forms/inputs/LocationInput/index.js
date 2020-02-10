@@ -67,8 +67,9 @@ class LocationInput extends Component {
     handleSelect = async address => {
         try {
             const results  = await geocodeByAddress(address);
+            const { updateLocation, changeFieldsValue, touchField } = this.props;
             this.loadHome(results[0].address_components);
-            this.props.updateLocation(this.state);
+            updateLocation(this.state, changeFieldsValue, touchField);
         }
         catch(err) {
             //TODO handle error

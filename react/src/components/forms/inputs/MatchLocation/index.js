@@ -1,29 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LocationInput from '../LocationInput';
-import CreateMatchValidator from '../../validators/CreateMatchValidator';
 
-const MatchLocation = ({ updateLocationAndState, input, meta, errorMessage, location }) => {
-    if( !errorMessage) {
-        errorMessage = meta.submitFailed ? CreateMatchValidator.validateLocation(location) : null;
-    }
+const updateLocation = (home, changeFieldsValue, touchField) => {
+    changeFieldsValue('matchLocation', home);
+    touchField('matchLocation');
+}
+
+const MatchLocation = ({ input, meta, changeFieldsValue, touchField }) => {
     return (
         <React.Fragment>
-            <LocationInput updateLocation={updateLocationAndState} inputInfo={input} />
-                {errorMessage &&
+            <LocationInput updateLocation={updateLocation} inputInfo={input}
+                            changeFieldsValue={changeFieldsValue}
+                            touchField={touchField} />
+                {meta.touched && meta.error &&
                     <span className="invalid-feedback d-block">
-                        {errorMessage}
+                        {meta.error}
                     </span>}
         </React.Fragment>
     );
 }
 
 MatchLocation.propTypes = {
-    updateLocationAndState: PropTypes.func.isRequired,
+    changeFieldsValue: PropTypes.func.isRequired,
+    touchField: PropTypes.func.isRequired,
     input: PropTypes.object.isRequired,
     meta: PropTypes.object.isRequired,
-    errorMessage: PropTypes.string,
-    location: PropTypes.object.isRequired
 }
 
 export default MatchLocation
