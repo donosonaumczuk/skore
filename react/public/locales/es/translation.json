@@ -27,7 +27,7 @@
         "birthday": "Fecha de nacimiento ",
         "year": "Año ",
         "month": "Mes ",
-        "day": "Dia ",
+        "day": "Día ",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Registrarse",
         "signUpButton": "REGISTRARSE",
@@ -75,6 +75,15 @@
                 "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
+            },
+            "year": {
+                "required": "Año es obligatorio.\n"
+            },
+            "month": {
+                "required": "Mes es obligatorio.\n"
+            },
+            "day": {
+                "required": "Día es obligatorio.\n"
             }
         }
     },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm, change} from 'redux-form';
+import { reduxForm, change, touch } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AuthService from '../../../services/AuthService';
@@ -17,7 +17,9 @@ const validate = values => {
     errors.email = CreateUserFormValidator.validateEmail(values.email);
     errors.image = CreateUserFormValidator.validateImage(values.image);
     errors.cellphone = CreateUserFormValidator.validateCellphone(values.cellphone);
-    errors.birthday = CreateUserFormValidator.validateDate(values.birthday);
+    errors.year = CreateUserFormValidator.validateYear(values.year);
+    errors.month = CreateUserFormValidator.validateMonth(values.month);
+    errors.day = CreateUserFormValidator.validateDay(values.day);
     return errors;
 }
 
@@ -119,7 +121,7 @@ class CreateUserFormContainer extends Component {
     }
 
     render() {
-        const { handleSubmit, submitting, birthday, change } = this.props;
+        const { handleSubmit, submitting, birthday, change, touch } = this.props;
         const { country, state, city, street } = this.state;
         let imageName = "";
         const currentUser = AuthService.getCurrentUser();
@@ -137,7 +139,8 @@ class CreateUserFormContainer extends Component {
                             updateLocation={this.updateLocation}
                             country={country} state={state} city={city}
                             street={street} birthday={birthday} 
-                            changeFieldValues={change} />
+                            changeFieldValues={change}
+                            touchField={touch} />
         );
     }
 
@@ -156,7 +159,6 @@ const mapStateToProps = (state) => {
                     month: values.month,
                     day: values.day,
                 }
-
             }
         );
     }
@@ -180,7 +182,8 @@ CreateUserFormContainer = reduxForm({
     form: 'createUser',
     destroyOnUnmount: true,
     validate,
-    change
+    change,
+    touch
 })(CreateUserFormContainer)
 
 export default CreateUserFormContainer;

@@ -16,7 +16,7 @@ import BirthdayInput from '../inputs/BirthdayInput';
 const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, updateLocation,
                             country, state, city, street, birthday,
-                            changeFieldValues }) => {
+                            changeFieldValues, touchField }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -55,7 +55,8 @@ const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                                     label={i18next.t('createUserForm.birthday')} 
                                     required={true} component={RenderDatePicker} /> */}
                             <BirthdayInput required={true} birthday={birthday}
-                                            changeFieldValues={changeFieldValues} />
+                                            changeFieldValues={changeFieldValues}
+                                            touchField={touchField} />
                             <LocationInput updateLocation={updateLocation} />
                             <SubLocationInput label={i18next.t('location.country')}
                                                 id="country" divStyle="form-group"

@@ -49,15 +49,30 @@ const getIsDayDisabled = (isMonthDisabled, birthday) => {
     return birthday.month ? false : true;
 }
 
-const BirthdayInput = ({ required, birthday, changeFieldValues }) => {
+const changeValueIfNeeded = (birthday, dayOptions, changeFieldValues, touchField) => {
+    if (birthday.day > dayOptions.length) {
+        changeFieldValues('day', undefined);
+        touchField('day');
+    }
+    if (!birthday.year) {
+        if (birthday.month) {
+            changeFieldValues('month', undefined);
+            touchField('month');
+        }
+        if (birthday.day) {
+            changeFieldValues('day', undefined);
+            touchField('day');
+        }
+    }
+}
+
+const BirthdayInput = ({ required, birthday, changeFieldValues, touchField }) => {
     const yearOptions = getYearOptions();
     const monthOptions = getMonthOptions();
     const dayOptions = getDayOptions(birthday.month, birthday.year);
     const isMonthDisabled = birthday.year ? false : true;
     const isDayDisabled = getIsDayDisabled(isMonthDisabled, birthday);
-    if (birthday.day > dayOptions.length) {
-        changeFieldValues('day', undefined);
-    }
+    changeValueIfNeeded(birthday, dayOptions, changeFieldValues, touchField);
     return (
         <div>
             <label>
