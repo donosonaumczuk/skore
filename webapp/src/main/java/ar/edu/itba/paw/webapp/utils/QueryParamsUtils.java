@@ -49,11 +49,7 @@ public final class QueryParamsUtils {
     }
 
     public static LocalDateTime localDateTimeOrNull(String s) {
-        return localDateTimeOrElse(s + ":00", null);
-    }
-
-    public static List<String> getQueryListOrNull(QueryList list) {
-        return list != null ? list.getQueryValues() : null;
+        return localDateTimeOrElse(s, null);
     }
 
     public static List<String> getQueryListOrElse(QueryList queryList, List<String> elseList) {
