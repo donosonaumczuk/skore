@@ -9,7 +9,7 @@ function WithError(WrappedComponent) {
 				history.push(`/error/${error}`);
 			}
 		}, [error, history]);
- 		return  <WrappedComponent {...props} />;
+ 		return  error ? null : <WrappedComponent {...props} />;
  	};
 }
 
