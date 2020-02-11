@@ -38,9 +38,9 @@ public class GameValidators {
             LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_ÑÁÉÍÓÚáéíñóöúü ]+";
+    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü ]+";
     private static final String TITLE_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
-            "digits, spaces or any of these characters: ¿?¡!_ÑÁÉÍÓÚáéíñóöúü";
+            "digits, spaces or any of these characters: ¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü";
     private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
     private static final String TEAM_NAME_PATTER_DESCRIPTION = TITLE_PATTER_DESCRIPTION;
     private static final String KEY_REGEX = "\\d{12}" + TEAM_NAME_REGEX + "\\d{12}";
@@ -72,7 +72,7 @@ public class GameValidators {
                         4, 140, log))))
                 .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DESCRIPTION,
                         0, 140, log)))
-                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, 1, null, log)))
+                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, 1, 9999, log)))
                 .add(Pair.of(DATE, ValidatorFactory.fieldIsValidObjectValidatorOf(DATE,
                         DateValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(TIME, ValidatorFactory.fieldIsValidObjectValidatorOf(TIME,
@@ -83,7 +83,9 @@ public class GameValidators {
         return baseFieldValidatorListOf(log)
                 .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
                         LocationValidator.creationValidatorOf(log), log)))
-                .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringValidatorOf(SPORT, log)))
+                .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT, Pattern.compile("[a-zA-Z0-9_]+"),
+                        "a string containing english alphabetic characters, digits or underscore", log)
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT, 4, 100, log)))
                 .add(Pair.of(INDIVIDUAL, individualValidation(log)))
                 .add(Pair.of(COMPETITIVE, ValidatorFactory.fieldIsBooleanValidatorOf(COMPETITIVE, log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,
