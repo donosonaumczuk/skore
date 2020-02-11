@@ -54,7 +54,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Autowired
     private Environment environment;
 
-    private Function<PremiumUser, PremiumUser> loadUserGames = user -> {
+    private final Function<PremiumUser, PremiumUser> loadUserGames = user -> {
         List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
         user.setGamesInTeam1(games.get(0));
         user.setGamesInTeam2(games.get(1));

@@ -49,6 +49,7 @@ import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.constants.HeaderConstants.CODE_HEADER;
 import static ar.edu.itba.paw.webapp.controller.GameController.BASE_PATH;
@@ -232,9 +233,8 @@ public class GameController {
     }
 
     private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
+        return Optional.ofNullable(team)
+                .map(it -> TeamDto.from(teamService.getAccountsMap(it), it))
+                .orElse(null);
     }
 }

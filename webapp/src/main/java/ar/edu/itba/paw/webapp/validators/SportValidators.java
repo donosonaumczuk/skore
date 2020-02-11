@@ -22,6 +22,17 @@ public class SportValidators {
     private static final Set<String> UPDATE_KNOWN_FIELDS = ImmutableSet.of(SPORT_NAME, QUANTITY, DISPLAY_NAME, IMAGE);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
+    private static final int MIN_QUANTITY          = 1;
+    private static final int MAX_QUANTITY          = 100;
+    private static final int MIN_LENGTH_NAME       = 4;
+    private static final int MAX_LENGTH_NAME       = 100;
+    private static final String DISPLAY_NAME_REGEX = "[0-9a-zA-ZáéíóúñÁÉÍÓÚÑ ]+";
+    private static final String DISPLAY_NAME_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
+            "space, digits or any of these characters: áéíóúñÁÉÍÓÚÑ";
+    private static final String SPORT_NAME_REGEX   = "[a-zA-Z0-9_]+";
+    private static final String SPORT_NAME_PATTERN_DESCRIPTION = "a string containing english alphabetic characters, " +
+            "digits or underscore";
+
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
                 creationFieldValidatorMapOf(log), log);
@@ -34,18 +45,21 @@ public class SportValidators {
 
     private static ImmutableMap.Builder<String, Validator<JSONObject>> baseFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(QUANTITY, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(QUANTITY, 1, 100, log))
-                .put(DISPLAY_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(DISPLAY_NAME, Pattern.compile("[0-9a-zA-ZáéíóúñÁÉÍÓÚÑ ]+"),
-                        "a string containing english alphabetic characters, space, digits or any of these characters: áéíóúñÁÉÍÓÚÑ", log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DISPLAY_NAME, 4, 100, log)))
+                .put(QUANTITY, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(QUANTITY, MIN_QUANTITY,
+                        MAX_QUANTITY, log))
+                .put(DISPLAY_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(DISPLAY_NAME,
+                        Pattern.compile(DISPLAY_NAME_REGEX), DISPLAY_NAME_PATTER_DESCRIPTION, log)
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DISPLAY_NAME, MIN_LENGTH_NAME,
+                                MAX_LENGTH_NAME, log)))
                 .put(IMAGE, ValidatorFactory.fieldIsStringValidatorOf(IMAGE, log));
     }
 
     private static Map<String, Validator<JSONObject>> creationFieldValidatorMapOf(final String log) {
         return baseFieldValidatorMapOf(log)
-                .put(SPORT_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT_NAME, Pattern.compile("[a-zA-Z0-9_]+"),
-                        "a string containing english alphabetic characters, digits or underscore", log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT_NAME, 4, 100, log)))
+                .put(SPORT_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT_NAME,
+                        Pattern.compile(SPORT_NAME_REGEX), SPORT_NAME_PATTERN_DESCRIPTION, log)
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT_NAME, MIN_LENGTH_NAME,
+                                MAX_LENGTH_NAME, log)))
                 .build();
     }
 

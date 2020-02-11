@@ -298,9 +298,8 @@ public class UserController {
     }
 
     private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
+        return Optional.ofNullable(team)
+                .map(it -> TeamDto.from(teamService.getAccountsMap(it), it))
+                .orElse(null);
     }
 }
