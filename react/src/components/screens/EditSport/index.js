@@ -50,14 +50,14 @@ class EditSportContainer extends Component {
         const isAdmin = AuthService.isAdmin();
         const formInitialValues = this.loadFormInitialValues();
         const isLoading = !this.state.sport;
-        let error = null;       
-        if (!isAdmin || this.state.status) {
-            error = !isAdmin ? SC_FORBIDDEN : this.state.status;
-        }
+        let error = this.state.status;
+        const needsPermission = !isAdmin;       
         
         return (
-            <EditSport initialValues={formInitialValues} history={this.props.history}
-                        isLoading={isLoading} error={error} />
+            <EditSport initialValues={formInitialValues}
+                        history={this.props.history}
+                        isLoading={isLoading} error={error}
+                        needsPermission={needsPermission} />
         );
     }
 
