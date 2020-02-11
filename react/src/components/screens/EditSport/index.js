@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import SportService from '../../../services/SportService';
 import EditSport from './layout';
-import { SC_FORBIDDEN } from '../../../services/constants/StatusCodesConstants';
 
 class EditSportContainer extends Component {
     mounted = false;
