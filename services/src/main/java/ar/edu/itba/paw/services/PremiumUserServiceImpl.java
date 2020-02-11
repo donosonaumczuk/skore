@@ -220,7 +220,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     private double calculateWinRate(final PremiumUser user) {
         double played = 0;
         double wins = 0;
-        double ties = 0;
 
         List<Game> gamesTeam = user.getGamesInTeam1();
 
@@ -230,11 +229,8 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
                     wins++;
-                } else if (g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
+                    played++;
                 }
-                played++;
             }
         }
 
@@ -246,16 +242,13 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
                     wins++;
-                } else if (g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
+                    played++;
                 }
-                played++;
             }
         }
 
         if (played != 0) {
-            return ((wins + 0.5 * ties) / played) * 100;
+            return (wins / played) * 100;
         }
 
         return 0;
