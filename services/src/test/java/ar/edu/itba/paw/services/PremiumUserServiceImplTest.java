@@ -168,6 +168,6 @@ public class PremiumUserServiceImplTest {
         Optional<PremiumUser> ans = premiumUserService.findByUserName(USERNAME);
 
         Assert.assertTrue(ans.isPresent());
-        Assert.assertEquals(25, ans.get().getWinRate(), 0.00001);
+        Assert.assertEquals(0, ans.get().getWinRate(), 0.00001);
     }
 }

@@ -229,6 +229,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
                     wins++;
+                }
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
                     played++;
                 }
             }
@@ -242,6 +245,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
                     wins++;
+                }
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
                     played++;
                 }
             }
