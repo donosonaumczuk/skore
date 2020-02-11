@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-//TODO imrove without redirect
+//TODO improve without redirect
 function WithError(WrappedComponent) {
 	return function Error({ error, ...props }) {
 		if (error) {
