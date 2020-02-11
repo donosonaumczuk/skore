@@ -33,7 +33,6 @@ class SetMatchScoreFormContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await MatchService.setScore(this.state.matchKey, score);
-        console.log(response);
         if (response.status) {
             if (this.mounted) {
                 this.setState({ status: response.status, executing: false })

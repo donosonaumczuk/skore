@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
-import Loader from '../../Loader';
 import SportService from '../../../services/SportService';
 import EditSport from './layout';
-import ErrorPage from '../ErrorPage';
 import { SC_FORBIDDEN } from '../../../services/constants/StatusCodesConstants';
 
 class EditSportContainer extends Component {
@@ -50,15 +48,16 @@ class EditSportContainer extends Component {
 
     render() {
         const isAdmin = AuthService.isAdmin();
-        const formInitialValues = this.loadFormInitialValues();       
+        const formInitialValues = this.loadFormInitialValues();
+        const isLoading = !this.state.sport;
+        let error = null;       
         if (!isAdmin || this.state.status) {
-            return <ErrorPage status={!isAdmin ? SC_FORBIDDEN : this.state.status} />
+            error = !isAdmin ? SC_FORBIDDEN : this.state.status;
         }
-        else if (!this.state.sport) {
-            return <Loader /> //TODO improve with hoc
-        }
+        
         return (
-            <EditSport initialValues={formInitialValues} history={this.props.history} />
+            <EditSport initialValues={formInitialValues} history={this.props.history}
+                        isLoading={isLoading} error={error} />
         );
     }
 

@@ -9,8 +9,8 @@ const ERROR_BASE_LABEL = "createMatchForm.errors.";
 
 //title constants
 const MIN_TITLE_LENGTH = 4;
-const MAX_TITLE_LENGTH = 100;
-const titleInvalidSymbols= /[^a-zA-Z0-9ñŃáéíóúÁÉÍÓÚ¿?¡! -_.]/;
+const MAX_TITLE_LENGTH = 140;
+const titleInvalidSymbols= /[^a-zA-Z0-9ñŃáéíóúÁÉÍÓÚ¿?¡! -_. ]/;
 
 //time constants
 const MIN_VALID_HOUR = 0;
@@ -24,6 +24,7 @@ const MAX_DESCRIPTION_LENGTH = 140;
 
 const hasTitleValidSymbols = title => hasStringValidSymbols(title, titleInvalidSymbols);
 
+//TODO make string validation
 const validateTitle = title => validateRequiredField(title, `${ERROR_BASE_LABEL}title`,
                                                         hasTitleValidSymbols, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH)
 

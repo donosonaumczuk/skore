@@ -134,6 +134,7 @@ class App extends Component {
                                                     {...props} needsAuthentication={!username} />
                             } />
                         <Route exact path="/setMatchScore/:creator/:matchKey" component={SetMatchScoreForm} />
+                        <Route exact path="/error/:statusCode" component={ErrorPage} />
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>

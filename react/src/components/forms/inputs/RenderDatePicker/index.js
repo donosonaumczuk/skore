@@ -3,7 +3,6 @@ import i18next from 'i18next';
 import createRenderer from '../CreateRenderer';
 
 const RenderDatePicker = createRenderer((input, label, inputType, id) => {
-    //TODO enable birthday button
     return (
         <React.Fragment>
             <small id="dateFormatHelp" className="form-text text-muted">{i18next.t('createUserForm.dateFormat')}</small>

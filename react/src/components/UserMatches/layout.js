@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Loader from '../Loader';
 import UserMatchWithResult from './components/UserMatchWithResult';
 import UserMatchWithResultPropType from '../../proptypes/UserMatchWithResultPropType';
+import WithError from '../hocs/WithError';
+import WithLoading from '../hocs/WithLoading';
 
 const UserMatches = ({ matches, getUserMatches, hasMore, username }) => {
     return (
@@ -26,4 +28,4 @@ UserMatches.propTypes = {
     username: PropTypes.string.isRequired
 }
 
-export default UserMatches;
+export default WithError(WithLoading(UserMatches));

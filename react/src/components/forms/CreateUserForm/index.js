@@ -90,7 +90,6 @@ class CreateUserFormContainer extends Component {
         if (image) {
             user = { ...user, "image":image.data };
         }
-        console.log(user);
         return user;
     }
 
@@ -109,7 +108,7 @@ class CreateUserFormContainer extends Component {
         let user = this.loadUser(values, this.state.image);
         const res = await UserService.createUser(user);
         if (res.status) {
-           //TODO handle error
+           //TODO handle error 409
         }
         else {
             this.props.history.push(`/createdAccount`);

@@ -5,7 +5,6 @@ import i18next from 'i18next';
 import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
-import SuggestionText from '../elements/SuggestionText';
 import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
 

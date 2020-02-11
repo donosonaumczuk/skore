@@ -26,7 +26,6 @@ class EditUserInfoContainer extends Component {
     }
 
     async componentDidMount() {
-        //TODO make request to userInfo not to profile, so as to have complete info
         this.mounted = true;
         const currentUser = AuthService.getCurrentUser();
         if (currentUser && currentUser === this.state.username) { 
@@ -76,11 +75,11 @@ class EditUserInfoContainer extends Component {
         const currentUser = AuthService.getCurrentUser();
         const formInitialValues = this.loadFormInitialValues();       
         if (!currentUser) {
-            //TODO maybe render error page with unauthorize instead of redirecting
+            //TODO maybe render error page with 403 forbidden
             return <Redirect to="/" />
         }
         else if (currentUser !== this.state.username) {
-            //TODO maybe render error page with unauthorize instead of redirecting
+            //TODO maybe render error page with 403 forbidden
             return <Redirect to={`/users/${currentUser}/editUserInfo`} />
         }
         else if (!this.state.currentUser) {

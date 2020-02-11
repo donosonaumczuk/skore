@@ -10,7 +10,7 @@ const ERROR_BASE_LABEL = "createSportForm.errors.";
 //sport name constants
 const MIN_SPORTNAME_LENGTH = 4;
 const MAX_SPORTNAME_LENGTH = 100;
-const sportNameInvalidSymbols= /[^a-zA-Z0-9]/;
+const sportNameInvalidSymbols= /[^a-zA-Z0-9_]/;
 
 //display name constants
 const MIN_DISPLAY_NAME_LENGTH = 4;

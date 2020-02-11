@@ -38,7 +38,7 @@ class CreateMatchFormContainer extends Component {
         this.mounted = true;
         let response = await SportService.getSports();
         if (response.status) {
-            //TODO handle error
+            //TODO handle error only 500 or 400
         }
         else if (this.mounted) {
             //TODO find a way to request all sports
@@ -135,10 +135,9 @@ class CreateMatchFormContainer extends Component {
 
     onSubmit = async (values) => {
         let match = this.loadMatch(values, this.state.image);
-        console.log(match); //TODO remove
         const response = await MatchService.createMatch(match);
         if (response.status) {
-            //TODO handle error
+            //TODO handle error only 409 
         }
         else {
             const matchKey= response.key;

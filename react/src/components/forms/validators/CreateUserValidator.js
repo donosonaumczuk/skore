@@ -14,7 +14,7 @@ const MAX_USERNAME_LENGTH = 100;
 const usernameInvalidSymbols= /[^a-zA-Z0-9_.]/;
 
 //password constants
-const MIN_PASSWORD_LENGTH = 5;
+const MIN_PASSWORD_LENGTH = 6;
 const MAX_PASSWORD_LENGTH = 100;
 
 //names constants
@@ -37,10 +37,12 @@ const validateUsername = username => validateRequiredField(username, `${ERROR_BA
                                                                 hasUsernameValidSymbols, MIN_USERNAME_LENGTH,
                                                                 MAX_USERNAME_LENGTH);
 
+                                                                //TODO accept everything
 const validatePassword = password => validateRequiredField(password, `${ERROR_BASE_LEVEL}password`,
                                                                 isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
                                                                 MAX_PASSWORD_LENGTH);
 
+                                                                //TODO accept everything
 const validateRepeatedPassword = (repeatedPassword, password) => {
     let errorMessage = validateRequiredField(repeatedPassword, `${ERROR_BASE_LEVEL}repeatedPassword`,
                                                 isStringAlphaNumeric, MIN_PASSWORD_LENGTH,

@@ -1,9 +1,9 @@
 import React from 'react';
-import ErrorPage from '../../screens/ErrorPage';
+import { Redirect } from 'react-router-dom';
 
 function WithError(Component) {
 	return function Error({ error, ...props }) {
-		return error ? <ErrorPage status={error} /> : <Component {...props} />;
+		return error ? <Redirect to={`/error/${error}`} /> : <Component {...props} />;
 	};
 }
 
