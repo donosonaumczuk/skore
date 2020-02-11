@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class PlayerValidators {
+public class PlayerValidators {//TODO reutilzar something
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerValidators.class);
     private static final String FIRST_NAME = "firstName";
