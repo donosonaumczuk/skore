@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sport snapshot test 1`] = `
+<div
+  className="row p-2 mt-2 ml-5 mr-5 match-card rounded-border"
+>
+  <div
+    className="col"
+  >
+    <div
+      className="row mb-4"
+    >
+      <div
+        className="col-2 col-sm-3"
+      >
+        <div
+          className="container-fluid pt-2"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="col col-xl-4 mr-0 mt-1"
+            >
+              <img
+                alt="sport-pic"
+                className="sport-img"
+                src="sportImageUrl"
+              />
+            </div>
+            <div
+              className="col-6 col-xl d-none d-sm-block pl-0"
+            >
+              <p
+                className="sport-label"
+              >
+                Display name
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="col"
+        >
+          <i
+            className="name-label fas fa-users mr-2"
+          />
+          <label />
+          <span>
+             1
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
