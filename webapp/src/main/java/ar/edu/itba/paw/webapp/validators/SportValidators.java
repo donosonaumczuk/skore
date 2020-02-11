@@ -34,10 +34,10 @@ public class SportValidators {
 
     private static ImmutableMap.Builder<String, Validator<JSONObject>> baseFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(QUANTITY, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(QUANTITY, 1, null, log))
-                .put(DISPLAY_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(DISPLAY_NAME, Pattern.compile("[a-zA-Z0-9_]+"),
-                        "a string containing english alphabetic characters, digits or underscore", log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DISPLAY_NAME, 1, 100, log)))
+                .put(QUANTITY, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(QUANTITY, 1, 100, log))
+                .put(DISPLAY_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(DISPLAY_NAME, Pattern.compile("[0-9a-zA-ZáéíóúñÁÉÍÓÚÑ ]+"),
+                        "a string containing english alphabetic characters, space, digits or any of these characters: áéíóúñÁÉÍÓÚÑ", log)
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DISPLAY_NAME, 4, 100, log)))
                 .put(IMAGE, ValidatorFactory.fieldIsStringValidatorOf(IMAGE, log));
     }
 
@@ -45,7 +45,7 @@ public class SportValidators {
         return baseFieldValidatorMapOf(log)
                 .put(SPORT_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT_NAME, Pattern.compile("[a-zA-Z0-9_]+"),
                         "a string containing english alphabetic characters, digits or underscore", log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT_NAME, 1, 100, log)))
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT_NAME, 4, 100, log)))
                 .build();
     }
 
