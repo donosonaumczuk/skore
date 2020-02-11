@@ -109,7 +109,7 @@ public class SportValidatorsTest {
     public void whenValidatingCreationIfDisplayNameHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Field 'displayName' must be a string containing english alphabetic " +
-                "characters, digits or underscore");
+                "characters, space, digits or any of these characters: áéíóúñÁÉÍÓÚÑ");
         SportValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                         "\t\"sportName\" : \"name_1\",\n" +
@@ -124,7 +124,7 @@ public class SportValidatorsTest {
     @Test
     public void whenValidatingCreationIfQuantityHasInvalidValueThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'playerQuantity' must belong to [1,Inf]");
+        exceptionRule.expectMessage("Field 'playerQuantity' must belong to [1,100]");
         SportValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                         "\t\"sportName\" : \"name_1\",\n" +

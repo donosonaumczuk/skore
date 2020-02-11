@@ -258,7 +258,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             return ((wins + 0.5 * ties) / played) * 100;
         }
 
-        return -1;
+        return 0;
     }
 
     private String getConfirmationUrl(PremiumUser user) {

@@ -38,7 +38,7 @@ public class GameValidators {
             LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü ]+";
+    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_-ÑÁÉÍÓÚáéíñóöúü .]+";
     private static final String TITLE_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
             "digits, spaces or any of these characters: ¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü";
     private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
@@ -85,7 +85,7 @@ public class GameValidators {
                         LocationValidator.creationValidatorOf(log), log)))
                 .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT, Pattern.compile("[a-zA-Z0-9_]+"),
                         "a string containing english alphabetic characters, digits or underscore", log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT, 4, 100, log)))
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT, 4, 100, log))))
                 .add(Pair.of(INDIVIDUAL, individualValidation(log)))
                 .add(Pair.of(COMPETITIVE, ValidatorFactory.fieldIsBooleanValidatorOf(COMPETITIVE, log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,
