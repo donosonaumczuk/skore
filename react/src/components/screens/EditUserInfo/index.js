@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import UserService from '../../../services/UserService';
-import Loader from '../../Loader';
 import EditUserInfo from './layout';
 
 class EditUserInfoContainer extends Component {
@@ -72,22 +70,18 @@ class EditUserInfoContainer extends Component {
     }
 
     render() {
+        const { username, status } = this.state;
         const currentUser = AuthService.getCurrentUser();
-        const formInitialValues = this.loadFormInitialValues();       
-        if (!currentUser) {
-            //TODO maybe render error page with 403 forbidden
-            return <Redirect to="/" />
-        }
-        else if (currentUser !== this.state.username) {
-            //TODO maybe render error page with 403 forbidden
-            return <Redirect to={`/users/${currentUser}/editUserInfo`} />
-        }
-        else if (!this.state.currentUser) {
-            return <Loader />
-        }
+        const formInitialValues = this.loadFormInitialValues(); 
+        const needsPermission = !currentUser || currentUser !== username;  
+        const isLoading = !this.state.currentUser;
+        const error = status;
         return (
-            <EditUserInfo initialValues={formInitialValues} username={currentUser}
-                            history={this.props.history} />
+            <EditUserInfo initialValues={formInitialValues}
+                            username={currentUser}
+                            history={this.props.history}
+                            isLoading={isLoading} error={error}
+                            needsPermission={needsPermission} />
         );
     }
 

@@ -1,10 +1,16 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-function WithError(Component) {
+//TODO imrove without redirect
+function WithError(WrappedComponent) {
 	return function Error({ error, ...props }) {
-		return error ? <Redirect to={`/error/${error}`} /> : <Component {...props} />;
-	};
+		if (error) {
+ 			return <Redirect to={`/error/${error}`} />
+ 		}
+ 		else {
+ 			return  <WrappedComponent {...props} />;
+ 		}
+ 	};
 }
 
 export default WithError;
