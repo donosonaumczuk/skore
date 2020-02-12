@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.Formatter;
 import java.util.List;
@@ -92,6 +93,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                               final String street, final Integer reputation, final String password,
                               final byte[] file, final Locale locale) {
         LOGGER.trace("Attempting to create user: {}", userName);
+        if (birthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
+
         if (premiumUserDao.findByEmail(email).isPresent()) {
             LOGGER.trace("User with email {} already exist", email);
             throw UserAlreadyExistException.ofEmail(email);
@@ -146,6 +152,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             final String oldPassword, final byte[] file, final Locale locale
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
+        if (newBirthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
+
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
         if (!loggedUser.getUserName().equals(username)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);

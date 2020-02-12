@@ -25,6 +25,12 @@ public class PlayerValidators {//TODO reutilzar something
     private static final Set<String> UPDATE_KNOWN_FIELDS      = ImmutableSet.of(USER_ID);
     private static final Set<String> UPDATE_REQUIRED_FIELDS   = ImmutableSet.of(USER_ID);
 
+    private static final String EMAIL_REGEX = "^[+a-zA-ZñÑ0-9_.-]+@[a-zA-Z0-9]+(\\.[A-Za-z]+)+$";
+    private static final String EMAIL_PATTERN_DESCRIPTION = "an email";
+    private static final String NAME_REGEX = "[a-zA-ZáéíóúñÁÉÍÓÚÑ ]+";
+    private static final String NAME_PATTERN_DESCRIPTION = "a string containing english alphabetic characters, spaces or any of these characters: áéíóúñÁÉÍÓÚÑ";
+    private static final int MIN_LENGTH_NAME = 2;
+    private static final int MAX_LENGTH_NAME = 100;
 
     public static Validator<JSONObject> createValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_AND_REQUIRED_FIELDS, CREATION_KNOWN_AND_REQUIRED_FIELDS,
@@ -44,11 +50,14 @@ public class PlayerValidators {//TODO reutilzar something
 
     private static Map<String, Validator<JSONObject>> createFieldValidatorListOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(EMAIL, ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern
-                                .compile("^[a-zA-ZñÑ0-9_.-]+@[a-zA-Z0-9]+(\\.[A-Za-z]+)+"),
-                        "an email", log)) //TODO: find an standard email pattern
-                .put(FIRST_NAME, ValidatorFactory.fieldIsStringValidatorOf(FIRST_NAME, log))
-                .put(LAST_NAME, ValidatorFactory.fieldIsStringValidatorOf(LAST_NAME, log))
+                .put(EMAIL, ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern.compile(EMAIL_REGEX),
+                        EMAIL_PATTERN_DESCRIPTION, log))
+                .put(FIRST_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(FIRST_NAME,
+                        Pattern.compile(NAME_REGEX), NAME_PATTERN_DESCRIPTION, log).and(ValidatorFactory
+                        .fieldIsStringWithLengthInRangeValidatorOf(FIRST_NAME, MIN_LENGTH_NAME, MAX_LENGTH_NAME, log)))
+                .put(LAST_NAME,  ValidatorFactory.fieldIsStringAndMatchesRegexOf(LAST_NAME,
+                        Pattern.compile(NAME_REGEX), NAME_PATTERN_DESCRIPTION, log).and(ValidatorFactory
+                        .fieldIsStringWithLengthInRangeValidatorOf(LAST_NAME, MIN_LENGTH_NAME, MAX_LENGTH_NAME, log)))
                 .build();
     }
 }

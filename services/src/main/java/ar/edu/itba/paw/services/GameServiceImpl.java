@@ -3,8 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.invalidstate.GameInvalidStateException;
-import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
-import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.MalformedGameKeyException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
@@ -17,7 +15,6 @@ import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameKey;
-import ar.edu.itba.paw.models.GamePK;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -69,6 +66,10 @@ public class GameServiceImpl implements GameService {
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title, final String sportName) {
+        if (startTime.isBefore(LocalDateTime.now())) {
+            LOGGER.trace("StartTime must happen in the future");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
         PremiumUser logged = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
 
@@ -88,6 +89,8 @@ public class GameServiceImpl implements GameService {
             newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
                     .getName();
         }
+
+        //TODO: check a game with key is no already added
 
         Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime,
                 startTime.plusMinutes(durationInMinutes), type, null,
@@ -221,6 +224,10 @@ public class GameServiceImpl implements GameService {
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title, final String key) {
+        if (startTime.isBefore(LocalDateTime.now())) {
+            LOGGER.trace("StartTime must happen in the future");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Update game failed, game '{}' not found", key);
@@ -237,6 +244,8 @@ public class GameServiceImpl implements GameService {
         if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL.toString())) {
             throw new IllegalArgumentException("Cannot modify teams in a individual match"); //TODO: map!!
         }
+
+        //TODO: check a game with key is no already added
 
         return gameDao.modify(
                 teamName1, teamName2, startTime,
