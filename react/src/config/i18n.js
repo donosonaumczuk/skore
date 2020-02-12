@@ -45,7 +45,9 @@ i18n
     debug: true,
     whitelist: availableLanguages,
     detection: options,
-
+    backend: { //TODO remove on local
+      loadPath: `${window.location.pathname}locales/{{lng}}/{{ns}}.json`
+    },
     interpolation: {
       escapeValue: false
     },
