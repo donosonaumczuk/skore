@@ -1,15 +1,15 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
-//TODO improve without redirect
 function WithError(WrappedComponent) {
 	return function Error({ error, ...props }) {
-		if (error) {
- 			return <Redirect to={`/error/${error}`} />
- 		}
- 		else {
- 			return  <WrappedComponent {...props} />;
- 		}
+		const history = useHistory();
+		useEffect(() => {
+			if (error) {
+				history.push(`/error/${error}`);
+			}
+		}, [error, history]);
+ 		return  error ? null : <WrappedComponent {...props} />;
  	};
 }
 

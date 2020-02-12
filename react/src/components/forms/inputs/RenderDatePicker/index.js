@@ -2,6 +2,7 @@ import React from 'react';
 import i18next from 'i18next';
 import createRenderer from '../CreateRenderer';
 
+//TODO remove file if it is not used at all
 const RenderDatePicker = createRenderer((input, label, inputType, id) => {
     return (
         <React.Fragment>

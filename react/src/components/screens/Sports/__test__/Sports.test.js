@@ -3,6 +3,14 @@ import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 import Sports from '../layout';
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useHistory: () => ({
+      push: jest.fn()
+    })
+}));
+
+
 test('Sports snapshot test', () => {
     //set up
     const sports = [
