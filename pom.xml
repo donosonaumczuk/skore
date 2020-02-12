@@ -48,6 +48,7 @@
         <checkerframework.version>2.3.2</checkerframework.version>
         <frontend-source>react</frontend-source>
         <frontend-build>../react/build</frontend-build>
+        <target-resources>target/classes/webapp/WEBB-INF/classes</target-resources>
     </properties>
 
     <dependencyManagement>
@@ -404,7 +405,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>target/clases/donde/sirva/spring</outputDirectory>
+                                    <outputDirectory>${target-resources}</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${frontend-build}</directory>
