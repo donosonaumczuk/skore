@@ -28,6 +28,7 @@
     "redux-form": "^8.2.6",
     "typescript": "^3.7.5"
   },
+  "homepage": "http://pawserver.it.itba.edu.ar/paw-2018b-04/",
   "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
