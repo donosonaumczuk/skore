@@ -71,7 +71,6 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        console.log(process.env.REACT_APP_BASE_URL);
         const currentUser = AuthService.getCurrentUser();
         const isAdmin = AuthService.isAdmin();
         if (currentUser) {
