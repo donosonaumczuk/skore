@@ -10,7 +10,6 @@
 /react/node_modules
 /react/node
 /react/.pnp
-/react/.env*
 .pnp.js
 
 # Testing
