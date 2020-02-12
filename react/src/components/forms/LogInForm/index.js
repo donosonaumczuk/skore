@@ -44,7 +44,7 @@ class LogInFormContainer extends Component {
             if (this.mounted) {
                 this.setState({ executing: false });
             }
-            //TODO handle other error status maybe?
+
             const isAdmin = AuthService.isAdmin();
             this.props.updateUser({
                 username: values.username,

@@ -3,7 +3,6 @@ import { reduxForm } from 'redux-form';
 import CreateSportValidator from '../validators/CreateSportValidator';
 import AuthService from '../../../services/AuthService';
 import SportService from '../../../services/SportService';
-import ErrorPage from '../../screens/ErrorPage';
 import { SC_FORBIDDEN, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import CreateSportForm from './layout';
 
@@ -84,16 +83,18 @@ class CreateSportFormContainer extends Component {
         const { sportNameError } = this.state;
         const isAdmin = AuthService.isAdmin();
         let imageName = "";
+        let error;
         if (!isAdmin || this.state.error) {
-            return <ErrorPage status={!isAdmin ? SC_FORBIDDEN : this.state.error} />
+            error = !isAdmin ? SC_FORBIDDEN : this.state.error;
         }
-        else if (this.state.image != null) {
+        if (this.state.image != null) {
             imageName = this.state.image.name;
         }
         return (
             <CreateSportForm handleSubmit={handleSubmit} submitting={submitting}
                                 onSubmit={this.onSubmit} sportNameError={sportNameError}
-                                imageName={imageName} handleChange={this.handleChange} />
+                                imageName={imageName} handleChange={this.handleChange}
+                                error={error} />
         );
     }
 

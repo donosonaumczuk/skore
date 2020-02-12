@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import UserService from '../../../services/UserService';
-import Loader from '../../Loader';
 import EditUserInfo from './layout';
-
 
 class EditUserInfoContainer extends Component {
     mounted = false;
@@ -15,10 +12,6 @@ class EditUserInfoContainer extends Component {
         this.state = {
             username: username,
         };
-    }
-
-    getBirthdayWithFormat = birthday => { 
-        return `${birthday.monthNumber}/${birthday.dayOfMonth}/${birthday.year}`;
     }
 
     updateStateWithUser = currentUser => {
@@ -31,7 +24,6 @@ class EditUserInfoContainer extends Component {
     }
 
     async componentDidMount() {
-        //TODO make request to userInfo not to profile, so as to have complete info
         this.mounted = true;
         const currentUser = AuthService.getCurrentUser();
         if (currentUser && currentUser === this.state.username) { 
@@ -42,38 +34,54 @@ class EditUserInfoContainer extends Component {
         }
     }
 
+    loadHome = home => {
+        if (home) {
+            const { country, state, city, street } = home;
+            return {
+                "country": country ? country : "",
+                "state": state ? state : "",
+                "city": city ? city : "",
+                "street": street ? street : ""
+            };
+        }
+        return null;
+    }
+
     loadFormInitialValues = () => {
         if (this.state.currentUser) {
             const { currentUser } = this.state;
-            return {
+            const home = this.loadHome(currentUser.home);
+            let newUser = {
                 "username": currentUser.username,
                 "email": currentUser.email,
                 "firstName": currentUser.firstName,
                 "lastName": currentUser.lastName,
-                "birthday": this.getBirthdayWithFormat(currentUser.birthday),
-                "cellphone": currentUser.cellphone
+                "year": currentUser.birthday.year,
+                "month": currentUser.birthday.monthNumber,
+                "day": currentUser.birthday.dayOfMonth,
+                "cellphone": currentUser.cellphone,
             }
+            if (home) {
+                newUser = { ...newUser, "home": home };
+            }
+            return newUser;
         }
         return {};
     }
 
     render() {
+        const { username, status } = this.state;
         const currentUser = AuthService.getCurrentUser();
-        const formInitialValues = this.loadFormInitialValues();       
-        if (!currentUser) {
-            //TODO maybe render error page with unauthorize instead of redirecting
-            return <Redirect to="/" />
-        }
-        else if (currentUser !== this.state.username) {
-            //TODO maybe render error page with unauthorize instead of redirecting
-            return <Redirect to={`/users/${currentUser}/editUserInfo`} />
-        }
-        else if (!this.state.currentUser) {
-            return <Loader />
-        }
+        const formInitialValues = this.loadFormInitialValues(); 
+        const needsPermission = !currentUser || currentUser !== username;  
+        const isLoading = !this.state.currentUser;
+        const error = status;
         return (
-            <EditUserInfo initialValues={formInitialValues} username={currentUser}
-                            history={this.props.history} />
+            <EditUserInfo initialValues={formInitialValues}
+                            username={currentUser}
+                            history={this.props.history}
+                            isLoading={isLoading} error={error}
+                            needsPermission={needsPermission} />
         );
     }
 

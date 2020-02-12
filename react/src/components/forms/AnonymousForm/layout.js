@@ -5,7 +5,6 @@ import i18next from 'i18next';
 import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
-import SuggestionText from '../elements/SuggestionText';
 import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
 
@@ -25,8 +24,6 @@ const AnonymousForm = ({ handleSubmit, onSubmit, submitting }) => {
                                 inputType="text" required={true} component={RenderInput} />
                         <SubmitButton label={i18next.t('home.joinMatch')} divStyle="text-center"
                                         buttonStyle="btn btn-green mb-2" submitting={submitting} />
-                        <SuggestionText suggestion={i18next.t('createUserForm.existingUser')}
-                                        link="/login" linkText={i18next.t('login.login')} />
                     </form>
                 </div>
             </div>

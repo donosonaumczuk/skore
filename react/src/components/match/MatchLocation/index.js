@@ -2,7 +2,7 @@ import React from 'react';
 import LocationPropType from '../../../proptypes/LocationPropType';
 
 const MatchLocation = ({ address }) => {
-    //TODO make toString of address
+    //TODO make toString of address @adammiano
     return (
          <div className="row">
             <div className="col">

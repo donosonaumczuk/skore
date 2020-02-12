@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 import UserService from '../../services/UserService';
-import Loader from '../Loader';
 import UserMatches from './layout';
-import ErrorPage from '../screens/ErrorPage';
 import Utils from '../utils/Utils';
 
 const INITIAL_OFFSET = 0;
@@ -53,24 +51,15 @@ class UserMatchesContainer extends Component {
     }
 
     render() {
-        //TODO depending on users choice change between mach with result and only finished, and created not played
+        //TODO depending on users choice change between match with result and only finished, and created not played
         const matches = this.state.matches;
-        if (matches.length > 0 || !this.state.hasMore) {
-            return (
-                <UserMatches matches={matches} getUserMatches={this.getUserMatches}
-                                hasMore={this.state.hasMore} username={this.props.username} />
-            );
-        }
-        else if (this.state.status) {
-            return (
-                <ErrorPage status={this.state.status} />
-            )
-        }
-        else {
-            return (
-                <Loader />//TODO improve with HOC
-            );
-        }
+        const isLoading = matches.length === 0 && this.state.hasMore;
+        const error = this.state.status;
+        return (
+            <UserMatches matches={matches} getUserMatches={this.getUserMatches}
+                            hasMore={this.state.hasMore} username={this.props.username}
+                            isLoading={isLoading} error={error} />
+        );
     }
 
     componentWillUnmount = () => {
