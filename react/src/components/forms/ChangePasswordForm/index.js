@@ -4,6 +4,7 @@ import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import ChangePasswordForm from './layout';
+import WithPermission from '../../hocs/WithPermission';
 
 const validate = values => {
     const errors = {}
@@ -51,10 +52,6 @@ class ChangePasswordFormContainer extends Component {
         this.mounted = true;
     }
 
-    componentDidMount() {
-        this.mounted = true;
-    }
-
     render() {
         const { handleSubmit, submitting } = this.props;
         const hasError = this.state.error && this.state.error !== SC_CONFLICT;
@@ -77,4 +74,4 @@ ChangePasswordFormContainer = reduxForm({
     validate
 })(ChangePasswordFormContainer)
 
-export default ChangePasswordFormContainer;
+export default WithPermission(ChangePasswordFormContainer);

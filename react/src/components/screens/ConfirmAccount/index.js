@@ -8,7 +8,6 @@ import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
 import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import Message from '../../Message';
-import ErrorPage from '../ErrorPage';
 
 class ConfirmAccountContainer extends Component {
     mounted = false;
@@ -50,7 +49,7 @@ class ConfirmAccountContainer extends Component {
                 return <Message message={i18next.t('confirmAccount.alreadyConfirmed')} />
             }
             else {
-                return <ErrorPage error={status} />
+                return <Redirect to={`/error/${status}`} />
             }
         }
         return <Loader />;

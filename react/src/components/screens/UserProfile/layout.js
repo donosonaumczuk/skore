@@ -4,6 +4,8 @@ import UserProfilePropType from '../../../proptypes/UserProfilePropType';
 import UserData from './components/UserData';
 import UserImage from './components/UserImage';
 import UserMatches from '../../UserMatches';
+import WithLoading from '../../hocs/WithLoading';
+import WithError from '../../hocs/WithError';
 
 const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRateAndAge }) => {
     return (
@@ -34,4 +36,4 @@ UserProfile.propTypes = {
     winRateAndAge: PropTypes.func.isRequired
 }
 
-export default UserProfile;
+export default WithError(WithLoading(UserProfile));

@@ -26,6 +26,7 @@ import ConfirmMatch from './components/screens/ConfirmMatch';
 import CancelMatch from './components/screens/CancelMatch';
 import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
+import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
 import './css/main.css';
 
 class App extends Component {
@@ -82,6 +83,7 @@ class App extends Component {
     }
 
     render() {
+        const { username } = this.state.currentUser;
         if (!this.state.translation) {
             //TODO test what happens on change language
             return (
@@ -94,8 +96,7 @@ class App extends Component {
                     <NavBar currentUser={this.state.currentUser} />
                     <Switch>
                         <Route exact path="/" render={(props) => <Home {...props} 
-                                currentUser={this.state.currentUser.username}
-                                updateUser={this.updateUser} />} />
+                                currentUser={this.state.currentUser.username} />} />
                         <Route exact path="/sports">
                             <Sports />
                         </Route>
@@ -126,7 +127,14 @@ class App extends Component {
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />
                         <Route exact path="/confirmMatch" component={ConfirmMatch} />
                         <Route exact path="/cancelMatch" component={CancelMatch} />
+                        <Route exact path="/authenticatedJoin/:param" 
+                            render={(props) =>
+                                <AuthenticatedMatch updateUser={this.updateUser}
+                                                    baseUrl={"/authenticatedJoin"}
+                                                    {...props} needsAuthentication={!username} />
+                            } />
                         <Route exact path="/setMatchScore/:creator/:matchKey" component={SetMatchScoreForm} />
+                        <Route exact path="/error/:statusCode" component={ErrorPage} />
                         <Route path="/" component={ErrorPage} />
                     </Switch>
                 </div>

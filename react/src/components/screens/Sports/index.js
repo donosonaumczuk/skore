@@ -33,7 +33,7 @@ class SportsContainer extends Component {
         const response = await SportService.getSports();
         if (response.status) {
             this.setState({ status: response.status });
-            //TODO handle error
+            //TODO handle error only 400
         }
         else if (this.mounted) {
             this.addSports(response);

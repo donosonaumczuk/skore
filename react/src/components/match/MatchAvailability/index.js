@@ -52,10 +52,9 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={i18next.t('home.cancelMatch')}
                             fontAwesome="fas fa-times mr-1" />
     }
-    else if(currentMatch.totalPlayers > currentMatch.currentPlayers &&
-            ((currentUser && currentMatch.competitive) || !currentMatch.competitive)) {
+    else if(currentMatch.totalPlayers > currentMatch.currentPlayers) { 
         let buttonText;        
-        if (currentMatch.isCompetitive) {
+        if (currentMatch.competitive) {
             buttonText = i18next.t('home.joinCompetitiveMatch');
         }
         else {

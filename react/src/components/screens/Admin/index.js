@@ -33,7 +33,7 @@ class AdminContainer extends Component {
     getSports = async () => {
         const response = await SportService.getSports();
         if (response.status) {
-            //TODO handle error
+            //TODO handle error only 400
         }
         else if (this.mounted) {
             this.addSports(response);

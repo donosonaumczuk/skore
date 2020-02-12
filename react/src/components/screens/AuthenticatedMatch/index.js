@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
+import  { Redirect } from 'react-router-dom'; 
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import Spinner from '../../Spinner';
 import MatchService from '../../../services/MatchService';
-import ErrorPage from '../ErrorPage';
-import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
 import WithAuthentication from '../../hocs/WithAuthenticatication';
 
 class AuthenticatedMatch extends Component {
     mounted = false;
     constructor(props) {
         super(props);
-        const { match } = this.props;
+        const { param } = this.props;
         this.state = {
-            match: match,
+            matchKey: param,
             status: null
         }
     }
@@ -21,21 +20,21 @@ class AuthenticatedMatch extends Component {
     componentDidMount = async () => {
         this.mounted = true;
         const userId = AuthService.getUserId();
-        const { match } = this.state;
-        const response = MatchService.joinMatchWithAccount(match.key, userId);
+        const { matchKey } = this.state;
+        const response = await MatchService.joinMatchWithAccount(matchKey, userId);
         if (response.status) {
             if (this.mounted) {
                 this.setState({ status: response.status });
             }
         }
         else {
-            this.props.history.push(`/match/${match.key}`);
+            this.props.history.push(`/match/${matchKey}`);
         }
     }
 
     render() {
         if (this.state.status) {
-            return <ErrorPage status = {this.state.status} />
+            return <Redirect to={`/error/${this.state.status}`} />;
         }
         return (
             <Spinner />
@@ -48,7 +47,7 @@ class AuthenticatedMatch extends Component {
 }
 
 AuthenticatedMatch.propTypes = {
-    match: HomeMatchPropType.isRequired,
+    param: PropTypes.string.isRequired,
     history: PropTypes.object.isRequired,
 }
 

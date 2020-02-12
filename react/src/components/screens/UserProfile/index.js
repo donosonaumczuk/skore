@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 import i18next from 'i18next';
 import UserService from '../../../services/UserService';
-import Loader from '../../Loader';
 import AuthService from '../../../services/AuthService';
 import EditUserButton from './components/EditUserButton';
-import ErrorPage from '../ErrorPage';
 import UserProfile from './layout';
+import { SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 class UserProfileContainer extends Component {
     mounted = false;
@@ -123,16 +122,19 @@ class UserProfileContainer extends Component {
         const imageUrl = this.state.imageUrl;
         const loggedUser = AuthService.getCurrentUser();
         let editButtons = this.getEditButtons(loggedUser, this.state.username);
+        const isLoading = imageUrl == null;
+        let error = null;
         //TODO check when winrate is negative if it is a valid value
-        if (this.state.status && this.state.staus !== 200) {
-            return <ErrorPage status={this.state.status} />
+        if (this.state.status && this.state.staus !== SC_OK) {
+            error = this.state.status;
         }
-        else if (imageUrl == null) {
-            return <Loader />; //TODO replace with HOC
-        }
+        
         return (
-            <UserProfile imageUrl={imageUrl} currentUser={currentUser} editButtons={editButtons}
-            locationData={this.locationData} winRateAndAge={this.winRateAndAge} />
+            <UserProfile imageUrl={imageUrl} currentUser={currentUser} 
+                            editButtons={editButtons}
+                            locationData={this.locationData}
+                            winRateAndAge={this.winRateAndAge}
+                            isLoading={isLoading} error={error} />
         );
     }
    

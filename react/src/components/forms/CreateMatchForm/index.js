@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux'
+import { reduxForm, change, touch, formValueSelector } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import AuthService from '../../../services/AuthService';
@@ -9,38 +10,6 @@ import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
 import MatchService from '../../../services/MatchService';
 
-var location = {
-    "country": null,
-    "state": null,
-    "city": null,
-    "street": null,    
-    "number": null
-};
-
-var time = {
-    "hour": null,
-    "minutes": null
-};
-
-const updateLocation = home => {
-    location.street = home.street;
-    location.city = home.city;
-    location.state = home.state;
-    location.country = home.country;
-    location.number = home.number;
-}
-
-const updateTime = newTime => {
-    if (!newTime) {
-        time.hour = null;
-        time.minutes = null;
-    }
-    else {
-        const timeArray = moment(newTime).format("HH:mm").split(":");
-        time.hour = parseInt(timeArray[0]);
-        time.minutes = parseInt(timeArray[1]);
-    }
-}
 
 const validate = values => {
     const errors = {}
@@ -51,10 +20,10 @@ const validate = values => {
     errors.durationHours = CreateMatchValidator.validateDurationHours(values.durationHours);
     errors.durationMinutes = CreateMatchValidator.validateDurationMinutes(values.durationMinutes);
     errors.description = CreateMatchValidator.validateDescription(values.description);
-    errors.matchTime = CreateMatchValidator.validateTime(time);
+    errors.matchTime = CreateMatchValidator.validateTime(values.matchTime);
+    errors.matchLocation = CreateMatchValidator.validateLocation(values.matchLocation);
     return errors;
 }
-
 
 class CreateMatchFormContainer extends Component {
     mounted = false;
@@ -69,7 +38,7 @@ class CreateMatchFormContainer extends Component {
         this.mounted = true;
         let response = await SportService.getSports();
         if (response.status) {
-            //TODO handle error
+            //TODO handle error only 500 or 400
         }
         else if (this.mounted) {
             //TODO find a way to request all sports
@@ -118,7 +87,6 @@ class CreateMatchFormContainer extends Component {
         let newDate;
         if (date) {
             const dateArray = moment(date).format("MM/DD/YYYY").split("/");
-            //TODO get Time and calculate its value
             newDate = {
                 year: parseInt(dateArray[2]),
                 month: parseInt(dateArray[0]),
@@ -136,6 +104,7 @@ class CreateMatchFormContainer extends Component {
 
     loadMatch = (values) => {
         const date = this.getDate(values.date);
+        const { country, state, city, street, number } = values.matchLocation;
         const durationMinutes = this.getDurationMinutes(values.durationHours, values.durationMinutes);
         const match = {
             "title": values.title,
@@ -147,15 +116,15 @@ class CreateMatchFormContainer extends Component {
                 "dayOfMonth": date.day,
             },
             "time": {
-                "hour": time.hour,
-                "minute": time.minutes
+                "hour": values.matchTime.hour,
+                "minute": values.matchTime.minutes
             },
             "minutesOfDuration": durationMinutes,
             "location": {
-                "country": location.country ? location.country : null,
-                "state": location.state ? location.state : null,
-                "city": location.city ? location.city : null,
-                "street": "" + location.street + " " + location.number
+                "country": country ? country : null,
+                "state": state ? state : null,
+                "city": city ? city : null,
+                "street": "" + street + " " + number
             },
             "individual": true,
             "competitive": values.competitivity === "competitive"
@@ -163,50 +132,22 @@ class CreateMatchFormContainer extends Component {
         return match;
     }
 
-    updateLocationAndState = home => {
-        updateLocation(home);
-        if (this.mounted) {
-            this.setState({
-                modifyingLocation: true
-            });
-        }
-    }
-
-    updateTimeAndState = time => {
-        updateTime(time);
-        if (this.mounted) {
-            this.setState({
-                modifyingTime: true
-            });
-        }
-    }
 
     onSubmit = async (values) => {
-        const locationError = CreateMatchValidator.validateLocation(location);
-        if(locationError) {
-            if (this.mounted) {
-                this.setState({ locationError: locationError });
-            }
+        let match = this.loadMatch(values, this.state.image);
+        const response = await MatchService.createMatch(match);
+        if (response.status) {
+            //TODO handle error only 409 
         }
         else {
-            if (this.mounted) {
-                this.setState({ locationError: null });
-            }
-            let match = this.loadMatch(values, this.state.image);
-            const response = await MatchService.createMatch(match);
-            if (response.status) {
-                //TODO handle error
-            }
-            else {
-                const matchKey= response.key;
-                this.props.history.push(`match/${matchKey}`);
-            }
+            const matchKey= response.key;
+            this.props.history.push(`match/${matchKey}`);
         }
+        
     }
 
     render() {
-        const { handleSubmit, submitting } = this.props; 
-        const { locationError } = this.state;
+        const { handleSubmit, submitting, change, touch, matchLocation } = this.props; 
         const currentUser = AuthService.getCurrentUser();
         const hourOptions = this.generateHourOptions();
         const minuteOptions = this.generateMinuteOptions();
@@ -221,33 +162,43 @@ class CreateMatchFormContainer extends Component {
             <CreateMatchForm handleSubmit={handleSubmit}
                              submitting={submitting}
                              onSubmit={this.onSubmit}
-                             updateTime={this.updateTimeAndState}
-                             currentTime={time} 
                              hourOptions={hourOptions}
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
-                             updateLocationAndState={this.updateLocationAndState}
-                             locationError={locationError}
-                             location={location} />
+                             location={matchLocation} changeFieldsValue={change}
+                             touchField={touch} />
         );
     }
 
     componentWillUnmount() {
         this.mounted = false;
-        time.hour = null;
-        time.minutes = null;
-        location.country = null;
-        location.state = null;
-        location.city = null;
-        location.street = null;    
-        location.number = null;
     }
 }
 
 CreateMatchFormContainer = reduxForm({
     form: 'createMatch',
     destroyOnUnmount: true,
-    validate
+    validate,
+    change,
+    touch
 })(CreateMatchFormContainer)
+
+const selector = formValueSelector('createMatch');
+
+CreateMatchFormContainer = connect(state => {    
+    let matchLocation = selector(state, 'matchLocation')
+    if (!matchLocation) {
+        matchLocation = {
+            "country": null,
+            "state": null,
+            "city": null,
+            "street": null,    
+            "number": null
+        }
+    }
+    return {
+      matchLocation: matchLocation
+    }
+})(CreateMatchFormContainer)  
 
 export default CreateMatchFormContainer;
