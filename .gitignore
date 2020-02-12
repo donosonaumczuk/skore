@@ -8,6 +8,7 @@
 # React
 # Dependencies
 /react/node_modules
+/react/node
 /react/.pnp
 .pnp.js
 
