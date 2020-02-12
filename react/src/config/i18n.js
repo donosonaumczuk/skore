@@ -46,7 +46,7 @@ i18n
     whitelist: availableLanguages,
     detection: options,
     backend: { //TODO remove on local
-      loadPath: `${window.location.pathname}locales/{{lng}}/{{ns}}.json`
+      loadPath: `${process.env.REACT_APP_TRANSLATIONS_BASE}locales/{{lng}}/{{ns}}.json`
     },
     interpolation: {
       escapeValue: false
