@@ -301,7 +301,7 @@ public class GameValidatorsTest {
     public void whenValidatingCreationIfTeamName1IsInvalidAndIsNotIndividualThenThrowApiExceptionWithExpectedValues() {
         exceptionRule.expect(ApiException.class);
         exceptionRule.expectMessage("Field 'teamName1' must be a string containing english alphabetic " +
-                "characters, digits, spaces or any of these characters: ¿?¡!_ÑÁÉÍÓÚáéíñóöúü");
+                "characters, digits, spaces or any of these characters: ¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü");
         GameValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +
                             "\t\"title\": \"El juego del siglo\",\n" +
@@ -325,7 +325,7 @@ public class GameValidatorsTest {
                             "\t},\n" +
                             "\t\"individual\": false,\n" +
                             "\t\"competitive\": false," +
-                            "\t\"teamName1\": \"E.quipo Uno\"\n" +
+                            "\t\"teamName1\": \"E/quipo Uno\"\n" +
                         "}"
                 )
         );

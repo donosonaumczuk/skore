@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.SportSort;
@@ -97,11 +98,10 @@ public class SportHibernateDao implements SportDao {
 
     @Override
     public Optional<byte[]> readImage(final String sportName) {
-        Optional<Sport> sport = findByName(sportName);
-        if(sport.isPresent() && sport.get().getImage() != null) {
-            return Optional.of(sport.get().getImage());
-        }
-        return Optional.empty();
+        return Optional.ofNullable(
+                findByName(sportName)
+                        .orElseThrow(() -> SportNotFoundException.ofId(sportName))
+                        .getImage());
     }
 
     @Override

@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.validators;
 
-import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -28,8 +25,8 @@ public class GameValidators {
     private static final String LOCATION    = "location";
     private static final String DATE        = "date";
     private static final String TIME        = "time";
-    private static final String TEAM_NAME_1 = "teamName1";//TODO: map dto
-    private static final String TEAM_NAME_2 = "teamName2";//TODO: map dto
+    private static final String TEAM_NAME_1 = "teamName1";
+    private static final String TEAM_NAME_2 = "teamName2";
     private static final Set<String> CREATION_KNOWN_FIELDS = ImmutableSet.of(TITLE, DESCRIPTION, SPORT, DURATION,
             INDIVIDUAL, COMPETITIVE, DATE, TIME, LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> CREATION_REQUIRED_FIELDS = ImmutableSet.of(TITLE, SPORT, DURATION, INDIVIDUAL,
@@ -38,12 +35,23 @@ public class GameValidators {
             LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_ÑÁÉÍÓÚáéíñóöúü ]+";
+    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_-ÑÁÉÍÓÚáéíñóöúü .]+";
     private static final String TITLE_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
-            "digits, spaces or any of these characters: ¿?¡!_ÑÁÉÍÓÚáéíñóöúü";
+            "digits, spaces or any of these characters: ¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü";
     private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
     private static final String TEAM_NAME_PATTER_DESCRIPTION = TITLE_PATTER_DESCRIPTION;
     private static final String KEY_REGEX = "\\d{12}" + TEAM_NAME_REGEX + "\\d{12}";
+    private static final int MIN_LENGTH_TITLE       = 4;
+    private static final int MAX_LENGTH_TITLE       = 140;
+    private static final int MIN_LENGTH_DESCRIPTION = 0;
+    private static final int MAX_LENGTH_DESCRIPTION = 140;
+    private static final int MIN_DURATION           = 1;
+    private static final int MAX_DURATION           = 9999;
+    private static final int MIN_LENGTH_SPORT       = 4;
+    private static final int MAX_LENGTH_SPORT       = 100;
+    private static final String SPORT_NAME_REGEX    = "[a-zA-Z0-9_]+";
+    private static final String SPORT_NAME_PATTERN_DESCRIPTION = "a string containing english alphabetic characters, " +
+            "digits or underscore";
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_FIELDS, CREATION_REQUIRED_FIELDS,
@@ -65,30 +73,15 @@ public class GameValidators {
         };
     }
 
-    public static Validator<Optional<Game>> existenceValidatorOf(final String key, final String log) {
-        return ValidatorFactory.existenceValidatorOf("Match", key, log);
-    }
-
-    public static Validator<PremiumUser> isCreatorValidatorOf(final String key, final String creatorUsername,
-                                                              final String log) {
-        return (optionalPremiumUser) -> {
-            if (!creatorUsername.equals(optionalPremiumUser.getUserName())) {
-                ApiException apiException = ApiException.of(HttpStatus.UNAUTHORIZED, "Must be creator of match '" + key
-                        + "' in order to perform this operation");
-                LOGGER.error(log, apiException);
-                throw apiException;
-            }
-        };
-    }
-
     private static ImmutableList.Builder<Pair<String, Validator<JSONObject>>> baseFieldValidatorListOf(final String log) {
         return new ImmutableList.Builder<Pair<String, Validator<JSONObject>>>()
                 .add(Pair.of(TITLE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TITLE, Pattern.compile(TITLE_REGEX),
                         TITLE_PATTER_DESCRIPTION, log).and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(TITLE,
-                        4, 140, log))))
+                        MIN_LENGTH_TITLE, MAX_LENGTH_TITLE, log))))
                 .add(Pair.of(DESCRIPTION, ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(DESCRIPTION,
-                        0, 140, log)))
-                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, 1, null, log)))
+                        MIN_LENGTH_DESCRIPTION, MAX_LENGTH_DESCRIPTION, log)))
+                .add(Pair.of(DURATION, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(DURATION, MIN_DURATION,
+                        MAX_DURATION, log)))
                 .add(Pair.of(DATE, ValidatorFactory.fieldIsValidObjectValidatorOf(DATE,
                         DateValidators.creationValidatorOf(log), log)))
                 .add(Pair.of(TIME, ValidatorFactory.fieldIsValidObjectValidatorOf(TIME,
@@ -99,7 +92,10 @@ public class GameValidators {
         return baseFieldValidatorListOf(log)
                 .add(Pair.of(LOCATION, ValidatorFactory.fieldIsValidObjectValidatorOf(LOCATION,
                         LocationValidator.creationValidatorOf(log), log)))
-                .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringValidatorOf(SPORT, log)))
+                .add(Pair.of(SPORT, ValidatorFactory.fieldIsStringAndMatchesRegexOf(SPORT,
+                        Pattern.compile(SPORT_NAME_REGEX), SPORT_NAME_PATTERN_DESCRIPTION, log)
+                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(SPORT, MIN_LENGTH_SPORT,
+                                MAX_LENGTH_SPORT, log))))
                 .add(Pair.of(INDIVIDUAL, individualValidation(log)))
                 .add(Pair.of(COMPETITIVE, ValidatorFactory.fieldIsBooleanValidatorOf(COMPETITIVE, log)))
                 .add(Pair.of(TEAM_NAME_1, ValidatorFactory.fieldIsStringAndMatchesRegexOf(TEAM_NAME_1,

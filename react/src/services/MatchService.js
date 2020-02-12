@@ -32,7 +32,6 @@ const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => 
     const config = { cancelToken: token };
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     paramObject = addFutureMinTimeToParams(paramObject);
-    paramObject = addMinFreePlacesToParams(paramObject);
     paramObject = addCreatedByToParams(paramObject, username);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
@@ -57,7 +56,6 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     paramObject = addFutureMinTimeToParams(paramObject);
-    paramObject = addMinFreePlacesToParams(paramObject);
     paramObject = addWithPlayersToParams(paramObject, username);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {

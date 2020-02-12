@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.AlreadyJoinedToMatchException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
-import ar.edu.itba.paw.exceptions.GameNotPlayedYetException;
+import ar.edu.itba.paw.exceptions.invalidstate.GameInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.exceptions.MalformedGameKeyException;
-import ar.edu.itba.paw.exceptions.TeamFullException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
+import ar.edu.itba.paw.exceptions.notfound.PlayerNotFoundException;
 import ar.edu.itba.paw.interfaces.GameDao;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
@@ -43,6 +42,7 @@ import static ar.edu.itba.paw.models.GameType.FRIENDLY;
 public class GameServiceImpl implements GameService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameServiceImpl.class);
+    private static final int NUMBER_OF_TEAMS = 2;
 
     @Autowired
     private GameDao gameDao;
@@ -59,10 +59,6 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private SessionService sessionService;
 
-    public GameServiceImpl() {
-
-    }
-
     @Transactional
     @Override
     public Game create(final String teamName1, final String teamName2, final LocalDateTime startTime,
@@ -70,6 +66,10 @@ public class GameServiceImpl implements GameService {
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title, final String sportName) {
+        if (startTime.isBefore(LocalDateTime.now())) {
+            LOGGER.trace("StartTime must happen in the future");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
         PremiumUser logged = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
 
@@ -89,6 +89,8 @@ public class GameServiceImpl implements GameService {
             newTeamName2 = teamService.createTempTeam2(logged.getUserName(), logged.getUser().getUserId(), sportName)
                     .getName();
         }
+
+        //TODO: check a game with key is no already added
 
         Game newGame = gameDao.create(newTeamName1, newTeamName2, startTime,
                 startTime.plusMinutes(durationInMinutes), type, null,
@@ -130,11 +132,17 @@ public class GameServiceImpl implements GameService {
 
     @Transactional
     @Override
-    public boolean deleteUserInGameWithCode(final String key, final long userId, final String code) {
+    public void deleteUserInGameWithCode(final String key, final long userId, final String code) {
         Game game = findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Delete player from game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
+
+        if (game.getStartTime().isBefore(LocalDateTime.now())) {
+            LOGGER.trace("Delete player from game failed, game '{}' has already started", key);
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
+        }
+
         if (code != null) {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
@@ -142,24 +150,28 @@ public class GameServiceImpl implements GameService {
                 throw new LackOfPermissionsException("Delete player from game fails, code '" + code +
                         "' is invalid for player '" + userId + "'");
             }
-            return deleteUserInGame(game, userId);
+            deleteUserInGame(game, userId);
         }
-
-        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
-            LOGGER.trace("Delete player from game fails, must be logged");
-            return new UnauthorizedException("Delete player from game fails, must be logged");
-        });
-        if (!game.getTeam1().getLeader().equals(loggedUser) &&
-                loggedUser.getUser().getUserId() != userId) {
-            LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
-            throw new LackOfPermissionsException("Delete player from game fails, must be leader of match '" + key +
-                    "' or player '" + userId + "'");
+        else {
+            PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> {
+                LOGGER.trace("Delete player from game fails, must be logged");
+                return new UnauthorizedException("Delete player from game fails, must be logged");
+            });
+            if (!game.getTeam1().getLeader().equals(loggedUser) &&
+                    loggedUser.getUser().getUserId() != userId) {
+                LOGGER.trace("Delete player from game fails, must be leader of match '{}' or player '{}'", key, userId);
+                throw new LackOfPermissionsException("Delete player from game fails, must be leader of match '" + key +
+                        "' or player '" + userId + "'");
+            }
+            if (userId == game.getTeam1().getLeader().getUser().getUserId()) {
+                LOGGER.trace("Delete player from game fails, can not delete leader '{}' from match '{}'", userId, key);
+                throw GameInvalidStateException.ofGameWithOutLeader(key);
+            }
+            deleteUserInGame(game, userId);
         }
-
-        return deleteUserInGame(game, userId);
     }
 
-    private boolean deleteUserInGame(final Game game, final long userIdReceive) {
+    private void deleteUserInGame(final Game game, final long userIdReceive) {
         for (User user : game.getTeam1().getPlayers()) {
             if (user.getUserId() == userIdReceive) {
                 LOGGER.trace("Found user: {} in team1", userIdReceive);
@@ -167,7 +179,7 @@ public class GameServiceImpl implements GameService {
                 if (!premiumUserService.findById(userIdReceive).isPresent()) {
                     userService.remove(userIdReceive);
                 }
-                return true;
+                return;
             }
         }
         for (User user : game.getTeam2().getPlayers()) {
@@ -177,11 +189,11 @@ public class GameServiceImpl implements GameService {
                 if (!premiumUserService.findById(userIdReceive).isPresent()) {
                     userService.remove(userIdReceive);
                 }
-                return true;
+                return;
             }
         }
         LOGGER.trace("Not found user: '{}' in match '{}'", userIdReceive, game.getKey());
-        return false;
+        throw PlayerNotFoundException.ofId(userIdReceive);
     }
 
     @Transactional
@@ -212,12 +224,17 @@ public class GameServiceImpl implements GameService {
                        final String country, final String state, final String city,
                        final String street, final String tornamentName, final String description,
                        final String title, final String key) {
+        if (startTime.isBefore(LocalDateTime.now())) {
+            LOGGER.trace("StartTime must happen in the future");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Update game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
-        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO check
+        PremiumUser loggedUser = sessionService.getLoggedUser()
+                .orElseThrow(() -> new UnauthorizedException("Must be logged to update match"));
 
         if (!gameOld.getTeam1().getLeader().equals(loggedUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
@@ -228,6 +245,8 @@ public class GameServiceImpl implements GameService {
             throw new IllegalArgumentException("Cannot modify teams in a individual match"); //TODO: map!!
         }
 
+        //TODO: check a game with key is no already added
+
         return gameDao.modify(
                 teamName1, teamName2, startTime,
                 (minutesOfDuration != null) ? gameOld.getStartTime().plusMinutes(minutesOfDuration) : null,
@@ -235,25 +254,42 @@ public class GameServiceImpl implements GameService {
                 gameKey.getStartTime(), gameKey.getFinishTime()
         ).orElseThrow(() -> {
             LOGGER.trace("Update game failed, game '{}' not found", key);
-            return GameNotFoundException.ofKey(key); //TODO: I think this must be a 500 not a 404
+            return GameNotFoundException.ofKey(key);
         });
     }
 
     @Transactional
     @Override
-    public boolean remove(final String key) {
+    public void remove(final String key) {
         Game game = findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Delete game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
         GameKey gameKey = getGameKey(key);
-        PremiumUser loggedUser = sessionService.getLoggedUser().get();//TODO maybe check
+        PremiumUser loggedUser = sessionService.getLoggedUser()
+                .orElseThrow(() -> new UnauthorizedException("Must be logged to delete match"));
         if (!game.getPrimaryKey().getTeam1().getLeader().equals(loggedUser)) {
             LOGGER.trace("User '{}' is not creator of '{}' match", loggedUser.getUserName(), key);
             throw new LackOfPermissionsException("User '" + loggedUser.getUserName() +
                     "' is not creator of '" + key + "' match");
         }
-        return gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime());
+        if (game.getStartTime().isBefore(LocalDateTime.now())
+                && (game.getTeam1().getPlayers().size() + game.getTeam1().getPlayers().size() ==
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS)) {
+            LOGGER.trace("Delete game failed, game '{}' has already started", key);
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
+        }
+        if (game.getTeam1().getPlayers().size() + game.getTeam1().getPlayers().size() ==
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
+            LOGGER.trace("Delete game failed, game '{}' is full", key);
+            throw GameInvalidStateException.ofGameFull(key);
+        }
+        if (gameDao.remove(gameKey.getTeamName1(), gameKey.getStartTime(), gameKey.getFinishTime())) {
+            LOGGER.trace("{} removed", key);
+        } else {
+            LOGGER.error("{} wasn't removed", key);
+            throw GameNotFoundException.ofKey(key);
+        }
     }
 
     @Transactional
@@ -270,14 +306,20 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Update game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
-        PremiumUser premiumUser = sessionService.getLoggedUser().get();//TODO check
+        PremiumUser premiumUser = sessionService.getLoggedUser()
+                .orElseThrow(() -> new UnauthorizedException("Must be logged to update match result"));
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() <
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
+            LOGGER.trace("Update game failed, game '{}' is not full", key);
+            throw GameInvalidStateException.ofGameNotFull(key);
+        }
         if (!game.getTeam1().getLeader().equals(premiumUser)) {
             LOGGER.trace("Update game failed, user '{}' is not creator of '{}' match", premiumUser.getUserName(), key);
             throw new LackOfPermissionsException("User '" + premiumUser.getUserName() +
                     "' must be the creator of '" + key + "' match");
         }
-        if (game.getFinishTime().compareTo(LocalDateTime.now()) > 0) {
-            throw new GameNotPlayedYetException("The match has not been played yet");
+        if (game.getFinishTime().isAfter(LocalDateTime.now())) {
+            throw GameInvalidStateException.ofGameNotPlayedYet(key);
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 
@@ -306,15 +348,25 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game insertUserInGame(String key, long userId) {
+        if (getGameKey(key).getStartTime().isBefore(LocalDateTime.now())) {
+            LOGGER.trace("Insert player in game failed, game '{}' has already started", key);
+            throw GameInvalidStateException.ofGameAlreadyStarted(key);
+        }
+
         Game game = findByKey(key).orElseThrow(() -> {
             LOGGER.trace("Insert user in game failed, game '{}' not found", key);
             return GameNotFoundException.ofKey(key);
         });
-        try {
+
+
+        if (game.getTeam1().getPlayers().size() < game.getTeam1().getSport().getQuantity()) {
             game = insertUserInGameTeam(game, userId, true);
         }
-        catch (TeamFullException e) {
+        else if (game.getTeam2().getPlayers().size() < game.getTeam2().getSport().getQuantity()) {
             game = insertUserInGameTeam(game, userId, false);
+        }
+        else {
+            throw GameInvalidStateException.ofGameFull(key);
         }
         return game;
     }
@@ -324,14 +376,14 @@ public class GameServiceImpl implements GameService {
             if(!game.getTeam1().getPlayers().stream()
                     .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
                 LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw new AlreadyJoinedToMatchException("User already joined to match");
+                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
             }
             game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
         } else {
             if(game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
                     .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
                 LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw new AlreadyJoinedToMatchException("User already joined to match");
+                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
             }
             game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
         }

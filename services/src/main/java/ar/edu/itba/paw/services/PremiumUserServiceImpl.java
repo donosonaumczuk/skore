@@ -1,13 +1,17 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
+import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
@@ -20,11 +24,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class PremiumUserServiceImpl implements PremiumUserService {
@@ -41,36 +47,41 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     public EmailService emailSender;
 
     @Autowired
+    public SessionService sessionService;
+
+    @Autowired
     private BCryptPasswordEncoder bcrypt;
 
     @Autowired
     private Environment environment;
 
+    private final Function<PremiumUser, PremiumUser> loadUserGames = user -> {
+        List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
+        user.setGamesInTeam1(games.get(0));
+        user.setGamesInTeam2(games.get(1));
+        user.setWinRate(PremiumUserServiceImpl.this.calculateWinRate(user));
+        return user;
+    };
+
     @Transactional
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
         LOGGER.trace("Looking for user with username: {}", userName);
-        return premiumUserDao.findByUserName(userName).map(user -> {
-            List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
-            user.setGamesInTeam1(games.get(0));
-            user.setGamesInTeam2(games.get(1));
-            user.setWinRate(calculateWinRate(user));
-            return user;
-        });
+        return premiumUserDao.findByUserName(userName).map(loadUserGames);
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
-        return premiumUserDao.findByEmail(email); //TODO: why does not include games/matches?
+        return premiumUserDao.findByEmail(email).map(loadUserGames);
     }
 
     @Transactional
     @Override
     public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
-        return premiumUserDao.findById(userId); //TODO: why does not include games/matches?
+        return premiumUserDao.findById(userId).map(loadUserGames);
     }
 
     @Transactional
@@ -79,10 +90,24 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                               final String email, final String userName,
                               final String cellphone, final LocalDate birthday,
                               final String country, final String state, final String city,
-                              final String street, final int reputation, final String password,
+                              final String street, final Integer reputation, final String password,
                               final byte[] file, final Locale locale) {
-        final String encodedPassword = bcrypt.encode(password);
         LOGGER.trace("Attempting to create user: {}", userName);
+        if (birthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
+
+        if (premiumUserDao.findByEmail(email).isPresent()) {
+            LOGGER.trace("User with email {} already exist", email);
+            throw UserAlreadyExistException.ofEmail(email);
+        }
+        if (premiumUserDao.findByUserName(userName).isPresent()) {
+            LOGGER.trace("User with username {} already exist", userName);
+            throw UserAlreadyExistException.ofUsername(userName);
+        }
+
+        final String encodedPassword = bcrypt.encode(password);
         PremiumUser user = premiumUserDao.create(
                 firstName, lastName, email, userName, cellphone, birthday, country, state, city, street, reputation,
                 encodedPassword, file
@@ -98,6 +123,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     @Transactional
     @Override
     public void remove(final String userName) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(userName)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userName);
+            throw new LackOfPermissionsException("User '" + userName + "' deletion failed, unauthorized");
+        }
         LOGGER.trace("Looking for user with username: {} to remove", userName);
         if (premiumUserDao.remove(userName)) {
             LOGGER.trace("{} removed", userName);
@@ -122,6 +152,21 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             final String oldPassword, final byte[] file, final Locale locale
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
+        if (newBirthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
+
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' update failed, unauthorized");
+        }
+
+        if (premiumUserDao.findByEmail(newEmail).isPresent()) {
+            LOGGER.trace("User with email {} already exist", newEmail);
+            throw UserAlreadyExistException.ofEmail(newEmail);
+        }
 
         if (newPassword != null) {
             PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
@@ -142,7 +187,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             return UserNotFoundException.ofUsername(username);
         });
 
-        if (newEmail != null) {
+        if (newEmail != null && !loggedUser.getEmail().equals(newEmail)) {
             emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
         }
         LOGGER.trace("User '{}' modified successfully", username);
@@ -157,24 +202,18 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             LOGGER.error("Can't find user with username: {}", username);
             return UserNotFoundException.ofUsername(username);
         });
-      
+
+        if (user.getEnabled()) {
+            LOGGER.error("Can't enable user with username {}, is already enable", username);
+            throw UserInvalidStateException.ofUserAlreadyEnable(username);
+        }
+
         if (!premiumUserDao.enableUser(user.getUserName(), code)) {
             LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
             throw InvalidUserCodeException.of(username, code);
         }
         LOGGER.trace("{} is now enabled", username);
         return user;
-    }
-
-    @Transactional
-    @Override
-    public boolean confirmationPath(String path) { //TODO: move to front
-        String dataPath = path.replace("/confirm/", "");
-        int splitIndex = dataPath.indexOf('&');
-        String username = dataPath.substring(0, splitIndex);
-        String code = dataPath.substring(splitIndex + 1);
-        enableUser(username, code);
-        return true;
     }
 
     @Transactional
@@ -192,7 +231,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     private double calculateWinRate(final PremiumUser user) {
         double played = 0;
         double wins = 0;
-        double ties = 0;
 
         List<Game> gamesTeam = user.getGamesInTeam1();
 
@@ -202,11 +240,11 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
                     wins++;
-                } else if (g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
                 }
-                played++;
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
+                    played++;
+                }
             }
         }
 
@@ -218,19 +256,19 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                 if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
                     wins++;
-                } else if (g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
                 }
-                played++;
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
+                    played++;
+                }
             }
         }
 
         if (played != 0) {
-            return ((wins + 0.5 * ties) / played) * 100;
+            return (wins / played) * 100;
         }
 
-        return -1;
+        return 0;
     }
 
     private String getConfirmationUrl(PremiumUser user) {

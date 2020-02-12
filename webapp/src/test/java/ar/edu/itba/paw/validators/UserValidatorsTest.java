@@ -16,40 +16,6 @@ public class UserValidatorsTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
-    public void whenValidatingExistenceIfOptionalIsEmptyThenThrowApiExceptionWithExpectedValues() {
-        exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("User 'username' not found");
-        UserValidators.existenceValidatorOf("username", "log").validate(Optional.empty());
-    }
-
-    @Test
-    public void whenValidatingExistenceIfOptionalIsPresentThenSuccessByDoingNothing() {
-        UserValidators.existenceValidatorOf("username", "log").validate(Optional.of(new PremiumUser()));
-    }
-
-    @Test
-    public void whenValidatingAuthorizationIfIsTheSameUsernameThenSuccessByDoingNothing() {
-        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.of(
-                new PremiumUser("firstName", "lastName", "an@email.com", "username")));
-    }
-
-    @Test
-    public void whenValidatingAuthorizationIfOptionalIsEmptyThenThrowApiExceptionWithExpectedValues() {
-        exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Only 'username' can update his own user");
-        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.empty());
-    }
-
-    @Test
-    public void whenValidatingAuthorizationIfOptionalIsPresentButDifferentUsernameThenThrowApiExceptionWithExpectedValues() {
-        exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Only 'username' can update his own user");
-        UserValidators.isAuthorizedForUpdateValidatorOf("username", "log").validate(Optional.of(
-                new PremiumUser("firstName", "lastName", "an@email.com", "otherUsername")
-        ));
-    }
-
-    @Test
     public void whenValidatingUpdateIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +

@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
@@ -27,6 +26,7 @@ import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.ImageValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,9 +90,6 @@ public class UserController {
     private TeamService teamService;
 
     @Autowired
-    private SessionService sessionService;
-
-    @Autowired
     private JWTUtility jwtUtility;
 
     private static Resource defaultImage = new ClassPathResource("user-default.png");
@@ -120,14 +117,13 @@ public class UserController {
     @GET
     public Response getUsers(@QueryParam("minReputation") String minReputation,
                              @QueryParam("maxReputation") String maxReputation,
-                             @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
                              @QueryParam("friends") QueryList friendsUsernames,
                              @QueryParam("sports") QueryList sportsLiked,
                              @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
-        Page<UserDto> userPage = premiumUserService.findUsersPage(QueryParamsUtils.getQueryListOrNull(usernames),
-                QueryParamsUtils.getQueryListOrNull(sportsLiked), QueryParamsUtils.getQueryListOrNull(friendsUsernames),
+        Page<UserDto> userPage = premiumUserService.findUsersPage( QueryParamsUtils.getQueryListOrNull(usernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(friendsUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
@@ -166,29 +162,19 @@ public class UserController {
         usernamesPlayersInclude.getQueryValues().add(username);
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
-                QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime),  QueryParamsUtils.getQueryListOrNull(types),
                 QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
                 QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
                 QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),  QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),  QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
-    }
-
-    private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
     @GET
@@ -221,8 +207,6 @@ public class UserController {
     @DELETE
     @Path("/{username}")
     public Response deleteUser(@PathParam("username") String username) {
-        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
-                + "' deletion failed, unauthorized").validate(sessionService.getLoggedUser());
         premiumUserService.remove(username);
         LOGGER.trace("User '{}' deleted successfully", username);
         return Response.noContent().build();
@@ -234,13 +218,11 @@ public class UserController {
     public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
                                @Context HttpServletRequest request) {
         LOGGER.trace("Trying to update '{}' user", username);
-        UserValidators.isAuthorizedForUpdateValidatorOf(username, "User '" + username
-                + "' update failed, unauthorized").validate(sessionService.getLoggedUser());
         UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage()); //TODO: maybe separate validating from obtaining
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
         PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
                 userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
@@ -259,7 +241,7 @@ public class UserController {
         UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
-        byte[] image = Validator.getValidator().validateAndProcessImage(userDto.getImage());
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         PremiumUser newPremiumUser = premiumUserService.create(
                 userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
@@ -290,8 +272,8 @@ public class UserController {
     @Path("/{username}/verification")
     public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
         LOGGER.trace("Trying to verify '{}' user", username);
-        PremiumUser userVerified = premiumUserService.enableUser(username, code);
-        return Response.ok(AuthDto.from(userVerified)).header(TOKEN_HEADER, jwtUtility.createToken(userVerified)).build();
+        PremiumUser premiumUser = premiumUserService.enableUser(username, code);
+        return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
     }
 
     private byte[] getDefaultImage() {
@@ -308,8 +290,16 @@ public class UserController {
     }
 
     private LocalDate getBirthDay(UserDto userDto) {
-        return userDto.getBirthday() != null ?
-                    LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
-                    userDto.getBirthday().getDayOfMonth()) : null ;
+        if (userDto.getBirthday() == null) {
+            return null;
+        }
+        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                userDto.getBirthday().getDayOfMonth());
+    }
+
+    private TeamDto getTeam(Team team) {
+        return Optional.ofNullable(team)
+                .map(it -> TeamDto.from(teamService.getAccountsMap(it), it))
+                .orElse(null);
     }
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
-import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
@@ -19,7 +18,6 @@ import ar.edu.itba.paw.webapp.dto.ResultDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
 import ar.edu.itba.paw.webapp.dto.TeamPlayerDto;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
-import ar.edu.itba.paw.webapp.exceptions.ApiException;
 import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
@@ -50,7 +48,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -105,24 +102,15 @@ public class GameController {
                 QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
                 QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
                 QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
-                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces),
-                QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
-                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),
-                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude), QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude), QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+
         LOGGER.trace("Matches successfully gotten");
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
-    }
-
-    private TeamDto getTeam(Team team) {
-        if (team == null) {
-            return null;
-        }
-        return TeamDto.from(teamService.getAccountsMap(team), team);
     }
 
     @POST
@@ -136,7 +124,6 @@ public class GameController {
                     gameDto.isIndividual(),  location.getCountry(), location.getState(), location.getCity(),
                     location.getStreet(), gameDto.getTornamentName(), gameDto.getDescription(), gameDto.getTitle(),
                     gameDto.getSport());
-        //TODO catch exception TeamNotFoundException, GameAlreadyExist, InvalidGameKeyException (should never happend)
         return Response.status(HttpStatus.CREATED.value())
                 .entity(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())))
                 .build();
@@ -150,7 +137,6 @@ public class GameController {
             LOGGER.error("Get game failed because there is no game '{}'", key);
             return GameNotFoundException.ofKey(key);
         });
-        //TODO catch exception GameNotFound, TeamNotFoundException, InvalidGameKeyException
         LOGGER.trace("Match '{}' founded successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }
@@ -159,11 +145,7 @@ public class GameController {
     @Path("/{key}")
     public Response deleteGame(@PathParam("key") String key) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a match").validate(key);
-        if (!gameService.remove(key)) {
-            LOGGER.trace("Match '{}' does not exist", key);
-            throw ApiException.of(HttpStatus.NOT_FOUND, "Match '" + key + "' does not exist");
-        }
-        //TODO catch ForbiddenException, GameNotFound, TeamNotFoundException, InvalidGameKeyException
+        gameService.remove(key);
         LOGGER.trace("Match '{}' deleted successfully", key);
         return Response.noContent().build();
     }
@@ -175,17 +157,11 @@ public class GameController {
         GameValidators.updateValidatorOf("Match update fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final GameDto gameDto = JSONUtils.jsonToObject(requestBody, GameDto.class);
-        Game newGame;
-        try {
-            PlaceDto location = gameDto.getLocation().orElse(PlaceDto.from(new Place(null, null, null, null)));
-            newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(), getStartTimeFrom(gameDto),
-                    gameDto.getMinutesOfDuration(), null, null, location.getCountry(), location.getState(),
-                    location.getCity(), location.getStreet(), null, gameDto.getDescription(),
-                    gameDto.getTitle(), key);
-        }
-        catch (TeamNotFoundException | IllegalArgumentException e) {//TODO catch GameNotFound, InvalidGameKeyException, ForbiddenException
-            throw ApiException.of(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        PlaceDto location = gameDto.getLocation().orElse(PlaceDto.from(new Place(null, null, null, null)));
+        Game newGame = gameService.modify(gameDto.getTeamName1(), gameDto.getTeamName2(), getStartTimeFrom(gameDto),
+                gameDto.getMinutesOfDuration(), null, null, location.getCountry(), location.getState(),
+                location.getCity(), location.getStreet(), null, gameDto.getDescription(),
+                gameDto.getTitle(), key);
         LOGGER.trace("Match '{}' modified successfully", key);
         return Response.ok(GameDto.from(newGame, getTeam(newGame.getTeam1()),
                 getTeam(newGame.getTeam2()))).build();
@@ -202,7 +178,6 @@ public class GameController {
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
                 null);
-        //TODO catch UserAlreadyExist,
         return Response.status(HttpStatus.CREATED.value()).header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString()).build();
     }
 
@@ -216,10 +191,6 @@ public class GameController {
         final TeamPlayerDto playerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
         Game game = gameService.insertPlayerInGame(key, playerDto.getUserId(), request.getHeader(CODE_HEADER), locale);
-
-        //TODO catch TeamNotFoundException, InvalidGameKeyException, UserNotFoundException (should never happend),
-        //TODO AlreadyJoinedToMatchException, TeamFullException, IllegalArgumentException
-        //TODO maybe delete not premium user if it fails
         LOGGER.trace("User '{}' added successfully to match '{}'", playerDto.getUserId(), key);
         Response.ResponseBuilder response = Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
         if (playerDto.getUsername() == null) {
@@ -233,13 +204,7 @@ public class GameController {
     public Response removeUserByIdFromGame(@PathParam("key") String key, @PathParam("id") long userId,
                                            @Context HttpServletRequest request) {
         GameValidators.keyValidator("Invalid '" + key + "' key for a game").validate(key);
-        //TODO: maybe validate user id is positive
-        if (!gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CODE_HEADER))) {
-            LOGGER.trace("User with id '{}' does not exist in match '{}'", userId, key);
-            throw ApiException.of(HttpStatus.NOT_FOUND, "User with id '" + userId + "' does not exist in match '" +
-                    key + "'");
-        }
-        //TODO catch TeamNotFoundException, InvalidGameKeyException, ForbiddenException, UnauthorizedException
+        gameService.deleteUserInGameWithCode(key, userId, request.getHeader(CODE_HEADER));
         LOGGER.trace("User with id '{}' in match '{}' deleted successfully", userId, key);
         return Response.noContent().build();
     }
@@ -251,10 +216,8 @@ public class GameController {
         ResultValidators.creationValidatorOf("Add result to match fails, invalid creation JSON")
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final ResultDto resultDto = JSONUtils.jsonToObject(requestBody, ResultDto.class);
-
         Game game = gameService.updateResultOfGame(key, resultDto.getScoreTeam1(),
                 resultDto.getScoreTeam2());
-        //TODO catch GameHasNotBeenPlayException, InvalidGameKeyException, ForbiddenException
         LOGGER.trace("Match '{}' result added successfully", key);
         return Response.ok(GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2()))).build();
     }
@@ -267,5 +230,11 @@ public class GameController {
         TimeDto timeDto = gameDto.getTime().get();
         return LocalDateTime.of(dateDto.getYear(), dateDto.getMonthNumber(),
                 dateDto.getDayOfMonth(), timeDto.getHour(), timeDto.getMinute(), 0);
+    }
+
+    private TeamDto getTeam(Team team) {
+        return Optional.ofNullable(team)
+                .map(it -> TeamDto.from(teamService.getAccountsMap(it), it))
+                .orElse(null);
     }
 }
