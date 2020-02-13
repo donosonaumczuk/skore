@@ -1,38 +1,27 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Game;
-import ar.edu.itba.paw.models.SimpleEncrypter;
 import ar.edu.itba.paw.models.User;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Locale;
 
 public interface UserService {
-    @Transactional
-    public User findById(final long id);
 
-    @Transactional
-    public User create(final String firstName, final String lastName,
-                       final String email);
+    User findById(final long id);
 
-    @Transactional
-    public boolean remove(final long userId);
+    User create(final String firstName, final String lastName, final String email);
 
-    @Transactional
-    public User updateFirstName(final long userId, final String newFirstName);
+    boolean remove(final long userId);
 
-    @Transactional
-    public User updateLastName(final long userId, final String newLastName);
+    User updateFirstName(final long userId, final String newFirstName);
 
-    @Transactional
-    public User updateEmail(final long userId, final String newEmail);
+    User updateLastName(final long userId, final String newLastName);
 
-    public void sendConfirmMatchAssistance(User user, Game game, String data);
+    User updateEmail(final long userId, final String newEmail);
 
-    public long getUserIdFromData (String data);
+    void sendConfirmMatchAssistance(final User user, final Game game, final String data, final Locale locale);
 
-    public void sendCancelOptionMatch(User user, Game game, String data);
+    User getUserFromData(final String data, final String gameData);
 
-    public SimpleEncrypter getEncrypter();
-
+    void sendCancelOptionMatch(final User user, final Game game, final String data, final Locale locale);
 }

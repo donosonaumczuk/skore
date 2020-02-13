@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.Exceptions.UserNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.NotificationDao;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.models.Notification;
@@ -29,7 +29,7 @@ public class NotificationHibernateDao implements NotificationDao {
     public Optional<Notification> create(final String startTime, final String content,
                                          final String userName) {
         PremiumUser user = premiumUserDao.findByUserName(userName)
-                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+                .orElseThrow(() -> UserNotFoundException.ofUsername(userName));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Notification notification = new Notification(LocalDateTime.parse(startTime, formatter), content, false,
                 user);

@@ -1,31 +1,27 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Sport;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import ar.edu.itba.paw.models.SportSort;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface SportService {
-    @Transactional
-    public Sport findByName(final String sportName);
 
-    @Transactional
-    public Sport create(final String sportName, final int playerQuantity,
-                        final String displayName, final MultipartFile file) throws IOException;
+    Optional<Sport> findByName(final String sportName);
 
-    @Transactional
-    public Sport modifySport(final String sportName, final String displayName,
-                             final MultipartFile file) throws IOException;
+    Sport create(final String sportName, final int playerQuantity,
+                 final String displayName, final byte[] file);
 
-    @Transactional
-    public boolean remove(final String sportName);
+    Sport modifySport(final String sportName, final String displayName,
+                      final Integer playerQuantity, final byte[] file);
 
-    @Transactional
-    public List<Sport> getAllSports();
+    void remove(final String sportName);
 
-    @Transactional
-    public byte[] readImage(final String sportName);
+    Page<Sport> findSportsPage(final List<String> sportNames, final Integer minQuantity,
+                               final Integer maxQuantity, final SportSort sort,
+                               final Integer limit, final Integer offset);
+
+    Optional<byte[]> readImage(final String sportName);
 }

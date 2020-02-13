@@ -2,6 +2,14 @@ DROP SCHEMA PUBLIC CASCADE;
 
 CREATE SEQUENCE users_userid_seq START WITH 1 INCREMENT BY 1;
 
+CREATE SEQUENCE jwtIdSeq START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE;
+
+CREATE TABLE IF NOT EXISTS Blacklist(
+  id INT PRIMARY KEY,
+  token VARCHAR(500) NOT NULL,
+  expiry TIMESTAMP NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS sports(
   sportName       VARCHAR(100) PRIMARY KEY,
   playerQuantity  INTEGER,
@@ -107,5 +115,13 @@ CREATE TABLE IF NOT EXISTS likes (
   FOREIGN KEY (userName) REFERENCES accounts(userName),
   FOREIGN KEY (sportName) REFERENCES sports(sportName),
   PRIMARY Key (userName, sportName)
+);
+
+CREATE TABLE IF NOT EXISTS friendOf(
+  userName        VARCHAR(100) NOT NULL,
+  friendsUserName VARCHAR(100) NOT NULL,
+  FOREIGN KEY (userName) REFERENCES accounts(userName),
+  FOREIGN KEY (friendsUserName) REFERENCES accounts(userName),
+  PRIMARY KEY (userName, friendsUserName)
 );
 

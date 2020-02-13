@@ -146,10 +146,6 @@ public class Game {
         return Objects.hash(primaryKey);
     }
 
-//    public int getQuantityOccupiedPlaces() {
-//        return quantityOccupiedPlaces;
-//    }
-
     public String getDescription() {
         return description;
     }
@@ -193,6 +189,10 @@ public class Game {
         return type.split("-")[1];
     }
 
+    public String getGroupType() {
+        return type.split("-")[0];
+    }
+
     public int getFirstScoreFromResult() {
         String result = getResult();
         int firstScore = 0;
@@ -216,5 +216,8 @@ public class Game {
         return secondScore;
     }
 
-
+    public String getKey() {
+        GameKey gameKey = new GameKey(getStartTime(), getTeam1().getName(), getFinishTime());
+        return gameKey.toString();
+    }
 }

@@ -1,32 +1,39 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.Exceptions.*;
-import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
+import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
+import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
+import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
+import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.PremiumUserDao;
+import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
-import ar.edu.itba.paw.models.Role;
-import org.mockito.cglib.core.Local;
+import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.relation.RoleNotFoundException;
-import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
-public class PremiumUserServiceImpl implements PremiumUserService{
+public class PremiumUserServiceImpl implements PremiumUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PremiumUserServiceImpl.class);
 
@@ -40,232 +47,235 @@ public class PremiumUserServiceImpl implements PremiumUserService{
     public EmailService emailSender;
 
     @Autowired
-    private RoleDao roleDao;
+    public SessionService sessionService;
 
     @Autowired
     private BCryptPasswordEncoder bcrypt;
 
+    @Autowired
+    private Environment environment;
+
+    private final Function<PremiumUser, PremiumUser> loadUserGames = user -> {
+        List<List<Game>> games = gameService.getGamesThatPlay(user.getUser().getUserId());
+        user.setGamesInTeam1(games.get(0));
+        user.setGamesInTeam2(games.get(1));
+        user.setWinRate(PremiumUserServiceImpl.this.calculateWinRate(user));
+        return user;
+    };
+
+    @Transactional
     @Override
     public Optional<PremiumUser> findByUserName(final String userName) {
-        LOGGER.trace("Looking for user with username: {}",userName);
-
-        Optional<PremiumUser> user = premiumUserDao.findByUserName(userName);
-        if(user.isPresent()) {
-            List<List<Game>> listsOfgames = gameService.getGamesThatPlay(user.get().getUser().getUserId());
-            user.get().setGamesInTeam1(listsOfgames.get(0));
-            user.get().setGamesInTeam2(listsOfgames.get(1));
-            user.get().setWinRate(calculateWinRate(user.get()));
-        }
-        return user;
+        LOGGER.trace("Looking for user with username: {}", userName);
+        return premiumUserDao.findByUserName(userName).map(loadUserGames);
     }
 
+    @Transactional
     @Override
     public Optional<PremiumUser> findByEmail(final String email) {
         LOGGER.trace("Looking for user with email: {}", email);
-        Optional<PremiumUser> user = premiumUserDao.findByEmail(email);
-
-        if(!user.isPresent()) {
-            LOGGER.error("Can't find user with email: {}", email);
-        }
-        return user;
+        return premiumUserDao.findByEmail(email).map(loadUserGames);
     }
 
+    @Transactional
     @Override
-    public  Optional<PremiumUser> findById(final long userId) {
+    public Optional<PremiumUser> findById(final long userId) {
         LOGGER.trace("Looking for user with id: {}", userId);
-        Optional<PremiumUser> user = premiumUserDao.findById(userId);
-
-        if(!user.isPresent()) {
-            LOGGER.error("Can't find user with id: {}", userId);
-        }
-        return user;
+        return premiumUserDao.findById(userId).map(loadUserGames);
     }
 
+    @Transactional
     @Override
     public PremiumUser create(final String firstName, final String lastName,
                               final String email, final String userName,
-                              final String cellphone, final String birthday,
+                              final String cellphone, final LocalDate birthday,
                               final String country, final String state, final String city,
-                              final String street, final int reputation, final String password,
-                              final MultipartFile file) throws IOException {
+                              final String street, final Integer reputation, final String password,
+                              final byte[] file, final Locale locale) {
+        LOGGER.trace("Attempting to create user: {}", userName);
+        if (birthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
+        }
+
+        if (premiumUserDao.findByEmail(email).isPresent()) {
+            LOGGER.trace("User with email {} already exist", email);
+            throw UserAlreadyExistException.ofEmail(email);
+        }
+        if (premiumUserDao.findByUserName(userName).isPresent()) {
+            LOGGER.trace("User with username {} already exist", userName);
+            throw UserAlreadyExistException.ofUsername(userName);
+        }
+
         final String encodedPassword = bcrypt.encode(password);
-        LOGGER.trace("Creating user");
-
-        final String formattedBirthday = formatDate(birthday);
-        Optional<PremiumUser> user = premiumUserDao.create(firstName, lastName, email, userName,
-                cellphone, formattedBirthday, country, state, city, street, reputation,
-                encodedPassword, file);
-        PremiumUser ans = user
-                .orElseThrow(() -> new CannotCreateUserException("Can't create user with with userName: " + userName ));
+        PremiumUser user = premiumUserDao.create(
+                firstName, lastName, email, userName, cellphone, birthday, country, state, city, street, reputation,
+                encodedPassword, file
+        ).orElseThrow(() -> {
+            LOGGER.error("User with username {} already exist", userName);
+            return UserAlreadyExistException.ofUsername(userName);
+        });
         LOGGER.trace("Sending confirmation email to {}", email);
-        sendConfirmationMail(ans);
-        return ans;
+        emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
+        return user;
     }
 
+    @Transactional
     @Override
-    public boolean remove(final String userName) {
+    public void remove(final String userName) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(userName)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), userName);
+            throw new LackOfPermissionsException("User '" + userName + "' deletion failed, unauthorized");
+        }
         LOGGER.trace("Looking for user with username: {} to remove", userName);
-        boolean returnedValue = premiumUserDao.remove(userName);
-        if(returnedValue) {
+        if (premiumUserDao.remove(userName)) {
             LOGGER.trace("{} removed", userName);
+        } else {
+            LOGGER.error("{} wasn't removed", userName);
+            throw UserNotFoundException.ofUsername(userName);
         }
-        else {
-            LOGGER.trace("{} wasn't removed", userName);
+    }
+
+    @Transactional
+    @Override
+    public Optional<byte[]> readImage(final String userName) {
+        return premiumUserDao.readImage(userName);
+    }
+
+    @Transactional
+    @Override
+    public PremiumUser updateUserInfo(
+            final String username, final String newFirstName, final String newLastName, final String newEmail,
+            final String newCellphone, final LocalDate newBirthday, final String newCountry, final String newState,
+            final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
+            final String oldPassword, final byte[] file, final Locale locale
+    ) {
+        LOGGER.trace("Looking for user with username: {} to update", username);
+        if (newBirthday.isAfter(LocalDate.now())) {
+            LOGGER.trace("Birthday must happen in the past");
+            throw new IllegalArgumentException("Birthday must happen in the past");
         }
-        return returnedValue;
+
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' update failed, unauthorized");
+        }
+
+        if (premiumUserDao.findByEmail(newEmail).isPresent()) {
+            LOGGER.trace("User with email {} already exist", newEmail);
+            throw UserAlreadyExistException.ofEmail(newEmail);
+        }
+
+        if (newPassword != null) {
+            PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+                LOGGER.error("Can't find user with username: {}", username);
+                return UserNotFoundException.ofUsername(username);
+            });
+            if (oldPassword != null && !bcrypt.matches(oldPassword, premiumUser.getPassword())) {
+                throw WrongOldUserPasswordException.ofUsername(username);
+            }
+        }
+
+        final String encodedPassword = (newPassword == null) ? null : bcrypt.encode(newPassword);
+        PremiumUser user = premiumUserDao.updateUserInfo(
+                newFirstName, newLastName, newEmail, username, newCellphone, newBirthday, newCountry, newState, newCity,
+                newStreet, newReputation, encodedPassword, file, username
+        ).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+
+        if (newEmail != null && !loggedUser.getEmail().equals(newEmail)) {
+            emailSender.sendConfirmAccount(user, getConfirmationUrl(user), locale);
+        }
+        LOGGER.trace("User '{}' modified successfully", username);
+        return user;
     }
 
+    @Transactional
     @Override
-    public byte[] readImage(final String userName) {
-        Optional<byte[]> imagesOpt = premiumUserDao.readImage(userName);
-        return imagesOpt.orElseThrow(() -> new ImageNotFoundException("Fail to read image from " + userName));
-    }
-
-    @Override
-    public PremiumUser updateUserInfo(final String newFirstName, final String newLastName,
-                                      final String newEmail,final String newUserName,
-                                      final String newCellphone, final String newBirthday,
-                                      final String newCountry, final String newState,
-                                      final String newCity, final String newStreet,
-                                      final int newReputation, final String newPassword,
-                                      final MultipartFile file, final String oldUserName) throws IOException{
-
-        LOGGER.trace("Looking for user with username: {} to update", oldUserName);
-
-        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(newFirstName, newLastName,
-                newEmail, newUserName, newCellphone, newBirthday, newCountry, newState,
-                newCity, newStreet, newReputation, newPassword, file, oldUserName);
-
-        return user.orElseThrow(() -> new UserNotFoundException("User with userName: " + oldUserName + "doesn't exist."));
-    }
-
-    @Override
-    public PremiumUser changePassword(final String newPassword, final String username) throws IOException{
-        Optional <PremiumUser> premiumUser = findByUserName(username);
-        PremiumUser currentUser = premiumUser.orElseThrow(() -> new UserNotFoundException("Can't find user" +
-                "with username:" + username));
-        final String encodedPassword = bcrypt.encode(newPassword);
-        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        Optional<PremiumUser> user = premiumUserDao.updateUserInfo(currentUser.getUser().getFirstName(),
-                currentUser.getUser().getLastName(), currentUser.getEmail(), currentUser.getUserName(),
-                currentUser.getCellphone(), currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
-                currentUser.getHome().getState(),currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
-                currentUser.getReputation(), encodedPassword, null, username);
-
-        return user.orElseThrow(() -> new CannotModifyUserException("Can't modify user with username:" + username));
-    }
-
-    private static String formatDate(String birthday) {
-        DateTimeFormatter toParse = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate parsed = LocalDate.parse(birthday, toParse);
-        String formattedDate = parsed.format(toFormat);
-        LOGGER.trace("birthday date of user formatted to: {}", formattedDate);
-        return formattedDate;
-    }
-
-    @Override
-    public void addRole(final String username, final int roleId) {
-        Optional<Role> role = roleDao.findRoleById(roleId);
-        Optional<PremiumUser> user;
-        LOGGER.trace("Looking for role with id: {}", roleId);
-
-        Role ans = role.orElseThrow(() ->
-                new ar.edu.itba.paw.Exceptions.RoleNotFoundException("can't find role with id: " + roleId));
-        LOGGER.trace("Looking for user with username: {}", username);
-        user = premiumUserDao.findByUserName(username);
-        user.orElseThrow(() -> new UserNotFoundException("Can't find user with username: " + username));
-
-        LOGGER.trace("Adding role {} to user with username: {}", ans.getName(), username);
-        premiumUserDao.addRole(username, roleId);
-    }
-
-    @Override
-    public boolean enableUser(final String username, final String code) {
+    public PremiumUser enableUser(final String username, final String code) {
         LOGGER.trace("Looking for user with username {} to enable", username);
+        PremiumUser user = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
 
-        Optional<PremiumUser> user = findByUserName(username);
-        if(!user.isPresent()) {
-            LOGGER.error("Can't find user with username {}", username);
-            return false;
+        if (user.getEnabled()) {
+            LOGGER.error("Can't enable user with username {}, is already enable", username);
+            throw UserInvalidStateException.ofUserAlreadyEnable(username);
         }
 
-        PremiumUser currentUser = user.get();
-
-        if(!premiumUserDao.enableUser(currentUser.getUserName(), code)) {
-            LOGGER.error("Can't find user with username {}", username);
-            return false;
+        if (!premiumUserDao.enableUser(user.getUserName(), code)) {
+            LOGGER.error("Couldn't enable user {}, invalid code {}", username, code);
+            throw InvalidUserCodeException.of(username, code);
         }
         LOGGER.trace("{} is now enabled", username);
-        return true;
+        return user;
     }
 
+    @Transactional
     @Override
-    public boolean confirmationPath(String path) {
-        String dataPath = path.replace("/confirm/","");
-        int splitIndex = dataPath.indexOf('&');
-        String username = dataPath.substring(0, splitIndex);
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-
-        if(!premiumUser.isPresent()) {
-            return false;
-        }
-
-        String code = dataPath.substring(splitIndex + 1, dataPath.length());
-        return enableUser(username, code);
-    }
-
-    private String generatePath(PremiumUser user) {
-        return "confirm/" + user.getUserName() + "&" + user.getCode();
-    }
-
-    public void sendConfirmationMail(PremiumUser user) {
-        emailSender.sendConfirmAccount(user, generatePath(user), LocaleContextHolder.getLocale());
+    public Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
+                                           final List<String> friendUsernames, final Integer minReputation,
+                                           final Integer maxReputation, final Integer minWinRate,
+                                           final Integer maxWinRate, final UserSort sort, final Integer offset,
+                                           final Integer limit) {
+        List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
+                maxReputation, minWinRate, maxWinRate, sort);
+        return new Page<>(users, offset, limit);
     }
 
     private double calculateWinRate(final PremiumUser user) {
         double played = 0;
         double wins = 0;
-        double ties = 0;
 
         List<Game> gamesTeam = user.getGamesInTeam1();
 
-        for(Game g : gamesTeam) {
-            if(g.getResult() != null) {
+        for (Game g : gamesTeam) {
+            if (g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(g.getType().split("-")[1].equals("Competitive") &&
+                if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) > Integer.parseInt(value[1])) {
                     wins++;
                 }
-                else if(g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
+                    played++;
                 }
-                played++;
             }
         }
 
         gamesTeam = user.getGamesInTeam2();
 
-        for(Game g : gamesTeam) {
-            if(g.getResult() != null) {
+        for (Game g : gamesTeam) {
+            if (g.getResult() != null) {
                 String[] value = g.getResult().split("-");
-                if(g.getType().split("-")[1].equals("Competitive") &&
+                if (g.getType().split("-")[1].equals("Competitive") &&
                         Integer.parseInt(value[0]) < Integer.parseInt(value[1])) {
                     wins++;
                 }
-                else if(g.getType().split("-")[1].equals("Competitive") &&
-                        Integer.parseInt(value[0]) == Integer.parseInt(value[1])) {
-                    ties++;
+                if (g.getType().split("-")[1].equals("Competitive") &&
+                        Integer.parseInt(value[0]) != Integer.parseInt(value[1])) {
+                    played++;
                 }
-                played++;
             }
         }
 
-        if(played != 0) {
-            return ((wins + 0.5 * ties)/played) * 100;
+        if (played != 0) {
+            return (wins / played) * 100;
         }
 
-        return -1;
+        return 0;
+    }
+
+    private String getConfirmationUrl(PremiumUser user) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter formatter = new Formatter(stringBuilder);
+        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+                user.getUserName(), user.getCode());
+        return stringBuilder.toString();
     }
 }

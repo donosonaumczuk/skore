@@ -1,35 +1,34 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Team;
-import org.springframework.transaction.annotation.Transactional;
+import ar.edu.itba.paw.models.User;
+
+import java.util.Map;
+import java.util.Optional;
 
 public interface TeamService {
-    @Transactional
-    public Team findByTeamName(final String teamName);
 
-    @Transactional
-    public Team create(final String leaderName, final long leaderId,
-                       final String acronym, final String teamName,
-                       final boolean isTemp, final String sportName);
+    Optional<Team> findByTeamName(final String teamName);
+
+    Team create(final String leaderName, final long leaderId,
+                final String acronym, final String teamName,
+                final boolean isTemp, final String sportName);
 
     Team createTempTeam1(final String leaderName, final long leaderId, final String sportName);
 
     Team createTempTeam2(final String leaderName, final long leaderId, final String sportName);
 
-    @Transactional
-    public boolean remove(final String teamName);
+    boolean remove(final String teamName);
 
 
-    public Team addPlayer(final String teamName, final long userId);
+    Team addPlayer(final String teamName, final long userId);
 
-    @Transactional
-    public Team removePlayer(final String teamName, final long userId);
+    Team removePlayer(final String teamName, final long userId);
 
-    @Transactional
-    public Team updateTeamInfo(final String newTeamName, final String newAcronym,
-                               final String newLeaderName, final String newSportName,
-                               final String oldTeamName);
+    Team updateTeamInfo(final String newTeamName, final String newAcronym,
+                        final String newLeaderName, final String newSportName,
+                        final String oldTeamName);
 
-    @Transactional
-    public void getAccountsList(Team team);
+    Map<User, PremiumUser> getAccountsMap(Team team);
 }

@@ -1,0 +1,389 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:800');
+
+:root {
+    --secondary-color: #dec58e;
+    --dark-secondary-color: #b49f71;
+    --light-gray: #f0f0f0;
+    --light-hover-gray: #f8f8f8;
+    --light-green: #a7d1b4;
+    --dark-green: #7db88f;
+}
+
+body {
+    padding-top: 60px;
+    background-color: var(--light-gray);
+}
+
+.white-text {
+    color: white;
+}
+
+.profile-container {
+    margin-top: -2rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
+.filters {
+    background-color: white;
+    border-radius: 0.5rem;
+}
+
+.sidepanel {
+    /* THIS VALUE IS
+    FOR THE DOUBLE NAVBAR
+    margin-top: 8.5rem;*/
+    margin-top: 5rem;
+}
+
+.user-avatar {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    background-color: white;
+}
+
+.user-avatar:hover {
+    opacity: 0.8;
+}
+
+.profile-name {
+    color: black;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 0rem;
+}
+
+.profile-username {
+    color: darkgrey;
+    font-style: italic;
+    font-size: 1.3rem;
+}
+
+.profile-pic {
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 8px;
+    border-color: black;
+    background-color: white;
+}
+
+.profile-data {
+    font-size: 1.1rem;
+}
+
+.sport-img {
+    width: 23px;
+    height: 23px;
+}
+
+.fa-bars {
+    color: white;
+}
+
+.create-match {
+    border-radius: 0.5rem;
+    background-color: var(--light-green);
+}
+
+.btn-green {
+    color: #1c7931;
+    border-color: #28a745;
+    background-color: transparent;
+}
+
+.btn-green:hover {
+    background-color: #abdf91;
+    color: #1c7931;
+}
+
+.btn-negative {
+    border-color: darkred;
+    color: darkred;
+    background-color: transparent;
+}
+
+.btn-negative:hover {
+    background-color: #ffaea7;
+    color: darkred;
+}
+
+.full-match {
+    color: grey;
+}
+
+.sport-label {
+    font-size: 1.1rem;
+}
+
+
+.sign-in-container {
+    margin-top: 9rem;
+}
+
+.left-panel-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.filter-badge {
+    background-color: var(--light-gray);
+    font-size: 0.9rem;
+}
+
+.sign-in-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 5rem;
+    color: var(--dark-secondary-color);
+}
+
+.sign-in-brand:hover {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.btn.active {
+    background: #abdf91;
+}
+
+.btn-white-succ {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: transparent;
+}
+
+.btn-white-succ:hover {
+    background-color: var(--dark-green);
+    color: white;
+}
+
+.primary-nav {
+    background-color: #000000;
+}
+
+.match-container {
+    /* THIS VALUE IS
+    FOR DOUBLE NAVBAR
+    margin-top: 8.5rem; */
+    margin-top: 5rem;
+}
+
+.create-match-container {
+    /* THIS VALUE IS
+    FOR DOUBLE NAVBAR
+    margin-top: 12rem;*/
+    margin-top: 9rem;
+}
+
+.match-card {
+    background-color: #ffffff;
+}
+
+.match-card:hover {
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.loserWinRate {
+    color: darkred;
+}
+
+.winnerWinRate {
+    color: darkgreen;
+}
+
+.result-label {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.bg-black {
+    background-color: #000000;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.bg-green {
+    background-color: var(--light-green);
+}
+
+.login-link {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.poster-link {
+    color: rgba(245, 238, 250, 0.8);
+    font-weight: bold;
+}
+
+.login-link:hover {
+    color: var(--secondary-color);
+}
+
+.poster-link:hover {
+    color: var(--dark-secondary-color);
+}
+
+.location-icon {
+    color: #e74c31;
+    font-size: 1.4rem;
+}
+
+.tooltip-icon {
+    opacity: 0.3;
+}
+
+.calendar-icon {
+    color: black;
+    font-size: 1.1rem;
+}
+
+.clock-icon {
+    color: black;
+    font-size: 1rem;
+}
+
+.link {
+    color: black;
+    font-weight: bold;
+}
+
+.link:hover {
+    color: var(--dark-secondary-color);
+}
+
+.black-text {
+    color: black;
+}
+
+.rounded-border {
+    border-radius: 0.5rem;
+}
+
+.nav-brand-font {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #ffffff;
+}
+
+.nav-brand-font .fas {
+    font-size: 1.42rem;
+}
+
+.nav-brand-font:hover {
+    color: var(--secondary-color);
+}
+
+.second-nav {
+    background-color:  var(--secondary-color);
+    margin-top: 4.6rem;
+}
+
+.btn-second-nav {
+    background-color: transparent;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.btn-second-nav:hover {
+    background-color: var(--dark-secondary-color);
+}
+
+html {
+    font-size: 0.8rem;
+}
+
+.name-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0rem;
+}
+.name-label-link {
+    color: inherit;
+    text-decoration: none;
+}
+.name-label-link:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.username-label {
+    font-size: 0.9rem;
+    font-style: italic;
+    font-weight: lighter;
+    color: grey;
+}
+
+.username-label:hover {
+    color: var(--dark-secondary-color);
+}
+.location-suggestion {
+    background-color: white;
+    cursor: pointer;
+    padding-left: 1rem;
+}
+
+.location-suggestion-active {
+    cursor: pointer;
+    padding-left: 1rem;
+    background-color: lightskyblue;
+}
+
+.react-datepicker__input-container {
+    width: inherit;
+  }
+
+  .react-datepicker__input-container input {
+    width: inherit;
+  }
+  
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+/* sm - Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    /*.primary-nav {*/
+        /*background-color: blueviolet;*/
+    /*}*/
+
+    .user-avatar {
+        width: 47px;
+        height: 47px;
+    }
+}
+
+/* md - Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    /*.primary-nav {*/
+        /*background-color: lightseagreen;*/
+    /*}*/
+}
+
+/* lg - Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    /*.primary-nav {*/
+        /*background-color: indianred;*/
+    /*}*/
+
+    html {
+        font-size: 1rem;
+    }
+}
+
+/* xl - Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    /*.primary-nav {*/
+        /*background-color: black;*/
+    /*}*/
+}

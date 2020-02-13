@@ -1,6 +1,13 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.token.JWTUserDetailsAuthProvider;
 import ar.edu.itba.paw.webapp.auth.SkoreUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthFilter;
+import ar.edu.itba.paw.webapp.auth.filters.login.LoginAuthSuccessHandler;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthFailureHandler;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthFilter;
+import ar.edu.itba.paw.webapp.auth.filters.session.SessionAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,11 +17,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.sql.DataSource;
-import java.util.concurrent.TimeUnit;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -24,44 +33,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SkoreUserDetailsService userDetailService;
 
+    @Autowired
+    private JWTUserDetailsAuthProvider jwtUserDetailsAuthProvider;
 
     @Autowired
-    private DataSource dataSource;
+    private LoginAuthSuccessHandler loginAuthSuccessHandler;
+
+    @Autowired
+    private LoginAuthFailureHandler loginAuthFailureHandler;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailService)
+                .addFilterBefore(createLoginAuthFilter(), UsernamePasswordAuthenticationFilter.class) // Use JSON login for initial authentication
+                .addFilterBefore(createSessionAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
-                    .invalidSessionUrl("/")
-                .and().authorizeRequests()
-                    .antMatchers("/", "/lang", "/profile/**", "/img/user-default.svg", "/404UserNotFound", "/filterMatch",
-                                "/404", "/match/*", "/confirm/**", "/joinMatch/*", "/joinMatchForm/*",
-                            "/confirmMatch/**", "/cancelMatch/*","/sport/**" ).permitAll()
-                    .antMatchers("/create", "/login", "/joinMatchForm").anonymous()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/**").authenticated()
-                .and().formLogin()
-                    .usernameParameter("user_username")
-                    .passwordParameter("user_password")
-                    .defaultSuccessUrl("/", false)
-                    .loginPage("/login")
-                .and().rememberMe()
-                    .rememberMeParameter("user_rememberme")
-                    .userDetailsService(userDetailService)
-                    .key("secretKey")
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-                .and().exceptionHandling()
-                    .accessDeniedPage("/403")
-                .and().csrf().disable();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().logout().disable()
+                .rememberMe().disable()
+                .csrf().disable();
     }
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+                .antMatchers("/css/**", "/js/**", "/media/**", "/favicon.ico"); //TODO: check url
     }
 
     @Bean
@@ -71,12 +67,63 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
-        //authManagerBuilder.userDetailsService(userDetailService).passwordEncoder(bCryptPasswordEncoder());
-        authManagerBuilder.userDetailsService(userDetailService)
-                .and().jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder())
-                .usersByUsernameQuery("select username as principal, password as credentials, enabled from accounts where username = ?")
-                .authoritiesByUsernameQuery("select username as principal, roles.roleName from userroles, roles where roles.roleId = userRoles.role AND username = ?");
+        authManagerBuilder.authenticationProvider(jwtUserDetailsAuthProvider)
+                .userDetailsService(userDetailService)
+                .passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    //TODO: get endpoints from another class
+    @Bean
+    public LoginAuthFilter createLoginAuthFilter() throws Exception {
+        LoginAuthFilter filter = new LoginAuthFilter();
+        filter.setRequiresAuthenticationRequestMatcher(new RegexRequestMatcher("/api/auth/login/?", "POST"));
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationSuccessHandler(loginAuthSuccessHandler);
+        filter.setAuthenticationFailureHandler(loginAuthFailureHandler);
+        return filter;
+    }
+
+    @Bean
+    public SessionAuthFilter createSessionAuthFilter() throws Exception {
+        SessionAuthFilter filter = new SessionAuthFilter();
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setRequiresAuthenticationRequestMatcher(needAuthEndpointsMatcher());
+        filter.setAuthenticationSuccessHandler(new SessionAuthSuccessHandler());
+        filter.setAuthenticationFailureHandler(new SessionAuthFailureHandler());
+        return filter;
+    }
+
+    @Bean
+    public RequestMatcher needAuthEndpointsMatcher() {
+        return new OrRequestMatcher(//TODO make list
+                new RegexRequestMatcher("/api/auth/logout/?", "POST"),
+                new RegexRequestMatcher("/api/users/\\w+/?", "PUT"),
+                new RegexRequestMatcher("/api/users/\\w+/?", "DELETE"),
+                new RegexRequestMatcher("/api/matches/?", "POST"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "PUT"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/?", "DELETE"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/result/?", "POST"),
+                optionalAuthEndpointsMatcher(),
+                adminAuthEndpointsMatcher()
+        );
+    }
+
+    @Bean
+    public RequestMatcher optionalAuthEndpointsMatcher() {
+        return new OrRequestMatcher( //TODO make list
+                new RegexRequestMatcher("/api/matches/temporal/?", "POST"),//TODO: maybe not needed
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/?", "POST"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/[0-9]+/?", "DELETE"),
+                new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/code/\\w+/?", "DELETE")
+        );
+    }
+
+    @Bean
+    public RequestMatcher adminAuthEndpointsMatcher() {
+        return new OrRequestMatcher(
+                new AntPathRequestMatcher("/api/sports/**", "DELETE"),
+                new AntPathRequestMatcher("/api/sports/**", "PUT"),
+                new AntPathRequestMatcher("/api/sports/**", "POST")
+        );
     }
 }

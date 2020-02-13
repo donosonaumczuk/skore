@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.Exceptions.*;
+import ar.edu.itba.paw.exceptions.*;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
+import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.SportDao;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -41,20 +45,20 @@ public class TeamHibernateDao implements TeamDao {
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName,
-                                 final MultipartFile file) throws IOException {
+                                 final byte[] file) {
         LOGGER.trace("Try to find leader: {}", leaderName);
         PremiumUser leader = null;
         if(leaderName != null) {
             leader = premiumUserDao.findByUserName(leaderName)
-                    .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+                    .orElseThrow(() -> UserNotFoundException.ofUsername(leaderName));
         }
         LOGGER.trace("Find leader: {}", leaderName);
         LOGGER.trace("Try to find sport: {}", sportName);
         Sport sport = sportDao.findByName(sportName)
-                .orElseThrow(() -> new SportNotFoundException("Sport does not exist"));
+                .orElseThrow(() -> SportNotFoundException.ofId(sportName));
         LOGGER.trace("Find sport: {}", sportName);
 
-        Team team = new Team(leader, acronym, teamName, isTemp, sport, ((file==null)?null:file.getBytes()));
+        Team team = new Team(leader, acronym, teamName, isTemp, sport, file);
         em.persist(team);
         return Optional.of(team);
     }
@@ -84,55 +88,46 @@ public class TeamHibernateDao implements TeamDao {
                                          final String oldTeamName) {
         LOGGER.trace("Try to modify: {}", oldTeamName);
         Team team = findByTeamName(oldTeamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(oldTeamName));
         team.setName(newTeamName);
         team.setAcronym(newAcronym);
 
         LOGGER.trace("Try to fin new leader: {}", newLeaderName);
         PremiumUser newLeader = premiumUserDao.findByUserName(newLeaderName)
-                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+                .orElseThrow(() -> UserNotFoundException.ofUsername(newLeaderName));
         team.setLeader(newLeader);
 
         LOGGER.trace("Try to fin new sport: {}", newSportName);
         Sport newSport = sportDao.findByName(newSportName)
-                .orElseThrow(() -> new SportNotFoundException("Sport does not exist"));
+                .orElseThrow(() -> SportNotFoundException.ofId(newSportName));
         team.setSport(newSport);
 
         em.merge(team);
         return  Optional.of(team);
     }
 
+    @Override
     public Optional<Team> addPlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
 
         User user = userDao.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(("User does not exist")));
-
-        for (User u:team.getPlayers()) {
-            if(u.equals(user)) {
-                throw new AlreadyJoinedToMatchException("User already joined to match");
-            }
-        }
-
-        if(team.getPlayers().size() >= team.getSport().getQuantity()) {
-            LOGGER.error("The team: {} is full", teamName);
-            throw new TeamFullException("The team " + teamName + "is full");
-        }
+                .orElseThrow(() -> UserNotFoundException.ofId(userId));
 
         team.addPlayer(user);
         em.merge(team);
         return Optional.of(team);
     }
 
+    @Override
     public Optional<Team> removePlayer(final String teamName, final long userId) {
         LOGGER.trace("Try to add player: {} to team: {}", userId, teamName);
         Team team = findByTeamName(teamName)
-                .orElseThrow(() -> new TeamNotFoundException("Team does not exist"));
+                .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
 
         if(!team.removePlayer(userId)) {
-            throw new UserNotFoundException("User does not exist in the team");
+            throw UserNotFoundException.ofId(userId);
         }
 
         em.merge(team);

@@ -1,0 +1,272 @@
+{
+    "navBar": {
+        "signIn": "Ingresar",
+        "createAccount": "Crear Cuenta",
+        "logOut": "Cerrar Sesión",
+        "or": "o"
+    },
+    "location": {
+        "address": "Dirección",
+        "country": "Pais",
+        "state": "Estado / Provincia",
+        "city": "Ciudad",
+        "street": "Calle",
+        "number": "Numero"
+    },
+    "createUserForm": {
+        "accounts": "Cuentas",
+        "username": "Nombre de usuario",
+        "password": "Contraseña ",
+        "repeatPassword": "Repita la contraseña ",
+        "firstName": "Nombre ",
+        "lastName": "Apellido ",
+        "email": "Email ",
+        "profilePicture": "Imagen de perfil ",
+        "imageFormat": "Formatos aceptados: png, jpeg or jpg",
+        "cellphone": "Celular ",
+        "birthday": "Fecha de nacimiento ",
+        "year": "Año ",
+        "month": "Mes ",
+        "day": "Día ",
+        "dateFormat": "Formato de fecha: MM/DD/YYYY",
+        "signUp": "Registrarse",
+        "signUpButton": "REGISTRARSE",
+        "existingUser": "ya tienes cuenta ",
+        "errors": {
+            "username": {
+                "required": "El nombre de usuario es obligatorio.\n",
+                "invalidSymbols": "El nombre de usuario sólo puede contener símbolos alfanuméricos, guión bajo('_') y punto(',').\n",
+                "invalidLength": "El nombre de usuario debe tener etre 4 y 100 caracteres.\n"
+            },
+            "password": {
+                "required": "La contraseña es obligatoria.\n",
+                "invalidSymbols": "La contraseña sólo puede contener símbolos alfanuméricos.\n",
+                "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
+            },
+            "repeatedPassword": {
+                "required": "Repetir la contraseña es obligatorio.\n",
+                "invalidSymbols": "La contraseña repetida sólo puede contener símbolos alfanuméricos.\n",
+                "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
+                "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
+            },
+            "firstName": {
+                "required": "El nombre es obligatorio.\n",
+                "invalidSymbols": "El nombre solo puede contener letras y espacios.\n",
+                "invalidLength": "El nombre debe tener entre 2 y 100 caracteres.\n"
+            },
+            "lastName": {
+                "required": "El apellido es obligatorio.\n",
+                "invalidSymbols": "El apellido debe contener solo letras y espacios.\n",
+                "invalidLength": "El apellido debe tener entre 2 y 100 caracteres.\n"
+            },
+            "email": {
+                "required": "El email es obligatorio.\n",
+                "invalidEmail": "No es un email bien formado, debe ser un email valido.\n"
+            },
+            "image": {
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
+                "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
+            },
+            "cellphone": {
+                "invalidCellphone": "El Celular deben ser diez digitos o vacio.\n"
+            },
+            "birthday": {
+                "required": "La fecha de nacimiento es obligatorio.\n",
+                "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
+                "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
+                "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
+            },
+            "year": {
+                "required": "El año es obligatorio.\n"
+            },
+            "month": {
+                "required": "El mes es obligatorio.\n"
+            },
+            "day": {
+                "required": "El día es obligatorio.\n"
+            }
+        }
+    },
+    "profile": {
+        "imageDescription": "Foto de perfil",
+        "editInfo": "EDITAR INFORMACION",
+        "changePassword": "CAMBIAR CONTRASEÑA",
+        "match": {
+            "won": "GANÓ",
+            "lost": "PERDIÓ",
+            "tie": "EMPATÓ",
+            "friendly": "Amistoso",
+            "friendlyTooltip": "Amistoso no requiere cuenta para unirse al partido.\nNo impacta el winrate.",
+            "competitive": "Competitivo",
+            "competitiveTooltip": "Competitivo requiere una cuenta para unirse al partido.\nImpacta el winrate."
+        }
+    },
+    "login": {
+        "loginButton": "INGRESAR",
+        "login": "ingresar",
+        "newUser": "eres nuevo? ",
+        "errors": {
+            "username": {
+                "required": "El nombre de usuario es obligatorio."
+            },
+            "password": {
+                "required": "La contraseña es obligatoria."
+            },
+            "invalidUsernameOrPassword": "Usuario o contraseña incorrecto."
+        }
+    },
+    "home": {
+        "createMatch": "CREAR UN PARTIDO",
+        "cantFindMatch": "No encontras el partido que estas buscando?",
+        "wantToCreateMatch": "Queres crear tu propio partido?\n",
+        "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
+        "filtersAndCategories": "Filtros y Categorias",
+        "countryFilter": "Pais",
+        "stateFilter": "Estado / Provincia",
+        "cityFilter": "Ciudad / Localidad",
+        "sportFilter": "Deporte",
+        "addFilters": "AGREGAR FILTROS",
+        "joinMatch": "UNIRSE AL PARTIDO",
+        "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
+        "cancelMatch": "CANCELAR ASISTENCIA",
+        "deleteMatch": "BORRAR PARTIDO",
+        "matches": "Partidos",
+        "toJoinTab": "PARA UNIRSE",
+        "joinedTab": "UNIDOS",
+        "createdTab": "CREADOS"
+    },
+    "errorPage": {
+        "404": "Esta no es la página que buscabas.\n",
+        "returnToHome": "Volver a inicio."
+    },
+    "editUserInfoForm": {
+        "updateInfoButton": "ACTUALIZAR"
+    },
+    "changePasswordForm": {
+        "changePasswordButton": "CAMBIAR CONTRASEÑA",
+        "oldPassword": "Contraseña actual",
+        "newPassword": "Contraseña nueva",
+        "repeatNewPassword": "Repita la contraseña nueva",
+        "passwordError": "La contraseña actual es incorrecta.\n"
+    },
+    "sports": {
+        "playersPerTeam": "Jugadores por equipo: "
+    },
+    "createMatchForm": {
+        "matchName": "Nombre del partido ",
+        "sport": "Deporte ",
+        "chooseSport": "Elija un deporte",
+        "date": "Fecha ",
+        "from": "Desde ",
+        "duration": "Duración ",
+        "chooseHour": "Elija las horas",
+        "chooseMinutes": "Elija los minutos",
+        "description": "Descripción",
+        "competitivity": "Competitividad",
+        "friendly": "Amistoso",
+        "competitive": "Competitivo",
+        "competitivityTooltip": "Amistoso no requiere cuenta para unirse al partido.\nNo impacta el winrate.\n\nCompetitivo requiere una cuenta para unirse al partido.\nImpacta el winrate.\n",
+        "createMatch": "CREAR PARTIDO",
+        "errors": {
+            "title": {
+                "required": "El nombre del partido es obligatorio.\n",
+                "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
+                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
+            },
+            "competitivity": {
+                "required": "La competitividad es obligatoria.\n"
+            },
+            "sport": {
+                "required": "El deporte es obligatorio.\n"
+            },
+            "date": {
+                "required": "La fecha es obligatoria.\n",
+                "invalidFutureDate": "La fecha debe ser una fecha futura válida.\n"
+            },
+            "time": {
+                "required": "Desde es obligatorio.\n",
+                "invalidTime": "Desde debe ser un tiempo válido.\n"
+            },
+            "durationHours": {
+                "required": "La duración debe contener un valor de horas.\n"
+            },
+            "durationMinutes": {
+                "required": "La duración debe contener un valor de minutos..\n"
+            },
+            "description": {
+                "invalidLength": "La descripción no puede contener mas de 140 caracteres.\n"
+            },
+            "location": {
+                "required": "La calle y el número son obligatorios.\n"
+            }
+        }
+    },
+    "forms": {
+        "requiredFields":"Los campos que contienen (*) son obligatorios."
+    },
+    "createSportForm": {
+        "sportName": "Nombre del deporte ",
+        "displayName": "Nombre a mostrar del deporte ",
+        "playersPerTeam": "Jugadores por equipo ",
+        "sportImage": "Imagen del deporte ",
+        "createSportButton": "CREAR DEPORTE",
+        "updateInfoButton": "ACTUALIZAR",
+        "errors": {
+            "sportName": {
+                "required": "El nombre del deporte es obligatorio.\n",
+                "invalidSymbols": "El nombre del deporte sólo puede contener símbolos alfanuméricos.\n",
+                "invalidLength": "El nombre del deporte debe tener entre 4 y 100 caracteres.\n",
+                "alreadyExists": "Ya existe un deporte con ese nombre.\n"
+            },
+            "displayName": {
+                "required": "El nombre a mostrar del deporte es obligatorio.\n",
+                "invalidSymbols": "El nombre a mostrar del deporte sólo puede contener símbolos alfanuméricos o espacios.\n",
+                "invalidLength": "El nombre a mostrar del deporte debe tener entre 4 y 100 caracteres.\n"
+            },
+            "playersPerTeam": {
+                "required": "Jugadores por equipo es obbligatorio.\n",
+                "invalidSymbols": "Jugadores por equipo debe contener unicamente digitos.\n",
+                "invalidLength": "Jugadores por equipo no puede tener entre 1 y 3 digitos.\n",
+                "invalidValue": "Jugadores por equipo debe tener un valor entre 1 y 100.\n"
+            },
+            "image": {
+                "required": "La imagen del deporte es obligatoria.\n",
+                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
+                "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
+            }
+        }
+    },
+    "admin": {
+        "sportImage": "Imagen",
+        "sportName": "Nombre",
+        "displayName": "Nombre a mostrar",
+        "playersPerTeam": "Jugadores por equipo",
+        "createSport": "CREAR DEPORTE",
+        "editSport": "EDITAR",
+        "deleteSport": "BORRAR"  
+    },
+    "confirmAccount": {
+        "confirmed": "Felicitaciones! Creaste una cuenta.",
+        "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
+        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
+    },
+    "confirmAsistance": {
+        "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
+        "confirmed": "Confirmaste tu asistencia al partido.\nSe te ha enviado un email para cancelar tu asistencia al partido."
+    },
+    "cancelAsistance": {
+        "canceled": "Cancelaste tu asistencia al partido."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Resultado del equipo 1 ",
+        "teamTwoScore": "Resultado del equipo 2 ",
+        "setScoreButton": "ACTUALIZAR RESULTADO",
+        "errors": {
+            "teamScore": {
+                "required": "Resultado del equipo es obligatorio.\n",
+                "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+            }
+        }
+    }
+}

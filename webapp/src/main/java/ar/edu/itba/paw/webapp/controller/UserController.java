@@ -1,54 +1,81 @@
 package ar.edu.itba.paw.webapp.controller;
 
-
-import ar.edu.itba.paw.Exceptions.*;
+import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.interfaces.TeamService;
+import ar.edu.itba.paw.models.GameSort;
+import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.form.Validators.ValidImageType;
+import ar.edu.itba.paw.models.QueryList;
+import ar.edu.itba.paw.models.Team;
+import ar.edu.itba.paw.models.UserSort;
+import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
+import ar.edu.itba.paw.webapp.constants.MessageConstants;
+import ar.edu.itba.paw.webapp.constants.URLConstants;
+import ar.edu.itba.paw.webapp.dto.AuthDto;
+import ar.edu.itba.paw.webapp.dto.GameDto;
+import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.PlaceDto;
+import ar.edu.itba.paw.webapp.dto.ProfileDto;
+import ar.edu.itba.paw.webapp.dto.TeamDto;
+import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.UserPageDto;
+import ar.edu.itba.paw.webapp.exceptions.ApiException;
+import ar.edu.itba.paw.webapp.utils.CacheUtils;
+import ar.edu.itba.paw.webapp.utils.JSONUtils;
+import ar.edu.itba.paw.webapp.utils.LocaleUtils;
+import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
+import ar.edu.itba.paw.webapp.validators.ImageValidators;
+import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
+import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
+
 @Controller
-public class UserController extends BaseController{
-    private static final int USER_ROLE_ID = 0;
+@Path(BASE_PATH)
+@Produces({MediaType.APPLICATION_JSON})
+public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    private UserDetailsService skoreUserDetailsService;
+    public static final String BASE_PATH = "users";
+    private static final int ONE_HOUR = 3600;
 
     @Autowired
     @Qualifier("premiumUserServiceImpl")
@@ -59,296 +86,220 @@ public class UserController extends BaseController{
     private GameService gameService;
 
     @Autowired
-    @Qualifier("userServiceImpl")
-    private UserService userService;
+    @Qualifier("teamServiceImpl")
+    private TeamService teamService;
 
-    @RequestMapping(value = "/create", method = {RequestMethod.GET })
-    public ModelAndView createForm(@ModelAttribute("registerForm") UserForm userForm) {
-        return new ModelAndView("createUser");
+    @Autowired
+    private JWTUtility jwtUtility;
+
+    private static Resource defaultImage = new ClassPathResource("user-default.png");
+
+    public static String getUserProfileEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("profile").toTemplate();
     }
 
-    @RequestMapping(value = "/create", method = {RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("registerForm") final UserForm userForm,
-                               final BindingResult errors, @RequestParam(value = "file", required = false)
-                                       MultipartFile file) throws IOException {
-        if(errors.hasErrors()) {
-            return createForm(userForm);
-        }
-
-        MultipartFile image;
-
-        if(userForm.getImage().getSize() == 0) {
-            image = null;
-        }
-        else {
-            image = userForm.getImage();
-        }
-
-        final PremiumUser user = premiumUserService.create(userForm.getFirstName(), userForm.getLastName(),
-                userForm.getEmail(), userForm.getUsername(), userForm.getCellphone(), userForm.getBirthday(),
-                userForm.getCountry(), userForm.getState(), userForm.getCity(), userForm.getStreet(),
-                0, userForm.getPassword(), image);
-
-        if(user == null) {
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "canNotCreateUser").addObject("attribute", userForm.getUsername());
-            //throw new CannotCreateUserException("Can't create user with username:" + userForm.getUsername());
-        }
-
-        return new ModelAndView("sendingConfirmationAccountMail");
+    public static String getUserEndpoint(String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).toTemplate();
     }
 
-    @RequestMapping(value = "/login", method = { RequestMethod.GET })
-    public ModelAndView loginForm(@RequestParam(value = "error", required = false) String error) {
-        ModelAndView mav = new ModelAndView("login");
-
-        if(error != null) {
-            mav.addObject("error", "errorTest");
-        }
-
-        return mav;
+    public static String getUserGamesEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("matches").toTemplate();
     }
 
-    @RequestMapping(value = "/profile/{username}", method = {RequestMethod.GET})
-    public ModelAndView userProfile(@PathVariable String username) {
-        Optional<PremiumUser> u = premiumUserService.findByUserName(username);
-
-        if(!u.isPresent()) {
-            return new ModelAndView("404UserNotFound").addObject("username", username);
-        }
-
-        List<List<Game>> games = gameService.getGamesThatPlay(u.get().getUser().getUserId());
-        List<Game> homeGames = games.get(0);
-        List<Game> awayGames = games.get(1);
-
-        return new ModelAndView("userProfile").addObject("user", u.get())
-                .addObject("homeGames", homeGames).addObject("awayGames", awayGames);
+    public static String getUserSportsEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("sports").toTemplate();
     }
 
-    @RequestMapping(value = "/editInfo", method = {RequestMethod.GET})
-    public ModelAndView editUserForm(@ModelAttribute("editUserForm") EditUserForm editUserForm) {
-        Optional<PremiumUser> u = premiumUserService.findByUserName(loggedUser().getUserName());
-
-        if(!u.isPresent()) {
-            return new ModelAndView("404UserNotFound").addObject("username",
-                    loggedUser().getUserName());//should never occur
-        }
-
-        return new ModelAndView("editUser").addObject("user", u.get())
-                .addObject("username", loggedUser().getUserName());
+    public static String getUserImageEndpoint(final String username) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
     }
 
-    @RequestMapping(value = "/editInfo", method = {RequestMethod.POST })
-    public ModelAndView edituser(@Valid @ModelAttribute("editUserForm") final EditUserForm editUserForm,
-                                 final BindingResult errors,
-                                 @RequestParam(value = "file", required = false)
-                                         MultipartFile file) throws IOException {
+    @GET
+    public Response getUsers(@QueryParam("minReputation") String minReputation,
+                             @QueryParam("maxReputation") String maxReputation,
+                             @QueryParam("friends") QueryList friendsUsernames,
+                             @QueryParam("sports") QueryList sportsLiked,
+                             @QueryParam("usernames") QueryList usernames,
+                             @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+                             @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
+        Page<UserDto> userPage = premiumUserService.findUsersPage( QueryParamsUtils.getQueryListOrNull(usernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(friendsUsernames),
+                QueryParamsUtils.positiveIntegerOrNull(minReputation),
+                QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
+                .map(UserDto::from);
 
-        if(errors.hasErrors()) {
-            return editUserForm(editUserForm);
-        }
-
-        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(loggedUser().getUserName());
-        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
-                "username:" + loggedUser().getUserName()));//should never occur
-        MultipartFile image;
-
-        if(editUserForm.getImage().getSize() == 0) {
-            image = null;
-        }
-        else {
-            image = editUserForm.getImage();
-        }
-
-         DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-         currentUser = premiumUserService.updateUserInfo(editUserForm.getFirstName(), editUserForm.getLastName(),
-                currentUser.getEmail(), currentUser.getUserName(), editUserForm.getCellphone(),
-                currentUser.getBirthday().format(expectedFormat), currentUser.getHome().getCountry(),
-                currentUser.getHome().getState(), currentUser.getHome().getCity(), currentUser.getHome().getStreet(),
-                currentUser.getReputation(), currentUser.getPassword(), image, currentUser.getUserName());
-
-
-        return new ModelAndView("userProfile").addObject("user", currentUser);
+        LOGGER.trace("Users successfully gotten");
+        return Response.ok().entity(UserPageDto.from(userPage, uriInfo)).build();
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
-    public ModelAndView modifyPasswordForm(@ModelAttribute("modifyPasswordForm") ModifyPasswordForm modifyPasswordForm) {
+    @GET
+    @Path("/{username}/matches")
+    public Response getUserGames(@PathParam("username") String username,
+                                 @QueryParam("minStartTime") String minStartTime,
+                                 @QueryParam("maxStartTime") String maxStartTime,
+                                 @QueryParam("minFinishTime") String minFinishTime,
+                                 @QueryParam("maxFinishTime") String maxFinishTime,
+                                 @QueryParam("minQuantity") String minQuantity,
+                                 @QueryParam("maxQuantity") String maxQuantity,
+                                 @QueryParam("minFreePlaces") String minFreePlaces,
+                                 @QueryParam("maxFreePlaces") String maxFreePlaces,
+                                 @QueryParam("country") QueryList countries,
+                                 @QueryParam("state") QueryList states,
+                                 @QueryParam("city") QueryList cities,
+                                 @QueryParam("sport") QueryList sports,
+                                 @QueryParam("type") QueryList types,
+                                 @QueryParam("withPlayers") QueryList usernamesPlayersInclude,
+                                 @QueryParam("withoutPlayers") QueryList usernamesPlayersNotInclude,
+                                 @QueryParam("createdBy") QueryList usernamesCreatorsInclude,
+                                 @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
+                                 @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+                                 @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
+                                 @QueryParam("hasResult") String hasResult) {
+        if (usernamesPlayersInclude == null) {
+            usernamesPlayersInclude = new QueryList(new ArrayList<>());
+        }
+        usernamesPlayersInclude.getQueryValues().add(username);
+        Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
+                QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
+                QueryParamsUtils.localDateTimeOrNull(maxFinishTime),  QueryParamsUtils.getQueryListOrNull(types),
+                QueryParamsUtils.getQueryListOrNull(sports), QueryParamsUtils.positiveIntegerOrNull(minQuantity),
+                QueryParamsUtils.positiveIntegerOrNull(maxQuantity), QueryParamsUtils.getQueryListOrNull(countries),
+                QueryParamsUtils.getQueryListOrNull(states), QueryParamsUtils.getQueryListOrNull(cities),
+                QueryParamsUtils.positiveIntegerOrNull(minFreePlaces), QueryParamsUtils.positiveIntegerOrNull(maxFreePlaces),
+                QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),  QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
+                QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),  QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
+                QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
+                QueryParamsUtils.booleanOrNull(hasResult))
+                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
-//        if(!isLogged()) {
-//            return new ModelAndView(("404UserNotLogged"));
-//        }
-
-
-        return new ModelAndView("modifyPassword");
+        LOGGER.trace("'{}' matches successfully gotten", username);
+        return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST })
-    public ModelAndView modifyPassword(@Valid @ModelAttribute("modifyPasswordForm") final ModifyPasswordForm
-                                                   modifyPasswordForm, final BindingResult errors) throws IOException {
-
-        if(errors.hasErrors()) {
-            return modifyPasswordForm(modifyPasswordForm);
-        }
-
-        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(modifyPasswordForm.getUsername());
-        PremiumUser currentUser = foundUser.orElseThrow(() -> new UserNotFoundException("Can't find user with" +
-                "username:" + modifyPasswordForm.getUsername()));
-
-        DateTimeFormatter expectedFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        currentUser = premiumUserService.changePassword(modifyPasswordForm.getNewPassword(), currentUser.getUserName());
-
-
-        return new ModelAndView("userProfile").addObject("user", currentUser);
+    @GET
+    @Path("/{username}/profile")
+    public Response getUserProfile(@PathParam("username") String username) {
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        LOGGER.trace("'{}' profile successfully gotten", username);
+        return Response.ok(ProfileDto.from(premiumUser)).build();
     }
 
-
-
-    @RequestMapping(value = "/confirm/**")
-    public ModelAndView confirmAccount(HttpServletRequest request) {
-        String path = request.getServletPath();
-        path = path.replace("/confirm/", "");
-        int splitIndex = path.indexOf('&');
-        String username = path.substring(0, splitIndex);
-        Optional<PremiumUser> foundUser = premiumUserService.findByUserName(username);
-
-        if(!foundUser.isPresent()) {
-            return new ModelAndView("404UserNotFound").addObject("username", username);
+    @GET
+    @Path("/{username}/image")
+    public Response getUserImage(@PathParam("username") String username) {
+        Optional<byte[]> media = premiumUserService.readImage(username);
+        CacheControl cache = CacheUtils.getCacheControl(ONE_HOUR);
+        Date expireDate = CacheUtils.getExpire(ONE_HOUR);
+        if (!media.isPresent()) {
+            LOGGER.trace("Returning default image: {} has not set an image yet", username);
+            return Response.ok(getDefaultImage()).header(HttpHeaders.CONTENT_TYPE, "image/*")
+                    .cacheControl(cache).expires(expireDate).build();
         }
-
-        PremiumUser user = premiumUserService.findByUserName(username).get();//should never be empty
-
-        if(user.getEnabled()) {
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "userIsAlreadyConfirmed").addObject("attribute", username);
-        }
-
-        if(premiumUserService.confirmationPath(path)) {
-            UserDetails userDetails = skoreUserDetailsService.loadUserByUsername (username);
-            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-                    user.getPassword(), userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            System.out.println("is logged:" + isLogged() + "\n");
-
-            return new ModelAndView("userProfile").addObject("isLogged", true)
-                    .addObject("user", user)
-                    .addObject("loggedUser", user);
-            // return new ModelAndView("accountConfirmed");
-        }
-
-        return new ModelAndView("genericPageWithMessage").addObject("message",
-                "canNotValidateUser").addObject("attribute", "");
-        //CannotValidateUserException("Can't validate user");
+        LOGGER.trace("Returning image for {}", username);
+        return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").cacheControl(cache)
+                .expires(expireDate).build();
     }
 
-    @RequestMapping(value = "/joinMatch/*", method = {RequestMethod.GET })
-    public ModelAndView joinMatch(HttpServletRequest request) {
-        String path = request.getServletPath().replace("/joinMatch/", "");
-        PremiumUser user = loggedUser();
-
-        if(user == null) {
-            return new ModelAndView("redirect:/joinMatchForm/" + path);
-        }
-
-        return new ModelAndView("redirect:/joinCompetitiveMatch/" + path);
+    @DELETE
+    @Path("/{username}")
+    public Response deleteUser(@PathParam("username") String username) {
+        premiumUserService.remove(username);
+        LOGGER.trace("User '{}' deleted successfully", username);
+        return Response.noContent().build();
     }
 
-    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.GET })
-    public ModelAndView createJoinMatchForm(@ModelAttribute("joinMatchForm") JoinMatchForm joinMatchForm,
-                                            @PathVariable String data) {
-        return new ModelAndView("joinMatch").addObject("data", data);
+    @PUT
+    @Path("/{username}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updateUser(@PathParam("username") String username, @RequestBody final String requestBody,
+                               @Context HttpServletRequest request) {
+        LOGGER.trace("Trying to update '{}' user", username);
+        UserValidators.updateValidatorOf("User '" + username + "' update failed, invalid update JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
+        PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
+                username, userDto.getFirstName(), userDto.getLastName(),
+                userDto.getEmail(), userDto.getCellphone(), getBirthDay(userDto),
+                userDto.getHome().map(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().map(PlaceDto::getState).orElse(null),
+                userDto.getHome().map(PlaceDto::getCity).orElse(null),
+                userDto.getHome().map(PlaceDto::getStreet).orElse(null),
+                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
+        );
+        return Response.ok(UserDto.from(updatedPremiumUser)).build();
     }
 
-    @RequestMapping(value = "/joinMatchForm/{data:.+}", method = {RequestMethod.POST })
-    public ModelAndView joinMatchForm(@Valid @ModelAttribute("joinMatchForm") final JoinMatchForm joinMatchForm,
-                                      final BindingResult errors, HttpServletRequest request, @PathVariable String data) {
-
-        if(errors.hasErrors()) {
-            return createJoinMatchForm(joinMatchForm, data);
-        }
-
-        final int URL_DATE_LENGTH = 12;
-        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
-
-        if(data.length() < MIN_LENGTH) {
-            return new ModelAndView("genericPageWithMessages").addObject("message",
-                    "canNotFoundGame").addObject("attribute", "");
-        }
-
-        String startTime = gameService.urlDateToKeyDate(data.substring(0, URL_DATE_LENGTH));
-        String teamName1 = data.substring(URL_DATE_LENGTH, data.length() - URL_DATE_LENGTH);
-        String finishTime = gameService.urlDateToKeyDate(data.substring(data.length() - URL_DATE_LENGTH));
-
-
-        final User u = userService.create(joinMatchForm.getFirstName(), joinMatchForm.getLastName(),
-                joinMatchForm.getEmail());
-        Game game = gameService.findByKey(teamName1, startTime, finishTime);
-
-        if(!game.getType().contains("Friendly")) {
-            return new ModelAndView("cantJoinCompetitive");
-        }
-        else {
-            userService.sendConfirmMatchAssistance(u, game, data);
-        }
-
-        return new ModelAndView("confirmationMatchMailSend");
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createUser(@RequestBody final String requestBody, @Context HttpServletRequest request) {
+        UserValidators.creationValidatorOf("User creation fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        PremiumUser newPremiumUser = premiumUserService.create(
+                userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
+                userDto.getUsername(), userDto.getCellphone(), getBirthDay(userDto),
+                userDto.getHome().map(PlaceDto::getCountry).orElse(null),
+                userDto.getHome().map(PlaceDto::getState).orElse(null),
+                userDto.getHome().map(PlaceDto::getCity).orElse(null),
+                userDto.getHome().map(PlaceDto::getStreet).orElse(null),
+                userDto.getReputation(), userDto.getPassword(), image, locale
+        );
+        LOGGER.trace("User '{}' created successfully", userDto.getUsername());
+        return Response.status(HttpStatus.CREATED.value()).entity(UserDto.from(newPremiumUser))
+                .header("Accept-Language", locale.toString()).build();
     }
 
+    @GET
+    @Path("/{username}")
+    public Response getUser(@PathParam("username") String username) {
+        PremiumUser premiumUser = premiumUserService.findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        LOGGER.trace("User '{}' found successfully", username);
+        return Response.ok(UserDto.from(premiumUser)).build();
+    }
 
-    ///joinCompetitiveMatch/201810021226$1|1-6967621630201810021246
-    @RequestMapping(value = "/joinCompetitiveMatch/*")
-    public ModelAndView joinCompetitiveMatch(HttpServletRequest request) {
-        PremiumUser user = loggedUser();
+    @POST
+    @Path("/{username}/verification")
+    public Response verifyUser(@PathParam("username") String username, @RequestBody String code) {
+        LOGGER.trace("Trying to verify '{}' user", username);
+        PremiumUser premiumUser = premiumUserService.enableUser(username, code);
+        return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
+    }
 
-        if(user == null) {
-            throw new UserNotFoundException("error in login");//should never occur
-        }
-
-        String path = request.getServletPath().replace("/joinCompetitiveMatch/", "");
-        //path = startTimenombreTeamfinishTime;
-        final int URL_DATE_LENGTH =12;
-        final int MIN_LENGTH = URL_DATE_LENGTH * 2 + 1;
-
-        if(path.length() < MIN_LENGTH) {
-            throw new GameNotFoundException("path '" + path + "' is too short to be formatted to a key");
-        }
-
-        String startTime = gameService.urlDateToKeyDate(path.substring(0, URL_DATE_LENGTH));
-        String teamName1 = path.substring(URL_DATE_LENGTH, path.length() - URL_DATE_LENGTH);
-        String finishTime = gameService.urlDateToKeyDate(path.substring(path.length() - URL_DATE_LENGTH));
-        Game game = gameService.findByKey(teamName1, startTime, finishTime);
-
-        if(game == null) {
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "canNotFoundGame").addObject("attribute", "");
-        }
-
-        if(game.getResult() != null || LocalDateTime.now().isAfter(game.getFinishTime())) {
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "confirmMatchAlreadyFinished").addObject("attribute", "");
-        }
-
-        if(LocalDateTime.now().isAfter(game.getStartTime())) {
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "confirmMatchAlreadyStarted").addObject("attribute", "");
-
-        }
-
+    private byte[] getDefaultImage() {
+        ByteArrayOutputStream bos;
         try {
-            game = gameService.insertUserInGame(teamName1, startTime, finishTime, user.getUser().getUserId());
-            LOGGER.trace("added to Match");
+            BufferedImage bImage = ImageIO.read(defaultImage.getFile());
+            bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, "png", bos);
         }
-        catch (TeamFullException e) {
-            LOGGER.error("Team is already full");
-            return new ModelAndView("teamFull");
+        catch (IOException e) {
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
-        catch(AlreadyJoinedToMatchException e) {
-            LOGGER.error("User has already joined match");
-            return new ModelAndView("genericPageWithMessage").addObject("message",
-                    "userAlreadyRegistereduserAlreadyRegisteredOnGameOnGame")
-                    .addObject("attribute", "");
+        return bos.toByteArray();
+    }
 
+    private LocalDate getBirthDay(UserDto userDto) {
+        if (userDto.getBirthday() == null) {
+            return null;
         }
+        return LocalDate.of(userDto.getBirthday().getYear(), userDto.getBirthday().getMonthNumber(),
+                userDto.getBirthday().getDayOfMonth());
+    }
 
-        return new ModelAndView("redirect:/match/" + path);
+    private TeamDto getTeam(Team team) {
+        return Optional.ofNullable(team)
+                .map(it -> TeamDto.from(teamService.getAccountsMap(it), it))
+                .orElse(null);
     }
 }

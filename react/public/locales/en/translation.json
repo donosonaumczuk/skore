@@ -1,0 +1,272 @@
+{
+    "navBar": {
+        "signIn": "Sign-in",
+        "createAccount": "Create Account",
+        "logOut": "Log out",
+        "or": "or"
+    },
+    "location": {
+        "address": "Address",
+        "country": "Country",
+        "state": "State / Province",
+        "city": "City",
+        "street": "Street",
+        "number": "Number"
+    },
+    "createUserForm": {
+        "accounts": "Accounts",
+        "username": "Username ",
+        "password": "Password ",
+        "repeatPassword": "Repeat password ",
+        "firstName": "First name ",
+        "lastName": "Last name ",
+        "email": "Email ",
+        "profilePicture": "Profile picture ",
+        "imageFormat": "Accepted formats: png, jpeg or jpg",
+        "cellphone": "Cellphone ",
+        "birthday": "Birthday ",
+        "year": "Year ",
+        "month": "Month ",
+        "day": "Day ",
+        "dateFormat": "Date format: MM/DD/YYYY",
+        "signUp": "Sign Up",
+        "signUpButton": "SIGN UP",
+        "existingUser": "already have an account ",
+        "errors": {
+            "username": {
+                "required": "Username is required.\n",
+                "invalidSymbols": "Username can only contains alphanumeric symbols and underscore('_') or dot('.').\n",
+                "invalidLength": "Username must be between 4 and 100 characters.\n"
+            },
+            "password": {
+                "required": "Password is required.\n",
+                "invalidSymbols": "Password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Password must be between 5 and 100 characters.\n"
+            },
+            "repeatedPassword": {
+                "required": "Repeat password is required.\n",
+                "invalidSymbols": "Repeat password can only contains alphanumeric symbols.\n",
+                "invalidLength": "Repeat password must be between 5 and 100 characters.\n",
+                "passwordDoesNotMatch": "Repeat password does not match password.\n"
+            },
+            "firstName": {
+                "required": "First name is required.\n",
+                "invalidSymbols": "First name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "First name must be between 2 and 100 characters.\n"
+            },
+            "lastName": {
+                "required": "Last name is required.\n",
+                "invalidSymbols": "Last name can only contains alphabetic characters and spaces.\n",
+                "invalidLength": "Last name must be between 2 and 100 characters.\n"
+            },
+            "email": {
+                "required": "Email is required.\n",
+                "invalidEmail": "It is not a well-formed email, should be a valid email.\n"
+            },
+            "image": {
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg and jpeg.\n",
+                "invalidImageSize": "Image can not be greater than 1MB.\n"
+            },
+            "cellphone": {
+                "invalidCellphone": "Cellphone must be ten digits or empty.\n"
+            },
+            "birthday": {
+                "required": "Birthday is required.\n",
+                "invalidSymbols": "Birthday can only contains digits and slash('/').\n",
+                "invalidLength": "Birthday must have exactly ten characters.\n",
+                "invalidPastDate": "Birthday must be a valid past date.\n"
+            },
+            "year": {
+                "required": "Year is required.\n"
+            },
+            "month": {
+                "required": "Month is required.\n"
+            },
+            "day": {
+                "required": "Day is required.\n"
+            }
+        }
+    },
+    "profile": {
+        "imageDescription": "Profile picture",
+        "editInfo": "EDIT INFO",
+        "changePassword": "CHANGE PASSWORD",
+        "match": {
+            "won": "WON",
+            "lost": "LOST",
+            "tie": "TIE",
+            "friendly": "Friendly",
+            "friendlyTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.",
+            "competitive": "Competitive",
+            "competitiveTooltip": "Competitive requires an account to join the match.\nImpacts winrate."
+        }
+    },
+    "login": {
+        "loginButton": "LOG IN",
+        "login": "log in",
+        "newUser": "are you new? ",
+        "errors": {
+            "username": {
+                "required": "Username is required."
+            },
+            "password": {
+                "required":"Password is required."
+            },
+            "invalidUsernameOrPassword": "Invalid username or password."
+        }
+    },
+    "home": {
+        "createMatch": "CREATE A MATCH",
+        "cantFindMatch": "Can't find the match you are looking for?",
+        "wantToCreateMatch": "Want to create your own match?\n",
+        "filtersToolTip": "To add more than one filter at once you can write them splited by spaces.\nYou will get the results that matches with at least one filter of each type.",
+        "filtersAndCategories": "Filters and Categories",
+        "countryFilter": "Country",
+        "stateFilter": "State / Province",
+        "cityFilter": "City / Locality",
+        "sportFilter": "Sport",
+        "addFilters": "ADD FILTERS",
+        "joinMatch": "JOIN MATCH",
+        "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
+        "cancelMatch": "CANCEL ASSISTANCE",
+        "deleteMatch": "DELETE MATCH",
+        "matches": "Matches",
+        "toJoinTab": "TO JOIN",
+        "joinedTab": "JOINED",
+        "createdTab": "CREATED"
+    },
+    "errorPage": {
+        "404": "This is not the page you are looking for.\n",
+        "returnToHome": "Return to home"
+    },
+    "editUserInfoForm": {
+        "updateInfoButton": "UPDATE"
+    },
+    "changePasswordForm": {
+        "changePasswordButton": "CHANGE PASSWORD",
+        "oldPassword": "Old password",
+        "newPassword": "New password",
+        "repeatNewPassword": "Repeat new password",
+        "passwordError": "Old password is incorrect.\n"
+    },
+    "sports": {
+        "playersPerTeam": "Players per team: "
+    },
+    "createMatchForm": {
+        "matchName": "Match name ",
+        "sport": "Sport ",
+        "chooseSport": "Choose sport",
+        "date": "Date ",
+        "from": "From ",
+        "duration": "Duration ",
+        "chooseHour": "Choose hours",
+        "chooseMinutes": "Choose minutes",
+        "description": "Description",
+        "competitivity": "Competitivity",
+        "friendly": "Friendly",
+        "competitive": "Competitive",
+        "competitivityTooltip": "Friendly does not requires an account to join the match.\nDoes not impacts winrate.\n\nCompetitive requires an account to join the match.\nImpacts winrate.\n",
+        "createMatch": "CREATE MATCH",
+        "errors": {
+            "title": {
+                "required": "Title is required.\n",
+                "invalidSymbols": "Title can have alphanumeric symbols, spaces and the following characters '¿?¡!-_.'\n",
+                "invalidLength": "Title must be between 4 and 100 characters length.\n"
+            },
+            "competitivity": {
+                "required": "Competitivity is required.\n"
+            },
+            "sport": {
+                "required": "Sport is required.\n"
+            },
+            "date": {
+                "required": "Date is required.\n",
+                "invalidFutureDate": "Date must be a valid future date.\n"
+            },
+            "time": {
+                "required": "From is required.\n",
+                "invalidTime": "From must be a valid time.\n"
+            },
+            "durationHours": {
+                "required": "Duration must have hours.\n"
+            },
+            "durationMinutes": {
+                "required": "Duration must have minutes.\n"
+            },
+            "description": {
+                "invalidLength": "Decription can not have more than 140 characters.\n"
+            },
+            "location": {
+                "required": "Street and number are required.\n"
+            }
+        }
+    },
+    "forms": {
+        "requiredFields":"Fields containing (*) are required."
+    },
+    "createSportForm": {
+        "sportName": "Sport name ",
+        "displayName": "Display name ",
+        "playersPerTeam": "Players per team ",
+        "sportImage": "Sport image ",
+        "createSportButton": "CREATE SPORT",
+        "updateInfoButton": "UPDATE INFO",
+        "errors": {
+            "sportName": {
+                "required": "Sport name is required.\n",
+                "invalidSymbols": "Sport name can only contains alphanumeric.\n",
+                "invalidLength": "Sport name must be between 4 and 100 characters.\n",
+                "alreadyExists": "Sport name already exists.\n"
+            },
+            "displayName": {
+                "required": "Display name is required.\n",
+                "invalidSymbols": "Display name can only contains alphanumeric symbols or spaces.\n",
+                "invalidLength": "Display name must be between 4 and 100 characters.\n"
+            },
+            "playersPerTeam": {
+                "required": "Players per team is required.\n",
+                "invalidSymbols": "Players per team must contain only digits.\n",
+                "invalidLength": "Players per team must be between 1 and 3 digits long.\n",
+                "invalidValue": "Player per teams must have a value between 1 and 100.\n"
+            },
+            "image": {
+                "required": "Sport image is required.\n",
+                "invalidImageFormat": "Image has invalid format. Supported formats are: png, jpg and jpeg.\n",
+                "invalidImageSize": "Image can not be greater than 1MB.\n"
+            }
+        }
+    },
+    "admin": {
+        "sportImage": "Image",
+        "sportName": "Sport name",
+        "displayName": "Display name",
+        "playersPerTeam": "Players per team",
+        "createSport": "CREATE SPORT",
+        "editSport": "EDIT",
+        "deleteSport": "DELETE"  
+    },
+    "confirmAccount": {
+        "confirmed": "Congratulations! You have created a new account.",
+        "confirmEmail": "An email has been sent to you to confirm your account.",
+        "alreadyConfirmed": "Your account has already been confirmed."
+    },
+    "confirmAsistance": {
+        "confirm": "An email has been sent to you to confirm your assistance.",
+        "confirmed": "You have confirmed your assistance to the match.\nAn email has been sent to you to cancel your assistance."
+    },
+    "cancelAsistance": {
+        "canceled": "You have cancelled your asistance to the match."
+    },
+    "setMatchScoreForm": {
+        "teamOneScore": "Team 1 Score ",
+        "teamTwoScore": "Team 2 Score ",
+        "setScoreButton": "SET SCORE",
+        "errors": {
+            "teamScore": {
+                "required": "Team score is required.\n",
+                "invalidSymbols": "Team score must have only numbers.\n",
+                "invalidLength": "Team score must be between one and ten digitis.\n"
+            }
+        }
+    }
+}
