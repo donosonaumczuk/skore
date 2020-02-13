@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { hasStringValidSymbols, isStringAlphaNumeric,
+import { hasStringValidSymbols, isString,
          isStringValidEmail, isStringNumeric, 
          isStringAlphaOrSpaces} from './utils/StringValidators';
 import { isValidPastDate } from './utils/DateValidators';
@@ -37,15 +37,13 @@ const validateUsername = username => validateRequiredField(username, `${ERROR_BA
                                                                 hasUsernameValidSymbols, MIN_USERNAME_LENGTH,
                                                                 MAX_USERNAME_LENGTH);
 
-                                                                //TODO accept everything
 const validatePassword = password => validateRequiredField(password, `${ERROR_BASE_LEVEL}password`,
-                                                                isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
+                                                                isString, MIN_PASSWORD_LENGTH,
                                                                 MAX_PASSWORD_LENGTH);
 
-                                                                //TODO accept everything
 const validateRepeatedPassword = (repeatedPassword, password) => {
     let errorMessage = validateRequiredField(repeatedPassword, `${ERROR_BASE_LEVEL}repeatedPassword`,
-                                                isStringAlphaNumeric, MIN_PASSWORD_LENGTH,
+                                                isString, MIN_PASSWORD_LENGTH,
                                                 MAX_PASSWORD_LENGTH);
     if (repeatedPassword !== password) {
         errorMessage =`${errorMessage} ${i18next.t(`${ERROR_BASE_LEVEL}repeatedPassword.passwordDoesNotMatch`)}`;

@@ -50,8 +50,7 @@ class EditSportContainer extends Component {
         const formInitialValues = this.loadFormInitialValues();
         const isLoading = !this.state.sport;
         let error = this.state.status;
-        const needsPermission = !isAdmin;       
-        
+        const needsPermission = !isAdmin;
         return (
             <EditSport initialValues={formInitialValues}
                         history={this.props.history}

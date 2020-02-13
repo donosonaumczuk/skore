@@ -85,7 +85,7 @@ public class SportController {
     public Response getAllSports(@QueryParam("sportName") QueryList sportNames,
                                  @QueryParam("minQuantity") String minQuantity,
                                  @QueryParam("maxQuantity") String maxQuantity,
-                                 @QueryParam("limit") String limit, @QueryParam("offSet") String offset,
+                                 @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                                  @QueryParam("sortBy") SportSort sort, @Context UriInfo uriInfo) {
         Page<SportDto> page = sportService.findSportsPage( QueryParamsUtils.getQueryListOrNull(sportNames),
                 QueryParamsUtils.positiveIntegerOrNull(minQuantity), QueryParamsUtils.positiveIntegerOrNull(maxQuantity),
