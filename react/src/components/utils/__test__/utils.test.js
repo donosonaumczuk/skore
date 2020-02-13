@@ -179,3 +179,85 @@ test('deleteMatch deleting more than one match', () => {
     expect(actualResult.length).toBe(expectedResult.length);
     expect(compareMatchArrays(expectedResult, actualResult)).toBeTruthy;
 });
+
+//removeLastSpaceFromString tests
+test('removeLastSpaceFromString with a valid string', () => {
+    //set up
+    const string1 = "test ";
+    const string2 = "test";
+    const string3 = "test three";
+    const expectedResult1 = "test";
+    const expectedResult2 = "test";
+    const expectedResult3 = "test three";
+
+    //execution
+    const actualResult1 = Utils.removeLastSpaceFromString(string1);
+    const actualResult2 = Utils.removeLastSpaceFromString(string2);
+    const actualResult3 = Utils.removeLastSpaceFromString(string3);
+
+    //postconditions
+    expect(actualResult1).toBe(expectedResult1);
+    expect(actualResult2).toBe(expectedResult2);
+    expect(actualResult3).toBe(expectedResult3);
+});
+
+test('removeLastSpaceFromString with empty string', () => {
+    //set up
+    const string = "";
+    const expectedResult = "";
+    
+
+    //execution
+    const actualResult = Utils.removeLastSpaceFromString(string);
+
+    //postconditions
+    expect(actualResult).toBe(expectedResult);
+});
+
+//addressToString tests
+test('addressToString with a valid address', () => {
+    //set up
+    const street = "street ";
+    const number = "1234";
+    const city = "city";
+    const state = "state";
+    const country = "country";
+    const address1 = { street, number, city, state, country};
+    const address2 = { street, city, state, country};
+    const address3 = { street, number, state, country};
+    const address4 = { street, number, city, country};
+    const expectedResult1 = "street 1234, city, state, country";
+    const expectedResult2 = "street, city, state, country";
+    const expectedResult3 = "street 1234, state, country";
+    const expectedResult4 = "street 1234, city, country";
+
+    //execution
+    const actualResult1 = Utils.addressToString(address1);
+    const actualResult2 = Utils.addressToString(address2);
+    const actualResult3 = Utils.addressToString(address3);
+    const actualResult4 = Utils.addressToString(address4);
+
+    //postconditions
+    expect(actualResult1).toBe(expectedResult1);
+    expect(actualResult2).toBe(expectedResult2);
+    expect(actualResult3).toBe(expectedResult3);
+    expect(actualResult4).toBe(expectedResult4);
+});
+
+test('addressToString with a null address', () => {
+    //set up
+    
+    const address1 = null
+    const address2 = { };
+    const expectedResult1 = "";
+    const expectedResult2 = "";
+
+    //execution
+    const actualResult1 = Utils.addressToString(address1);
+    const actualResult2 = Utils.addressToString(address2);
+
+    //postconditions
+    expect(actualResult1).toBe(expectedResult1);
+    expect(actualResult2).toBe(expectedResult2);
+});
+
