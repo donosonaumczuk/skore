@@ -1,10 +1,14 @@
 import api from './../config/Api';
 import { SPORTS_ENDPOINT } from './constants/EndpointConstants';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 
-const getSports = async () => {
+const getSports = async (offset, limit) => {
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, {});
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${SPORTS_ENDPOINT}`);
+        const res = await api.get(`${SPORTS_ENDPOINT}${paramsUrl}`);
+        console.log(res);
         return res.data;
     }
     catch(err) {

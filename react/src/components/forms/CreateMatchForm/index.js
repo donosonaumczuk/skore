@@ -9,7 +9,10 @@ import Loader from '../../Loader';
 import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
 import MatchService from '../../../services/MatchService';
+import Utils from '../../utils/Utils';
 
+const INITIAL_OFFSET = 0;
+const QUERY_QUANTITY = 100;
 
 const validate = values => {
     const errors = {}
@@ -30,32 +33,43 @@ class CreateMatchFormContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sports: null,
+            sports: [],
+            offset: INITIAL_OFFSET,
+            limit: QUERY_QUANTITY,
+            hasMore: true
         };
     }
 
-    getAllSports = async () => {
-        let hasMore = true;
-        while (hasMore) {
-            let response = await SportService.getSports();
-            if (response.status) {
-                hasMore = false
-                //TODO handle error only 500 or 400
+    getSports = async () => {
+        const { offset, limit } = this.state;
+        this.setState({ executing: true });
+        let response = await SportService.getSports(offset, limit);
+        if (response.status) {
+            if (this.mounted) {
+                this.setState({ status: response.status, hasMore: false });
             }
-            else if (this.mounted) {
-                hasMore = false;
-            //TODO find a way to request all sports
-                this.setState({
-                    sports: response.sports
-                });
-            }
+        }
+        else if (this.mounted) {
+            const hasMore = Utils.hasMorePages(response.links);
+            this.setState({
+                sports: [...this.state.sports, ...response.sports],
+                offset: this.state.offset + response.sports.length,
+                hasMore: hasMore,
+                executing: false
+            });
         }
     }
     
     componentDidMount = async () => {
         this.mounted = true;
-        getAllSports();
-        
+        let hasMore = this.state.hasMore;
+        while (hasMore) {
+            if (!this.state.executing) {
+                await this.getSports();
+                hasMore = this.state.hasMore;
+            }
+        }
+
     }
 
     generateSportOptions = () => {
@@ -164,7 +178,7 @@ class CreateMatchFormContainer extends Component {
         if (!currentUser) {
             return <Redirect to="/" />
         }
-        else if (!this.state.sports) {
+        else if (this.state.hasMore) {
             return <Loader />
         }
         const sportOptions = this.generateSportOptions();
