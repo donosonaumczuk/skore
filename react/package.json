@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "@types/query-string": "^5.1.0",
     "axios": "^0.19.0",
+    "env-cmd": "^10.1.0",
     "i18next": "^19.0.3",
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
@@ -31,9 +32,9 @@
   "homepage": "http://pawserver.it.itba.edu.ar/paw-2018b-04",
   "proxy": "http://localhost:8080",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "env-cmd -f .env.development react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
+    "test": "env-cmd -f .env.development react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

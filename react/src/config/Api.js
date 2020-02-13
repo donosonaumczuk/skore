@@ -2,7 +2,7 @@ import { create } from 'axios';
 import AuthService from './../services/AuthService';
 
 // const api = create({ baseURL: '/api/'});//TODO remove on deploy
-const api = create({ baseURL: '/paw-2018b-04/api/'});
+const api = create({ baseURL: `${process.env.REACT_APP_BASE_URL}/api/`});
 
 // Intercepting requests
 api.interceptors.request.use(

@@ -42,11 +42,11 @@ i18n
 
   .init({
     fallbackLng, // if user computer language is not on the list of available languages, than we will be using the fallback language specified earlier
-    debug: true,
+    debug: false,
     whitelist: availableLanguages,
     detection: options,
     backend: { //TODO remove on local
-      loadPath: `${window.location.pathname}locales/{{lng}}/{{ns}}.json`
+      loadPath: `${process.env.REACT_APP_TRANSLATIONS_BASE}locales/{{lng}}/{{ns}}.json`
     },
     interpolation: {
       escapeValue: false
