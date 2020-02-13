@@ -33,19 +33,29 @@ class CreateMatchFormContainer extends Component {
             sports: null,
         };
     }
+
+    getAllSports = async () => {
+        let hasMore = true;
+        while (hasMore) {
+            let response = await SportService.getSports();
+            if (response.status) {
+                hasMore = false
+                //TODO handle error only 500 or 400
+            }
+            else if (this.mounted) {
+                hasMore = false;
+            //TODO find a way to request all sports
+                this.setState({
+                    sports: response.sports
+                });
+            }
+        }
+    }
     
     componentDidMount = async () => {
         this.mounted = true;
-        let response = await SportService.getSports();
-        if (response.status) {
-            //TODO handle error only 500 or 400
-        }
-        else if (this.mounted) {
-            //TODO find a way to request all sports
-            this.setState({
-                sports: response.sports
-            });
-        }
+        getAllSports();
+        
     }
 
     generateSportOptions = () => {
