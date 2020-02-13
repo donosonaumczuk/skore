@@ -18,6 +18,10 @@ class AccountsContainer extends Component {
         }
     }
 
+    onSubmit = values => {
+        console.log(values);
+    }
+
     updateUsers = response => {
         if (response.status) {
             this.setState({ status: response.status });
@@ -51,7 +55,7 @@ class AccountsContainer extends Component {
         return (
             <Accounts accounts={this.state.accounts} getUsers={this.getUsers}
                         hasMore={this.state.hasMore} isLoading={isLoading}
-                        error={this.state.status} />
+                        error={this.state.status} onSubmit={this.onSubmit} />
         )
     }
 

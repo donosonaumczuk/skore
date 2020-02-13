@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 import PropTypes from 'prop-types';
-import FilterMenu from './layout';
+import SearchInput from '../../../../panel/filterMenu/SearchInput';
+import i18next from 'i18next';
 
-let SearchBar = ({ handleSubmit, submitting }) => {
+let SearchBar = ({ handleSubmit, submitting, onSubmit, label, inputStyle }) => {
     return (
-         <div className="row filters p-4 mt-2">
+         <div className="row filters p-4 mt-2 mb-2">
             <div className="container-fluid">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Field name="username" containerId="usernameSearch" inputType="text"
-                            labelText={i18next.t('createUserForm.username')}
-                            inputStyle={inputStyle} inputId="country-filter" 
-                            placeholderText="Search..." component={FilterInput} />
-                    <AddFilterButton buttonStyle="btn btn-outline-secondary" submitting={submitting}
-                                    buttonText={i18next.t('home.addFilters')} />
+                    <Field name="username" containerId="searchBar" inputType="text"
+                            labelText={label} inputId="searchinput"
+                            inputStyle={inputStyle} component={SearchInput} 
+                            placeholderText={i18next.t('accounts.searchPlacelder')}
+                            submitting={submitting} />
                 </form>
             </div>
         </div>
@@ -22,7 +22,11 @@ let SearchBar = ({ handleSubmit, submitting }) => {
 }
 
 SearchBar.propTypes = {
-    onSubmit: PropTypes.func.isRequired
+    handleSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+    inputStyle: PropTypes.string.isRequired
+
 }
 
 SearchBar = reduxForm({

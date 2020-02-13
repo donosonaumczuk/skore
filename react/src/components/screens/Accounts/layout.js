@@ -7,8 +7,10 @@ import Account from './components/Account';
 import AccountPropType from '../../../proptypes/AccountPropType';
 import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
+import SearchBar from './components/SearchBar';
 
-const Accounts = ({ accounts, getUsers, hasMore }) => {
+const Accounts = ({ accounts, getUsers, hasMore, onSubmit }) => {
+    const inputStyle = "form-control filter-input mb-2";
     return (
         <div>
             <center>
@@ -16,6 +18,10 @@ const Accounts = ({ accounts, getUsers, hasMore }) => {
                     {i18next.t('createUserForm.accounts')}
                 </h1>
             </center>
+            <div className="container">
+                <SearchBar onSubmit={onSubmit} inputStyle={inputStyle} 
+                            label={i18next.t('createUserForm.username')} />
+            </div>
             <div className="container">
                 <InfiniteScroll dataLength={accounts.length} next={getUsers}
                                 hasMore={hasMore} loader={<Loader />} >
