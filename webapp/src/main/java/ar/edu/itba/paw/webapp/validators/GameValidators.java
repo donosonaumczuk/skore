@@ -35,10 +35,10 @@ public class GameValidators {
             LOCATION, TEAM_NAME_1, TEAM_NAME_2);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
 
-    private static final String TITLE_REGEX = "[a-zA-Z0-9¿?¡!_-ÑÁÉÍÓÚáéíñóöúü .]+";
+    private static final String TITLE_REGEX = "[-a-zA-Z0-9¿?¡!_ÑÁÉÍÓÚáéíñóöúü .]+";
     private static final String TITLE_PATTER_DESCRIPTION = "a string containing english alphabetic characters, " +
             "digits, spaces or any of these characters: ¿?¡!_-.ÑÁÉÍÓÚáéíñóöúü";
-    private static final String TEAM_NAME_REGEX = TITLE_REGEX;//TODO check team name pattern, it must not have '.'
+    private static final String TEAM_NAME_REGEX = TITLE_REGEX;
     private static final String TEAM_NAME_PATTER_DESCRIPTION = TITLE_PATTER_DESCRIPTION;
     private static final String KEY_REGEX = "\\d{12}" + TEAM_NAME_REGEX + "\\d{12}";
     private static final int MIN_LENGTH_TITLE       = 4;
@@ -65,7 +65,7 @@ public class GameValidators {
 
     public static Validator<String> keyValidator(final String log) {
         return (string) -> {
-            if (Pattern.compile(KEY_REGEX).matcher(string).matches()) {
+            if (!Pattern.compile(KEY_REGEX).matcher(string).matches()) {
                 ApiException apiException = ApiException.of(HttpStatus.NOT_FOUND, "Match '" + string + "' does not exist");
                 LOGGER.error(log, apiException);
                 throw apiException;
