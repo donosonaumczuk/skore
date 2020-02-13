@@ -35,13 +35,13 @@ public interface GameService {
                 final String street, final String tornamentName, final String description,
                 final String title, final String key);
 
-    boolean remove(final String key);
+    void remove(final String key);
 
     Optional<Game> findByKey(final String key);
 
     Game insertPlayerInGame(final String key, final long userId, final String code, final Locale locale);
 
-    boolean deleteUserInGameWithCode(final String key, final long userId, final String code);
+    void deleteUserInGameWithCode(final String key, final long userId, final String code);
 
     Game updateResultOfGame(final String key, final int scoreTeam1, final int scoreTeam2);
 

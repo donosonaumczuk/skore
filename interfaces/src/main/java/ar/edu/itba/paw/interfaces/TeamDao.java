@@ -13,7 +13,7 @@ public interface TeamDao {
     Optional<Team> create(final String leaderName, final long leaderId,
                           final String acronym, final String teamName,
                           final boolean isTemp, final String sportName,
-                          final MultipartFile file) throws IOException;
+                          final byte[] file);
 
     boolean remove(final String teamName);
 

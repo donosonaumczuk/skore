@@ -17,7 +17,7 @@ public interface SportService {
     Sport modifySport(final String sportName, final String displayName,
                       final Integer playerQuantity, final byte[] file);
 
-    boolean remove(final String sportName);
+    void remove(final String sportName);
 
     Page<Sport> findSportsPage(final List<String> sportNames, final Integer minQuantity,
                                final Integer maxQuantity, final SportSort sort,

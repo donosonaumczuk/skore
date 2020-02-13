@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.exceptions.*;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.SportNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
@@ -44,7 +45,7 @@ public class TeamHibernateDao implements TeamDao {
     public Optional<Team> create(final String leaderName, final long leaderId,
                                  final String acronym, final String teamName,
                                  final boolean isTemp, final String sportName,
-                                 final MultipartFile file) throws IOException {
+                                 final byte[] file) {
         LOGGER.trace("Try to find leader: {}", leaderName);
         PremiumUser leader = null;
         if(leaderName != null) {
@@ -57,7 +58,7 @@ public class TeamHibernateDao implements TeamDao {
                 .orElseThrow(() -> SportNotFoundException.ofId(sportName));
         LOGGER.trace("Find sport: {}", sportName);
 
-        Team team = new Team(leader, acronym, teamName, isTemp, sport, ((file==null)?null:file.getBytes()));
+        Team team = new Team(leader, acronym, teamName, isTemp, sport, file);
         em.persist(team);
         return Optional.of(team);
     }
@@ -113,17 +114,6 @@ public class TeamHibernateDao implements TeamDao {
 
         User user = userDao.findById(userId)
                 .orElseThrow(() -> UserNotFoundException.ofId(userId));
-
-        for (User u:team.getPlayers()) {//TODO: maybe move to service
-            if(u.equals(user)) {
-                throw new AlreadyJoinedToMatchException("User already joined to match");
-            }
-        }
-
-        if(team.getPlayers().size() >= team.getSport().getQuantity()) {//TODO: maybe move to service
-            LOGGER.error("The team: {} is full", teamName);
-            throw new TeamFullException("The team " + teamName + "is full");
-        }
 
         team.addPlayer(user);
         em.merge(team);

@@ -42,17 +42,24 @@ public final class QueryParamsUtils {
     }
 
     public static LocalDateTime localDateTimeOrElse(String s, LocalDateTime l) {
-        if (s == null || !s.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
+        if (s == null || !s.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}")) {
             return l;
         }
-        return LocalDateTime.parse(s);
+        return LocalDateTime.parse(s + ":00");
     }
 
     public static LocalDateTime localDateTimeOrNull(String s) {
-        return localDateTimeOrElse(s + ":00", null);
+        return localDateTimeOrElse(s, null);
     }
 
-    public static List<String> getQueryListOrNull(QueryList list) {
-        return list != null ? list.getQueryValues() : null;
+    public static List<String> getQueryListOrElse(QueryList queryList, List<String> elseList) {
+        if (queryList != null) {
+            return queryList.getQueryValues();
+        }
+        return elseList;
+    }
+
+    public static List<String> getQueryListOrNull(QueryList queryList) {
+        return  getQueryListOrElse(queryList, null);
     }
 }

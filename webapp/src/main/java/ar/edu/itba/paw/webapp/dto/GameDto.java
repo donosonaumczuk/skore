@@ -29,7 +29,7 @@ public class GameDto {
     private DateDto date;
     private TimeDto time;
     private Long minutesOfDuration;
-    private PlaceDto location; //TODO: make a decision about DOCKER
+    private PlaceDto location;
     private Integer totalPlayers;
     private Integer currentPlayers;
     private Boolean hasStarted;
@@ -41,7 +41,6 @@ public class GameDto {
     private String teamName2;
     private String key;
     private List<Link> links;
-//    private ResultDto results; TODO maybe dto with specific results according to sport
 
     private GameDto() {
         /* Required by JSON object mapper */

@@ -21,7 +21,7 @@ public interface PremiumUserService {
 					   final String email, final String username,
                        final String cellphone, final LocalDate birthday,
                        final String country, final String state, final String city,
-                       final String street, final int reputation, final String password,
+                       final String street, final Integer reputation, final String password,
                        final byte[] file, final Locale locale);
 
     Optional<byte[]> readImage(final String userName);
@@ -35,8 +35,6 @@ public interface PremiumUserService {
                                final String oldPassword, final byte[] file, final Locale locale);
 
     PremiumUser enableUser(final String username, final String code);
-
-    boolean confirmationPath(String path);
 
     Page<PremiumUser> findUsersPage(final List<String> usernames, final List<String> sportLiked,
                                     final List<String> friendUsernames, final Integer minReputation,

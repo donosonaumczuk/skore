@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.TemporalTeamNotCreatedException;
+import ar.edu.itba.paw.exceptions.invalidstate.TeamInvalidStateException;
 import ar.edu.itba.paw.exceptions.notfound.TeamNotFoundException;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.TeamDao;
@@ -47,15 +48,7 @@ public class TeamServiceImpl implements TeamService {
                        final String acronym, final String teamName,
                        final boolean isTemp, final String sportName) {
         Optional<Team> team;
-        try {
-            team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp,
-                    sportName, null);
-        } catch (IOException e) {
-            //TODO: heeeeey! we must throw an special exception here (maybe IOException and map then to a 500 in controller?)
-            //TODO: why image always null? why this exception if image is always null, why not remove the file param?
-            LOGGER.error("Image corrupted\n");
-            team = Optional.empty();
-        }
+        team = teamDao.create(leaderName, leaderId, acronym, teamName, isTemp, sportName, null);
         return team.orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }
 
@@ -100,6 +93,14 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     @Override
     public Team addPlayer(final String teamName, final long userId) {
+        Team team = findByTeamName(teamName).orElseThrow(() -> {
+            LOGGER.trace("Insert user in team failed, team '{}' not found", teamName);
+            return TeamNotFoundException.ofId(teamName);
+        });
+        if(team.getPlayers().size() >= team.getSport().getQuantity()) {
+            LOGGER.error("The team: {} is full", teamName);
+            throw TeamInvalidStateException.ofTeamAlreadyFull(teamName);
+        }
         return teamDao.addPlayer(teamName, userId)
                 .orElseThrow(() -> TeamNotFoundException.ofId(teamName));
     }

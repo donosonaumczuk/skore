@@ -16,6 +16,8 @@ public class ResultValidators {
     private static final String SCORE_TEAM_2 = "scoreTeam2";
 
     private static final Set<String> CREATION_KNOWN_AND_REQUIRED_FIELDS = ImmutableSet.of(SCORE_TEAM_1, SCORE_TEAM_2);
+    private static final int MIN_RESULT = 0;
+    private static final int MAX_RESULT = 9999;
 
     public static Validator<JSONObject> creationValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(CREATION_KNOWN_AND_REQUIRED_FIELDS,
@@ -24,8 +26,10 @@ public class ResultValidators {
 
     private static Map<String, Validator<JSONObject>> creationFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(SCORE_TEAM_1, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_1, 0, null, log))
-                .put(SCORE_TEAM_2, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_2, 0, null, log))
+                .put(SCORE_TEAM_1, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_1, MIN_RESULT,
+                        MAX_RESULT, log))
+                .put(SCORE_TEAM_2, ValidatorFactory.fieldIsIntegerInRangeValidatorOf(SCORE_TEAM_2, MIN_RESULT,
+                        MAX_RESULT, log))
                 .build();
     }
 }
