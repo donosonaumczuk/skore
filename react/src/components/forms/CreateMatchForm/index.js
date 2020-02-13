@@ -69,7 +69,6 @@ class CreateMatchFormContainer extends Component {
                 hasMore = this.state.hasMore;
             }
         }
-
     }
 
     generateSportOptions = () => {

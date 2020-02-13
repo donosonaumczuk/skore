@@ -246,7 +246,6 @@ test('addressToString with a valid address', () => {
 
 test('addressToString with a null address', () => {
     //set up
-    
     const address1 = null
     const address2 = { };
     const expectedResult1 = "";
