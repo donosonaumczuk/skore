@@ -224,9 +224,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                                            final List<String> friendUsernames, final Integer minReputation,
                                            final Integer maxReputation, final Integer minWinRate,
                                            final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                           final Integer limit) {
+                                           final Integer limit, final boolean exactMatchUsernames) {
         List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
-                maxReputation, minWinRate, maxWinRate, sort);
+                maxReputation, minWinRate, maxWinRate, sort, exactMatchUsernames);
         return new Page<>(users, offset, limit);
     }
 
@@ -272,7 +272,8 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         ArrayList<String> usernamesOfLiked = new ArrayList<>();
         usernamesOfLiked.add(usernameOfLiked);
         Page<PremiumUser> likedUsers = findUsersPage(usernames, null, usernamesOfLiked,
-                null, null, null, null, null, 0, 1);
+                null, null, null, null, null, 0, 1,
+                true);
         if (likedUsers.getData().size() != 1) {
             LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
             throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);

@@ -55,7 +55,7 @@ public interface PremiumUserDao {
     List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                 final List<String> friendUsernames, final Integer minReputation,
                                 final Integer maxReputation, final Integer minWinRate,
-                                final Integer maxWinRate, final UserSort sort);
+                                final Integer maxWinRate, final UserSort sort, final boolean exactMatchUsernames);
 
     boolean addLikedUser(String username, String usernameOfLiked);
 

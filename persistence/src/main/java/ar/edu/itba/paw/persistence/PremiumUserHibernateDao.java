@@ -315,7 +315,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                        final List<String> friendUsernames, final Integer minReputation,
                                        final Integer maxReputation, final Integer minWinRate,
-                                       final Integer maxWinRate, final UserSort sort) {
+                                       final Integer maxWinRate, final UserSort sort, final boolean exactMatchUsernames) {
         StringBuilder queryStart = new StringBuilder(QUERY_PART_1);
         if (friendUsernames != null && !friendUsernames.isEmpty()) {
             queryStart = queryStart.append(QUERY_PART_2);
@@ -329,7 +329,12 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         daoHelper.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
         daoHelper.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
         //TODO: winrate filter and Sort, need base migration
-        daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        if (exactMatchUsernames) {
+            daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        }
+        else {
+            daoHelper.addListFilters(false, false, QUERY_USERNAME_NAME, USERNAME, usernames);
+        }
         daoHelper.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
         daoHelper.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
 

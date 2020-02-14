@@ -133,8 +133,8 @@ public class UserController {
                 QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(likedUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
-                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
-                .map(UserDto::from);
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit),
+                false).map(UserDto::from);
 
         LOGGER.trace("Users successfully gotten");
         return Response.ok().entity(UserPageDto.from(userPage, uriInfo)).build();
@@ -304,8 +304,8 @@ public class UserController {
         usernames.add(username);
         Page<LikeUserDto> page = premiumUserService.findUsersPage(null, null, usernames,
                 null, null, null, null, null,
-                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
-                .map((u) -> LikeUserDto.from(u, username));
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit),
+                true).map((u) -> LikeUserDto.from(u, username));
         LOGGER.trace("'{}' liked users successfully gotten", username);
         return Response.ok().entity(LikeUserPageDto.from(page, uriInfo)).build();
     }

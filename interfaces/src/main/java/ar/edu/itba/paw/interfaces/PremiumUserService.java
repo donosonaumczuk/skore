@@ -40,7 +40,7 @@ public interface PremiumUserService {
                                     final List<String> friendUsernames, final Integer minReputation,
                                     final Integer maxReputation, final Integer minWinRate,
                                     final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                    final Integer limit);
+                                    final Integer limit, final boolean exactMatchUsernames);
 
     PremiumUser addLikedUser(String username, String username1);
 

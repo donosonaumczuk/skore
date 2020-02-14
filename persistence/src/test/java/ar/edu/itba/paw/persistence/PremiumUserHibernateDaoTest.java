@@ -352,7 +352,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, null,
-                null, null, null, null, null);
+                null, null, null, null, null,
+                false);
 
         //postconditions
         Assert.assertEquals(users.size(), usersReturn.size());
@@ -370,7 +371,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, usernamesFriends,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), true);
 
         //postconditions
         Assert.assertEquals(1, usersReturn.size());
@@ -385,7 +387,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, likedSports, null,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
@@ -402,7 +405,26 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(usernames, null, null,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), true);
+
+        //postconditions
+        Assert.assertEquals(2, usersReturn.size());
+        Assert.assertEquals(user1, usersReturn.get(0));
+        Assert.assertEquals(user4, usersReturn.get(1));
+    }
+
+    @Test
+    public void testFindListOfUserWithFilterByUsernameNotExactAndSort() {
+        //set up
+        List<String> usernames = new ArrayList<>();
+        usernames.add(user1.getUserName().substring(3));
+        usernames.add(user4.getUserName().substring(2));
+
+        //exercise class
+        List<PremiumUser> usersReturn = premiumUserDao.findUsers(usernames, null, null,
+                null, null, null, null,
+                new UserSort("reputation asc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
@@ -415,7 +437,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, null,
-                30, 200, null, null, new UserSort("reputation desc"));
+                30, 200, null, null,
+                new UserSort("reputation desc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
