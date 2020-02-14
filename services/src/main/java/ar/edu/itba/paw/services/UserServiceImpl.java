@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
     private String getUrl(String urlProperty, String data, long id, String phrase) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty(urlProperty), data, id, phrase);
+        formatter.format(environment.getRequiredProperty(environment.getRequiredProperty("state") + urlProperty), data, id, phrase);
         return stringBuilder.toString();
     }
 
