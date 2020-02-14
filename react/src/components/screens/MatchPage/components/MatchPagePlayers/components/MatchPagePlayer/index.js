@@ -1,16 +1,42 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+const getPlayerLink = player => {
+    if (!player) {
+        return null;
+    }
+    if (player.username) {
+        return (
+            <Link to={`/users/${player.username}`} className="player-username skore-link">
+                @{player.username}
+            </Link>
+        );
+    }
+    else {
+            return <p>{player.email}</p>;
+    }
+}
 
 const MatchPagePlayer = ({ gamePlayers }) => {
     return (
-        <tr>
-            <td scope="row">
-                <a data-toggle="tooltip" data-placement="top" data-html="true" title="Nombre Apellido | 21 años" class="player-username skore-link" href="http://baseurl.com/api/profile/otherusername">@otherUsername</a>
-            </td>
-            <td scope="row">
-                <a data-toggle="tooltip" data-placement="top" data-html="true" title="Nombre Apellido | 21 años" class="player-username skore-link" href="http://baseurl.com/api/profile/myUser">@myUser</a>
-			</td>
-        </tr>
-    )
+        gamePlayers.map((currentPlayers, i) => {
+            const  { playerTeamOne, playerTeamTwo } = currentPlayers;
+            return (
+                <tr key={i}>
+                    <td scope="row">
+                        {getPlayerLink(playerTeamOne)}
+                    </td>
+                    <td scope="row">
+                        {getPlayerLink(playerTeamTwo)}
+                    </td>
+                </tr>
+            );
+        })
+    );
 }
 
+MatchPagePlayer.propTypes = {
+    gamePlayers: PropTypes.array.isRequired
+}
 export default MatchPagePlayer;
