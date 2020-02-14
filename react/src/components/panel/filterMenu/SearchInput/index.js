@@ -2,6 +2,7 @@ import React from 'react';
 import Proptypes from 'prop-types';
 import SearchButton from '../SearchButton';
 
+//TODO improve layout
 const SearchInput = ({ containerId, labelText, inputStyle, inputId,
                         inputType, input, placeholderText, submitting }) => {
     return (
@@ -11,8 +12,7 @@ const SearchInput = ({ containerId, labelText, inputStyle, inputId,
             </div>
             <div className="col-3">
                 <input {...input} className="form-control filter-input mb-2" 
-                        type={inputType} id={inputId} placeholder={placeholderText} />
-                        
+                        type={inputType} id={inputId} placeholder={placeholderText} />             
             </div>
             <div className="col-1">
                 <SearchButton submitting={submitting} />

@@ -29,7 +29,7 @@ const AdminSport = ({ sport }) => {
                             iStyle="fas fa-edit mr-1" 
                             buttonLabel={i18next.t('admin.editSport')} />
             <SportButton buttonStyle="btn btn-negative join-button" 
-                            buttonUrl={`sports/${sport.sportName}/edit`}
+                            buttonUrl={`sports/${sport.sportName}/delete`}
                             iStyle="fas fa-trash-alt mr-1"
                             buttonLabel={i18next.t('admin.deleteSport')} />
         </div>

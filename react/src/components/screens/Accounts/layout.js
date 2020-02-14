@@ -9,7 +9,7 @@ import WithError from '../../hocs/WithError';
 import WithLoading from '../../hocs/WithLoading';
 import SearchBar from './components/SearchBar';
 
-const Accounts = ({ accounts, getUsers, hasMore, onSubmit }) => {
+const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters }) => {
     const inputStyle = "form-control filter-input mb-2";
     return (
         <div>
@@ -20,7 +20,8 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit }) => {
             </center>
             <div className="container">
                 <SearchBar onSubmit={onSubmit} inputStyle={inputStyle} 
-                            label={i18next.t('createUserForm.username')} />
+                            label={i18next.t('createUserForm.username')}
+                            initialValues={filters} />
             </div>
             <div className="container">
                 <InfiniteScroll dataLength={accounts.length} next={getUsers}
@@ -35,7 +36,8 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit }) => {
 Accounts.propTypes = {
     accounts: PropTypes.arrayOf(AccountPropType).isRequired,
     getUsers: PropTypes.func.isRequired,
-    hasMore: PropTypes.bool.isRequired
+    hasMore: PropTypes.bool.isRequired,
+    filters: PropTypes.object.isRequired
 }
 
 export default WithError(WithLoading(Accounts));

@@ -9,7 +9,7 @@ let SearchBar = ({ handleSubmit, submitting, onSubmit, label, inputStyle }) => {
          <div className="row filters p-4 mt-2 mb-2">
             <div className="container-fluid">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Field name="username" containerId="searchBar" inputType="text"
+                    <Field name="usernames" containerId="searchBar" inputType="text"
                             labelText={label} inputId="searchinput"
                             inputStyle={inputStyle} component={SearchInput} 
                             placeholderText={i18next.t('accounts.searchPlacelder')}

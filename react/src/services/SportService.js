@@ -8,7 +8,6 @@ const getSports = async (offset, limit) => {
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${SPORTS_ENDPOINT}${paramsUrl}`);
-        console.log(res);
         return res.data;
     }
     catch(err) {
@@ -66,11 +65,27 @@ const updateSport = async sport => {
     }
 }
 
+const deleteSport = async sportName => {
+    try {
+        const res = await api.delete(`${SPORTS_ENDPOINT}/${sportName}`);
+        return res.data;
+    }
+    catch(err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const SportService = {
     getSports: getSports,
     createSport: createSport,
     getSportByName: getSportByName,
-    updateSport: updateSport
+    updateSport: updateSport,
+    deleteSport: deleteSport
 }
 
 export default SportService;

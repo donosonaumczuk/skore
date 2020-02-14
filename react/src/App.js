@@ -28,6 +28,7 @@ import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
 import './css/main.css';
+import DeleteSport from './components/screens/DeleteSport';
 
 class App extends Component {
     constructor(props) {
@@ -112,9 +113,7 @@ class App extends Component {
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route exact path="/accounts">
-                            <Accounts />
-                        </Route>
+                        <Route exact path="/accounts" component={Accounts} />
                         <Route exact path="/admin">
                             <Admin />
                         </Route>
@@ -122,6 +121,7 @@ class App extends Component {
                         <Route exact path="/match/:matchKey" component={MatchPage} />
                         <Route exact path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
+                        <Route exact path="/sports/:sportName/delete" component={DeleteSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />

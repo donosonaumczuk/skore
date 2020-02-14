@@ -13,6 +13,7 @@ const validate = values => {
     errors.playersPerTeam = CreateSportValidator.validatePlayersPerTeam(values.playersPerTeam);
     errors.sportImage = CreateSportValidator.validateRequiredSportImage(values.sportImage);
     return errors;
+    
 }
 
 class CreateSportFormContainer extends Component {
