@@ -283,19 +283,6 @@ public class UserController {
         return Response.ok(AuthDto.from(premiumUser)).header(TOKEN_HEADER, jwtUtility.createToken(premiumUser)).build();
     }
 
-    private byte[] getDefaultImage() {
-        ByteArrayOutputStream bos;
-        try {
-            BufferedImage bImage = ImageIO.read(defaultImage.getFile());
-            bos = new ByteArrayOutputStream();
-            ImageIO.write(bImage, "png", bos);
-        }
-        catch (IOException e) {
-            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
-        }
-        return bos.toByteArray();
-    }
-
     @GET
     @Path("/{username}/likedUsers")
     public Response getLikedUser(@PathParam("username") String username,  @QueryParam("limit") String limit,
@@ -311,6 +298,7 @@ public class UserController {
     }
 
     @POST
+    @Consumes({MediaType.APPLICATION_JSON})
     @Path("/{username}/likedUsers")
     public Response addLikedUser(@PathParam("username") String username, @RequestBody final String requestBody) {
         UserValidators.likedUserCreationValidator("User like fails, invalid creation JSON")
@@ -337,6 +325,19 @@ public class UserController {
         premiumUserService.removeLikedUser(username, usernameOfLiked);
         LOGGER.trace("User '{}' deleted successfully", username);
         return Response.noContent().build();
+    }
+
+    private byte[] getDefaultImage() {
+        ByteArrayOutputStream bos;
+        try {
+            BufferedImage bImage = ImageIO.read(defaultImage.getFile());
+            bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, "png", bos);
+        }
+        catch (IOException e) {
+            throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
+        }
+        return bos.toByteArray();
     }
 
     private LocalDate getBirthDay(UserDto userDto) {

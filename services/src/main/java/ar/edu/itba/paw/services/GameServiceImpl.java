@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.invalidstate.GameInvalidStateException;
@@ -68,7 +69,7 @@ public class GameServiceImpl implements GameService {
                        final String title, final String sportName) {
         if (startTime.isBefore(LocalDateTime.now())) {
             LOGGER.trace("StartTime must happen in the future");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
         PremiumUser logged = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
@@ -81,8 +82,8 @@ public class GameServiceImpl implements GameService {
         if (isIndividual) {
             if (teamName1 != null || teamName2 != null) {
                 LOGGER.trace("Creation fails, match '{}' cannot be individual and add teams to match", gameKey.toString());
-                throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
-                        "individual and add teams to match"); //TODO: map!!!!!
+                throw new InvalidParameterException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
+                        "individual and add teams to match");
             }
             newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
                     .getName();
@@ -226,7 +227,7 @@ public class GameServiceImpl implements GameService {
                        final String title, final String key) {
         if (startTime.isBefore(LocalDateTime.now())) {
             LOGGER.trace("StartTime must happen in the future");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key).orElseThrow(() -> {
@@ -242,7 +243,7 @@ public class GameServiceImpl implements GameService {
                     "' is not creator of '" + key + "' match");
         }
         if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL.toString())) {
-            throw new IllegalArgumentException("Cannot modify teams in a individual match"); //TODO: map!!
+            throw new InvalidParameterException("Cannot modify teams in a individual match");
         }
 
         //TODO: check a game with key is no already added

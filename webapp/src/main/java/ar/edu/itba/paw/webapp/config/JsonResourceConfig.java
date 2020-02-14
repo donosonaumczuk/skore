@@ -8,9 +8,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 
+
 public class JsonResourceConfig extends ResourceConfig {
 
-    public JsonResourceConfig() {
+    public JsonResourceConfig() {//TODO: avoid json without "
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); /* Check done by us manually */

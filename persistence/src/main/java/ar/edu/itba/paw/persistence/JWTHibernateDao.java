@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.interfaces.JWTDao;
 import ar.edu.itba.paw.models.JWT;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,7 @@ public class JWTHibernateDao implements JWTDao {
     @Override
     public void delete(JWT jwt) {
         if (jwt == null) {
-            throw new IllegalArgumentException("JWT cannot be null");
+            throw new InvalidParameterException("JWT cannot be null");
         }
         em.remove(jwt);
     }

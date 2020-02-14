@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
@@ -97,7 +98,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         LOGGER.trace("Attempting to create user: {}", userName);
         if (birthday.isAfter(LocalDate.now())) {
             LOGGER.trace("Birthday must happen in the past");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
 
         if (premiumUserDao.findByEmail(email).isPresent()) {
@@ -156,7 +157,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         LOGGER.trace("Looking for user with username: {} to update", username);
         if (newBirthday.isAfter(LocalDate.now())) {
             LOGGER.trace("Birthday must happen in the past");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
 
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
