@@ -47,9 +47,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private static final String EQUALS                = "=";
     private static final String QUERY_USERNAME_NAME   = "u.userName";
     private static final String QUERY_LIKES_NAME      = "elements(u.likes)";
-    private static final String QUERY_FRIENDS_NAME    = "elements(u2.friends)";
+    private static final String QUERY_FRIENDS_NAME    = "elements(u.friends)";
     private static final String LIKES_OPERATOR        = "= s.sportName AND s IN";
-    private static final String FRIENDS_OPERATOR      = "= u2.userName AND u IN";
+    private static final String FRIENDS_OPERATOR      = "= u2.userName AND u2 IN";
     private static final String USERNAME              = "username";
     private static final String SPORT                 = "sport";
     private static final String USERNAME_FRIENDS      = "usernameFriends";
