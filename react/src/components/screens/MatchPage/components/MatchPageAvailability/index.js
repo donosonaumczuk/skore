@@ -28,19 +28,13 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
     return userFound;
 }
 
-const matchHasStarted = currentMatch => {
-    const date = currentMatch.date;
-    const time = currentMatch.time;
-    const startTime = new Date(date.year, date.monthNumber -1, date.dayOfMonth, time.hour, time.minute);
-    const currentTime = new Date();
-    return startTime <= currentTime;
-}
-
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
-    if (matchHasStarted(currentMatch)) {
+    const { hasStarted, creator, currentPlayers, totalPlayers } = currentMatch;
+    const isFull = currentPlayers === totalPlayers;     
+    if ((hasStarted && isFull) || (hasStarted && currentUser !== creator)) { 
         return <Fragment></Fragment>;
     }
-    if (currentUser && currentUser === currentMatch.creator) {
+    if (currentUser && currentUser === creator) {
         return <MatchButton buttonStyle="btn btn-negative join-button" 
                             handleClick={deleteMatch} currentMatch={currentMatch}
                             buttonText={i18next.t('home.deleteMatch')}
@@ -71,18 +65,24 @@ const MatchPageAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMat
     const { currentPlayers, totalPlayers} = currentMatch;
     let button = getButton(currentMatch, AuthService.getCurrentUser(), 
                             joinMatch, cancelMatch, deleteMatch);
-    return (
-        <div className="row text-center mb-3">
-            <div className="col offset-4 playing-label">
-                <i className="name-label fas fa-users mr-2"></i>
-                {`${currentPlayers} / ${totalPlayers}`} 
+    const isFull = currentMatch.currentPlayers === currentMatch.totalPlayers;
+    if (!currentMatch.hasStarted || !isFull) {
+        return (
+            <div className="row text-center mb-3">
+                <div className="col offset-4 playing-label">
+                    <i className="name-label fas fa-users mr-2"></i>
+                    {`${currentPlayers} / ${totalPlayers}`} 
+                </div>
+                <div className="col">
+                    {button}
+                    {/* TODO update with corresponding button */}
+                </div>
             </div>
-            <div className="col">
-                {button}
-                {/* TODO update with corresponding button */}
-            </div>
-        </div>
-    );
+        );
+    }
+    else {
+        return <Fragment></Fragment>;
+    }
 }
 
 MatchPageAvailability.propTypes = {

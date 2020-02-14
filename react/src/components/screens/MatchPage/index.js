@@ -5,8 +5,6 @@ import MatchService from '../../../services/MatchService';
 import AuthService from '../../../services/AuthService';
 import Utils from '../../utils/Utils';
 
-const TO_JOIN_TAB = 1;
-
 class MatchPageContainer extends Component {
     mounted = false;
     constructor(props) {
@@ -48,24 +46,24 @@ class MatchPageContainer extends Component {
         else {
             //TODO replace match with the one of response
             if (this.mounted) {
-                this.setState({ currentMatch: response.data, executing: false });
+                this.setState({ match: response, executing: false });
             }
         }
     }
 
     joinMatchAnonymous = (match) => {
-        if (match.competitive && this.mounted) {
-            this.props.history.push(`/authenticatedJoin/${match.key}`);
-        }
-        else if ( this.mounted) {
-            this.props.history.push(`/?matchKey=${match.key}`);
-            this.setState({ anonymous: true });
-        }
+        // if (match.competitive && this.mounted) {
+        //     this.props.history.push(`/authenticatedJoin/${match.key}`);
+        // }
+        // else if ( this.mounted) {
+        //     this.props.history.push(`/?matchKey=${match.key}`);
+        //     this.setState({ anonymous: true });
+        // }
     }
     
     cancelMatch = (e, match) => {
         e.stopPropagation();
-        if (this.props.currentUser) {
+        if (AuthService.getCurrentUser()) {
             const userId = AuthService.getUserId();
             this.cancelMatchLogged(match, userId);
         }
@@ -75,6 +73,7 @@ class MatchPageContainer extends Component {
     }
 
     cancelMatchLogged = async (match, userId) => {
+
         if (this.mounted) {
             this.setState({ executing: true });
         }
@@ -83,11 +82,10 @@ class MatchPageContainer extends Component {
             this.setState({ status: response.status });
         }
         else {
-            const newMatches = Utils.replaceWithNewMatch(this.state.matches, match);
+            const newMatch = Utils.removePlayerFromMatch(match, userId)
             if (this.mounted) {
-                this.setState({ matches: newMatches, executing: false });
+                this.setState({ match: newMatch, executing: false });
             }
-            this.handleTabChange(TO_JOIN_TAB);
         }
     }
     
@@ -101,10 +99,7 @@ class MatchPageContainer extends Component {
             this.setState({ status: response.status });
         }
         else {
-            const newMatches = Utils.deleteMatch(this.state.matches, match);
-            if (this.mounted) {
-                this.setState({ matches: newMatches, executing: false });
-            }
+            this.props.history.push('/');
         }
     }
 

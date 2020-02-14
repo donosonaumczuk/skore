@@ -274,6 +274,9 @@
     },
     "matchPage": {
         "TeamOne": "Equipo 1",
-        "TeamTwo": "Equipo 2"
+        "TeamTwo": "Equipo 2",
+        "matchIsPlaying": "Partido en curso...",
+        "waitingForScore": "Esperando el resultado...",
+        "matchIsCanceled": "Partido cancelado"
     }
 }

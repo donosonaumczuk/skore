@@ -10,12 +10,13 @@ import MatchPageDuration from './components/MatchPageDuration';
 import MatchPageDescription from './components/MatchPageDescription';
 import MatchPageLocation from './components/MatchPageLocation';
 import WithError from '../../hocs/WithError';
+import MatchPageStatus from './components/MatchPageStatus';
+import MatchPageAvailability from './components/MatchPageAvailability';
+import MatchPagePlayers from './components/MatchPagePlayers';
 // import WithAnonymous from '../../hocs/WithAnonymous';//TODO add without breaking
 import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
-import MatchPageAvailability from './components/MatchPageAvailability';
-import MatchPagePlayers from './components/MatchPagePlayers';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -56,6 +57,7 @@ const MatchPage = ({ currentMatch, updateMatchScore, joinMatch,
                     <MatchPageLocation address={location} />
                     <MatchPageAvailability currentMatch={currentMatch} joinMatch={joinMatch}
                                             cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
+                    <MatchPageStatus currentMatch={currentMatch} updateMatchScore={updateMatchScore} />
                     <MatchPagePlayers teamOnePlayers={team1.players} 
                                         teamTwoPlayers={team2 ? team2.players : [] } />
                 </div>
