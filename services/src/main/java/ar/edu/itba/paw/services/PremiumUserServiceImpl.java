@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
+import ar.edu.itba.paw.exceptions.alreadyexists.LikeSportAlreadyExistException;
+import ar.edu.itba.paw.exceptions.notfound.LikeSportNotFoundException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
 import ar.edu.itba.paw.exceptions.alreadyexists.LikeUserAlreadyExistException;
@@ -15,9 +17,11 @@ import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserDao;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
 import ar.edu.itba.paw.interfaces.SessionService;
+import ar.edu.itba.paw.interfaces.SportService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.UserSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +46,9 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Autowired
     private PremiumUserDao premiumUserDao;
+
+    @Autowired
+    private SportService sportService;
 
     @Autowired
     private GameService gameService;
@@ -280,6 +287,67 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
         }
         return likedUsers.getData().get(0);
+    }
+
+    @Transactional
+    @Override
+    public Sport addLikedSport(final String username, final String sportName) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' add liked sport failed, unauthorized");
+        }
+        Sport likedSport = sportService.findByName(sportName).orElseThrow(() -> {
+            LOGGER.error("Can't find like with id: {}|{}", username, sportName);
+            return LikeSportNotFoundException.ofUsernameAndSportName(username, sportName);
+        });
+
+        if (!premiumUserDao.addLikedSport(username, sportName)) {
+            LOGGER.error("Like already exist with id: {}|{}", username, sportName);
+            throw LikeSportAlreadyExistException.ofUsernameAndSportName(username, sportName);
+        }
+        return likedSport;
+    }
+
+    @Transactional
+    @Override
+    public Sport getLikedSport(final String username, final String sportnameOfLiked) {
+        PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        for (Sport liked : premiumUser.getLikes()) {
+            if (liked.getName().equals(sportnameOfLiked)) {
+                return liked;
+            }
+        }
+        LOGGER.error("Can't find like with id: {}|{}", username, sportnameOfLiked);
+        throw LikeSportNotFoundException.ofUsernameAndSportName(username, sportnameOfLiked);
+    }
+
+    @Transactional
+    @Override
+    public void removeLikedSport(final String username, final String sportnameOfLiked) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' remove liked sport failed, unauthorized");
+        }
+
+        if (!premiumUserDao.removeLikedSport(username, sportnameOfLiked)) {
+            LOGGER.error("Can't find like with id: {}|{}", username, sportnameOfLiked);
+            throw  LikeSportNotFoundException.ofUsernameAndSportName(username, sportnameOfLiked);
+        }
+    }
+
+    @Transactional
+    @Override
+    public Page<Sport> getLikedSports(final String username, final Integer offset, final Integer limit) {
+        List<Sport> likedSports = premiumUserDao.getLikedSports(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        return new Page<>(likedSports, offset, limit);
     }
 
     private double calculateWinRate(final PremiumUser user) {

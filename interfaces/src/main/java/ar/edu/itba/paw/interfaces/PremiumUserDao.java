@@ -46,12 +46,6 @@ public interface PremiumUserDao {
 
     boolean removeRole(final String username, final int roleId);
 
-    List<Sport> getSports(String username);
-
-    boolean addSport(final String username, String sportName);
-
-    boolean removeSport(final String username, String sportName);
-
     List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                 final List<String> friendUsernames, final Integer minReputation,
                                 final Integer maxReputation, final Integer minWinRate,
@@ -60,5 +54,11 @@ public interface PremiumUserDao {
     boolean addLikedUser(String username, String usernameOfLiked);
 
     boolean removeLikedUser(String username, String usernameOfLiked);
+
+    boolean addLikedSport(final String username, final String sportName);
+
+    boolean removeLikedSport(final String username, final String sportnameOfLiked);
+
+    Optional<List<Sport>> getLikedSports(final String username);
 }
 

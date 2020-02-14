@@ -2,7 +2,9 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
+import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.UserSort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,4 +49,12 @@ public interface PremiumUserService {
     void removeLikedUser(String username, String usernameOfLiked);
 
     PremiumUser getLikedUser(String username, String usernameOfLiked);
+
+    Sport addLikedSport(final String username, final String sportName);
+
+    Sport getLikedSport(final String username, final String sportnameOfLiked);
+
+    void removeLikedSport(final String username, final String sportnameOfLiked);
+
+    Page<Sport> getLikedSports(final String username, final Integer offset, final Integer limit);
 }
