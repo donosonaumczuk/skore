@@ -47,9 +47,9 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     private static final String EQUALS                = "=";
     private static final String QUERY_USERNAME_NAME   = "u.userName";
     private static final String QUERY_LIKES_NAME      = "elements(u.likes)";
-    private static final String QUERY_FRIENDS_NAME    = "elements(u.friends)";
+    private static final String QUERY_FRIENDS_NAME    = "elements(u2.friends)";
     private static final String LIKES_OPERATOR        = "= s.sportName AND s IN";
-    private static final String FRIENDS_OPERATOR      = "= u2.userName AND u2 IN";
+    private static final String FRIENDS_OPERATOR      = "= u2.userName AND u IN";
     private static final String USERNAME              = "username";
     private static final String SPORT                 = "sport";
     private static final String USERNAME_FRIENDS      = "usernameFriends";
@@ -282,16 +282,12 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             em.merge(user);
             return true;
         }
-
     }
 
     @Override
     public List<Sport> getSports(String username) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
-        if(premiumUser.isPresent()) {
-            return premiumUser.get().getLikes();
-        }
-        else return null;
+        return premiumUser.map(PremiumUser::getLikes).orElse(null);
     }
 
     @Override
@@ -347,5 +343,42 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public boolean addLikedUser(String username, String usernameOfLiked) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
+
+        if(!premiumUserOfLiked.isPresent() || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getFriends().contains(premiumUserOfLiked.get())) {
+            return false;
+        }
+        else {
+            user.getFriends().add(premiumUserOfLiked.get());
+            em.merge(user);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean removeLikedUser(String username, String usernameOfLiked) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
+
+        if(!premiumUserOfLiked.isPresent() || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getFriends().contains(premiumUserOfLiked.get())) {
+            user.getFriends().remove(premiumUserOfLiked.get());
+            em.merge(user);
+        }
+        return true;
     }
 }

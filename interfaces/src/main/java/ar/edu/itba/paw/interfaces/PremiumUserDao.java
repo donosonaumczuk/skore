@@ -56,5 +56,9 @@ public interface PremiumUserDao {
                                 final List<String> friendUsernames, final Integer minReputation,
                                 final Integer maxReputation, final Integer minWinRate,
                                 final Integer maxWinRate, final UserSort sort);
+
+    boolean addLikedUser(String username, String usernameOfLiked);
+
+    boolean removeLikedUser(String username, String usernameOfLiked);
 }
 

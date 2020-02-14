@@ -16,6 +16,8 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.LikeUserDto;
+import ar.edu.itba.paw.webapp.dto.LikeUserPageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
 import ar.edu.itba.paw.webapp.dto.ProfileDto;
 import ar.edu.itba.paw.webapp.dto.TeamDto;
@@ -114,16 +116,21 @@ public class UserController {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username).path("image").toTemplate();
     }
 
+    public static String getLikedUserEndpoint(final String username, final String usernameLiked) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username)
+                .path("likedUsers").path(usernameLiked).toTemplate();
+    }
+
     @GET
     public Response getUsers(@QueryParam("minReputation") String minReputation,
                              @QueryParam("maxReputation") String maxReputation,
-                             @QueryParam("friends") QueryList friendsUsernames,
+                             @QueryParam("likedUsers") QueryList likedUsernames,
                              @QueryParam("sports") QueryList sportsLiked,
                              @QueryParam("usernames") QueryList usernames,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") UserSort sort, @Context UriInfo uriInfo) { //TODO: winrate
         Page<UserDto> userPage = premiumUserService.findUsersPage( QueryParamsUtils.getQueryListOrNull(usernames),
-                QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(friendsUsernames),
+                QueryParamsUtils.getQueryListOrNull(sportsLiked),  QueryParamsUtils.getQueryListOrNull(likedUsernames),
                 QueryParamsUtils.positiveIntegerOrNull(minReputation),
                 QueryParamsUtils.positiveIntegerOrNull(maxReputation), null, null, sort,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
@@ -287,6 +294,49 @@ public class UserController {
             throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);
         }
         return bos.toByteArray();
+    }
+
+    @GET
+    @Path("/{username}/likedUsers")
+    public Response getLikedUser(@PathParam("username") String username,  @QueryParam("limit") String limit,
+                                 @QueryParam("offset") String offset, @Context UriInfo uriInfo) {
+        ArrayList<String> usernames = new ArrayList<>();
+        usernames.add(username);
+        Page<LikeUserDto> page = premiumUserService.findUsersPage(null, null, usernames,
+                null, null, null, null, null,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
+                .map((u) -> LikeUserDto.from(u, username));
+        LOGGER.trace("'{}' liked users successfully gotten", username);
+        return Response.ok().entity(LikeUserPageDto.from(page, uriInfo)).build();
+    }
+
+    @POST
+    @Path("/{username}/likedUsers")
+    public Response addLikedUser(@PathParam("username") String username, @RequestBody final String requestBody) {
+        UserValidators.likedUserCreationValidator("User like fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final LikeUserDto likeUserDto = JSONUtils.jsonToObject(requestBody, LikeUserDto.class);
+        PremiumUser userLiked = premiumUserService.addLikedUser(username, likeUserDto.getUsername());
+        LOGGER.trace("'{}' liked '{}' successfully created", username, likeUserDto.getUsername());
+        return Response.status(HttpStatus.CREATED.value()).entity(LikeUserDto.from(userLiked, username)).build();
+    }
+
+    @GET
+    @Path("/{username}/likedUsers/{usernameOfLiked}")
+    public Response getLikedUser(@PathParam("username") String username,
+                                 @PathParam("usernameOfLiked") String usernameOfLiked) {
+        PremiumUser likedUser = premiumUserService.getLikedUser(username, usernameOfLiked);
+        LOGGER.trace("Liked user '{}' get successfully", usernameOfLiked);
+        return Response.ok().entity(LikeUserDto.from(likedUser, username)).build();
+    }
+
+    @DELETE
+    @Path("/{username}/likedUsers/{usernameOfLiked}")
+    public Response removeLikedUser(@PathParam("username") String username,
+                                    @PathParam("usernameOfLiked") String usernameOfLiked) {
+        premiumUserService.removeLikedUser(username, usernameOfLiked);
+        LOGGER.trace("User '{}' deleted successfully", username);
+        return Response.noContent().build();
     }
 
     private LocalDate getBirthDay(UserDto userDto) {

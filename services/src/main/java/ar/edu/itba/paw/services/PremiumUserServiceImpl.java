@@ -4,8 +4,10 @@ import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
+import ar.edu.itba.paw.exceptions.alreadyexists.LikeUserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
+import ar.edu.itba.paw.exceptions.notfound.LikeUserNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -24,8 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.InvalidParameterException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -226,6 +228,56 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
                 maxReputation, minWinRate, maxWinRate, sort);
         return new Page<>(users, offset, limit);
+    }
+
+    @Transactional
+    @Override
+    public PremiumUser addLikedUser(String username, String usernameOfLiked) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' add liked user failed, unauthorized");
+        }
+        PremiumUser likedUser = premiumUserDao.findByUserName(usernameOfLiked).orElseThrow(() -> {
+            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+            return LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+        });
+
+        if (!premiumUserDao.addLikedUser(username, usernameOfLiked)) {
+            LOGGER.error("Like already exist with id: {}|{}", username, usernameOfLiked);
+            throw LikeUserAlreadyExistException.ofUsernames(username, usernameOfLiked);
+        }
+        return likedUser;
+    }
+
+    @Transactional
+    @Override
+    public void removeLikedUser(String username, String usernameOfLiked) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' remove liked user failed, unauthorized");
+        }
+
+        if (!premiumUserDao.removeLikedUser(username, usernameOfLiked)) {
+            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+            throw  LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+        }
+    }
+
+    @Override
+    public PremiumUser getLikedUser(String username, String usernameOfLiked) {
+        ArrayList<String> usernames = new ArrayList<>();
+        usernames.add(username);
+        ArrayList<String> usernamesOfLiked = new ArrayList<>();
+        usernamesOfLiked.add(usernameOfLiked);
+        Page<PremiumUser> likedUsers = findUsersPage(usernames, null, usernamesOfLiked,
+                null, null, null, null, null, 0, 1);
+        if (likedUsers.getData().size() != 1) {
+            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+            throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+        }
+        return likedUsers.getData().get(0);
     }
 
     private double calculateWinRate(final PremiumUser user) {

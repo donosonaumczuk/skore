@@ -41,4 +41,10 @@ public interface PremiumUserService {
                                     final Integer maxReputation, final Integer minWinRate,
                                     final Integer maxWinRate, final UserSort sort, final Integer offset,
                                     final Integer limit);
+
+    PremiumUser addLikedUser(String username, String username1);
+
+    void removeLikedUser(String username, String usernameOfLiked);
+
+    PremiumUser getLikedUser(String username, String usernameOfLiked);
 }
