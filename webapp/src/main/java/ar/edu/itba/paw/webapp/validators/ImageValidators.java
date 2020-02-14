@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validators;
 
 import ar.edu.itba.paw.webapp.exceptions.ApiException;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
