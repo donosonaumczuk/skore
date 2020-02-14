@@ -15,6 +15,7 @@ import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
 import MatchPageAvailability from './components/MatchPageAvailability';
+import MatchPagePlayers from './components/MatchPagePlayers';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -55,6 +56,7 @@ const MatchPage = ({ currentMatch, updateMatchScore, joinMatch,
                     <MatchPageLocation address={location} />
                     <MatchPageAvailability currentMatch={currentMatch} joinMatch={joinMatch}
                                             cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
+                    <MatchPagePlayers />
                 </div>
             </div>
         </div>

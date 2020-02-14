@@ -8,10 +8,10 @@ const MatchPagePlayers = () => {
                 <thead>
                 <tr>
                     <th className="team-name" scope="col">
-                        {i18next.t('match.teamOne')}
+                        {i18next.t('matchPage.teamOne')}
                     </th>
                     <th className="team-name" scope="col">
-                        {i18next.t('match.teamTwo')}
+                        {i18next.t('matchPage.teamTwo')}
                     </th>
                 </tr>
                 </thead>
