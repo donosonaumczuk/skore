@@ -351,7 +351,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     @Override
-    public boolean addLikedUser(String username, String usernameOfLiked) {
+    public boolean addLikedUser(final String username, final String usernameOfLiked) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
         Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
 
@@ -371,7 +371,7 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     @Override
-    public boolean removeLikedUser(String username, String usernameOfLiked) {
+    public boolean removeLikedUser(final String username, final String usernameOfLiked) {
         Optional<PremiumUser> premiumUser = findByUserName(username);
         Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
 
@@ -385,5 +385,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             em.merge(user);
         }
         return true;
+    }
+
+    @Override
+    public Optional<List<PremiumUser>> getLikedPremiumUsers(String username) {
+        Optional<PremiumUser> user = findByUserName(username);
+        return user.map(PremiumUser::getFriends);
     }
 }
