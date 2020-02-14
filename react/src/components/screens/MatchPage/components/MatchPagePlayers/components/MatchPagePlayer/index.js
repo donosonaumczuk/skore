@@ -24,10 +24,10 @@ const MatchPagePlayer = ({ gamePlayers }) => {
             const  { playerTeamOne, playerTeamTwo } = currentPlayers;
             return (
                 <tr key={i}>
-                    <td scope="row">
+                    <td>
                         {getPlayerLink(playerTeamOne)}
                     </td>
-                    <td scope="row">
+                    <td>
                         {getPlayerLink(playerTeamTwo)}
                     </td>
                 </tr>
