@@ -328,7 +328,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     private String getConfirmationUrl(PremiumUser user) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+        formatter.format(environment.getRequiredProperty(environment.getRequiredProperty("state") + ".url.frontend.confirm.account"),
                 user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }
