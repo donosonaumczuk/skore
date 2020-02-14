@@ -13,7 +13,7 @@ import WithError from '../../hocs/WithError';
 import MatchPageStatus from './components/MatchPageStatus';
 import MatchPageAvailability from './components/MatchPageAvailability';
 import MatchPagePlayers from './components/MatchPagePlayers';
-// import WithAnonymous from '../../hocs/WithAnonymous';//TODO add without breaking
+import WithAnonymous from '../../hocs/WithAnonymous';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
@@ -36,11 +36,11 @@ const getImageUrls = links => {
     };
 }
 
-const MatchPage = ({ currentMatch, updateMatchScore, joinMatch,
+const MatchPage = ({ match, updateMatchScore, joinMatch,
                         cancelMatch, deleteMatch }) => {
-    const { creatorImageUrl, sportImageUrl } = getImageUrls(currentMatch.links);
+    const { creatorImageUrl, sportImageUrl } = getImageUrls(match.links);
     const { title, creator, sportName, competitive, date, time, minutesOfDuration,
-            description, location, team1, team2 } = currentMatch;
+            description, location, team1, team2 } = match;
     return (
         <div className="container-fluid">
             <div className="row">
@@ -55,9 +55,9 @@ const MatchPage = ({ currentMatch, updateMatchScore, joinMatch,
                     <MatchPageDuration startTime={time} durationInMinutes={minutesOfDuration} />
                     <MatchPageDescription description={description} />
                     <MatchPageLocation address={location} />
-                    <MatchPageAvailability currentMatch={currentMatch} joinMatch={joinMatch}
+                    <MatchPageAvailability currentMatch={match} joinMatch={joinMatch}
                                             cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
-                    <MatchPageStatus currentMatch={currentMatch} updateMatchScore={updateMatchScore} />
+                    <MatchPageStatus currentMatch={match} updateMatchScore={updateMatchScore} />
                     <MatchPagePlayers teamOnePlayers={team1.players} 
                                         teamTwoPlayers={team2 ? team2.players : [] } />
                 </div>
@@ -67,11 +67,11 @@ const MatchPage = ({ currentMatch, updateMatchScore, joinMatch,
 }
 
 MatchPage.propTypes = {
-    currentMatch: HomeMatchPropType.isRequired,
+    match: HomeMatchPropType.isRequired,
     updateMatchScore: PropTypes.func.isRequired,
     joinMatch: PropTypes.func.isRequired,
     cancelMatch: PropTypes.func.isRequired,
     deleteMatch: PropTypes.func.isRequired
 }
 
-export default WithError(WithLoading(WithExecuting(WithMessage((MatchPage)))));
+export default WithError(WithLoading(WithExecuting(WithAnonymous(WithMessage(MatchPage)))));

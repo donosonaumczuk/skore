@@ -4,6 +4,7 @@ import MatchPage from './layout';
 import MatchService from '../../../services/MatchService';
 import AuthService from '../../../services/AuthService';
 import Utils from '../../utils/Utils';
+import { SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
 
 class MatchPageContainer extends Component {
     mounted = false;
@@ -44,7 +45,6 @@ class MatchPageContainer extends Component {
             this.setState({ status: response.status });
         }
         else {
-            //TODO replace match with the one of response
             if (this.mounted) {
                 this.setState({ match: response, executing: false });
             }
@@ -52,13 +52,12 @@ class MatchPageContainer extends Component {
     }
 
     joinMatchAnonymous = (match) => {
-        // if (match.competitive && this.mounted) {
-        //     this.props.history.push(`/authenticatedJoin/${match.key}`);
-        // }
-        // else if ( this.mounted) {
-        //     this.props.history.push(`/?matchKey=${match.key}`);
-        //     this.setState({ anonymous: true });
-        // }
+        if (match.competitive && this.mounted) {
+            this.props.history.push(`/authenticatedJoin/${match.key}`);
+        }
+        else if ( this.mounted) {
+            this.setState({ anonymous: true });
+        }
     }
     
     cancelMatch = (e, match) => {
@@ -68,7 +67,7 @@ class MatchPageContainer extends Component {
             this.cancelMatchLogged(match, userId);
         }
         else {
-            //TODO should never happen
+            this.setStatus({ status: SC_UNAUTHORIZED });
         }
     }
 
@@ -123,9 +122,9 @@ class MatchPageContainer extends Component {
     render() {
         const { message } = this.props; 
         return (
-            <MatchPage currentMatch={this.state.match} error={this.state.status}
-                        isLoading={!this.state.match} message={message}
-                        updateMatchScore={this.updateMatchScore} 
+            <MatchPage currentMatch={this.state.match} match={this.state.match}
+                        error={this.state.status} isLoading={!this.state.match}
+                        message={message} updateMatchScore={this.updateMatchScore} 
                         joinMatch={this.joinMatch} cancelMatch={this.cancelMatch}
                         deleteMatch={this.deleteMatch} anonymous={this.state.anonymous} 
                         isExecuting={this.state.executing} />
