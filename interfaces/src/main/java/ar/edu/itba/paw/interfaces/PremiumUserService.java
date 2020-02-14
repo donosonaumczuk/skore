@@ -49,5 +49,5 @@ public interface PremiumUserService {
 
     PremiumUser getLikedUser(final String username, final String usernameOfLiked);
 
-    Page<PremiumUser> getLikedPremiumUsers(final String username, final Integer offset, final Integer limit);
+    Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit);
 }

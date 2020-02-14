@@ -284,7 +284,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public Page<PremiumUser> getLikedPremiumUsers(final String username, final Integer offset, final Integer limit) {
+    public Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit) {
         List<PremiumUser> likedPremiumUsers = premiumUserDao.getLikedPremiumUsers(username).orElseThrow(() -> {
             LOGGER.error("Can't find user with username: {}", username);
             return UserNotFoundException.ofUsername(username);

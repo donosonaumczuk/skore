@@ -320,7 +320,12 @@ public class GameServiceImpl implements GameService {
                     "' must be the creator of '" + key + "' match");
         }
         if (game.getFinishTime().isAfter(LocalDateTime.now())) {
+            LOGGER.trace("Update game failed, game '{}' is not played yet", key);
             throw GameInvalidStateException.ofGameNotPlayedYet(key);
+        }
+        if (game.getResult() != null) {
+            LOGGER.trace("Update game failed, game '{}' already has result", key);
+            throw GameInvalidStateException.ofGameWithResult(key);
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 

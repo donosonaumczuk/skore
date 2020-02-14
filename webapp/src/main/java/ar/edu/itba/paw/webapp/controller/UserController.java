@@ -287,7 +287,7 @@ public class UserController {
     @Path("/{username}/likedUsers")
     public Response getLikedUser(@PathParam("username") String username,  @QueryParam("limit") String limit,
                                  @QueryParam("offset") String offset, @Context UriInfo uriInfo) {
-        Page<LikeUserDto> page = premiumUserService.getLikedPremiumUsers(username,
+        Page<LikeUserDto> page = premiumUserService.getLikedUsers(username,
                 QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
                 .map((p) -> LikeUserDto.from(p, username));
         LOGGER.trace("'{}' liked users successfully gotten", username);
