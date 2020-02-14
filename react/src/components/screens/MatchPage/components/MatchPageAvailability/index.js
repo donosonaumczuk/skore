@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import AuthService from '../../../services/AuthService';
-import MatchButton from '../MatchButton';
+import AuthService from '../../../../../services/AuthService';
+import MatchButton from '../../../../match/MatchButton';
 import i18next from 'i18next';
 
 const isUserInTeam = (currentUser, team) => {
@@ -67,32 +67,29 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
     return <Fragment></Fragment>
 }
 
-const MatchAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }) => {
+const MatchPageAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }) => {
     const { currentPlayers, totalPlayers} = currentMatch;
     let button = getButton(currentMatch, AuthService.getCurrentUser(), 
                             joinMatch, cancelMatch, deleteMatch);
     return (
-        <div className="offset-1 col-4 col-sm-3">
-            <div className="row text-center">
-                <div className="col">
-                    <i className="name-label fas fa-users mr-2"></i>
-                    { `${currentPlayers} / ${totalPlayers}`} 
-                </div>
+        <div className="row text-center mb-3">
+            <div className="col offset-4 playing-label">
+                <i className="name-label fas fa-users mr-2"></i>
+                {`${currentPlayers} / ${totalPlayers}`} 
             </div>
-            <div className="row text-center">
-                <div className="col mt-xl-2 ml-xl-4">
-                        {button}
-                </div>
+            <div className="col">
+                {button}
+                {/* TODO update with corresponding button */}
             </div>
         </div>
     );
 }
 
-MatchAvailability.propTypes = {
+MatchPageAvailability.propTypes = {
     currentMatch: PropTypes.object.isRequired,
     joinMatch: PropTypes.func.isRequired,
     cancelMatch: PropTypes.func.isRequired,
     deleteMatch: PropTypes.func.isRequired
 }
 
-export default MatchAvailability;
+export default MatchPageAvailability;

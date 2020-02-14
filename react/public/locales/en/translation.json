@@ -268,5 +268,12 @@
                 "invalidLength": "Team score must be between one and ten digitis.\n"
             }
         }
+    },
+    "sport": {
+        "imageDescription": "Sport picture."
+    },
+    "matchPage": {
+        "TeamOne": "Team 1",
+        "TeamTwo": "Team 2"
     }
 }

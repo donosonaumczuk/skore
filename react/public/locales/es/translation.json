@@ -268,5 +268,12 @@
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
             }
         }
+    },
+    "sport": {
+        "imageDescription": "Imagen del deporte."
+    },
+    "matchPage": {
+        "TeamOne": "Equipo 1",
+        "TeamTwo": "Equipo 2"
     }
 }
