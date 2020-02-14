@@ -118,9 +118,9 @@
     "home": {
         "createMatch": "CREAR UN PARTIDO",
         "cantFindMatch": "No encontras el partido que estas buscando?",
-        "wantToCreateMatch": "Queres crear tu propio partido?\n",
+        "wantToCreateMatch": "Querés crear tu propio partido?\n",
         "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
-        "filtersAndCategories": "Filtros y Categorias",
+        "filtersAndCategories": "Filtros y Categorías",
         "countryFilter": "País",
         "stateFilter": "Estado / Provincia",
         "cityFilter": "Ciudad / Localidad",
