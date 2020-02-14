@@ -176,8 +176,8 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
-                null);
+        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(),
+                teamPlayerDto.getEmail(), locale);
         return Response.status(HttpStatus.CREATED.value()).header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString()).build();
     }
 

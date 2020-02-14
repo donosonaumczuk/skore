@@ -1,4 +1,5 @@
 import api from './../config/Api';
+import i18next from 'i18next';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 import AuthService from './AuthService';
@@ -95,7 +96,13 @@ const getUserMatchesWithResults = async (username, offset, limit) => {
 
 const createUser = async user => {
     try {
-        const res = await api.post(`${USERS_ENDPOINT}`, user);
+        const language = i18next.language;
+        let config = {
+            headers: {
+                "Accept-Language": language
+            }
+        };
+        const res = await api.post(`${USERS_ENDPOINT}`, user, config);
         return res.data;
     }
     catch (err) {
