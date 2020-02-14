@@ -18,6 +18,8 @@ const isStringAlphaNumericOrSpaces = string => !/[^0-9a-zA-ZáéíóúñÁÉÍÓ
 
 const isStringValidEmail = string => /^[+a-zA-ZñÑ0-9_.-]+@[a-zA-Z0-9]+(\.[A-Za-z]+)+$/.test(string);
 
+const isString = string => typeof(string) === 'string';
+
 export {
     hasStringInvalidSymbols, 
     hasStringValidSymbols,
@@ -27,5 +29,6 @@ export {
     isStringNumeric,
     isStringAlphaNumeric,
     isStringAlphaNumericOrSpaces,
-    isStringValidEmail
+    isStringValidEmail,
+    isString
 }

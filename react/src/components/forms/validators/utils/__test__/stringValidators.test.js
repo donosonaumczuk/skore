@@ -1,4 +1,8 @@
-import { hasStringInvalidSymbols, isStringAlpha, isStringAlphaOrSpaces, isStringNumeric, isStringAlphaNumeric, isStringAlphaNumericOrSpaces, isStringValidEmail, isStringLengthBetween } from '../StringValidators';
+import { hasStringInvalidSymbols, isStringAlpha,
+        isStringAlphaOrSpaces, isStringNumeric,
+        isStringAlphaNumeric, isStringAlphaNumericOrSpaces,
+        isStringValidEmail, isStringLengthBetween,
+        isString } from '../StringValidators';
 
 //hasStringInvalidSymbols tests
 test('hasStringInvalidSymbols with all valid Symbols', () => {
@@ -257,4 +261,112 @@ test('isStringValidEmail ending with invalid symbols', () => {
     expect(actualResult1).toBeFalsy();
     expect(actualResult2).toBeFalsy();
     expect(actualResult3).toBeFalsy();
+});
+
+//isString tests
+test('isString with all alphabetic Symbols', () => {
+    //set up
+    const text = "test";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with all numeric Symbols', () => {
+    //set up
+    const text = "1234";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with all alphanumeric Symbols', () => {
+    //set up
+    const text = "test1234";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with alphanumeric and spaces Symbols', () => {
+    //set up
+    const text = " test  1234 ";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with only spaces', () => {
+    //set up
+    const text = "   ";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with only spaces', () => {
+    //set up
+    const text = "   ";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with special characters spaces', () => {
+    //set up
+    const text = "áéíóúÁÉÍÓÚñÑöü!@#$%^&*()-=;'";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with empty string', () => {
+    //set up
+    const text = "";
+
+    //execution
+    const actualResult = isString(text);
+
+    //postconditions
+    expect(actualResult).toBeTruthy();
+});
+
+test('isString with not a string', () => {
+    //set up
+    const test1 = 1;
+    const test2 = {};
+    const test3 = [];
+
+
+    //execution
+    const actualResult1 = isString(test1);
+    const actualResult2 = isString(test2);
+    const actualResult3 = isString(test3);
+
+
+    //postconditions
+   expect(actualResult1).toBeFalsy();
+   expect(actualResult2).toBeFalsy();
+   expect(actualResult3).toBeFalsy();
 });

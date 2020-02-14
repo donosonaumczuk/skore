@@ -59,13 +59,43 @@ const generateOptionsForSelectBetweenValues = (minValue, maxValue) => {
     return options;
 }
 
+const removeLastSpaceFromString = string => {
+    if (!string || string.length === 0) {
+        return "";
+    }
+    const length = string.length;
+    if (string.charAt(length - 1) === ' ') {
+        return string.substring(0, length - 1);
+    }
+    return string;
+}
+
+const addressToString = address => {
+    if (!address) {
+        return "";
+    }
+    const street = removeLastSpaceFromString(address.street);
+    const number = removeLastSpaceFromString(address.number);
+    const city = removeLastSpaceFromString(address.city);
+    const state = removeLastSpaceFromString(address.state);
+    const country = removeLastSpaceFromString(address.country);
+    let addressString = `${street}`;
+    addressString = number.length > 0 ? `${addressString} ${number}` : addressString;
+    addressString = city.length > 0 ? `${addressString}, ${city}` : addressString;
+    addressString = state.length > 0 ? `${addressString}, ${state}` : addressString;
+    addressString = country.length > 0 ? `${addressString}, ${country}` : addressString;
+    return addressString;
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
     removeUnknownHomeFilters: removeUnknownHomeFilters,
     replaceWithNewMatch: replaceWithNewMatch,
     deleteMatch: deleteMatch,
-    generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues
+    generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues,
+    removeLastSpaceFromString: removeLastSpaceFromString,
+    addressToString: addressToString
 };
 
 export default Utils;
