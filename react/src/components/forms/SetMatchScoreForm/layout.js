@@ -23,6 +23,14 @@ const SetMatchScoreForm = ({ onSubmit, handleSubmit, submitting}) => {
                         <Field name="teamTwoScore" id="teamTwoScore" inputType="text"
                                 label={i18next.t('setMatchScoreForm.teamTwoScore')}
                                 required={true} component={RenderInput} />
+                        <Field name="repeatTeamOneScore" id="repeatTeamOneScore" 
+                                inputType="text" required={true} 
+                                label={i18next.t('setMatchScoreForm.repeatTeamOneScore')}
+                                component={RenderInput} />
+                        <Field name="repeatTeamTwoScore" id="repeatTeamTwoScore" 
+                                inputType="text" required={true} 
+                                label={i18next.t('setMatchScoreForm.repeatTeamTwoScore')}
+                                component={RenderInput} />
                         <FormComment id="requiredHelp" textStyle="form-text text-muted mb-2"
                                         text={i18next.t('forms.requiredFields')} />
                         <SubmitButton label={i18next.t('setMatchScoreForm.setScoreButton')}
