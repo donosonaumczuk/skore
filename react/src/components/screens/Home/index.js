@@ -241,8 +241,20 @@ class HomeContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await MatchService.deleteMatch(match.key);
-        if (response.status && this.mounted) {
-            this.setState({ status: response.status });
+        if (response.status) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 already deleted
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             const newMatches = Utils.deleteMatch(this.state.matches, match);
