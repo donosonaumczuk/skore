@@ -159,10 +159,43 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             final String username, final String newFirstName, final String newLastName, final String newEmail,
             final String newCellphone, final LocalDate newBirthday, final String newCountry, final String newState,
             final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
-            final String oldPassword, final byte[] file, final Locale locale
+            final String oldPassword, final byte[] file, final Locale locale, final String code
     ) {
         LOGGER.trace("Looking for user with username: {} to update", username);
-        if (newBirthday.isAfter(LocalDate.now())) {
+        if (code == null) {
+            return updateUserInfoWithOutCode(username, newFirstName, newLastName, newEmail, newCellphone, newBirthday,
+                    newCountry, newState, newCity, newStreet, newReputation, newPassword, oldPassword, file, locale);
+        }
+        if (newFirstName != null || newLastName != null || newEmail != null || newCellphone != null
+                || newBirthday != null || newCountry != null || newState != null || newCity != null || newStreet != null
+                || newReputation != null || oldPassword != null || file != null || newPassword == null) {
+            LOGGER.trace("If recovery code is send it must only have newPassword");
+            throw new InvalidParameterException("If recovery code is send it must only have newPassword");
+        }
+        return updateUserInfoWithCode(username,newPassword, code);
+    }
+
+    private PremiumUser updateUserInfoWithCode(String username, String newPassword, String code) {
+        final String encodedPassword = (newPassword == null) ? null : bcrypt.encode(newPassword);
+        PremiumUser premiumUser = premiumUserDao.resetPassword(username, encodedPassword, code).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        if (!bcrypt.matches(newPassword, premiumUser.getPassword())) {
+            LOGGER.error("Couldn't rest user {} password, invalid code {}", username, code);
+            throw InvalidUserCodeException.of(username, code);
+        }
+        LOGGER.trace("User '{}' reset password successfully", username);
+        return premiumUser;
+    }
+
+    private PremiumUser updateUserInfoWithOutCode(
+            final String username, final String newFirstName, final String newLastName, final String newEmail,
+            final String newCellphone, final LocalDate newBirthday, final String newCountry, final String newState,
+            final String newCity, final String newStreet, final Integer newReputation, final String newPassword,
+            final String oldPassword, final byte[] file, final Locale locale
+    ) {
+        if (newBirthday != null && newBirthday.isAfter(LocalDate.now())) {
             LOGGER.trace("Birthday must happen in the past");
             throw new InvalidParameterException("Birthday must happen in the past");
         }
@@ -360,6 +393,22 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         return new Page<>(likedSports, offset, limit);
     }
 
+    @Transactional
+    @Override
+    public void forgotPassword(final String username, final String email, final Locale locale) {
+        PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+
+        if (!premiumUser.getEmail().equals(email)) {
+            LOGGER.trace("Email '{}' is invalid for '{}'", email, username);
+            throw new InvalidParameterException("Email '" + email + "' is invalid for '" + username + "'");
+        }
+
+        emailSender.sendResetPassword(premiumUser, getResetPasswordUrl(premiumUser), locale);
+    }
+
     private double calculateWinRate(final PremiumUser user) {
         double played = 0;
         double wins = 0;
@@ -404,10 +453,19 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     }
 
     private String getConfirmationUrl(PremiumUser user) {
+        return getAccountUrl(user, environment.getRequiredProperty(environment.getRequiredProperty("state")
+                + ".url.frontend.confirm.account"));
+    }
+
+    private String getResetPasswordUrl(PremiumUser user) {
+        return getAccountUrl(user, environment.getRequiredProperty(environment.getRequiredProperty("state")
+                + ".url.frontend.reset.password"));
+    }
+
+    private String getAccountUrl(PremiumUser user, String template) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty(environment.getRequiredProperty("state") + ".url.frontend.confirm.account"),
-                user.getUserName(), user.getCode());
+        formatter.format(template, user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }
 }
