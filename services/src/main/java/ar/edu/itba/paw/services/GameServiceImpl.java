@@ -280,7 +280,7 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Delete game failed, game '{}' has already started", key);
             throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
-        if (game.getTeam1().getPlayers().size() + game.getTeam1().getPlayers().size() ==
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() ==
                 game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
             LOGGER.trace("Delete game failed, game '{}' is full", key);
             throw GameInvalidStateException.ofGameFull(key);
