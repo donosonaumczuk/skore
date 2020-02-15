@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import UserService from '../../../services/UserService';
 import Utils from '../../utils/Utils';
 import Accounts from './layout';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
 const LIKES_OFFSET = 0;
-const LIKES_LIMIT = 1;
+const LIKES_LIMIT = 100;
 
 class AccountsContainer extends Component {
     mounted = false;
@@ -23,7 +24,7 @@ class AccountsContainer extends Component {
             limit: QUERY_QUANTITY,
             hasMore: true,
             filters: queryParams,
-            likes: [],
+            likes: {},
             likesOffset: LIKES_OFFSET,
             likesLimit: LIKES_LIMIT,
             hasMoreLikes: hasMoreLikes
@@ -47,21 +48,32 @@ class AccountsContainer extends Component {
         }
     }
 
+    updateLikes = likedUsers => {
+        let newLikes = { ...this.state.likes };
+        likedUsers.forEach(likedUser => {
+            newLikes[likedUser.username] = true;
+        });
+        return newLikes;
+    }
+
     getLikes = async () => {
         const { likesOffset, likesLimit } = this.state;
         const username = this.props.currentUser;
-        this.setState({ executing: true });
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         let response = await UserService.getLikedUsers(username, likesOffset, likesLimit);
         if (response.status) {
             if (this.mounted) {
-                this.setState({ status: response.status, hasMore: false });
+                this.setState({ status: response.status, hasMoreLikes: false });
             }
         }
         else if (this.mounted) {
             const hasMore = Utils.hasMorePages(response.links);
+            const newLikes = this.updateLikes(response.likedUsers);
             this.setState({
-                likes: [...this.state.likes, ...response.likedUsers],
-                offset: this.state.offset + response.likedUsers.length,
+                likes: newLikes,
+                likesOffset: this.state.likesOffset + response.likedUsers.length,
                 hasMoreLikes: hasMore,
                 executing: false
             });
@@ -79,6 +91,38 @@ class AccountsContainer extends Component {
             }, () => { this.getUsers(); }); 
             this.props.history.push(`/accounts${newUrl}`);
         }  
+    }
+
+    likeUser = async (e, username) => {
+        e.stopPropagation();
+        const { currentUser } = this.props;
+        const response = await UserService.likeUser(currentUser, username);
+        if (response.status && response.status !== SC_CONFLICT) {
+            if (this.mounted) {
+                this.setState({ error: response.status });
+            }
+        }
+        else if (this.mounted) {
+            const newLikes = { ...this.state.likes};
+            newLikes[username] = true;
+            this.setState({ likes: newLikes });
+        }
+    }
+
+    dislikeUser = async (e, username) => {
+        e.stopPropagation();
+        const { currentUser } = this.props;
+        const response = await UserService.likeUser(currentUser, username);
+        if (response.status && response.status !== SC_CONFLICT) {
+            if (this.mounted) {
+                this.setState({ error: response.status });
+            }
+        }
+        else if (this.mounted) {
+            const newLikes = { ...this.state.likes};
+            newLikes[username] = false;
+            this.setState({ likes: newLikes });
+        }
     }
 
     updateUsers = response => {
@@ -115,22 +159,24 @@ class AccountsContainer extends Component {
             while (hasMore) {
                 if (!this.state.loading) {
                     await this.getLikes();
-                    hasMore = this.state.hasMoreLikes;
+                    hasMore = this.mounted ? this.state.hasMoreLikes : false;
+                    // console.log(this.state);
                 }
             }
-            this.getLikes();      
         }
-        console.log(this.state);
     }
 
     render() {
-        const { accounts, hasMore, hasMoreLikes } = this.state;
+        const { accounts, hasMore, hasMoreLikes, likes } = this.state;
+        const { currentUser, history } = this.props;
         const isLoading = ((accounts.length === 0 && hasMore) || (hasMoreLikes));
         return (
             <Accounts accounts={this.state.accounts} getUsers={this.getUsers}
-                        hasMore={this.state.hasMore} isLoading={isLoading}
+                        hasMore={this.state.hasMore} likes={likes}
+                        likeUser={this.likeUser} dislikeUser={this.dislikeUser}
+                        currentUser={currentUser} isLoading={isLoading}
                         error={this.state.status} onSubmit={this.onSubmit}
-                        filters={this.state.filters} />
+                        filters={this.state.filters} history={history} />
         )
     }
 

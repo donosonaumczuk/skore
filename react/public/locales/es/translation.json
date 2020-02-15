@@ -286,5 +286,10 @@
         "waitingForScore": "Esperando el resultado...",
         "matchIsCanceled": "Partido cancelado",
         "winner": "Ganador"
+    },
+    "accounts": {
+        "title": "Cuentas",
+        "searchPlaceholder": "Buscar usuarios..."
+
     }
 }

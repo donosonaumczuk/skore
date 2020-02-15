@@ -153,13 +153,11 @@ const updateUser = async (user, username) => {
     }
 }
 
-const getLikedUsers = async (username, offset, limit, token) => {
-    const config = { cancelToken: token };
+const getLikedUsers = async (username, offset, limit) => {
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, null);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedUsers${paramsUrl}`, config);
-        console.log(res);
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedUsers${paramsUrl}`);
         return res.data;
     }
     catch (err) {
@@ -170,7 +168,37 @@ const getLikedUsers = async (username, offset, limit, token) => {
             return { status: SC_TIME_OUT };
         }
     }
+}
 
+const likeUser = async (username, likedUser) => {
+    const userLike = { username: likedUser };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/likedUsers`, userLike);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const dislikeUser = async (username, likedUser) => {
+    try {
+        const res = await api.delete(`${USERS_ENDPOINT}/${username}/likedUsers/${likedUser}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
 }
 
 const UserService = {
@@ -183,7 +211,9 @@ const UserService = {
     createUser: createUser,
     verifyUser: verifyUser,
     updateUser: updateUser,
-    getLikedUsers: getLikedUsers
+    getLikedUsers: getLikedUsers,
+    likeUser: likeUser,
+    dislikeUser: dislikeUser
 };
 
 export default UserService;
