@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.InvalidUserCodeException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import ar.edu.itba.paw.exceptions.WrongOldUserPasswordException;
+import ar.edu.itba.paw.exceptions.alreadyexists.LikeUserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.invalidstate.UserInvalidStateException;
+import ar.edu.itba.paw.exceptions.notfound.LikeUserNotFoundException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.GameService;
@@ -24,8 +27,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.InvalidParameterException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -95,7 +98,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         LOGGER.trace("Attempting to create user: {}", userName);
         if (birthday.isAfter(LocalDate.now())) {
             LOGGER.trace("Birthday must happen in the past");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
 
         if (premiumUserDao.findByEmail(email).isPresent()) {
@@ -154,7 +157,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         LOGGER.trace("Looking for user with username: {} to update", username);
         if (newBirthday.isAfter(LocalDate.now())) {
             LOGGER.trace("Birthday must happen in the past");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
 
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
@@ -222,10 +225,71 @@ public class PremiumUserServiceImpl implements PremiumUserService {
                                            final List<String> friendUsernames, final Integer minReputation,
                                            final Integer maxReputation, final Integer minWinRate,
                                            final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                           final Integer limit) {
+                                           final Integer limit, final boolean exactMatchUsernames) {
         List<PremiumUser> users = premiumUserDao.findUsers(usernames, sportLiked, friendUsernames, minReputation,
-                maxReputation, minWinRate, maxWinRate, sort);
+                maxReputation, minWinRate, maxWinRate, sort, exactMatchUsernames);
         return new Page<>(users, offset, limit);
+    }
+
+    @Transactional
+    @Override
+    public PremiumUser addLikedUser(final String username, final String usernameOfLiked) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' add liked user failed, unauthorized");
+        }
+        PremiumUser likedUser = premiumUserDao.findByUserName(usernameOfLiked).orElseThrow(() -> {
+            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+            return LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+        });
+
+        if (!premiumUserDao.addLikedUser(username, usernameOfLiked)) {
+            LOGGER.error("Like already exist with id: {}|{}", username, usernameOfLiked);
+            throw LikeUserAlreadyExistException.ofUsernames(username, usernameOfLiked);
+        }
+        return likedUser;
+    }
+
+    @Transactional
+    @Override
+    public void removeLikedUser(final String username, final String usernameOfLiked) {
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        if (!loggedUser.getUserName().equals(username)) {
+            LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
+            throw new LackOfPermissionsException("User '" + username + "' remove liked user failed, unauthorized");
+        }
+
+        if (!premiumUserDao.removeLikedUser(username, usernameOfLiked)) {
+            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+            throw  LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+        }
+    }
+
+    @Transactional
+    @Override
+    public PremiumUser getLikedUser(final String username, final String usernameOfLiked) {
+        PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        for (PremiumUser liked : premiumUser.getFriends()) {
+            if (liked.getUserName().equals(usernameOfLiked)) {
+                return liked;
+            }
+        }
+        LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+        throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+    }
+
+    @Transactional
+    @Override
+    public Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit) {
+        List<PremiumUser> likedPremiumUsers = premiumUserDao.getLikedPremiumUsers(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        return new Page<>(likedPremiumUsers, offset, limit);
     }
 
     private double calculateWinRate(final PremiumUser user) {
@@ -274,7 +338,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
     private String getConfirmationUrl(PremiumUser user) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty("url.frontend.confirm.account"),
+        formatter.format(environment.getRequiredProperty(environment.getRequiredProperty("state") + ".url.frontend.confirm.account"),
                 user.getUserName(), user.getCode());
         return stringBuilder.toString();
     }

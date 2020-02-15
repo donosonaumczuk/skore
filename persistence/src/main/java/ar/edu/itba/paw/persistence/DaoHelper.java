@@ -185,4 +185,8 @@ public class DaoHelper {
 
         return escapedValue.toString();
     }
+
+    public void addFilterCustom(String filter) {
+        start = start.append(filter);
+    }
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.alreadyexists.UserAlreadyExistException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.EmailService;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public User findById(final long id) {
         if(id < 0 ) {
             LOGGER.error("Attempted to find a user with negative id.");
-            throw new IllegalArgumentException("id must be positive");
+            throw new InvalidParameterException("id must be positive");
         }
 
         LOGGER.trace("Looking up user with id {}", id);
@@ -139,12 +140,12 @@ public class UserServiceImpl implements UserService {
     private String getUrl(String urlProperty, String data, long id, String phrase) {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter formatter = new Formatter(stringBuilder);
-        formatter.format(environment.getRequiredProperty(urlProperty), data, id, phrase);
+        formatter.format(environment.getRequiredProperty(environment.getRequiredProperty("state") + urlProperty), data, id, phrase);
         return stringBuilder.toString();
     }
 
     private void throwAndLogCodeError(String code) {
         LOGGER.trace("The code '{}' is invalid", code);
-        throw new IllegalArgumentException("The code '" + code + "' is invalid");
+        throw new InvalidParameterException("The code '" + code + "' is invalid");
     }
 }

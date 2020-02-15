@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.UserSort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,5 +41,13 @@ public interface PremiumUserService {
                                     final List<String> friendUsernames, final Integer minReputation,
                                     final Integer maxReputation, final Integer minWinRate,
                                     final Integer maxWinRate, final UserSort sort, final Integer offset,
-                                    final Integer limit);
+                                    final Integer limit, final boolean exactMatchUsernames);
+
+    PremiumUser addLikedUser(final String username, final String username1);
+
+    void removeLikedUser(final String username, final String usernameOfLiked);
+
+    PremiumUser getLikedUser(final String username, final String usernameOfLiked);
+
+    Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit);
 }

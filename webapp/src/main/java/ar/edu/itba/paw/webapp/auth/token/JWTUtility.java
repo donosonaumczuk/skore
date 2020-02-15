@@ -22,8 +22,8 @@ public class JWTUtility {
 
     @Autowired
     public JWTUtility(Environment environment) {
-        this.secret = environment.getProperty("token.secret");
-        this.maxValidTime = environment.getProperty("token.time", Integer.class);
+        this.secret = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".token.secret");
+        this.maxValidTime = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".token.time", Integer.class);
         this.secureRandom = new SecureRandom();
     }
 
