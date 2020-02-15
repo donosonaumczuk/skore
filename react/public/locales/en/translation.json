@@ -105,6 +105,7 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
+        "sesionExpired": "Your session has expired.\n",
         "errors": {
             "username": {
                 "required": "Username is required."
