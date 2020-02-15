@@ -162,7 +162,8 @@ public class UserController {
                                  @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
                                  @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
-                                 @QueryParam("hasResult") String hasResult) {
+                                 @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
+                                 @QueryParam("onlyLikedSports") String onlyLikedSports) {
         if (usernamesPlayersInclude == null) {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
@@ -177,7 +178,8 @@ public class UserController {
                 QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),  QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
                 QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),  QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
-                QueryParamsUtils.booleanOrNull(hasResult))
+                QueryParamsUtils.booleanOrNull(hasResult), QueryParamsUtils.booleanOrElse(onlyLikedUsers, false),
+                QueryParamsUtils.booleanOrElse(onlyLikedSports, false))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);

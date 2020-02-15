@@ -25,7 +25,7 @@ public final class QueryParamsUtils {
         return positiveIntegerOrElse(s, null);
     }
 
-    private static Boolean booleanOrElse(String s, Boolean o) {
+    public static Boolean booleanOrElse(String s, Boolean o) {
         Boolean bool = o;
         if (s != null) {
             if (s.equals("true")) {

@@ -209,11 +209,22 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
-                                    final Integer offset, final GameSort sort, final Boolean onlyWithResults) {
+                                    final Integer offset, final GameSort sort, final Boolean onlyWithResults,
+                                    final boolean onlyWithLikedUsers, final boolean onlyWithLikedSport) {
+        String sessionUsername = null;
+
+        if (onlyWithLikedSport || onlyWithLikedUsers) {
+            sessionUsername = sessionService.getLoggedUser().orElseThrow(() -> {
+                LOGGER.trace("Get matches fails, must be logged to filter matches by liked users or liked sports");
+                return new UnauthorizedException("Must be logged to filter matches by liked users or liked sports");
+            }).getUserName();
+        }
+
         List<Game> games = gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types,
                 sportNames, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, sort, onlyWithResults);
+                usernamesCreatorsNotInclude, sort, onlyWithResults, sessionUsername, onlyWithLikedUsers,
+                onlyWithLikedSport);
 
         return new Page<>(games, offset, limit);
     }
