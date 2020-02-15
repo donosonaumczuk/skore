@@ -29,8 +29,8 @@
         "month": "Mes ",
         "day": "Día ",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
-        "signUp": "Registrarse",
-        "signUpButton": "REGISTRARSE",
+        "signUp": "Crear Cuenta",
+        "signUpButton": "CREAR CUENTA",
         "existingUser": "ya tienes cuenta ",
         "errors": {
             "username": {
@@ -104,7 +104,7 @@
     "login": {
         "loginButton": "INGRESAR",
         "login": "ingresar",
-        "newUser": "eres nuevo? ",
+        "newUser": "¿Eres nuevo? ",
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio."
