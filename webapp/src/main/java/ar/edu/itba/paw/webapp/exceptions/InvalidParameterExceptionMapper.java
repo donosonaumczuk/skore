@@ -14,7 +14,7 @@ public class InvalidParameterExceptionMapper implements ExceptionMapper<InvalidP
     @Override
     public Response toResponse(InvalidParameterException e) {
         return Response
-                .status(Response.Status.FORBIDDEN)
+                .status(Response.Status.BAD_REQUEST)
                 .entity(ApiErrorDto.of(HttpStatus.BAD_REQUEST, e.getMessage()))
                 .build();
     }

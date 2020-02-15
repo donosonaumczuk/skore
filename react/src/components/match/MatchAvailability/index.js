@@ -64,7 +64,6 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             handleClick={joinMatch} currentMatch={currentMatch} 
                             buttonText={buttonText} fontAwesome="fas fa-plus mr-1" />
     }
-  
     return <Fragment></Fragment>
 }
 

@@ -240,7 +240,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public PremiumUser addLikedUser(String username, String usernameOfLiked) {
+    public PremiumUser addLikedUser(final String username, final String usernameOfLiked) {
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
         if (!loggedUser.getUserName().equals(username)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
@@ -260,7 +260,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
     @Transactional
     @Override
-    public void removeLikedUser(String username, String usernameOfLiked) {
+    public void removeLikedUser(final String username, final String usernameOfLiked) {
         PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
         if (!loggedUser.getUserName().equals(username)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
@@ -273,20 +273,30 @@ public class PremiumUserServiceImpl implements PremiumUserService {
         }
     }
 
+    @Transactional
     @Override
-    public PremiumUser getLikedUser(String username, String usernameOfLiked) {
-        ArrayList<String> usernames = new ArrayList<>();
-        usernames.add(username);
-        ArrayList<String> usernamesOfLiked = new ArrayList<>();
-        usernamesOfLiked.add(usernameOfLiked);
-        Page<PremiumUser> likedUsers = findUsersPage(usernames, null, usernamesOfLiked,
-                null, null, null, null, null, 0, 1,
-                true);
-        if (likedUsers.getData().size() != 1) {
-            LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
-            throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+    public PremiumUser getLikedUser(final String username, final String usernameOfLiked) {
+        PremiumUser premiumUser = findByUserName(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        for (PremiumUser liked : premiumUser.getFriends()) {
+            if (liked.getUserName().equals(usernameOfLiked)) {
+                return liked;
+            }
         }
-        return likedUsers.getData().get(0);
+        LOGGER.error("Can't find like with id: {}|{}", username, usernameOfLiked);
+        throw LikeUserNotFoundException.ofUsernames(username, usernameOfLiked);
+    }
+
+    @Transactional
+    @Override
+    public Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit) {
+        List<PremiumUser> likedPremiumUsers = premiumUserDao.getLikedPremiumUsers(username).orElseThrow(() -> {
+            LOGGER.error("Can't find user with username: {}", username);
+            return UserNotFoundException.ofUsername(username);
+        });
+        return new Page<>(likedPremiumUsers, offset, limit);
     }
 
     @Transactional

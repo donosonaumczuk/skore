@@ -3,10 +3,14 @@ import i18next from 'i18next';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 import AuthService from './AuthService';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
 
-const getUsers = async (offset, limit) => {
+const getUsers = async (offset, limit, filters, token) => {
+    const config = { cancelToken: token };
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${USERS_ENDPOINT}?offset=${offset}&limit=${limit}`);
+        const res = await api.get(`${USERS_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {

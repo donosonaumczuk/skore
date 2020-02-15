@@ -70,6 +70,19 @@ const removeLastSpaceFromString = string => {
     return string;
 }
 
+const removePlayerFromMatch = (match, userId) => {
+    let teamOnePlayers = match.team1.players;
+    teamOnePlayers = teamOnePlayers.filter(player => player.userId !== userId);
+    match.team1.players = teamOnePlayers;
+    if (match.team2) {
+        let teamTwoPlayers = match.team2.players;
+        teamTwoPlayers = teamTwoPlayers.filter(player => player.userId !== userId);
+        match.team2.players = teamTwoPlayers;
+    }
+    match.currentPlayers = match.currentPlayers -1;
+    return match;
+}
+
 const addressToString = address => {
     if (!address) {
         return "";
@@ -95,7 +108,8 @@ const Utils = {
     deleteMatch: deleteMatch,
     generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues,
     removeLastSpaceFromString: removeLastSpaceFromString,
-    addressToString: addressToString
+    addressToString: addressToString,
+    removePlayerFromMatch: removePlayerFromMatch
 };
 
 export default Utils;

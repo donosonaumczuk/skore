@@ -171,7 +171,8 @@ public class UserController {
                                  @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
                                  @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
-                                 @QueryParam("hasResult") String hasResult) {
+                                 @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
+                                 @QueryParam("onlyLikedSports") String onlyLikedSports) {
         if (usernamesPlayersInclude == null) {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
@@ -186,7 +187,8 @@ public class UserController {
                 QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude),  QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
                 QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude),  QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
-                QueryParamsUtils.booleanOrNull(hasResult))
+                QueryParamsUtils.booleanOrNull(hasResult), QueryParamsUtils.booleanOrElse(onlyLikedUsers, false),
+                QueryParamsUtils.booleanOrElse(onlyLikedSports, false))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
@@ -296,12 +298,9 @@ public class UserController {
     @Path("/{username}/likedUsers")
     public Response getLikedUser(@PathParam("username") String username,  @QueryParam("limit") String limit,
                                  @QueryParam("offset") String offset, @Context UriInfo uriInfo) {
-        ArrayList<String> usernames = new ArrayList<>();
-        usernames.add(username);
-        Page<LikeUserDto> page = premiumUserService.findUsersPage(null, null, usernames,
-                null, null, null, null, null,
-                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit),
-                true).map((u) -> LikeUserDto.from(u, username));
+        Page<LikeUserDto> page = premiumUserService.getLikedUsers(username,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
+                .map((p) -> LikeUserDto.from(p, username));
         LOGGER.trace("'{}' liked users successfully gotten", username);
         return Response.ok().entity(LikeUserPageDto.from(page, uriInfo)).build();
     }

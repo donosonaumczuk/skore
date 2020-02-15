@@ -62,11 +62,11 @@ public class SportServiceImpl implements SportService {
         }
         ArrayList<String> sport = new ArrayList<>();
         sport.add(sportName);
-        if (playerQuantity != null && !gameService. findGamesPage(null, null, null,
+        if (playerQuantity != null && !gameService.findGamesPage(null, null, null,
                 null, null, sport, null, null, null, null ,
                 null, null ,null, null ,null,
                 null,null, null,null, null,
-                null).getData().isEmpty()) {
+                null, false, false).getData().isEmpty()) {
             LOGGER.trace("Modify sport '{}' failed, is already used in a match", sportName);
             throw SportInvalidStateException.ofSportUsed(sportName);
         }
@@ -86,7 +86,7 @@ public class SportServiceImpl implements SportService {
                 null, sport, null, null, null, null ,null,
                 null ,null, null ,null,
                 null,null, null,null, null,
-                null).getData().isEmpty()) {
+                null, false, false).getData().isEmpty()) {
             LOGGER.trace("Remove sport '{}' failed, is already used in a match", sportName);
             throw SportInvalidStateException.ofSportUsed(sportName);
         }

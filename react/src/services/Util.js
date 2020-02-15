@@ -112,4 +112,5 @@ export {
     addWithoutPlayersToParams,
     addFutureMinTimeToParams,
     addMinFreePlacesToParams,
+    getStringWithTwoDigits
 };

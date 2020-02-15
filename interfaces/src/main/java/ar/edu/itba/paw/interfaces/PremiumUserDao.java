@@ -51,9 +51,11 @@ public interface PremiumUserDao {
                                 final Integer maxReputation, final Integer minWinRate,
                                 final Integer maxWinRate, final UserSort sort, final boolean exactMatchUsernames);
 
-    boolean addLikedUser(String username, String usernameOfLiked);
+    boolean addLikedUser(final String username, final String usernameOfLiked);
 
-    boolean removeLikedUser(String username, String usernameOfLiked);
+    boolean removeLikedUser(final String username, final String usernameOfLiked);
+
+    Optional<List<PremiumUser>> getLikedPremiumUsers(final String username);
 
     boolean addLikedSport(final String username, final String sportName);
 

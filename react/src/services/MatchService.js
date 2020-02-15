@@ -33,7 +33,6 @@ const getMatches = async (offset, limit, filters, token) => {
 const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    paramObject = addFutureMinTimeToParams(paramObject);
     paramObject = addCreatedByToParams(paramObject, username);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {

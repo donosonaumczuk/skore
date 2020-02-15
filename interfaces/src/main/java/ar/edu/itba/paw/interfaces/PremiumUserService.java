@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.UserSort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,11 +43,13 @@ public interface PremiumUserService {
                                     final Integer maxWinRate, final UserSort sort, final Integer offset,
                                     final Integer limit, final boolean exactMatchUsernames);
 
-    PremiumUser addLikedUser(String username, String username1);
+    PremiumUser addLikedUser(final String username, final String username1);
 
-    void removeLikedUser(String username, String usernameOfLiked);
+    void removeLikedUser(final String username, final String usernameOfLiked);
 
-    PremiumUser getLikedUser(String username, String usernameOfLiked);
+    PremiumUser getLikedUser(final String username, final String usernameOfLiked);
+
+    Page<PremiumUser> getLikedUsers(final String username, final Integer offset, final Integer limit);
 
     Sport addLikedSport(final String username, final String sportName);
 

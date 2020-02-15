@@ -34,6 +34,8 @@ import java.util.Set;
 @Transactional
 public class PremiumUserHibernateDaoTest implements Serializable{
 
+    private static final String DO_NOT_EXIST_USERNAME = "DO NOT EXIST";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -445,6 +447,117 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         Assert.assertEquals(2, usersReturn.size());
         Assert.assertEquals(user1, usersReturn.get(0));
         Assert.assertEquals(user3, usersReturn.get(1));
+    }
+
+    @Test
+    public void testAddLikedUser() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user2.getUserName(), user4.getUserName());
+
+        //postconditions
+        PremiumUser user2InDataBase = em.find(PremiumUser.class, user2.getUserName());
+        Assert.assertTrue(hasBeenAdded);
+        Assert.assertTrue(user2InDataBase.getFriends().contains(user4));
+    }
+
+    @Test
+    public void testAddLikedUserAndLikedUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user2.getUserName(), DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testAddLikedUserAndLikeUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(DO_NOT_EXIST_USERNAME, user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testAddLikedUserAndLikeAlreadyExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user1.getUserName(), user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testRemoveLikedUser() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(user1.getUserName(), user4.getUserName());
+
+        //postconditions
+        PremiumUser user1InDataBase = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertTrue(hasBeenRemoved);
+        Assert.assertFalse(user1InDataBase.getFriends().contains(user4));
+    }
+
+    @Test
+    public void testRemoveLikedUserAndLikedUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(user2.getUserName(), DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(hasBeenRemoved);
+    }
+
+    @Test
+    public void testRemoveLikedUserAndLikeUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(DO_NOT_EXIST_USERNAME, user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenRemoved);
+    }
+
+    @Test
+    public void testGetLikedUsers() {
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(user1.getUserName());
+
+        //postconditions
+        Assert.assertTrue(optionalOfListOfLikedUsers.isPresent());
+        Assert.assertEquals(user2, optionalOfListOfLikedUsers.get().get(0));
+        Assert.assertEquals(user3, optionalOfListOfLikedUsers.get().get(1));
+        Assert.assertEquals(user4, optionalOfListOfLikedUsers.get().get(2));
+    }
+
+    @Test
+    public void testGetLikedUsersAndUserDoesNotExist() {
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(optionalOfListOfLikedUsers.isPresent());
+    }
+
+    @Test
+    public void testGetLikedUsersAndhasNoLikes() {
+        //set up
+        user4.getFriends().remove(0);
+        em.persist(user4);
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(user4.getUserName());
+
+        //postconditions
+        Assert.assertTrue(optionalOfListOfLikedUsers.isPresent());
+        Assert.assertTrue(optionalOfListOfLikedUsers.get().size() == 0);
     }
 }
 
