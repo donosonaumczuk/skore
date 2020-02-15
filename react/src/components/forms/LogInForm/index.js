@@ -69,6 +69,9 @@ class LogInFormContainer extends Component {
     render() {
         const { handleSubmit, submitting, url } = this.props; 
         const currentUser = AuthService.getCurrentUser();
+        if (!currentUser && this.props.currentUser) {
+            this.props.updateUser(null);
+        }
         const errorMessage = this.getErrorMessage();
         if (currentUser && !url) {
             return <Redirect to={`/users/${currentUser}`} />
@@ -95,7 +98,8 @@ LogInFormContainer = reduxForm({
 })(LogInFormContainer) 
 
 LogInFormContainer.propTypes = {
-    updateUser: PropTypes.func.isRequired
+    updateUser: PropTypes.func.isRequired,
+    currentUser: PropTypes.string
 }
 
 export default LogInFormContainer;
