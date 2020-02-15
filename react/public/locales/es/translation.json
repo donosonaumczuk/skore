@@ -51,12 +51,12 @@
             },
             "firstName": {
                 "required": "El nombre es obligatorio.\n",
-                "invalidSymbols": "El nombre solo puede contener letras y espacios.\n",
+                "invalidSymbols": "El nombre sólo puede contener letras y espacios.\n",
                 "invalidLength": "El nombre debe tener entre 2 y 100 caracteres.\n"
             },
             "lastName": {
                 "required": "El apellido es obligatorio.\n",
-                "invalidSymbols": "El apellido debe contener solo letras y espacios.\n",
+                "invalidSymbols": "El apellido debe contener sólo letras y espacios.\n",
                 "invalidLength": "El apellido debe tener entre 2 y 100 caracteres.\n"
             },
             "email": {
@@ -72,7 +72,7 @@
             },
             "birthday": {
                 "required": "La fecha de nacimiento es obligatorio.\n",
-                "invalidSymbols": "La fecha de nacimiento solo puede tener dígitos y barra('/').\n",
+                "invalidSymbols": "La fecha de nacimiento sólo puede tener dígitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
             },
@@ -191,7 +191,7 @@
                 "required": "La duración debe contener un valor de horas.\n"
             },
             "durationMinutes": {
-                "required": "La duración debe contener un valor de minutos..\n"
+                "required": "La duración debe contener un valor de minutos.\n"
             },
             "description": {
                 "invalidLength": "La descripción no puede contener mas de 140 caracteres.\n"
@@ -264,7 +264,7 @@
         "errors": {
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
-                "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
+                "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
             }
         }
