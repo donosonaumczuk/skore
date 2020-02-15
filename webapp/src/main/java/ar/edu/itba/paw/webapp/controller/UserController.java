@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.QueryList;
+import ar.edu.itba.paw.models.Sport;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.models.UserSort;
 import ar.edu.itba.paw.webapp.auth.token.JWTUtility;
@@ -16,6 +17,8 @@ import ar.edu.itba.paw.webapp.constants.URLConstants;
 import ar.edu.itba.paw.webapp.dto.AuthDto;
 import ar.edu.itba.paw.webapp.dto.GameDto;
 import ar.edu.itba.paw.webapp.dto.GamePageDto;
+import ar.edu.itba.paw.webapp.dto.LikeSportDto;
+import ar.edu.itba.paw.webapp.dto.LikeSportPageDto;
 import ar.edu.itba.paw.webapp.dto.LikeUserDto;
 import ar.edu.itba.paw.webapp.dto.LikeUserPageDto;
 import ar.edu.itba.paw.webapp.dto.PlaceDto;
@@ -29,6 +32,7 @@ import ar.edu.itba.paw.webapp.utils.JSONUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleUtils;
 import ar.edu.itba.paw.webapp.utils.QueryParamsUtils;
 import ar.edu.itba.paw.webapp.validators.ImageValidators;
+import ar.edu.itba.paw.webapp.validators.SportValidators;
 import ar.edu.itba.paw.webapp.validators.UserValidators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +123,11 @@ public class UserController {
     public static String getLikedUserEndpoint(final String username, final String usernameLiked) {
         return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username)
                 .path("likedUsers").path(usernameLiked).toTemplate();
+    }
+
+    public static String getLikedSportEndpoint(String username, String sportName) {
+        return URLConstants.getApiBaseUrlBuilder().path(BASE_PATH).path(username)
+                .path("likedSport").path(sportName).toTemplate();
     }
 
     @GET
@@ -323,6 +332,47 @@ public class UserController {
                                     @PathParam("usernameOfLiked") String usernameOfLiked) {
         premiumUserService.removeLikedUser(username, usernameOfLiked);
         LOGGER.trace("User '{}' deleted successfully", username);
+        return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/{username}/likedSports")
+    public Response getLikedSport(@PathParam("username") String username,  @QueryParam("limit") String limit,
+                                 @QueryParam("offset") String offset, @Context UriInfo uriInfo) {
+        Page<LikeSportDto> page = premiumUserService.getLikedSports(username,
+                QueryParamsUtils.positiveIntegerOrNull(offset), QueryParamsUtils.positiveIntegerOrNull(limit))
+                .map((s) -> LikeSportDto.from(s, username));
+        LOGGER.trace("'{}' liked sports successfully gotten", username);
+        return Response.ok().entity(LikeSportPageDto.from(page, uriInfo)).build();
+    }
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/{username}/likedSports")
+    public Response addLikedSport(@PathParam("username") String username, @RequestBody final String requestBody) {
+        SportValidators.likedSportCreationValidator("Sport like fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final LikeSportDto likeSportDto = JSONUtils.jsonToObject(requestBody, LikeSportDto.class);
+        Sport sportLiked = premiumUserService.addLikedSport(username, likeSportDto.getSportName());
+        LOGGER.trace("'{}' liked '{}' successfully created", username, likeSportDto.getSportName());
+        return Response.status(HttpStatus.CREATED.value()).entity(LikeSportDto.from(sportLiked, username)).build();
+    }
+
+    @GET
+    @Path("/{username}/likedSports/{sportnameOfLiked}")
+    public Response getLikedSport(@PathParam("username") String username,
+                                 @PathParam("sportnameOfLiked") String sportnameOfLiked) {
+        Sport likedSport = premiumUserService.getLikedSport(username, sportnameOfLiked);
+        LOGGER.trace("Sport like '{}' from user '{}' get successfully", sportnameOfLiked, username);
+        return Response.ok().entity(LikeSportDto.from(likedSport, username)).build();
+    }
+
+    @DELETE
+    @Path("/{username}/likedSports/{sportnameOfLiked}")
+    public Response removeLikedSport(@PathParam("username") String username,
+                                    @PathParam("sportnameOfLiked") String sportnameOfLiked) {
+        premiumUserService.removeLikedSport(username, sportnameOfLiked);
+        LOGGER.trace("Sport like '{}' from user '{}' deleted successfully", sportnameOfLiked, username);
         return Response.noContent().build();
     }
 
