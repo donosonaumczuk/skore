@@ -9,7 +9,7 @@ import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
-import { SC_CLIENT_CLOSED_REQUEST } from '../../../services/constants/StatusCodesConstants';
+import { SC_CLIENT_CLOSED_REQUEST, SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -190,7 +190,7 @@ class HomeContainer extends Component {
             this.cancelMatchLogged(match, userId);
         }
         else {
-            //TODO should never happen
+            this.setStatus({ status: SC_UNAUTHORIZED });
         }
     }
 

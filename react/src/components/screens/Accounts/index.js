@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
+import queryString from 'query-string';
+import PropTypes from 'prop-types';
 import UserService from '../../../services/UserService';
 import Utils from '../../utils/Utils';
 import Accounts from './layout';
@@ -10,12 +13,44 @@ class AccountsContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
+        const queryParams = queryString.parse(props.location.search);
         this.state = {
             accounts: [],
             offset: INITIAL_OFFSET,
             limit: QUERY_QUANTITY,
-            hasMore: true
+            hasMore: true,
+            filters: queryParams
         }
+    }
+
+    getSourceToken = () => {
+        const newSource = Axios.CancelToken.source();
+        if (this.mounted) {
+            this.setState({ currentSource: newSource });
+        }
+        return newSource.token;
+    }
+
+    cancelRequestIfPending = () => {
+        if (this.state.currentSource) {
+            this.state.currentSource.cancel();
+            if (this.mounted) {
+                this.setState({ currentSource: null });
+            }
+        }
+    }
+
+    onSubmit = values => {
+        const newUrl = Utils.buildUrlFromParamQueriesAndTab(values, null);
+        if (this.mounted) {
+            this.setState({
+                accounts: [],
+                offset: INITIAL_OFFSET,
+                hasMore: true,
+                filters: values
+            }, () => { this.getUsers(); }); 
+            this.props.history.push(`/accounts${newUrl}`);
+        }  
     }
 
     updateUsers = response => {
@@ -34,14 +69,17 @@ class AccountsContainer extends Component {
     }
 
     getUsers = async () => {
-        const { offset, limit } = this.state;
-        const response = await UserService.getUsers(offset, limit);
+        const { offset, limit, filters } = this.state;
+        this.cancelRequestIfPending();
+        const token = this.getSourceToken();
+        const response = await UserService.getUsers(offset, limit, filters, token);
         if (this.mounted) {
             this.updateUsers(response);
         }
+        //TODO validate error
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         this.mounted = true;
         this.getUsers();        
     }
@@ -51,13 +89,19 @@ class AccountsContainer extends Component {
         return (
             <Accounts accounts={this.state.accounts} getUsers={this.getUsers}
                         hasMore={this.state.hasMore} isLoading={isLoading}
-                        error={this.state.status} />
+                        error={this.state.status} onSubmit={this.onSubmit}
+                        filters={this.state.filters} />
         )
     }
 
     componentWillUnmount() {
         this.mounted = false;
     }
+}
+
+AccountsContainer.propTypes = {
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 export default AccountsContainer;

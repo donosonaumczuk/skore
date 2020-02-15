@@ -126,10 +126,10 @@
         "cityFilter": "Ciudad / Localidad",
         "sportFilter": "Deporte",
         "addFilters": "AGREGAR FILTROS",
-        "joinMatch": "UNIRSE AL PARTIDO",
-        "joinCompetitiveMatch": "UNIRSE AL PARTIDO COMPETITIVO",
+        "joinMatch": "UNIRSE",
+        "joinCompetitiveMatch": "UNIRSE",
         "cancelMatch": "CANCELAR ASISTENCIA",
-        "deleteMatch": "BORRAR PARTIDO",
+        "deleteMatch": "BORRAR",
         "matches": "Partidos",
         "toJoinTab": "PARA UNIRSE",
         "joinedTab": "UNIDOS",
@@ -268,5 +268,15 @@
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
             }
         }
+    },
+    "sport": {
+        "imageDescription": "Imagen del deporte."
+    },
+    "matchPage": {
+        "TeamOne": "Equipo 1",
+        "TeamTwo": "Equipo 2",
+        "matchIsPlaying": "Partido en curso...",
+        "waitingForScore": "Esperando el resultado...",
+        "matchIsCanceled": "Partido cancelado"
     }
 }

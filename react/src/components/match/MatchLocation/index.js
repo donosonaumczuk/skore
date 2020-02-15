@@ -2,8 +2,6 @@ import React from 'react';
 import LocationPropType from '../../../proptypes/LocationPropType';
 import Utils from '../../utils/Utils';
 
-
-
 const MatchLocation = ({ address }) => {
     const addressString = Utils.addressToString(address);
     return (
