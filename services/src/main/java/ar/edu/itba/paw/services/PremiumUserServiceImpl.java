@@ -200,7 +200,8 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             throw new InvalidParameterException("Birthday must happen in the past");
         }
 
-        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(() -> new UnauthorizedException("Must be logged"));
+        PremiumUser loggedUser = sessionService.getLoggedUser().orElseThrow(
+                () -> new UnauthorizedException("Must be logged to perform this operation"));
         if (!loggedUser.getUserName().equals(username)) {
             LOGGER.trace("User '{}' is not user '{}'", loggedUser.getUserName(), username);
             throw new LackOfPermissionsException("User '" + username + "' update failed, unauthorized");
