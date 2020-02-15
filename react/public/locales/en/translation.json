@@ -273,10 +273,11 @@
         "imageDescription": "Sport picture."
     },
     "matchPage": {
-        "TeamOne": "Team 1",
-        "TeamTwo": "Team 2",
+        "teamOne": "Team 1",
+        "teamTwo": "Team 2",
         "matchIsPlaying": "Match is beign played...",
         "waitingForScore": "Waiting for match score...",
-        "matchIsCanceled": "Match cancelled"
+        "matchIsCanceled": "Match cancelled",
+        "winner": "Winner"
     }
 }
