@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import Spinner from '../../Spinner';
 import SportService from '../../../services/SportService';
+import { SC_OK, SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
 
 class DeleteSport extends Component {
     mounted = false;
@@ -20,9 +21,18 @@ class DeleteSport extends Component {
         this.mounted = true;
         const response = await SportService.deleteSport(this.state.sportName);
         if (response.status) {
-            if (this.mounted) {
-                this.setState({ error: response.status });
-                //TODO check for status of sport with played games
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                this.setState({ error: response.status, executing: false });
+                //TODO check for status of sport with played games 409
             }
         }
         else if (this.mounted) {
@@ -52,7 +62,8 @@ class DeleteSport extends Component {
 } 
 
 DeleteSport.propTypes = {
-    match: PropTypes.object.isRequired
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 export default DeleteSport;

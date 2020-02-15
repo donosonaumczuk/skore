@@ -39,7 +39,7 @@ class EditSportContainer extends Component {
             return {
                 "sportName": sport.sportName,
                 "displayName": sport.displayName,
-                "playersPerTeam": sport.playerQuantity
+                "playersPerTeam": `${sport.playerQuantity}`
             };
         }
         return {};

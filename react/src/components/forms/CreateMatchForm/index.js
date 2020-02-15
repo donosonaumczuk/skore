@@ -10,6 +10,7 @@ import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 100;
@@ -160,7 +161,19 @@ class CreateMatchFormContainer extends Component {
         let match = this.loadMatch(values, this.state.image);
         const response = await MatchService.createMatch(match);
         if (response.status) {
-            //TODO handle error only 409 
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 if any
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             const matchKey= response.key;

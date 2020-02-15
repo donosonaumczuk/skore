@@ -66,6 +66,14 @@ const logOutUser = async () => {
     }
 }
 
+const internalLogout = () => {
+    if (getToken) {
+        removeToken();
+        removeUser(); 
+    }
+    return SC_OK;
+}
+
 const getCurrentUser = () => {
     if (getToken()) {
         const user = JSON.parse(getUser());
@@ -96,6 +104,7 @@ const AuthService = {
     logInUser: logInUser,
     autoLogin: autoLogin,
     logOutUser: logOutUser,
+    internalLogout: internalLogout,
     getCurrentUser: getCurrentUser,
     isAdmin: isAdmin,
     getUserId: getUserId

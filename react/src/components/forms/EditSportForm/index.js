@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import CreateSportValidator from '../validators/CreateSportValidator';
 import SportService from '../../../services/SportService';
+import AuthService from '../../../services/AuthService';
 import EditSportForm from './layout';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -56,9 +58,21 @@ class EditSportFormContainer extends Component {
     
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        const res = await SportService.updateSport(sport);
-        if (res.status && this.mounted) {
-            //TODO handle errors
+        const response = await SportService.updateSport(sport);
+        if (response.status && this.mounted) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else {
+                //TODO handle 409
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             this.props.history.push(`/sports`);
