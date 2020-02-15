@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import EditUserInfoForm from './layout';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import AuthService from '../../../services/AuthService';
 
 const validate = values => {
     const errors = {}
@@ -104,7 +106,16 @@ class EditUserInfoFormContainer extends Component {
         }
         const response = await UserService.updateUser(user, this.state.username);
         if (response.status) {
-            if (this.mounted) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
         }

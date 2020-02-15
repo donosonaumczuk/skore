@@ -153,6 +153,26 @@ const updateUser = async (user, username) => {
     }
 }
 
+const getLikedUsers = async (username, offset, limit, token) => {
+    const config = { cancelToken: token };
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, null);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
+    try {
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedUsers${paramsUrl}`, config);
+        console.log(res);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+
+}
+
 const UserService = {
     getUsers: getUsers,
     getUser: getUser,
@@ -162,7 +182,8 @@ const UserService = {
     getUserMatchesWithResults: getUserMatchesWithResults,
     createUser: createUser,
     verifyUser: verifyUser,
-    updateUser: updateUser
+    updateUser: updateUser,
+    getLikedUsers: getLikedUsers
 };
 
 export default UserService;

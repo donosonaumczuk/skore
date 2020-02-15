@@ -9,9 +9,9 @@ import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import SubLocationInput from '../inputs/SubLocationInput';
 import FormComment from '../elements/FormComment';
+import HomeLocation from '../inputs/HomeLocation';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithError from '../../hocs/WithError';
-import HomeLocation from '../inputs/HomeLocation';
 
 const EditUserInfoForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, home, birthday,

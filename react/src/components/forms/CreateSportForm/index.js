@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
+import CreateSportForm from './layout';
 import CreateSportValidator from '../validators/CreateSportValidator';
 import AuthService from '../../../services/AuthService';
 import SportService from '../../../services/SportService';
-import { SC_FORBIDDEN, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
-import CreateSportForm from './layout';
+import { SC_FORBIDDEN, SC_CONFLICT, SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -61,13 +61,22 @@ class CreateSportFormContainer extends Component {
 
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        const res = await SportService.createSport(sport);
-        if (res.status && this.mounted) {
-            if (res.status === SC_CONFLICT) {
+        const response = await SportService.createSport(sport);
+        if (response.status && this.mounted) {
+            if (response.status === SC_CONFLICT) {
                 this.setState({ sportNameError: true });
             }
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
             else {
-                this.setState({ error: res.status });
+                this.setState({ error: response.status, executing: false });
             }
         }
         else {

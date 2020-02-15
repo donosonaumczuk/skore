@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import MatchPagePlayer from './components/MatchPagePlayer';
+
+const TEAM_ONE_NUMBER = 1;
+const TEAM_TWO_NUMBER = 2;
 
 const getGamePlayersWithSameLength = (teamOnePlayers, teamTwoPlayers) => {
     let maxLength = teamOnePlayers.length > teamTwoPlayers.length ? teamOnePlayers.length :
@@ -16,17 +19,41 @@ const getGamePlayersWithSameLength = (teamOnePlayers, teamTwoPlayers) => {
     return gamePlayers;
 }
 
-const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers }) => {
+const getTeamAward = (score, teamNumber) => {
+    if (score) {
+        const teamScores = score.split("-");
+        const teamOneScore = parseInt(teamScores[0]);
+        const teamTwoScore = parseInt(teamScores[1]);
+        if (teamOneScore !== teamTwoScore) {
+            const winnerTeam = teamOneScore > teamTwoScore ? TEAM_ONE_NUMBER : TEAM_TWO_NUMBER;
+            if (winnerTeam === teamNumber) {
+                return (
+                    <i className="mr-2 fas fa-winner fa-award" data-toggle="tooltip"
+                        data-placement="top" data-html="true" 
+                        title={i18next.t('matchPage.winner')}>
+                    </i>
+                );
+            }
+        }
+    }
+    return <Fragment></Fragment>;
+}
+
+const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
     const gameplayers = getGamePlayersWithSameLength( teamOnePlayers, teamTwoPlayers );
+    const teamOneAward = getTeamAward(score, TEAM_ONE_NUMBER);
+    const teamTwoAward = getTeamAward(score, TEAM_TWO_NUMBER);
     return (
         <div className="row text-center">
             <table className="table table-striped">
                 <thead>
                 <tr>
                     <th className="team-name" scope="col">
+                        {teamOneAward}
                         {i18next.t('matchPage.teamOne')}
                     </th>
                     <th className="team-name" scope="col">
+                        {teamTwoAward}
                         {i18next.t('matchPage.teamTwo')}
                     </th>
                 </tr>
@@ -42,6 +69,7 @@ const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers }) => {
 MatchPagePlayers.propTypes = {
     teamOnePlayers: PropTypes.array.isRequired,
     teamTwoPlayers: PropTypes.array.isRequired,
-
+    score: PropTypes.string
 }
+
 export default MatchPagePlayers;

@@ -15,14 +15,14 @@ const getTag = (currentMatch, currentUser, updateMatchScore) => {
                 if (currentUser === currentMatch.creator) {
                     return (
                         <div className="row text-center mb-3">
-                                <div className="col">
-                                    <button className="btn btn-green"
-                                            onClick={(e) => updateMatchScore(e, currentMatch)}>
-                                        <i className="fas fa-plus mr-1"></i>
-                                        {i18next.t('setMatchScoreForm.setScoreButton')}
-                                    </button>
-                                </div>
+                            <div className="col">
+                                <button className="btn btn-green"
+                                        onClick={(e) => updateMatchScore(e, currentMatch)}>
+                                    <i className="fas fa-plus mr-1"></i>
+                                    {i18next.t('setMatchScoreForm.setScoreButton')}
+                                </button>
                             </div>
+                        </div>
                     );
                 }
                 else {

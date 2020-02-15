@@ -108,12 +108,13 @@ class App extends Component {
                         <Route exact path="/confirmAccount" render={(props) => 
                                 <ConfirmAccount {...props} updateUser={this.updateUser} />} />
                         <Route exact path="/login">
-                            <LogInForm updateUser={this.updateUser} />
+                            <LogInForm updateUser={this.updateUser} currentUser={username} />
                         </Route>
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route exact path="/accounts" component={Accounts} />
+                        <Route exact path="/accounts" render={(props) => 
+                                                <Accounts {...props} currentUser={username} />} />
                         <Route exact path="/admin">
                             <Admin />
                         </Route>
