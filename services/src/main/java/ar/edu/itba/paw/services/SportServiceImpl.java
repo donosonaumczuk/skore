@@ -62,7 +62,7 @@ public class SportServiceImpl implements SportService {
         }
         ArrayList<String> sport = new ArrayList<>();
         sport.add(sportName);
-        if (playerQuantity != null && !gameService. findGamesPage(null, null, null,
+        if (playerQuantity != null && !gameService.findGamesPage(null, null, null,
                 null, null, sport, null, null, null, null ,
                 null, null ,null, null ,null,
                 null,null, null,null, null,
