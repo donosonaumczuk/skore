@@ -5,6 +5,7 @@ import AuthService from '../../../services/AuthService';
 import MatchService from '../../../services/MatchService';
 import SetMatchScoreForm from './layout';
 import SetMatchScoreValidator from '../validators/SetMatchScoreValidator';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -37,8 +38,18 @@ class SetMatchScoreFormContainer extends Component {
         }
         const response = await MatchService.setScore(this.state.matchKey, score);
         if (response.status) {
-            if (this.mounted) {
-                this.setState({ status: response.status, executing: false })
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 already has score
+                this.setState({ error: response.status, executing: false });
             }
         }
         else {
