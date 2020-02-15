@@ -10,6 +10,8 @@ const Account = ({ account }) => {
                     <h5 className="card-title">
                         {account.username}
                     </h5>
+                    {/* TODO make button */}
+                    <button>likeUser</button>
                 </div>
             </div>
         </Link>

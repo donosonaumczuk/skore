@@ -126,10 +126,10 @@
         "cityFilter": "City / Locality",
         "sportFilter": "Sport",
         "addFilters": "ADD FILTERS",
-        "joinMatch": "JOIN MATCH",
-        "joinCompetitiveMatch": "JOIN COMPETITIVE MATCH",
+        "joinMatch": "JOIN",
+        "joinCompetitiveMatch": "JOIN",
         "cancelMatch": "CANCEL ASSISTANCE",
-        "deleteMatch": "DELETE MATCH",
+        "deleteMatch": "DELETE",
         "matches": "Matches",
         "toJoinTab": "TO JOIN",
         "joinedTab": "JOINED",
@@ -268,5 +268,15 @@
                 "invalidLength": "Team score must be between one and ten digitis.\n"
             }
         }
+    },
+    "sport": {
+        "imageDescription": "Sport picture."
+    },
+    "matchPage": {
+        "TeamOne": "Team 1",
+        "TeamTwo": "Team 2",
+        "matchIsPlaying": "Match is beign played...",
+        "waitingForScore": "Waiting for match score...",
+        "matchIsCanceled": "Match cancelled"
     }
 }

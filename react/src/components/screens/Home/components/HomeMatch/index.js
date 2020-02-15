@@ -14,7 +14,7 @@ const getImageUrls = links => {
             sportImageUrl = link.href;
         }
         return link;
-    })
+    });
     return {
         creatorImageUrl: creatorImageUrl,
         sportImageUrl: sportImageUrl
