@@ -89,8 +89,20 @@ class MatchPageContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await MatchService.cancelMatchWithAccount(match.key, userId);
-        if (response.status && this.mounted) {
-            this.setState({ status: response.status });
+        if (response.status) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 already cancelled asistance
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             const newMatch = Utils.removePlayerFromMatch(match, userId)
