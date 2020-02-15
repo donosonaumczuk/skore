@@ -36,10 +36,15 @@ import java.util.Properties;
         "ar.edu.itba.paw.webapp.config", "ar.edu.itba.paw.webapp.constants",})
 @Configuration
 @PropertySources({
-        @PropertySource(value = "classpath:properties/db.properties"),
-        @PropertySource(value = "classpath:properties/email.properties"),
-        @PropertySource(value = "classpath:properties/url.properties"),
-        @PropertySource(value = "classpath:properties/token.properties"),
+        @PropertySource(value = "classpath:properties/local/db.properties"),
+        @PropertySource(value = "classpath:properties/local/email.properties"),
+        @PropertySource(value = "classpath:properties/local/url.properties"),
+        @PropertySource(value = "classpath:properties/local/token.properties"),
+        @PropertySource(value = "classpath:properties/production/db.properties"),
+        @PropertySource(value = "classpath:properties/production/email.properties"),
+        @PropertySource(value = "classpath:properties/production/url.properties"),
+        @PropertySource(value = "classpath:properties/production/token.properties"),
+        @PropertySource(value = "classpath:properties/state.properties"),
         //If it is conflict in properties it keep the last one
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -50,25 +55,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("classpath:schema.sql")
     private org.springframework.core.io.Resource schemaSQL;
 
-    /* Production */
-//    @Bean
-//    public DataSource dataSource() {
-//        final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-//        dataSource.setDriverClass(org.postgresql.Driver.class);
-//        dataSource.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2018b-04");
-//        dataSource.setUsername("paw-2018b-04");
-//        dataSource.setPassword("oc7Yzau4N");
-//
-//        return dataSource;
-//    }
-
     @Bean
     public DataSource dataSource() {
-        String dbHost  = environment.getRequiredProperty("db.host");
-        Integer dbPort = environment.getRequiredProperty("db.port", Integer.class);
-        String dbName  = environment.getRequiredProperty("db.name");
-        String dbUsername = environment.getRequiredProperty("db.username");
-        String dbPassword = environment.getRequiredProperty("db.pass");
+        String dbHost  = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".db.host");
+        Integer dbPort = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".db.port", Integer.class);
+        String dbName  = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".db.name");
+        String dbUsername = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".db.username");
+        String dbPassword = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".db.pass");
 
         final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(org.postgresql.Driver.class);
@@ -129,8 +122,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername(environment.getRequiredProperty("email.username"));
-        mailSender.setPassword(environment.getRequiredProperty("email.pass"));
+        mailSender.setUsername(environment.getRequiredProperty(environment.getRequiredProperty("state") + ".email.username"));
+        mailSender.setPassword(environment.getRequiredProperty(environment.getRequiredProperty("state") + ".email.pass"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

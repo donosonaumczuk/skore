@@ -27,7 +27,8 @@ public interface GameService {
                              final List<String> usernamesPlayersNotInclude,
                              final List<String> usernamesCreatorsInclude,
                              final List<String> usernamesCreatorsNotInclude, final Integer limit,
-                             final Integer offset, final GameSort sort, final Boolean onlyWithResults);
+                             final Integer offset, final GameSort sort, final Boolean onlyWithResults,
+                             final boolean onlyWithLikedUsers, final boolean onlyWithLikedSport);
 
     Game modify(final String teamName1, final String teamName2, final LocalDateTime startTime,
                 final Long minutesOfDuration, final String type, final String result,

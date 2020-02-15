@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.LackOfPermissionsException;
 import ar.edu.itba.paw.exceptions.alreadyexists.GameAlreadyExistException;
 import ar.edu.itba.paw.exceptions.invalidstate.GameInvalidStateException;
@@ -68,7 +69,7 @@ public class GameServiceImpl implements GameService {
                        final String title, final String sportName) {
         if (startTime.isBefore(LocalDateTime.now())) {
             LOGGER.trace("StartTime must happen in the future");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
         PremiumUser logged = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
@@ -81,8 +82,8 @@ public class GameServiceImpl implements GameService {
         if (isIndividual) {
             if (teamName1 != null || teamName2 != null) {
                 LOGGER.trace("Creation fails, match '{}' cannot be individual and add teams to match", gameKey.toString());
-                throw new IllegalArgumentException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
-                        "individual and add teams to match"); //TODO: map!!!!!
+                throw new InvalidParameterException("Creation fails, match '" + gameKey.toString() + "' cannot be " +
+                        "individual and add teams to match");
             }
             newTeamName1 = teamService.createTempTeam1(logged.getUserName(), logged.getUser().getUserId(), sportName)
                     .getName();
@@ -208,11 +209,22 @@ public class GameServiceImpl implements GameService {
                                     final List<String> usernamesPlayersNotInclude,
                                     final List<String> usernamesCreatorsInclude,
                                     final List<String> usernamesCreatorsNotInclude, final Integer limit,
-                                    final Integer offset, final GameSort sort, final Boolean onlyWithResults) {
+                                    final Integer offset, final GameSort sort, final Boolean onlyWithResults,
+                                    final boolean onlyWithLikedUsers, final boolean onlyWithLikedSport) {
+        String sessionUsername = null;
+
+        if (onlyWithLikedSport || onlyWithLikedUsers) {
+            sessionUsername = sessionService.getLoggedUser().orElseThrow(() -> {
+                LOGGER.trace("Get matches fails, must be logged to filter matches by liked users or liked sports");
+                return new UnauthorizedException("Must be logged to filter matches by liked users or liked sports");
+            }).getUserName();
+        }
+
         List<Game> games = gameDao.findGames(minStartTime, maxStartTime, minFinishTime, maxFinishTime, types,
                 sportNames, minQuantity, maxQuantity, countries, states, cities, minFreePlaces, maxFreePlaces,
                 usernamesPlayersInclude, usernamesPlayersNotInclude, usernamesCreatorsInclude,
-                usernamesCreatorsNotInclude, sort, onlyWithResults);
+                usernamesCreatorsNotInclude, sort, onlyWithResults, sessionUsername, onlyWithLikedUsers,
+                onlyWithLikedSport);
 
         return new Page<>(games, offset, limit);
     }
@@ -226,7 +238,7 @@ public class GameServiceImpl implements GameService {
                        final String title, final String key) {
         if (startTime.isBefore(LocalDateTime.now())) {
             LOGGER.trace("StartTime must happen in the future");
-            throw new IllegalArgumentException("Birthday must happen in the past");
+            throw new InvalidParameterException("Birthday must happen in the past");
         }
         GameKey gameKey = getGameKey(key);
         Game gameOld = findByKey(key).orElseThrow(() -> {
@@ -242,7 +254,7 @@ public class GameServiceImpl implements GameService {
                     "' is not creator of '" + key + "' match");
         }
         if ((teamName1 != null || teamName2 != null) && gameOld.getGroupType().equals(INDIVIDUAL.toString())) {
-            throw new IllegalArgumentException("Cannot modify teams in a individual match"); //TODO: map!!
+            throw new InvalidParameterException("Cannot modify teams in a individual match");
         }
 
         //TODO: check a game with key is no already added
@@ -279,7 +291,7 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Delete game failed, game '{}' has already started", key);
             throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
-        if (game.getTeam1().getPlayers().size() + game.getTeam1().getPlayers().size() ==
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() ==
                 game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
             LOGGER.trace("Delete game failed, game '{}' is full", key);
             throw GameInvalidStateException.ofGameFull(key);
@@ -319,7 +331,12 @@ public class GameServiceImpl implements GameService {
                     "' must be the creator of '" + key + "' match");
         }
         if (game.getFinishTime().isAfter(LocalDateTime.now())) {
+            LOGGER.trace("Update game failed, game '{}' is not played yet", key);
             throw GameInvalidStateException.ofGameNotPlayedYet(key);
+        }
+        if (game.getResult() != null) {
+            LOGGER.trace("Update game failed, game '{}' already has result", key);
+            throw GameInvalidStateException.ofGameWithResult(key);
         }
         game.setResult(scoreTeam1 + "-" + scoreTeam2);
 

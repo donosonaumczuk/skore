@@ -265,7 +265,89 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     @Override
-    public boolean addSport(final String username, String sportName) {
+    public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
+                                       final List<String> friendUsernames, final Integer minReputation,
+                                       final Integer maxReputation, final Integer minWinRate,
+                                       final Integer maxWinRate, final UserSort sort, final boolean exactMatchUsernames) {
+        StringBuilder queryStart = new StringBuilder(QUERY_PART_1);
+        if (friendUsernames != null && !friendUsernames.isEmpty()) {
+            queryStart = queryStart.append(QUERY_PART_2);
+        }
+        if (sportLiked != null && !sportLiked.isEmpty()) {
+            queryStart = queryStart.append(QUERY_PART_3);
+        }
+        queryStart = queryStart.append(QUERY_PART_4);
+
+        DaoHelper daoHelper = new DaoHelper(queryStart.toString());
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
+        daoHelper.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
+        //TODO: winrate filter and Sort, need base migration
+        if (exactMatchUsernames) {
+            daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
+        }
+        else {
+            daoHelper.addListFilters(false, false, QUERY_USERNAME_NAME, USERNAME, usernames);
+        }
+        daoHelper.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
+        daoHelper.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
+
+        final TypedQuery<PremiumUser> query = em.createQuery(daoHelper.getQuery() +
+                (sort != null ? sort.toQuery() : ""), PremiumUser.class);
+        List<String> valueName = daoHelper.getValueNames();
+        List<Object> values    = daoHelper.getValues();
+
+        for(int i = 0; i < valueName.size(); i++) {
+            query.setParameter(valueName.get(i), values.get(i));
+        }
+
+        return query.getResultList();
+    }
+
+    @Override
+    public boolean addLikedUser(final String username, final String usernameOfLiked) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
+
+        if(!premiumUserOfLiked.isPresent() || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getFriends().contains(premiumUserOfLiked.get())) {
+            return false;
+        }
+        else {
+            user.getFriends().add(premiumUserOfLiked.get());
+            em.merge(user);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean removeLikedUser(final String username, final String usernameOfLiked) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        Optional<PremiumUser> premiumUserOfLiked = findByUserName(usernameOfLiked);
+
+        if(!premiumUserOfLiked.isPresent() || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getFriends().contains(premiumUserOfLiked.get())) {
+            user.getFriends().remove(premiumUserOfLiked.get());
+            em.merge(user);
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<List<PremiumUser>> getLikedPremiumUsers(String username) {
+        Optional<PremiumUser> user = findByUserName(username);
+        return user.map(PremiumUser::getFriends);
+    }
+
+    @Override
+    public boolean addLikedSport(final String username, final String sportName) {
         Sport sport = em.find(Sport.class, sportName);
         Optional<PremiumUser> premiumUser = findByUserName(username);
 
@@ -282,21 +364,11 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
             em.merge(user);
             return true;
         }
-
     }
 
     @Override
-    public List<Sport> getSports(String username) {
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-        if(premiumUser.isPresent()) {
-            return premiumUser.get().getLikes();
-        }
-        else return null;
-    }
-
-    @Override
-    public boolean removeSport(final String username, String sportName) {
-        Sport sport = em.find(Sport.class, sportName);
+    public boolean removeLikedSport(final String username, final String sportnameOfLiked) {
+        Sport sport = em.find(Sport.class, sportnameOfLiked);
         Optional<PremiumUser> premiumUser = findByUserName(username);
 
         if(sport == null || !premiumUser.isPresent()) {
@@ -307,45 +379,13 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         if(user.getLikes().contains(sport)) {
             user.getLikes().remove(sport);
             em.merge(user);
-            return true;
         }
-        else {
-            return false;
-        }
-
+        return true;
     }
 
     @Override
-    public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
-                                       final List<String> friendUsernames, final Integer minReputation,
-                                       final Integer maxReputation, final Integer minWinRate,
-                                       final Integer maxWinRate, final UserSort sort) {
-        StringBuilder queryStart = new StringBuilder(QUERY_PART_1);
-        if (friendUsernames != null && !friendUsernames.isEmpty()) {
-            queryStart = queryStart.append(QUERY_PART_2);
-        }
-        if (sportLiked != null && !sportLiked.isEmpty()) {
-            queryStart = queryStart.append(QUERY_PART_3);
-        }
-        queryStart = queryStart.append(QUERY_PART_4);
-
-        DaoHelper daoHelper = new DaoHelper(queryStart.toString());
-        daoHelper.addFilter(QUERY_REPUTATION_NAME, LESS_THAN, MIN_REPUTATION, minReputation);
-        daoHelper.addFilter(QUERY_REPUTATION_NAME, GREATER_THAN, MAX_REPUTATION, maxReputation);
-        //TODO: winrate filter and Sort, need base migration
-        daoHelper.addFilter(QUERY_USERNAME_NAME, EQUALS, USERNAME, usernames);
-        daoHelper.addFilter(QUERY_LIKES_NAME, LIKES_OPERATOR, SPORT, sportLiked);
-        daoHelper.addFilter(QUERY_FRIENDS_NAME, FRIENDS_OPERATOR, USERNAME_FRIENDS, friendUsernames);
-
-        final TypedQuery<PremiumUser> query = em.createQuery(daoHelper.getQuery() +
-                (sort != null ? sort.toQuery() : ""), PremiumUser.class);
-        List<String> valueName = daoHelper.getValueNames();
-        List<Object> values    = daoHelper.getValues();
-
-        for(int i = 0; i < valueName.size(); i++) {
-            query.setParameter(valueName.get(i), values.get(i));
-        }
-
-        return query.getResultList();
+    public Optional<List<Sport>> getLikedSports(final String username) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        return premiumUser.map(PremiumUser::getLikes);
     }
 }
