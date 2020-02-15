@@ -258,14 +258,20 @@
         "canceled": "You have cancelled your asistance to the match."
     },
     "setMatchScoreForm": {
-        "teamOneScore": "Team 1 Score ",
-        "teamTwoScore": "Team 2 Score ",
+        "teamOneScore": "Your team score ",
+        "teamTwoScore": "Opponent team score ",
+        "repeatTeamOneScore": "Repeat your team score ",
+        "repeatTeamTwoScore": "Repeat opponent team score ",
         "setScoreButton": "SET SCORE",
         "errors": {
             "teamScore": {
                 "required": "Team score is required.\n",
                 "invalidSymbols": "Team score must have only numbers.\n",
                 "invalidLength": "Team score must be between one and ten digitis.\n"
+            },
+            "repeatedScore": {
+                "teamOneDoesNotMatch": "Score does not match your team score.\n",
+                "teamTwoDoesNotMatch": "Score does not match opponent team score.\n"
             }
         }
     },

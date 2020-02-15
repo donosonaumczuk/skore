@@ -8,8 +8,11 @@ import SetMatchScoreValidator from '../validators/SetMatchScoreValidator';
 
 const validate = values => {
     const errors = {}
-    errors.teamOneScore = SetMatchScoreValidator.validateTeamScore(values.teamOneScore);
-    errors.teamTwoScore = SetMatchScoreValidator.validateTeamScore(values.teamTwoScore);
+    const { teamOneScore, teamTwoScore, repeatTeamOneScore, repeatTeamTwoScore } = values;
+    errors.teamOneScore = SetMatchScoreValidator.validateTeamScore(teamOneScore);
+    errors.teamTwoScore = SetMatchScoreValidator.validateTeamScore(teamTwoScore);
+    errors.repeatTeamOneScore = SetMatchScoreValidator.validateRepeatTeamOneScore(repeatTeamOneScore, teamOneScore);
+    errors.repeatTeamTwoScore = SetMatchScoreValidator.validateRepeatTeamTwoScore(repeatTeamTwoScore, teamTwoScore);
     return errors;
 }
 

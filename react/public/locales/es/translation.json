@@ -258,14 +258,20 @@
         "canceled": "Cancelaste tu asistencia al partido."
     },
     "setMatchScoreForm": {
-        "teamOneScore": "Resultado del equipo 1 ",
-        "teamTwoScore": "Resultado del equipo 2 ",
+        "teamOneScore": "Resultado de su equipo ",
+        "teamTwoScore": "Resultado del equipo rival ",
+        "repeatTeamOneScore": "Repita el resultado de su equipo ",
+        "repeatTeamTwoScore": "Repita el resultado del equipo rival ",
         "setScoreButton": "ACTUALIZAR RESULTADO",
         "errors": {
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
                 "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+            },
+            "repeatedScore": {
+                "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
+                "teamTwoDoesNotMatch": "El resultado no coincide con el resultado del equipo rival.\n"
             }
         }
     },
