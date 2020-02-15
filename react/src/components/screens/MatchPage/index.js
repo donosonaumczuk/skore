@@ -4,7 +4,7 @@ import MatchPage from './layout';
 import MatchService from '../../../services/MatchService';
 import AuthService from '../../../services/AuthService';
 import Utils from '../../utils/Utils';
-import { SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 class MatchPageContainer extends Component {
     mounted = false;
@@ -41,8 +41,20 @@ class MatchPageContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await MatchService.joinMatchWithAccount(match.key, userId);
-        if (response.status && this.mounted) {
-            this.setState({ status: response.status });
+        if (response.status) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 already joined
+                this.setState({ error: response.status, executing: false });
+            }
         }
         else {
             if (this.mounted) {
