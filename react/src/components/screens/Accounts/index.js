@@ -112,7 +112,7 @@ class AccountsContainer extends Component {
     dislikeUser = async (e, username) => {
         e.stopPropagation();
         const { currentUser } = this.props;
-        const response = await UserService.likeUser(currentUser, username);
+        const response = await UserService.dislikeUser(currentUser, username);
         if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
                 this.setState({ error: response.status });
@@ -160,7 +160,6 @@ class AccountsContainer extends Component {
                 if (!this.state.loading) {
                     await this.getLikes();
                     hasMore = this.mounted ? this.state.hasMoreLikes : false;
-                    // console.log(this.state);
                 }
             }
         }

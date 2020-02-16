@@ -31,7 +31,9 @@ test('Sports snapshot test', () => {
 
     //execution
     const component = renderer.create(
-      <Sports sports={sports} getSports={getSports} hasMore={hasMore} />,
+      <Sports sports={sports} getSports={() => {}} likeSport={() => {}} 
+                hasMore={false} currentUser="" dislikeSport={() => {}}
+                likes={{}} />
     );
     let tree = component.toJSON();
 
@@ -53,6 +55,9 @@ test('enzyme demo', () => {
             ]
         }
     ];
-    const wrapper = shallow(<Sports sports={sports} />);
+    const wrapper = shallow(<Sports sports={sports} getSports={() => {}} 
+                                    likeSport={() => {}} hasMore={false}
+                                    currentUser="" dislikeSport={() => {}}
+                                    likes={{}} />);
     expect(wrapper.exists()).toBeTruthy();
 })
