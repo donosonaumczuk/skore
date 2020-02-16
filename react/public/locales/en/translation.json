@@ -176,7 +176,7 @@
             "title": {
                 "required": "Title is required.\n",
                 "invalidSymbols": "Title can have alphanumeric symbols, spaces and the following characters '¿?¡!-_.'\n",
-                "invalidLength": "Title must be between 4 and 100 characters length.\n"
+                "invalidLength": "Title must be between 4 and 140 characters length.\n"
             },
             "competitivity": {
                 "required": "Competitivity is required.\n"
@@ -275,7 +275,7 @@
             "teamScore": {
                 "required": "Team score is required.\n",
                 "invalidSymbols": "Team score must have only numbers.\n",
-                "invalidLength": "Team score must be between one and ten digitis.\n"
+                "invalidLength": "Team score must be between one and four digitis.\n"
             },
             "repeatedScore": {
                 "teamOneDoesNotMatch": "Score does not match your team score.\n",

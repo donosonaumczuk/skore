@@ -49,10 +49,13 @@ class ConfirmMatchContainer extends Component {
     }
 
     render() {
+        let message = i18next.t('confirmAssistance.confirmed');
+        if (this.state.errorMessage) {
+            message = this.state.errorMessage
+        }
         return (
             <ConfirmMatch error={this.state.status} isLoading={this.state.loading} 
-                            message={i18next.t('confirmAssistance.confirmed')}
-                            matchKey={this.state.matchKey} />
+                            message={message} matchKey={this.state.matchKey} />
         );
     }
 

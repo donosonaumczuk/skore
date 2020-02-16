@@ -176,7 +176,7 @@
             "title": {
                 "required": "El nombre del partido es obligatorio.\n",
                 "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
-                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
+                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 140 caracteres.\n"
             },
             "competitivity": {
                 "required": "La competitividad es obligatoria.\n"
@@ -275,7 +275,7 @@
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
                 "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
-                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y cuatro dígitos.\n"
             },
             "repeatedScore": {
                 "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
