@@ -7,6 +7,7 @@ import Account from './components/Account';
 import AccountPropType from '../../../proptypes/AccountPropType';
 import SearchBar from './components/SearchBar';
 import WithError from '../../hocs/WithError';
+import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 
 const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
@@ -49,4 +50,4 @@ Accounts.propTypes = {
     history: PropTypes.object.isRequired
 }
 
-export default WithError(WithLoading(Accounts));
+export default WithError(WithExecuting(WithLoading(Accounts)));

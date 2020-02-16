@@ -9,11 +9,11 @@ import java.util.List;
 
 public class LikeSportPageDto {
 
-    private final List<LikeSportDto> likedUsers;
+    private final List<LikeSportDto> likedSports;
     private final List<Link> links;
 
     private LikeSportPageDto(Page<LikeSportDto> page, UriInfo uriInfo) {
-        this.likedUsers = page.getData();
+        this.likedSports = page.getData();
         this.links = HateoasUtils.getHateoasForPageLinks(page, HateoasUtils.getQuery(uriInfo.getQueryParameters(false)),
                 uriInfo.getPath());
     }
@@ -22,8 +22,8 @@ public class LikeSportPageDto {
         return new LikeSportPageDto(allLikedSportsPage, uriInfo);
     }
 
-    public List<LikeSportDto> getLikedUsers() {
-        return likedUsers;
+    public List<LikeSportDto> getLikedSports() {
+        return likedSports;
     }
 
     public List<Link> getLinks() {
