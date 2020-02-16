@@ -338,7 +338,7 @@ public class GameServiceImpl implements GameService {
             LOGGER.trace("Update game failed, game '{}' already has result", key);
             throw GameInvalidStateException.ofGameWithResult(key);
         }
-        game.setResult(scoreTeam1 + " - " + scoreTeam2);
+        game.setResult(scoreTeam1 + "-" + scoreTeam2);
 
         return game;
     }

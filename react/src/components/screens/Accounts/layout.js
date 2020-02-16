@@ -20,7 +20,7 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
                 </h1>
             </center>
             <div className="container">
-                <SearchBar onSubmit={onSubmit} inputStyle={inputStyle} //TODO: SearchBar doesn't have required attribute handleSubmit
+                <SearchBar onSubmit={onSubmit} inputStyle={inputStyle}
                             label={i18next.t('createUserForm.username')}
                             initialValues={filters} />
             </div>

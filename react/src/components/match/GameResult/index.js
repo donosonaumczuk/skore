@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import i18next from 'i18next';
 
 const getResult = gameResult => {
-    const results = gameResult.split(" - ");
+    const results = gameResult.split("-");
     return {
         teamOne: parseInt(results[0], 10),
         teamTwo: parseInt(results[1], 10)

@@ -19,12 +19,12 @@ const Sports = (props) => {
             </InfiniteScroll>
         </div>
     );
-};
+}
 
 Sports.propTypes = {
     sports: PropTypes.arrayOf(SportPropType),
     getSports: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired
-};
+}
 
 export default WithError(WithLoading(Sports));

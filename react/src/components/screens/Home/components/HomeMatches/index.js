@@ -19,7 +19,7 @@ const HomeMatches = (props) => {
             </InfiniteScroll>
         </div>
     );
-};
+}
 
 HomeMatches.propTypes = {
     matches: PropTypes.array.isRequired,//TODO validate array of HomeMatchProptype
@@ -29,6 +29,6 @@ HomeMatches.propTypes = {
     joinMatch: PropTypes.func.isRequired,
     cancelMatch: PropTypes.func.isRequired,
     deleteMatch: PropTypes.func.isRequired
-};
+}
 
 export default HomeMatches;

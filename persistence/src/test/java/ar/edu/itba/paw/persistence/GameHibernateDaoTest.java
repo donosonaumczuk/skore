@@ -70,7 +70,7 @@ public class GameHibernateDaoTest {
                             LocalDateTime.parse("2018-11-11T19:00:00"), "competitive", null,
                             "Alan prefiere verlo y recursar", "La final de la libertadores",
                             null);
-        game1.setResult("5 - 1");
+        game1.setResult("5-1");
         Team team3          = new Team(account1, "C.A.I.", "Club Atletico Independiente", false,
                             sport, null);
         team3.addPlayer(account1.getUser());

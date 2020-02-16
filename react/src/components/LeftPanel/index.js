@@ -10,7 +10,7 @@ const getTabs = (user, currentTab, handleTabChange) => {
         return <Tabs currentTab={currentTab} handleTabChange={handleTabChange} />
     }
     return <React.Fragment/>;
-};
+}
  
 const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, updateFilters }) => {
     const user = currentUser;
@@ -27,7 +27,7 @@ const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, upda
             <FilterMenu initialValues={filters} updateFilters={updateFilters} />
         </div>
     );
-};
+}
 
 HomeLeftPanel.propTypes = {
     currentTab: PropTypes.number.isRequired,
@@ -35,6 +35,6 @@ HomeLeftPanel.propTypes = {
     currentUser: PropTypes.string,
     updateFilters: PropTypes.func.isRequired,
     filters: PropTypes.object.isRequired
-};
+}
 
 export default HomeLeftPanel;

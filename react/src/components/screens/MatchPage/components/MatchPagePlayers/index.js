@@ -17,11 +17,11 @@ const getGamePlayersWithSameLength = (teamOnePlayers, teamTwoPlayers) => {
         };
     }
     return gamePlayers;
-};
+}
 
 const getTeamAward = (score, teamNumber) => {
     if (score) {
-        const teamScores = score.split(" - ");
+        const teamScores = score.split("-");
         const teamOneScore = parseInt(teamScores[0]);
         const teamTwoScore = parseInt(teamScores[1]);
         if (teamOneScore !== teamTwoScore) {
@@ -37,7 +37,7 @@ const getTeamAward = (score, teamNumber) => {
         }
     }
     return <Fragment/>;
-};
+}
 
 const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
     const gamePlayers = getGamePlayersWithSameLength( teamOnePlayers, teamTwoPlayers );
@@ -64,12 +64,12 @@ const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
             </table>
         </div>
     )
-};
+}
 
 MatchPagePlayers.propTypes = {
     teamOnePlayers: PropTypes.array.isRequired,
     teamTwoPlayers: PropTypes.array.isRequired,
     score: PropTypes.string
-};
+}
 
 export default MatchPagePlayers;
