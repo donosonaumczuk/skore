@@ -249,6 +249,47 @@ const dislikeSport = async (username, likedSport) => {
     }
 }
 
+const requestNewPassword = async (username, user) => {
+    const language = i18next.language;
+    let config = {
+        headers: {
+            "Accept-Language": language
+        }
+    };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/forgotPassword`, user, config);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const resetPassword = async (username, password, code) => {
+    const config = {
+        headers: {
+            "x-code": code,
+        }
+    };
+    try {
+        const res = await api.put(`${USERS_ENDPOINT}/${username}`, password, config);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const UserService = {
     getUsers: getUsers,
     getUser: getUser,
@@ -264,7 +305,9 @@ const UserService = {
     dislikeUser: dislikeUser,
     getLikedSports: getLikedSports,
     likeSport: likeSport,
-    dislikeSport: dislikeSport
+    dislikeSport: dislikeSport,
+    requestNewPassword: requestNewPassword,
+    resetPassword: resetPassword
 };
 
 export default UserService;

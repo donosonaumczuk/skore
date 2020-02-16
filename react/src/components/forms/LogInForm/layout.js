@@ -23,6 +23,8 @@ const LogInForm = ({ handleSubmit, onSubmit, submitting, errorMessage }) => {
                                 inputType="password" required={false} component={RenderInput} />
                         <SubmitButton label={i18next.t('login.loginButton')} divStyle="text-center"
                                         buttonStyle="btn btn-green mb-2" submitting={submitting} />
+                        <SuggestionText suggestion={i18next.t('login.forgotPassword')} link="/requestNewPassword" 
+                                        linkText={i18next.t('login.recoverPassword')} />
                         <SuggestionText suggestion={i18next.t('login.newUser')} link="/signUp" 
                                         linkText={i18next.t('createUserForm.signUp')} />
                     </form>

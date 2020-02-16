@@ -4,7 +4,8 @@ import SportService from '../../../services/SportService';
 import UserService from '../../../services/UserService';
 import Utils from './../../utils/Utils';
 import Sports from './layout';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import AuthService from '../../../services/AuthService';
+import { SC_CONFLICT, SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
@@ -88,7 +89,16 @@ class SportsContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await UserService.likeSport(currentUser, sportName);
-        if (response.status && response.status !== SC_CONFLICT) {
+        if (response.status === SC_UNAUTHORIZED) {
+            const status = AuthService.internalLogout();
+            if (status === SC_OK) {
+                this.props.history.push(`/login`);
+            }
+            else {
+                this.setState({ error: status });
+            }
+        }
+        else if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
@@ -107,7 +117,16 @@ class SportsContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await UserService.dislikeSport(currentUser, sportName);
-        if (response.status && response.status !== SC_CONFLICT) {
+        if (response.status === SC_UNAUTHORIZED) {
+            const status = AuthService.internalLogout();
+            if (status === SC_OK) {
+                this.props.history.push(`/login`);
+            }
+            else {
+                this.setState({ error: status });
+            }
+        }
+        else if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }

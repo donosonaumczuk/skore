@@ -41,12 +41,12 @@
             "password": {
                 "required": "Password is required.\n",
                 "invalidSymbols": "Password can only contains alphanumeric symbols.\n",
-                "invalidLength": "Password must be between 5 and 100 characters.\n"
+                "invalidLength": "Password must be between 6 and 100 characters.\n"
             },
             "repeatedPassword": {
                 "required": "Repeat password is required.\n",
                 "invalidSymbols": "Repeat password can only contains alphanumeric symbols.\n",
-                "invalidLength": "Repeat password must be between 5 and 100 characters.\n",
+                "invalidLength": "Repeat password must be between 6 and 100 characters.\n",
                 "passwordDoesNotMatch": "Repeat password does not match password.\n"
             },
             "firstName": {
@@ -105,6 +105,8 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
+        "forgotPassword": "forgot your password? ",
+        "recoverPassword": "Recover Password",
         "sesionExpired": "Your session has expired.\n",
         "errors": {
             "username": {
@@ -290,5 +292,9 @@
     "accounts": {
         "title": "Accounts",
         "searchPlaceholder": "Search users..."
+    },
+    "requestNewPasswordForm": {
+        "requestNewPasswordButton": "SEARCH",
+        "resetPasswordMessage": "An email has been sent to you to reset your password.\n"
     }
 }

@@ -7,7 +7,7 @@ import UserMatches from '../../UserMatches';
 import WithLoading from '../../hocs/WithLoading';
 import WithError from '../../hocs/WithError';
 
-const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRateAndAge }) => {
+const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRateAndAge, history }) => {
     return (
         <div className="container-fluid">
             <div className="row">
@@ -21,7 +21,7 @@ const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRate
                         <UserData styleClass="profile-data" tag={winRateAndAge(currentUser.winRate, currentUser.age)} />
                         {editButtons}
                     </div>
-                    <UserMatches username={currentUser.username} />
+                    <UserMatches username={currentUser.username} history={history} />
                 </div>
             </div>
         </div>
@@ -33,7 +33,8 @@ UserProfile.propTypes = {
     currentUser: UserProfilePropType.isRequired,
     editButtons: PropTypes.object,
     locationData: PropTypes.func.isRequired,
-    winRateAndAge: PropTypes.func.isRequired
+    winRateAndAge: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 export default WithError(WithLoading(UserProfile));

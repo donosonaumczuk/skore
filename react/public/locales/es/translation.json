@@ -41,12 +41,12 @@
             "password": {
                 "required": "La contraseña es obligatoria.\n",
                 "invalidSymbols": "La contraseña sólo puede contener símbolos alfanuméricos.\n",
-                "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
+                "invalidLength": "La contraseña debe tener entre 6 y 100 caracteres.\n"
             },
             "repeatedPassword": {
                 "required": "Repetir la contraseña es obligatorio.\n",
                 "invalidSymbols": "La contraseña repetida sólo puede contener símbolos alfanuméricos.\n",
-                "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
+                "invalidLength": "La contraseña repetida debe tener entre 6 y 100 caracteres.\n",
                 "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
             },
             "firstName": {
@@ -105,6 +105,8 @@
         "loginButton": "INGRESAR",
         "login": "Ingresar",
         "newUser": "¿Sos nuevo? ",
+        "forgotPassword": "¿Olvidaste tu contraseña? ",
+        "recoverPassword": "Recuperar contraseña",
         "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
             "username": {
@@ -248,12 +250,12 @@
     },
     "confirmAccount": {
         "confirmed": "¡Felicitaciones! Creaste una cuenta.",
-        "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
+        "confirmEmail": "Se te envió un email para confirmar tu cuenta.",
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
     },
     "confirmAsistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
-        "confirmed": "Confirmaste tu asistencia al partido.\nSe te ha enviado un email para cancelar tu asistencia al partido."
+        "confirmed": "Confirmaste tu asistencia al partido.\nSe te envió un email para cancelar tu asistencia al partido."
     },
     "cancelAsistance": {
         "canceled": "Cancelaste tu asistencia al partido."
@@ -290,6 +292,9 @@
     "accounts": {
         "title": "Cuentas",
         "searchPlaceholder": "Buscar usuarios..."
-
+    },
+    "requestNewPasswordForm": {
+        "requestNewPasswordButton": "BUSCAR",
+        "resetPasswordMessage": "Se te envió un email para que puedas recuperar tu contraseña.\n"
     }
 }
