@@ -49,18 +49,19 @@ class EditSportFormContainer extends Component {
     }
 
     loadSport = (values, image) => {
-        const sport = {
-            "sportName": values.sportName,
+        let sport = {
             "displayName": values.displayName,
             "playerQuantity": values.playersPerTeam,
-            "imageSport": image ? image.data : null
         };
+        if (image) {
+            sport = { ...sport, "imageSport": image.data };
+        }
         return sport;
     }
     
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        const response = await SportService.updateSport(sport);
+        const response = await SportService.updateSport(values.sportName, sport);
         if (this.mounted) {
             this.setState({ executing: true });
         }

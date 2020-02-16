@@ -69,7 +69,7 @@ class CreateSportFormContainer extends Component {
             if (response.status === SC_CONFLICT) {
                 this.setState({ sportNameError: true, executing: false });
             }
-            if (response.status === SC_UNAUTHORIZED) {
+            else if (response.status === SC_UNAUTHORIZED) {
                 const status = AuthService.internalLogout();
                 if (status === SC_OK) {
                     this.props.history.push(`/login`);
