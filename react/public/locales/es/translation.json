@@ -298,6 +298,7 @@
     },
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "BUSCAR",
+        "emailUserNotMatch": "No existe una cuenta con ese nombre de usuario y ese email.\n",
         "resetPasswordMessage": "Se te envió un email para que puedas recuperar tu contraseña.\n"
     },
     "editSportForm": {

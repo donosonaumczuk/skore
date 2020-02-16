@@ -31,7 +31,8 @@ class AdminContainer extends Component {
     }
 
     getSports = async () => {
-        const response = await SportService.getSports();
+        const { offset, total } = this.state;
+        const response = await SportService.getSports(offset, total);
         if (response.status) {
             //TODO handle error only 400
         }
