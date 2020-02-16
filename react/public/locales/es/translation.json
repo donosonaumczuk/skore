@@ -253,7 +253,8 @@
     "confirmAccount": {
         "confirmed": "¡Felicitaciones! Creaste una cuenta.",
         "confirmEmail": "Se te envió un email para confirmar tu cuenta.",
-        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
+        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada.",
+        "invalidCode": "El code enviado es inválido."
     },
     "confirmAsistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
