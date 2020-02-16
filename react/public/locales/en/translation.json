@@ -176,7 +176,7 @@
             "title": {
                 "required": "Title is required.\n",
                 "invalidSymbols": "Title can have alphanumeric symbols, spaces and the following characters '¿?¡!-_.'\n",
-                "invalidLength": "Title must be between 4 and 100 characters length.\n"
+                "invalidLength": "Title must be between 4 and 140 characters length.\n"
             },
             "competitivity": {
                 "required": "Competitivity is required.\n"
@@ -256,8 +256,10 @@
         "alreadyConfirmed": "Your account has already been confirmed.",
         "invalidCode": "The code requested is invalid."
     },
-    "confirmAsistance": {
+    "confirmAssistance": {
         "confirm": "An email has been sent to you to confirm your assistance.",
+        "alreadyJoined": "You are already joined to the match.\n",
+        "matchFullOrPlayed": "You can't join a match that is full or has been played.\n",
         "confirmed": "You have confirmed your assistance to the match.\nAn email has been sent to you to cancel your assistance."
     },
     "cancelAsistance": {
@@ -273,7 +275,7 @@
             "teamScore": {
                 "required": "Team score is required.\n",
                 "invalidSymbols": "Team score must have only numbers.\n",
-                "invalidLength": "Team score must be between one and ten digitis.\n"
+                "invalidLength": "Team score must be between one and four digitis.\n"
             },
             "repeatedScore": {
                 "teamOneDoesNotMatch": "Score does not match your team score.\n",

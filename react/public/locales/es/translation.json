@@ -176,7 +176,7 @@
             "title": {
                 "required": "El nombre del partido es obligatorio.\n",
                 "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
-                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
+                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 140 caracteres.\n"
             },
             "competitivity": {
                 "required": "La competitividad es obligatoria.\n"
@@ -256,8 +256,10 @@
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada.",
         "invalidCode": "El code enviado es inválido."
     },
-    "confirmAsistance": {
+    "confirmAssistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
+        "alreadyJoined": "Ya estás unido al partido.\n",
+        "matchFullOrPlayed": "No podés unirte a un partido que ya empezó o se encuentra lleno.\n",
         "confirmed": "Confirmaste tu asistencia al partido.\nSe te envió un email para cancelar tu asistencia al partido."
     },
     "cancelAsistance": {
@@ -273,7 +275,7 @@
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
                 "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
-                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y cuatro dígitos.\n"
             },
             "repeatedScore": {
                 "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
