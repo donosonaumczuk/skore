@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import TimePropType from '../../../../../proptypes/TimePropType';
 import { getStringWithTwoDigits } from '../../../../../services/Util';
 
-
 const MINUTES_PER_HOUR = 60;
 const HOURS_PER_DAY = 24;
 
@@ -13,7 +12,7 @@ const getDuration = duration => {
         return `${duration} m`;
     } 
     else {
-        hours = duration / MINUTES_PER_HOUR;
+        hours = parseInt(duration / MINUTES_PER_HOUR);
         minutes = duration % MINUTES_PER_HOUR;
         return `${hours} h ${minutes} m`;
     }
