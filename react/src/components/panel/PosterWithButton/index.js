@@ -17,7 +17,7 @@ const getLink = (currentUser, buttonText, buttonUrl) => {
                 <Link className="mr-1 poster-link" to="/login">
                     {i18next.t('navBar.signIn')}
                 </Link>
-                <span className="mr-1">{i18next.t('navBar.or')}</span>
+                <span className="mr-1"> {i18next.t('navBar.or')} </span>
                 <Link className="poster-link" to="/signUp">
                     {i18next.t('navBar.createAccount')}
                 </Link>
