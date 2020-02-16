@@ -105,6 +105,8 @@
         "loginButton": "INGRESAR",
         "login": "Ingresar",
         "newUser": "¿Sos nuevo? ",
+        "forgotPassword": "Olvidó su contraseña? ",
+        "recoverPassword": "Recuperar contraseña",
         "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
             "username": {
@@ -290,6 +292,9 @@
     "accounts": {
         "title": "Cuentas",
         "searchPlaceholder": "Buscar usuarios..."
-
+    },
+    "requestNewPasswordForm": {
+        "requestNewPasswordButton": "BUSCAR",
+        "resetPasswordMessage": "Se le ha enviado un email para recuperar su contraseña.\n"
     }
 }

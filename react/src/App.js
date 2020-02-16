@@ -27,8 +27,9 @@ import CancelMatch from './components/screens/CancelMatch';
 import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
-import './css/main.css';
 import DeleteSport from './components/screens/DeleteSport';
+import RequestNewPasswordForm from './components/forms/RequestNewPasswordForm';
+import './css/main.css';
 
 class App extends Component {
     constructor(props) {
@@ -86,7 +87,6 @@ class App extends Component {
     render() {
         const { username } = this.state.currentUser;
         if (!this.state.translation) {
-            //TODO test what happens on change language
             return (
                 <Loader />
             );
@@ -109,6 +109,7 @@ class App extends Component {
                         <Route exact path="/login">
                             <LogInForm updateUser={this.updateUser} currentUser={username} />
                         </Route>
+                        <Route exact path="/requestNewPassword" component={RequestNewPasswordForm} />
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>

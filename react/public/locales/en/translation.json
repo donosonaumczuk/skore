@@ -105,6 +105,8 @@
         "loginButton": "LOG IN",
         "login": "log in",
         "newUser": "are you new? ",
+        "forgotPassword": "forgot your password? ",
+        "recoverPassword": "Recover Password",
         "sesionExpired": "Your session has expired.\n",
         "errors": {
             "username": {
@@ -290,5 +292,9 @@
     "accounts": {
         "title": "Accounts",
         "searchPlaceholder": "Search users..."
+    },
+    "requestNewPasswordForm": {
+        "requestNewPasswordButton": "SEARCH",
+        "resetPasswordMessage": "An email has been sent to you to reset your password.\n"
     }
 }
