@@ -20,12 +20,12 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
                 </h1>
             </center>
             <div className="container">
-                <SearchBar onSubmit={onSubmit} inputStyle={inputStyle} 
+                <SearchBar onSubmit={onSubmit} inputStyle={inputStyle} //TODO: SearchBar doesn't have required attribute handleSubmit
                             label={i18next.t('createUserForm.username')}
                             initialValues={filters} />
             </div>
             <div className="container">
-                <InfiniteScroll dataLength={accounts.length} next={getUsers}
+                <InfiniteScroll dataLength={accounts.length} style={{height: 'auto', overflow: 'visible'}} next={getUsers}
                                 hasMore={hasMore} loader={<Loader />} >
                     {accounts.map((account, i) => 
                         <Account key={i} account={account} isLogged={currentUser}
@@ -35,7 +35,7 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
             </div>
         </div>
     );
-}
+};
 
 Accounts.propTypes = {
     accounts: PropTypes.arrayOf(AccountPropType).isRequired,
@@ -47,6 +47,6 @@ Accounts.propTypes = {
     dislikeUser: PropTypes.func.isRequired,
     currentUser: PropTypes.string,
     history: PropTypes.object.isRequired
-}
+};
 
 export default WithError(WithLoading(Accounts));

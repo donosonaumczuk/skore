@@ -10,7 +10,7 @@ import WithLoading from '../hocs/WithLoading';
 const UserMatches = ({ matches, getUserMatches, hasMore, username }) => {
     return (
         <div className="container-fluid mt-4 rounded-border">
-            <InfiniteScroll dataLength={matches.length} next={getUserMatches}
+            <InfiniteScroll dataLength={matches.length} style={{height: 'auto', overflow: 'visible'}} next={getUserMatches}
                             loader={<Loader />} hasMore={hasMore}>
             {
                 matches.map( (match, i) => 
@@ -19,13 +19,13 @@ const UserMatches = ({ matches, getUserMatches, hasMore, username }) => {
             </InfiniteScroll>    
         </div>
     );
-}
+};
 
 UserMatches.propTypes = {
     matches: PropTypes.arrayOf(UserMatchWithResultPropType).isRequired,
     getUserMatches: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired,
     username: PropTypes.string.isRequired
-}
+};
 
 export default WithError(WithLoading(UserMatches));

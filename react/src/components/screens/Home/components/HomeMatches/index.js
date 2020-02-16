@@ -9,8 +9,8 @@ const HomeMatches = (props) => {
             cancelMatch, deleteMatch } = props;
     return (
         <div className="match-container container-fluid">
-            <InfiniteScroll dataLength={matches.length} next={getMatches} loader={<Loader />}
-                            hasMore={hasMore}>
+            <InfiniteScroll dataLength={matches.length} style={{height: 'auto', overflow: 'visible'}} next={getMatches}
+                            loader={<Loader />} hasMore={hasMore}>
                 {matches.map( (match, i) => <HomeMatch key={i} currentMatch={match}
                                                         handleMatchClick={handleMatchClick}
                                                         joinMatch={joinMatch}
@@ -19,7 +19,7 @@ const HomeMatches = (props) => {
             </InfiniteScroll>
         </div>
     );
-}
+};
 
 HomeMatches.propTypes = {
     matches: PropTypes.array.isRequired,//TODO validate array of HomeMatchProptype
@@ -29,6 +29,6 @@ HomeMatches.propTypes = {
     joinMatch: PropTypes.func.isRequired,
     cancelMatch: PropTypes.func.isRequired,
     deleteMatch: PropTypes.func.isRequired
-}
+};
 
 export default HomeMatches;

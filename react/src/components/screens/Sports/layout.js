@@ -12,19 +12,19 @@ const Sports = (props) => {
     return (
         <div className="match-container container-fluid">
             {/* TODO sport Filter */}
-            <InfiniteScroll dataLength={sports.length} next={getSports}
+            <InfiniteScroll dataLength={sports.length} style={{height: 'auto', overflow: 'visible'}} next={getSports}
                             hasMore={hasMore} loader={<Loader />}>
                 {sports.map((sport) => 
                     <Sport key={sport.sportName} sport={sport} />)}
             </InfiniteScroll>
         </div>
     );
-}
+};
 
 Sports.propTypes = {
     sports: PropTypes.arrayOf(SportPropType),
     getSports: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired
-}
+};
 
 export default WithError(WithLoading(Sports));
