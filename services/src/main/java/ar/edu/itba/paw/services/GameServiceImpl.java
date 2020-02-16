@@ -389,19 +389,16 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
+        if(!game.getTeam1().getPlayers().stream()
+                .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty() ||
+                (game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
+                        .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty())) {
+            LOGGER.trace("Inset user to game failed, user already joined to match");
+            throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
+        }
         if (!toTeam1) {
-            if(!game.getTeam1().getPlayers().stream()
-                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
-                LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
-            }
             game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
         } else {
-            if(game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
-                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
-                LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
-            }
             game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
         }
         return game;
