@@ -256,8 +256,10 @@
         "alreadyConfirmed": "Your account has already been confirmed.",
         "invalidCode": "The code requested is invalid."
     },
-    "confirmAsistance": {
+    "confirmAssistance": {
         "confirm": "An email has been sent to you to confirm your assistance.",
+        "alreadyJoined": "You are already joined to the match.\n",
+        "matchFullOrPlayed": "You can't join a match that is full or has been played.\n",
         "confirmed": "You have confirmed your assistance to the match.\nAn email has been sent to you to cancel your assistance."
     },
     "cancelAsistance": {
