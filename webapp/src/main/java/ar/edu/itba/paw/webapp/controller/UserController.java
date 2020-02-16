@@ -70,6 +70,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.HeaderConstants.CODE_HEADER;
 import static ar.edu.itba.paw.webapp.constants.HeaderConstants.TOKEN_HEADER;
 import static ar.edu.itba.paw.webapp.controller.UserController.BASE_PATH;
 
@@ -240,6 +241,7 @@ public class UserController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        String code = request.getHeader(CODE_HEADER);
         byte[] image = ImageValidators.validateAndProcessImage(userDto.getImage());
         PremiumUser updatedPremiumUser = premiumUserService.updateUserInfo(
                 username, userDto.getFirstName(), userDto.getLastName(),
@@ -248,7 +250,7 @@ public class UserController {
                 userDto.getHome().map(PlaceDto::getState).orElse(null),
                 userDto.getHome().map(PlaceDto::getCity).orElse(null),
                 userDto.getHome().map(PlaceDto::getStreet).orElse(null),
-                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale
+                userDto.getReputation(), userDto.getPassword(), userDto.getOldPassword(),image, locale, code
         );
         return Response.ok(UserDto.from(updatedPremiumUser)).build();
     }
@@ -374,6 +376,19 @@ public class UserController {
         premiumUserService.removeLikedSport(username, sportnameOfLiked);
         LOGGER.trace("Sport like '{}' from user '{}' deleted successfully", sportnameOfLiked, username);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{username}/forgotPassword")
+    public Response forgotPassword(@PathParam("username") String username, @RequestBody final String requestBody,
+                                  @Context HttpServletRequest request) {
+        UserValidators.resetPasswordPost("User password reset fails, invalid creation JSON")
+                .validate(JSONUtils.jsonObjectFrom(requestBody));
+        final UserDto userDto = JSONUtils.jsonToObject(requestBody, UserDto.class);
+        Locale locale = LocaleUtils.validateLocale(request.getLocales());
+        premiumUserService.forgotPassword(username, userDto.getEmail(), locale);
+        LOGGER.trace("User '{}' password reset process started successfully");
+        return  Response.ok().build();
     }
 
     private byte[] getDefaultImage() {
