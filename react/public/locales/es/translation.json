@@ -298,5 +298,8 @@
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "BUSCAR",
         "resetPasswordMessage": "Se te envió un email para que puedas recuperar tu contraseña.\n"
+    },
+    "editSportForm": {
+        "sportWithGamesError": "No se pueden modificar los jugadores por equipo a un deporte que ya tiene partidos jugados.\n"
     }
 }

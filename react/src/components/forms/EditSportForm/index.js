@@ -4,7 +4,9 @@ import CreateSportValidator from '../validators/CreateSportValidator';
 import SportService from '../../../services/SportService';
 import AuthService from '../../../services/AuthService';
 import EditSportForm from './layout';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import i18next from 'i18next';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -59,6 +61,9 @@ class EditSportFormContainer extends Component {
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
         const response = await SportService.updateSport(sport);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         if (response.status && this.mounted) {
             if (response.status === SC_UNAUTHORIZED) {
                 const status = AuthService.internalLogout();
@@ -66,11 +71,14 @@ class EditSportFormContainer extends Component {
                     this.props.history.push(`/login`);
                 }
                 else {
-                    this.setState({ error: status });
+                    this.setState({ error: status, executing: false });
                 }
             }
             else {
-                //TODO handle 409
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('editSportForm.sportWithGamesError');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
                 this.setState({ error: response.status, executing: false });
             }
         }
@@ -85,6 +93,7 @@ class EditSportFormContainer extends Component {
     
     render() {
         const { handleSubmit, submitting } = this.props;
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         let imageName = "";
         if (this.state.image != null) {
             imageName = this.state.image.name;
@@ -92,7 +101,10 @@ class EditSportFormContainer extends Component {
         return (
             <EditSportForm handleSubmit={handleSubmit} submitting={submitting}
                             onSubmit={this.onSubmit} imageName={imageName}
-                            handleChange={this.handleChange} />
+                            handleChange={this.handleChange}
+                            isExecuting={this.state.executing}
+                            errorMessage={errorMessage}
+                            error={this.state.error} />
         );
     }
 

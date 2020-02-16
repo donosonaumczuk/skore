@@ -298,5 +298,8 @@
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "SEARCH",
         "resetPasswordMessage": "An email has been sent to you to reset your password.\n"
+    },
+    "editSportForm": {
+        "sportWithGamesError": "Can't modify sport players per team on a sport that already has played games.\n"
     }
 }
