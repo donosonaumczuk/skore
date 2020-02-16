@@ -4,8 +4,16 @@ import HomeMatchPropType from '../../../../../proptypes/HomeMatchPropType';
 import AuthService from '../../../../../services/AuthService';
 import StatusLabel from './components/StatusLabel';
 
+const getFormattedResult = gameResult => {
+    const results = gameResult.split("-");
+    const teamOneScore = parseInt(results[0], 10);
+    const teamTwoScore = parseInt(results[1], 10);
+    return `${teamOneScore} - ${teamTwoScore}`;
+}
+
 const getTag = (currentMatch, currentUser, updateMatchScore) => {
     const { currentPlayers, totalPlayers, hasStarted, hasFinished } = currentMatch
+    let formattedResult = getFormattedResult(currentMatch.results);
     if (currentPlayers === totalPlayers) {
         if (hasStarted && !hasFinished) {
             return <StatusLabel text={i18next.t('matchPage.matchIsPlaying')} />
@@ -33,7 +41,7 @@ const getTag = (currentMatch, currentUser, updateMatchScore) => {
                 return (
                     <div className="row text-center">
 						<div className="col">
-							<h1 className="match-result">{currentMatch.results}</h1>
+							<h1 className="match-result">{formattedResult}</h1>
 						</div>
 					</div>
                 );

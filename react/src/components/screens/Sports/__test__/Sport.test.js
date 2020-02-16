@@ -18,7 +18,8 @@ test('Sport snapshot test', () => {
 
     //execution
     const component = renderer.create(
-      <Sport sport={sport} />,
+      <Sport sport={sport} likeSport={() => {}} dislikeSport={() => {}}
+                isLoggued={false} isLiked={false} />,
     );
     let tree = component.toJSON();
 

@@ -2,7 +2,7 @@
 
 exports[`Sports snapshot test 1`] = `
 <div
-  className="match-container container-fluid"
+  className="match-container container-fluid container p-2"
 >
   <div
     className="infinite-scroll-component__outerdiv"
@@ -19,7 +19,7 @@ exports[`Sports snapshot test 1`] = `
       }
     >
       <div
-        className="row p-2 mt-2 ml-5 mr-5 match-card rounded-border"
+        className="row p-4 mt-2 ml-5 mr-5 match-card rounded-border"
       >
         <div
           className="col"
@@ -71,6 +71,13 @@ exports[`Sports snapshot test 1`] = `
                    1
                 </span>
               </div>
+            </div>
+            <div
+              className="row"
+            >
+              <div
+                className="col offset-2"
+              />
             </div>
           </div>
         </div>

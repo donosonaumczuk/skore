@@ -61,18 +61,22 @@ const getResultLabelClass = resultLabel => {
     }
 }
 
+const getFormattedResult = gameResult => {
+    return `${gameResult.teamOne} - ${gameResult.teamTwo}`;
+}
 
 const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
     const result = getResult(gameResult);
     const userTeam = getUserTeam(username, teamOne, teamTwo);
     let resultLabel= getResultLabel(userTeam, result.teamOne, result.teamTwo);
-    let resultLabelClass = getResultLabelClass(resultLabel)
-    
+    let resultLabelClass = getResultLabelClass(resultLabel);
+    let formattedResult = getFormattedResult(result);
+
     return (
         <div className="offset-1 col-4 col-sm-3">
                 <div className="row text-center">
                     <div className="col">
-                        <p className="result-label">{gameResult}</p>
+                        <p className="result-label">{formattedResult}</p>
                     </div>
                 </div>
                 <div className="row text-center">

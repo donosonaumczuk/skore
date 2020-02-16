@@ -201,6 +201,54 @@ const dislikeUser = async (username, likedUser) => {
     }
 }
 
+const getLikedSports = async (username, offset, limit) => {
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, null);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
+    try {
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedSports${paramsUrl}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const likeSport = async (username, likedSport) => {
+    const sportLike = { sportName: likedSport };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/likedSports`, sportLike);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const dislikeSport = async (username, likedSport) => {
+    try {
+        const res = await api.delete(`${USERS_ENDPOINT}/${username}/likedSports/${likedSport}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const UserService = {
     getUsers: getUsers,
     getUser: getUser,
@@ -213,7 +261,10 @@ const UserService = {
     updateUser: updateUser,
     getLikedUsers: getLikedUsers,
     likeUser: likeUser,
-    dislikeUser: dislikeUser
+    dislikeUser: dislikeUser,
+    getLikedSports: getLikedSports,
+    likeSport: likeSport,
+    dislikeSport: dislikeSport
 };
 
 export default UserService;
