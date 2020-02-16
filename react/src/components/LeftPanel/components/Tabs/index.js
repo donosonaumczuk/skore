@@ -19,7 +19,7 @@ const getTabState = currentTab => {
         tabTwo: tabTwo,
         tabThree: tabThree
     };
-};
+}
 
 const Tabs = ({ currentTab, handleTabChange }) => {
     const tabState = getTabState(currentTab);
@@ -36,11 +36,11 @@ const Tabs = ({ currentTab, handleTabChange }) => {
             </div>
         </div>
     );
-};
+}
 
 Tabs.propTypes = {
     currentTab: PropTypes.number.isRequired,
     handleTabChange: PropTypes.func.isRequired
-};
+}
 
 export default Tabs;

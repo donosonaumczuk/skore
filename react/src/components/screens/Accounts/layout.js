@@ -35,7 +35,7 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
             </div>
         </div>
     );
-};
+}
 
 Accounts.propTypes = {
     accounts: PropTypes.arrayOf(AccountPropType).isRequired,
@@ -47,6 +47,6 @@ Accounts.propTypes = {
     dislikeUser: PropTypes.func.isRequired,
     currentUser: PropTypes.string,
     history: PropTypes.object.isRequired
-};
+}
 
 export default WithError(WithLoading(Accounts));

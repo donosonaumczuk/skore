@@ -17,12 +17,12 @@ const Admin = ({ sports, getSports, hasMore }) => {
             </InfiniteScroll>
         </div>
     );
-};
+}
 
 Admin.propTypes = {
     sports: PropTypes.arrayOf(SportPropType),
     getSports: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired
-};
+}
 
 export default Admin;

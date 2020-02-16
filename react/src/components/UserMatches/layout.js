@@ -19,13 +19,13 @@ const UserMatches = ({ matches, getUserMatches, hasMore, username }) => {
             </InfiniteScroll>    
         </div>
     );
-};
+}
 
 UserMatches.propTypes = {
     matches: PropTypes.arrayOf(UserMatchWithResultPropType).isRequired,
     getUserMatches: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired,
     username: PropTypes.string.isRequired
-};
+}
 
 export default WithError(WithLoading(UserMatches));
