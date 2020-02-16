@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import UserService from '../../../services/UserService';
 import Utils from '../../utils/Utils';
 import Accounts from './layout';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import AuthService from '../../../services/AuthService';
+import { SC_CONFLICT, SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
@@ -100,7 +101,16 @@ class AccountsContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await UserService.likeUser(currentUser, username);
-        if (response.status && response.status !== SC_CONFLICT) {
+        if (response.status === SC_UNAUTHORIZED) {
+            const status = AuthService.internalLogout();
+            if (status === SC_OK) {
+                this.props.history.push(`/login`);
+            }
+            else {
+                this.setState({ error: status });
+            }
+        }
+        else if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
@@ -119,7 +129,16 @@ class AccountsContainer extends Component {
             this.setState({ executing: true });
         }
         const response = await UserService.dislikeUser(currentUser, username);
-        if (response.status && response.status !== SC_CONFLICT) {
+        if (response.status === SC_UNAUTHORIZED) {
+            const status = AuthService.internalLogout();
+            if (status === SC_OK) {
+                this.props.history.push(`/login`);
+            }
+            else {
+                this.setState({ error: status });
+            }
+        }
+        else if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
