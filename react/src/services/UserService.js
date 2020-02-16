@@ -111,7 +111,7 @@ const createUser = async user => {
     }
     catch (err) {
         if (err.response) {
-            return { status: err.response.status };
+            return err.response;
         }
         else {
             return { status: SC_TIME_OUT };

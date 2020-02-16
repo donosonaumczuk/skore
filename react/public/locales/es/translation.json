@@ -84,7 +84,9 @@
             },
             "day": {
                 "required": "El día es obligatorio.\n"
-            }
+            },
+            "emailExists": "Ya existe una cuenta con ese email.\n",
+            "usernameExists": "Ya existe una cuenta con ese nombre de usuario.\n"
         }
     },
     "profile": {

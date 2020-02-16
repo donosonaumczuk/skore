@@ -6,6 +6,9 @@ import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import CreateUserForm from './layout';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_EMAIL_EXISTS } from '../../../services/constants/ErrorCodesConstants';
+import i18next from 'i18next';
 
 const validate = values => {
     const errors = {}
@@ -125,13 +128,39 @@ class CreateUserFormContainer extends Component {
 
     onSubmit = async (values) => {
         let user = this.loadUser(values, this.state.image);
-        const res = await UserService.createUser(user);
-        if (res.status) {
-           //TODO handle error 409
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await UserService.createUser(user);
+        if (response.status) {
+            if (this.mounted) {
+                if (response.status === SC_CONFLICT) {
+                    if (response.data.errorCode === EC_EMAIL_EXISTS) {
+                        const errorMessage = i18next.t('createUserForm.errors.emailExists');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                    else {
+                        const errorMessage = i18next.t('createUserForm.errors.usernameExists');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                }
+                else {
+                    this.setState({ status: response.status, executing: false });
+                }
+            }
         }
         else {
             this.props.history.push(`/createdAccount`);
         }
+    }
+
+    getErrorMessage = () => {
+        if (this.state.errorMessage) {
+            return (<span className="invalid-feedback d-block">
+                        {this.state.errorMessage}
+                    </span>);
+        }
+        return <React.Fragment></React.Fragment>;
     }
 
     componentDidMount() {
@@ -140,7 +169,8 @@ class CreateUserFormContainer extends Component {
 
     render() {
         const { handleSubmit, submitting, birthday, change, touch } = this.props;
-        const { country, state, city, street } = this.state;
+        const { country, state, city, street, executing, status } = this.state;
+        const errorMessage = this.getErrorMessage();
         let imageName = "";
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {
@@ -158,7 +188,8 @@ class CreateUserFormContainer extends Component {
                             country={country} state={state} city={city}
                             street={street} birthday={birthday} 
                             changeFieldsValue={change}
-                            touchField={touch} />
+                            touchField={touch} isExecuting={executing}
+                            error={status} errorMessage={errorMessage} />
         );
     }
 

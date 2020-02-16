@@ -84,7 +84,9 @@
             },
             "day": {
                 "required": "Day is required.\n"
-            }
+            },
+            "emailExists": "An account with the same email already exists.\n",
+            "usernameExists": "An account with the same username already exists.\n"
         }
     },
     "profile": {
