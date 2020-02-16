@@ -20,6 +20,23 @@ import java.util.Optional;
 public class GameHibernateDao implements GameDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameHibernateDao.class);
+    private static final String LIKED_USER_PLAY_GAME_QUERY =
+            " AND (EXISTS" +
+            "(SELECT f" +
+            " FROM Game g, Team t JOIN t.players p, PremiumUser u2 JOIN u2.friends f" +
+            " WHERE games = g AND g.primaryKey.team1.teamName = t.teamName AND u2.userName = :username AND f.user.userId = p.userId) " +
+            "OR EXISTS" +
+            "(SELECT p" +
+            " FROM Game g, Team t JOIN t.players p, PremiumUser u2 JOIN u2.friends f" +
+            " WHERE games = g AND g.team2.teamName = t.teamName AND u2.userName = :username AND f.user.userId = p.userId))";
+    public static final String LIKED_SPORT_OF_GAME_QUERY = " AND (EXISTS" +
+            "(SELECT s" +
+            " FROM Game g, Team t, PremiumUser u2 JOIN u2.likes s" +
+            " WHERE games = g AND g.primaryKey.team1.teamName = t.teamName AND u2.userName = :username AND s.sportName = t.sport.sportName) " +
+            "OR EXISTS" +
+            "(SELECT s" +
+            " FROM Game g, Team t, PremiumUser u2 JOIN u2.likes s" +
+            " WHERE games = g AND g.team2.teamName = t.teamName AND u2.userName = :username AND s.sportName = t.sport.sportName))";
 
     @PersistenceContext
     private EntityManager em;
@@ -108,7 +125,8 @@ public class GameHibernateDao implements GameDao {
                                 final List<String> usernamesPlayersNotInclude,
                                 final List<String> usernamesCreatorsInclude,
                                 final List<String> usernamesCreatorsNotInclude, final GameSort sort,
-                                final Boolean onlyWithResults) {
+                                final Boolean onlyWithResults, final String currentUsername, final boolean onlyLikedUsersPlay,
+                                final boolean onlyLikedSports) {
         DaoHelper daoHelper = new DaoHelper(QUERY_START);
         daoHelper.addFilter(QUERY_START_TIME_NAME, LESS_OR_EQUAL_TO, START_TIME_MIN, minStartTime);
         daoHelper.addFilter(QUERY_START_TIME_NAME, GREATER_OR_EQUAL_TO, START_TIME_MAX, maxStartTime);
@@ -132,13 +150,26 @@ public class GameHibernateDao implements GameDao {
 
         daoHelper.addListFilters(true, false, QUERY_USER_NAME, USERNAME_CI, usernamesCreatorsInclude);
         daoHelper.addListFilters(true, true, QUERY_USER_NAME, USERNAME_CNI, usernamesCreatorsNotInclude);
+        String aux = "";
+        if (currentUsername != null) {
+            if (onlyLikedUsersPlay) {
+                daoHelper.addFilterCustom(LIKED_USER_PLAY_GAME_QUERY);
+            }
+
+            if (onlyLikedSports) {
+                daoHelper.addFilterCustom(LIKED_SPORT_OF_GAME_QUERY);
+            }
+        }
         daoHelper.addFilterOnlyFinished(onlyWithResults);
 
-        final TypedQuery<Game> query = em.createQuery(daoHelper.getQuery() +
+        final TypedQuery<Game> query = em.createQuery(daoHelper.getQuery() + aux +
                 (sort != null ? sort.toQuery() : ""), Game.class);
         List<String> valueName = daoHelper.getValueNames();
         List<Object> values    = daoHelper.getValues();
 
+        if (currentUsername != null && (onlyLikedSports || onlyLikedUsersPlay)) {
+            query.setParameter("username" , currentUsername);
+        }
         for(int i = 0; i < valueName.size(); i++) {
             query.setParameter(valueName.get(i), values.get(i));
         }

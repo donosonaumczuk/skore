@@ -39,7 +39,7 @@ class EditSportContainer extends Component {
             return {
                 "sportName": sport.sportName,
                 "displayName": sport.displayName,
-                "playersPerTeam": sport.playerQuantity
+                "playersPerTeam": `${sport.playerQuantity}`
             };
         }
         return {};
@@ -50,8 +50,7 @@ class EditSportContainer extends Component {
         const formInitialValues = this.loadFormInitialValues();
         const isLoading = !this.state.sport;
         let error = this.state.status;
-        const needsPermission = !isAdmin;       
-        
+        const needsPermission = !isAdmin;
         return (
             <EditSport initialValues={formInitialValues}
                         history={this.props.history}

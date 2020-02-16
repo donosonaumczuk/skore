@@ -57,6 +57,49 @@ body {
     margin-bottom: 0rem;
 }
 
+.match-name {
+    color: black;
+    font-weight: bold;
+    font-size: 2.8rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.team-name {
+    color: black;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.match-result {
+    color: black;
+    font-weight: bold;
+    font-size: 3.5rem;
+    margin-top: 1rem;
+}
+
+
+.address-text {
+    text-decoration: underline;
+    color: black;
+}
+
+.playing-label {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: black;
+}
+
+.player-username {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: black;
+}
+
+.skore-link:hover {
+    color: var(--dark-secondary-color);
+}
+
 .profile-username {
     color: darkgrey;
     font-style: italic;
@@ -84,6 +127,11 @@ body {
 
 .fa-bars {
     color: white;
+}
+
+.fa-winner {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
 }
 
 .create-match {
@@ -121,8 +169,11 @@ body {
     font-size: 1.1rem;
 }
 
-
 .sign-in-container {
+    margin-top: 9rem;
+}
+
+.match-container {
     margin-top: 9rem;
 }
 
@@ -221,7 +272,7 @@ body {
 }
 
 .poster-link {
-    color: rgba(245, 238, 250, 0.8);
+    color: white;
     font-weight: bold;
 }
 
@@ -285,7 +336,7 @@ body {
 }
 
 .second-nav {
-    background-color:  var(--secondary-color);
+    background-color: var(--secondary-color);
     margin-top: 4.6rem;
 }
 
@@ -308,10 +359,12 @@ html {
     font-weight: bold;
     margin-bottom: 0rem;
 }
+
 .name-label-link {
     color: inherit;
     text-decoration: none;
 }
+
 .name-label-link:hover {
     color: inherit;
     text-decoration: none;
@@ -327,6 +380,7 @@ html {
 .username-label:hover {
     color: var(--dark-secondary-color);
 }
+
 .location-suggestion {
     background-color: white;
     cursor: pointer;
@@ -341,12 +395,12 @@ html {
 
 .react-datepicker__input-container {
     width: inherit;
-  }
+}
 
-  .react-datepicker__input-container input {
+.react-datepicker__input-container input {
     width: inherit;
-  }
-  
+}
+
 .react-datepicker-wrapper {
     width: 100%;
 }
@@ -354,9 +408,8 @@ html {
 /* sm - Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     /*.primary-nav {*/
-        /*background-color: blueviolet;*/
+    /*background-color: blueviolet;*/
     /*}*/
-
     .user-avatar {
         width: 47px;
         height: 47px;
@@ -366,16 +419,15 @@ html {
 /* md - Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
     /*.primary-nav {*/
-        /*background-color: lightseagreen;*/
+    /*background-color: lightseagreen;*/
     /*}*/
 }
 
 /* lg - Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     /*.primary-nav {*/
-        /*background-color: indianred;*/
+    /*background-color: indianred;*/
     /*}*/
-
     html {
         font-size: 1rem;
     }
@@ -384,6 +436,6 @@ html {
 /* xl - Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     /*.primary-nav {*/
-        /*background-color: black;*/
+    /*background-color: black;*/
     /*}*/
 }

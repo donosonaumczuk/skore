@@ -31,4 +31,8 @@ public class GameInvalidStateException extends EntityInvalidStateException {
     public static GameInvalidStateException ofGameNotFull(String key) {
         return new GameInvalidStateException(key, "is not full");
     }
+
+    public static GameInvalidStateException ofGameWithResult(String key) {
+        return new GameInvalidStateException(key, "already has a result");
+    }
 }

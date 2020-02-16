@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SportPlayers snapshot test 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col"
+  >
+    <i
+      className="name-label fas fa-users mr-2"
+    />
+    <label />
+    <span>
+       2
+    </span>
+  </div>
+</div>
+`;

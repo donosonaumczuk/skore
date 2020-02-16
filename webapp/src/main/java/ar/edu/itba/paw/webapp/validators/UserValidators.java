@@ -32,6 +32,10 @@ public class UserValidators {
     private static final Set<String> UPDATE_KNOWN_FIELDS = ImmutableSet.of(FIRST_NAME, LAST_NAME, EMAIL,
             CELLPHONE, BIRTHDAY, HOME, PASSWORD, OLD_PASSWORD, IMAGE);
     private static final Set<String> UPDATE_REQUIRED_FIELDS = ImmutableSet.of();
+    private static final Set<String> LIKED_USER_KNOWN_FIELDS = ImmutableSet.of(USERNAME);
+    private static final Set<String> LIKED_USER_REQUIRED_FIELDS = ImmutableSet.of(USERNAME);
+    private static final Set<String> RESET_PASS_REQUIRED_FIELDS = ImmutableSet.of(EMAIL);
+    private static final Set<String> RESET_PASS_KNOWN_FIELDS = ImmutableSet.of(EMAIL);
 
     private static final String EMAIL_REGEX = "^[+a-zA-ZñÑ0-9_.-]+@[a-zA-Z0-9]+(\\.[A-Za-z]+)+$";
     private static final String EMAIL_PATTERN_DESCRIPTION = "an email";
@@ -55,30 +59,26 @@ public class UserValidators {
 
     public static Validator<JSONObject> updateValidatorOf(final String log) {
         return ValidatorFactory.jsonInputValidator(UPDATE_KNOWN_FIELDS, UPDATE_REQUIRED_FIELDS,
-                updateFieldValidatorMapOf(log), log).and(passwordUpdateValidatorOf(log));
+                updateFieldValidatorMapOf(log), log);
     }
 
-    private static Validator<JSONObject> passwordUpdateValidatorOf(final String log) {
-        return jsonObject -> {
-            if (jsonObject.has(PASSWORD) && !jsonObject.has(OLD_PASSWORD)) {
-                LOGGER.error(log);
-                throw ApiException.of(HttpStatus.BAD_REQUEST, "To update '" + PASSWORD + "' field you must " +
-                        "provide an '" + OLD_PASSWORD + "' field with the old password");
-            }
-            else if (!jsonObject.has(PASSWORD)) {
-                ValidatorFactory.forbiddenFieldsValidatorOf(ImmutableSet.of(OLD_PASSWORD), log).validate(jsonObject);
-            }
-        };
+    public static Validator<JSONObject> likedUserCreationValidator(final String log) {
+        return ValidatorFactory.jsonInputValidator(LIKED_USER_KNOWN_FIELDS, LIKED_USER_REQUIRED_FIELDS,
+                likedUserCreationValidatorMapOf(log), log);
+    }
+
+    public static Validator<JSONObject> resetPasswordPost(final String log) {
+        return ValidatorFactory.jsonInputValidator(RESET_PASS_KNOWN_FIELDS, RESET_PASS_REQUIRED_FIELDS,
+                resetPasswordPostValidatorMapOf(log), log);
     }
 
     private static ImmutableMap.Builder<String, Validator<JSONObject>> baseFieldValidatorMapOf(final String log) {
         return new ImmutableMap.Builder<String, Validator<JSONObject>>()
-                .put(EMAIL, ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern.compile(EMAIL_REGEX),
-                        EMAIL_PATTERN_DESCRIPTION, log))
+                .put(EMAIL, getEmailValidator(log))
                 .put(FIRST_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(FIRST_NAME,
                         Pattern.compile(NAME_REGEX), NAME_PATTERN_DESCRIPTION, log).and(ValidatorFactory
                         .fieldIsStringWithLengthInRangeValidatorOf(FIRST_NAME, MIN_LENGTH_NAME, MAX_LENGTH_NAME, log)))
-                .put(LAST_NAME,  ValidatorFactory.fieldIsStringAndMatchesRegexOf(LAST_NAME,
+                .put(LAST_NAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(LAST_NAME,
                         Pattern.compile(NAME_REGEX), NAME_PATTERN_DESCRIPTION, log).and(ValidatorFactory
                         .fieldIsStringWithLengthInRangeValidatorOf(LAST_NAME, MIN_LENGTH_NAME, MAX_LENGTH_NAME, log)))
                 .put(CELLPHONE, ValidatorFactory.fieldIsStringAndMatchesRegexOf(CELLPHONE,
@@ -99,12 +99,33 @@ public class UserValidators {
 
     private static Map<String, Validator<JSONObject>> creationFieldValidatorMapOf(final String log) {
         return baseFieldValidatorMapOf(log)
-                .put(USERNAME, ValidatorFactory.fieldIsStringAndMatchesRegexOf(USERNAME,
-                        Pattern.compile(USERNAME_REGEX), USERNAME_PATTERN_DESCRIPTION, log)
-                        .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(USERNAME, MIN_LENGTH_USERNAME,
-                                MAX_LENGTH_USERNAME, log)))
+                .put(USERNAME, getUsernameValidator(log))
                 .put(HOME, ValidatorFactory
                         .fieldIsValidObjectValidatorOf(HOME, HomeValidators.creationValidatorOf(log), log))
                 .build();
+    }
+
+    private static Map<String, Validator<JSONObject>> likedUserCreationValidatorMapOf(final String log) {
+        return new ImmutableMap.Builder<String, Validator<JSONObject>>()
+                .put(USERNAME, getUsernameValidator(log))
+                .build();
+    }
+
+    private static Map<String, Validator<JSONObject>> resetPasswordPostValidatorMapOf(final String log) {
+        return new ImmutableMap.Builder<String, Validator<JSONObject>>()
+                .put(EMAIL, getEmailValidator(log))
+                .build();
+    }
+
+    private static Validator<JSONObject> getEmailValidator(String log) {
+        return ValidatorFactory.fieldIsStringAndMatchesRegexOf(EMAIL, Pattern.compile(EMAIL_REGEX),
+                EMAIL_PATTERN_DESCRIPTION, log);
+    }
+
+    private static Validator<JSONObject> getUsernameValidator(final String log) {
+        return ValidatorFactory.fieldIsStringAndMatchesRegexOf(USERNAME,
+                Pattern.compile(USERNAME_REGEX), USERNAME_PATTERN_DESCRIPTION, log)
+                .and(ValidatorFactory.fieldIsStringWithLengthInRangeValidatorOf(USERNAME, MIN_LENGTH_USERNAME,
+                        MAX_LENGTH_USERNAME, log));
     }
 }

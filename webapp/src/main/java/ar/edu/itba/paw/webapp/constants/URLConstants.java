@@ -18,7 +18,7 @@ public final class URLConstants {
 
     @Autowired
     public URLConstants(Environment environment) {
-        URLConstants.BASE_URL = environment.getProperty("url.backend.base");
+        URLConstants.BASE_URL = environment.getRequiredProperty(environment.getRequiredProperty("state") + ".url.backend.base");
         URLConstants.BASE_URL_BUILDER = UriBuilder.fromUri(BASE_URL);
         URLConstants.API_BASE_URL = getBaseUrlBuilder().path(API_PATH).toTemplate();
         URLConstants.API_BASE_URL_BUILDER = UriBuilder.fromUri(API_BASE_URL);

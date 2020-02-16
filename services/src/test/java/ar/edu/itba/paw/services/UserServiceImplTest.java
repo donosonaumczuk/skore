@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.InvalidParameterException;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.models.SimpleEncrypter;
@@ -60,7 +61,7 @@ public class UserServiceImplTest {
 
     @Test
     public void getIdFromCodeButGameKeyIsDifferent() {
-        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expect(InvalidParameterException.class);
         exceptionRule.expectMessage("The code '" + CODE + "' is invalid");
         when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(FIRST_NAME, null, null)));
 
@@ -69,7 +70,7 @@ public class UserServiceImplTest {
 
     @Test
     public void getIdFromCodeButFirstNameIsDifferent() {
-        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expect(InvalidParameterException.class);
         exceptionRule.expectMessage("The code '" + CODE + "' is invalid");
         when(userDaoMock.findById(ID)).thenReturn(Optional.of(new User(ANOTHER_FIRST_NAME, null, null)));
 

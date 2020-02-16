@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import EditUserInfoForm from './layout';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import AuthService from '../../../services/AuthService';
 
 const validate = values => {
     const errors = {}
@@ -58,14 +60,12 @@ class EditUserInfoFormContainer extends Component {
         this.mounted = true;
     }
 
-    getBirthdayWithCorrectFormat = birthday => {
-        const birthdayInfo = birthday.split("/");
-        let newBirthday = {
-            "year": parseInt(birthdayInfo[2]),
-            "monthNumber": parseInt(birthdayInfo[0]),
-            "dayOfMonth":  parseInt(birthdayInfo[1])
-        }
-        return newBirthday;
+    getBirthdayWithCorrectFormat = (year, month, day) => {
+        return {
+            "year": parseInt(year),
+            "monthNumber": parseInt(month),
+            "dayOfMonth":  parseInt(day)
+        };
     }
 
     loadHome = home => {
@@ -82,12 +82,11 @@ class EditUserInfoFormContainer extends Component {
     }
 
     loadUser = (values, image) => {
-        const birthday = this.getBirthdayWithCorrectFormat(values.birthday);
+        const birthday = this.getBirthdayWithCorrectFormat(values.year, values.month, values.day);
         const home = this.loadHome(values.home);
         let user = {
             "firstName": values.firstName,
             "lastName": values.lastName,
-            "email": values.email,
             "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday
         };
@@ -107,7 +106,16 @@ class EditUserInfoFormContainer extends Component {
         }
         const response = await UserService.updateUser(user, this.state.username);
         if (response.status) {
-            if (this.mounted) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
         }

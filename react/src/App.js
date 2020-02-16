@@ -27,6 +27,9 @@ import CancelMatch from './components/screens/CancelMatch';
 import CreatedAccount from './components/screens/CreatedAccount';
 import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
+import DeleteSport from './components/screens/DeleteSport';
+import RequestNewPasswordForm from './components/forms/RequestNewPasswordForm';
+import ResetPasswordForm from './components/forms/ResetPasswordForm';
 import './css/main.css';
 
 class App extends Component {
@@ -85,7 +88,6 @@ class App extends Component {
     render() {
         const { username } = this.state.currentUser;
         if (!this.state.translation) {
-            //TODO test what happens on change language
             return (
                 <Loader />
             );
@@ -97,9 +99,8 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/" render={(props) => <Home {...props} 
                                 currentUser={this.state.currentUser.username} />} />
-                        <Route exact path="/sports">
-                            <Sports />
-                        </Route>
+                        <Route exact path="/sports" render={(props) => 
+                                        <Sports {...props} currentUser={username} />} />
                         <Route exact path="/signUp" component={CreateUserForm} />
                         <Route exact path="/createdAccount">
                             <CreatedAccount />
@@ -107,14 +108,15 @@ class App extends Component {
                         <Route exact path="/confirmAccount" render={(props) => 
                                 <ConfirmAccount {...props} updateUser={this.updateUser} />} />
                         <Route exact path="/login">
-                            <LogInForm updateUser={this.updateUser} />
+                            <LogInForm updateUser={this.updateUser} currentUser={username} />
                         </Route>
+                        <Route exact path="/requestNewPassword" component={RequestNewPasswordForm} />
+                        <Route exact path="/resetPassword" component={ResetPasswordForm} />
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route exact path="/accounts">
-                            <Accounts />
-                        </Route>
+                        <Route exact path="/accounts" render={(props) => 
+                                                <Accounts {...props} currentUser={username} />} />
                         <Route exact path="/admin">
                             <Admin />
                         </Route>
@@ -122,6 +124,7 @@ class App extends Component {
                         <Route exact path="/match/:matchKey" component={MatchPage} />
                         <Route exact path="/createSport" component={CreateSportForm} />
                         <Route exact path="/sports/:sportName/edit" component={EditSport} />
+                        <Route exact path="/sports/:sportName/delete" component={DeleteSport} />
                         <Route exact path="/users/:username" component={UserProfile} />
                         <Route exact path="/users/:username/edit" component={EditUserInfo} />
                         <Route exact path="/users/:username/changePassword" component={ChangePassword} />

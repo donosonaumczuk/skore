@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
+import ChangePasswordForm from './layout';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
-import ChangePasswordForm from './layout';
+import AuthService from '../../../services/AuthService';
 import WithPermission from '../../hocs/WithPermission';
+import { SC_CONFLICT, SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -39,7 +40,17 @@ class ChangePasswordFormContainer extends Component {
         }
         const response = await UserService.updateUser(user, values.username);
         if (response.status) {
-            if (this.mounted) {
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 invalid password
                 this.setState({ error: response.status, executing: false });
             }
         }

@@ -1,8 +1,10 @@
 import api from './../config/Api';
+import i18next from 'i18next';
 import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
 import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging,
             addFutureMinTimeToParams, addMinFreePlacesToParams,
-            addCreatedByToParams, addWithoutPlayersToParams, addWithPlayersToParams } from './Util';
+            addCreatedByToParams, addWithoutPlayersToParams,
+            addWithPlayersToParams } from './Util';
 import { SC_TIME_OUT, SC_CLIENT_CLOSED_REQUEST } from './constants/StatusCodesConstants';
 
 const getMatches = async (offset, limit, filters, token) => {
@@ -31,7 +33,6 @@ const getMatches = async (offset, limit, filters, token) => {
 const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => {
     const config = { cancelToken: token };
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
-    paramObject = addFutureMinTimeToParams(paramObject);
     paramObject = addCreatedByToParams(paramObject, username);
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
@@ -149,7 +150,13 @@ const joinMatchWithAccount = async (matchKey, userId) => {
 
 const joinMatchAnonymous = async (matchKey, user) => {
     try {
-        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players/requestToJoin`, user);
+        const language = i18next.language;
+        let config = {
+            headers: {
+                "Accept-Language": language
+            }
+        };
+        const res = await api.post(`${MATCHES_ENDPOINT}/${matchKey}/players/requestToJoin`, user, config);
         return res.data;
     }
     catch (err) {
@@ -201,9 +208,11 @@ const cancelMatchWithAccount = async (matchKey, userId) => {
 
 const cancelAssistance = async (matchKey, userId, code) => {
     try {
+        const language = i18next.language;
         const config = {
             headers: {
                 "x-code": code,
+                "Accept-Language": language
             }
         };
         const res = await api.delete(`${MATCHES_ENDPOINT}/${matchKey}/players/${userId}`, config);

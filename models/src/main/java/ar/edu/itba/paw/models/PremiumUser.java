@@ -53,7 +53,7 @@ public class PremiumUser {
     @OneToMany(fetch = FetchType.LAZY, mappedBy="primaryKey.owner")
     private List<Notification> notifications;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "likes",
     joinColumns = {@JoinColumn (name = "userName", referencedColumnName = "userName")},
     inverseJoinColumns = {@JoinColumn(name = "sportName", referencedColumnName = "sportName")})

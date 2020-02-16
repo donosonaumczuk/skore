@@ -1,11 +1,16 @@
 import api from './../config/Api';
+import i18next from 'i18next';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 import AuthService from './AuthService';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
 
-const getUsers = async (offset, limit) => {
+const getUsers = async (offset, limit, filters, token) => {
+    const config = { cancelToken: token };
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${USERS_ENDPOINT}?offset=${offset}&limit=${limit}`);
+        const res = await api.get(`${USERS_ENDPOINT}${paramsUrl}`, config);
         return res.data;
     }
     catch (err) {
@@ -95,7 +100,13 @@ const getUserMatchesWithResults = async (username, offset, limit) => {
 
 const createUser = async user => {
     try {
-        const res = await api.post(`${USERS_ENDPOINT}`, user);
+        const language = i18next.language;
+        let config = {
+            headers: {
+                "Accept-Language": language
+            }
+        };
+        const res = await api.post(`${USERS_ENDPOINT}`, user, config);
         return res.data;
     }
     catch (err) {
@@ -142,6 +153,143 @@ const updateUser = async (user, username) => {
     }
 }
 
+const getLikedUsers = async (username, offset, limit) => {
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, null);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
+    try {
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedUsers${paramsUrl}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const likeUser = async (username, likedUser) => {
+    const userLike = { username: likedUser };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/likedUsers`, userLike);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const dislikeUser = async (username, likedUser) => {
+    try {
+        const res = await api.delete(`${USERS_ENDPOINT}/${username}/likedUsers/${likedUser}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const getLikedSports = async (username, offset, limit) => {
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit, null);
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
+    try {
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/likedSports${paramsUrl}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const likeSport = async (username, likedSport) => {
+    const sportLike = { sportName: likedSport };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/likedSports`, sportLike);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const dislikeSport = async (username, likedSport) => {
+    try {
+        const res = await api.delete(`${USERS_ENDPOINT}/${username}/likedSports/${likedSport}`);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const requestNewPassword = async (username, user) => {
+    const language = i18next.language;
+    let config = {
+        headers: {
+            "Accept-Language": language
+        }
+    };
+    try {
+        const res = await api.post(`${USERS_ENDPOINT}/${username}/forgotPassword`, user, config);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
+const resetPassword = async (username, password, code) => {
+    const config = {
+        headers: {
+            "x-code": code,
+        }
+    };
+    try {
+        const res = await api.put(`${USERS_ENDPOINT}/${username}`, password, config);
+        return res.data;
+    }
+    catch (err) {
+        if (err.response) {
+            return { status: err.response.status };
+        }
+        else {
+            return { status: SC_TIME_OUT };
+        }
+    }
+}
+
 const UserService = {
     getUsers: getUsers,
     getUser: getUser,
@@ -151,7 +299,15 @@ const UserService = {
     getUserMatchesWithResults: getUserMatchesWithResults,
     createUser: createUser,
     verifyUser: verifyUser,
-    updateUser: updateUser
+    updateUser: updateUser,
+    getLikedUsers: getLikedUsers,
+    likeUser: likeUser,
+    dislikeUser: dislikeUser,
+    getLikedSports: getLikedSports,
+    likeSport: likeSport,
+    dislikeSport: dislikeSport,
+    requestNewPassword: requestNewPassword,
+    resetPassword: resetPassword
 };
 
 export default UserService;

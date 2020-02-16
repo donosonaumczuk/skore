@@ -60,6 +60,16 @@ public class SportServiceImpl implements SportService {
             LOGGER.trace("Sport with name {} already exist", sportName);
             throw SportAlreadyExistException.ofId(sportName);
         }
+        ArrayList<String> sport = new ArrayList<>();
+        sport.add(sportName);
+        if (playerQuantity != null && !gameService.findGamesPage(null, null, null,
+                null, null, sport, null, null, null, null ,
+                null, null ,null, null ,null,
+                null,null, null,null, null,
+                null, false, false).getData().isEmpty()) {
+            LOGGER.trace("Modify sport '{}' failed, is already used in a match", sportName);
+            throw SportInvalidStateException.ofSportUsed(sportName);
+        }
         return sportDao.modifySport(sportName, displayName, playerQuantity, file).orElseThrow(() -> {
             LOGGER.error("Modify sport failed, sport '{}' not found", sportName);
             return SportNotFoundException.ofId(sportName);
@@ -76,7 +86,7 @@ public class SportServiceImpl implements SportService {
                 null, sport, null, null, null, null ,null,
                 null ,null, null ,null,
                 null,null, null,null, null,
-                null).getData().isEmpty()) {
+                null, false, false).getData().isEmpty()) {
             LOGGER.trace("Remove sport '{}' failed, is already used in a match", sportName);
             throw SportInvalidStateException.ofSportUsed(sportName);
         }

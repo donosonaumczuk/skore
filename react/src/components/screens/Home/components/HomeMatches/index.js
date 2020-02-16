@@ -9,8 +9,8 @@ const HomeMatches = (props) => {
             cancelMatch, deleteMatch } = props;
     return (
         <div className="match-container container-fluid">
-            <InfiniteScroll dataLength={matches.length} next={getMatches} loader={<Loader />}
-                            hasMore={hasMore}>
+            <InfiniteScroll dataLength={matches.length} style={{height: 'auto', overflow: 'visible'}} next={getMatches}
+                            loader={<Loader />} hasMore={hasMore}>
                 {matches.map( (match, i) => <HomeMatch key={i} currentMatch={match}
                                                         handleMatchClick={handleMatchClick}
                                                         joinMatch={joinMatch}

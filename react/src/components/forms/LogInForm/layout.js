@@ -7,6 +7,7 @@ import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
 import SuggestionText from '../elements/SuggestionText';
 import WithExecuting from '../../hocs/WithExecuting';
+import WithMessage from '../../hocs/WithMessage';
 
 const LogInForm = ({ handleSubmit, onSubmit, submitting, errorMessage }) => {
     return (
@@ -22,6 +23,8 @@ const LogInForm = ({ handleSubmit, onSubmit, submitting, errorMessage }) => {
                                 inputType="password" required={false} component={RenderInput} />
                         <SubmitButton label={i18next.t('login.loginButton')} divStyle="text-center"
                                         buttonStyle="btn btn-green mb-2" submitting={submitting} />
+                        <SuggestionText suggestion={i18next.t('login.forgotPassword')} link="/requestNewPassword" 
+                                        linkText={i18next.t('login.recoverPassword')} />
                         <SuggestionText suggestion={i18next.t('login.newUser')} link="/signUp" 
                                         linkText={i18next.t('createUserForm.signUp')} />
                     </form>
@@ -37,4 +40,4 @@ LogInForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired
 }
 
-export default WithExecuting(LogInForm);
+export default WithExecuting(WithMessage(LogInForm));

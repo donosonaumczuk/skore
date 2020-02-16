@@ -95,7 +95,8 @@ public class GameController {
                              @QueryParam("notCreatedBy") QueryList usernamesCreatorsNotInclude,
                              @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
-                             @QueryParam("hasResult") String hasResult) {
+                             @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
+                             @QueryParam("onlyLikedSports") String onlyLikedSports) {
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
                 QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
@@ -106,7 +107,8 @@ public class GameController {
                 QueryParamsUtils.getQueryListOrNull(usernamesPlayersInclude), QueryParamsUtils.getQueryListOrNull(usernamesPlayersNotInclude),
                 QueryParamsUtils.getQueryListOrNull(usernamesCreatorsInclude), QueryParamsUtils.getQueryListOrNull(usernamesCreatorsNotInclude),
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
-                QueryParamsUtils.booleanOrNull(hasResult))
+                QueryParamsUtils.booleanOrNull(hasResult), QueryParamsUtils.booleanOrElse(onlyLikedUsers, false),
+                QueryParamsUtils.booleanOrElse(onlyLikedSports, false))
                 .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
 
         LOGGER.trace("Matches successfully gotten");
@@ -176,8 +178,8 @@ public class GameController {
                 .validate(JSONUtils.jsonObjectFrom(requestBody));
         final TeamPlayerDto teamPlayerDto = JSONUtils.jsonToObject(requestBody, TeamPlayerDto.class);
         Locale locale = LocaleUtils.validateLocale(request.getLocales());
-        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(), teamPlayerDto.getEmail(),
-                null);
+        gameService.createRequestToJoin(key, teamPlayerDto.getFirstName(), teamPlayerDto.getLastName(),
+                teamPlayerDto.getEmail(), locale);
         return Response.status(HttpStatus.CREATED.value()).header(HttpHeaders.ACCEPT_LANGUAGE, locale.toString()).build();
     }
 

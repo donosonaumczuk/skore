@@ -34,6 +34,8 @@ import java.util.Set;
 @Transactional
 public class PremiumUserHibernateDaoTest implements Serializable{
 
+    private static final String DO_NOT_EXIST_USERNAME = "DO NOT EXIST";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -230,6 +232,39 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     }
 
     @Test
+    public void testResetPassword() {
+        //set up
+        String newPassword = "hola123";
+
+        //excercise class
+        Optional<PremiumUser> premiumUserOptional = premiumUserDao.resetPassword(user1.getUserName(),
+                newPassword, user1.getCode());
+
+        //postcondition
+        Assert.assertTrue(premiumUserOptional.isPresent());
+        Assert.assertEquals(newPassword, premiumUserOptional.get().getPassword());
+        PremiumUser premiumUser = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertEquals(newPassword, premiumUser.getPassword());
+    }
+
+    @Test
+    public void testResetPasswordInvalidCode() {
+        //set up
+        String newPassword = "hola123";
+        String code = "notCodeUser1";
+
+        //excercise class
+        Optional<PremiumUser> premiumUserOptional = premiumUserDao.resetPassword(user1.getUserName(),
+                newPassword, code);
+
+        //postcondition
+        Assert.assertTrue(premiumUserOptional.isPresent());
+        Assert.assertEquals(user1.getPassword(), premiumUserOptional.get().getPassword());
+        PremiumUser premiumUser = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertEquals(user1.getPassword(), premiumUser.getPassword());
+    }
+
+    @Test
     public void testAddRoles() {
         //set up
         Role role = new Role("ROLE_USER", 1);
@@ -291,11 +326,12 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        List<Sport> sports = premiumUserDao.getSports(notInsertedUser.getUserName());
+        Optional<List<Sport>> sports = premiumUserDao.getLikedSports(notInsertedUser.getUserName());
 
         //postconditions
-        Assert.assertEquals(1, sports.size());
-        Assert.assertTrue(sports.contains(sport));
+        Assert.assertTrue(sports.isPresent());
+        Assert.assertEquals(1, sports.get().size());
+        Assert.assertTrue(sports.get().contains(sport));
     }
 
     @Test
@@ -306,7 +342,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        boolean returnedValue = premiumUserDao.addSport(notInsertedUser.getUserName(), sport.getName());
+        boolean returnedValue = premiumUserDao.addLikedSport(notInsertedUser.getUserName(), sport.getName());
 
         //postconditions
         PremiumUser user = em.find(PremiumUser.class, notInsertedUser.getUserName());
@@ -325,7 +361,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        boolean returnedValue = premiumUserDao.removeSport(notInsertedUser.getUserName(), sport.getName());
+        boolean returnedValue = premiumUserDao.removeLikedSport(notInsertedUser.getUserName(), sport.getName());
 
         //postconditions
         PremiumUser user = em.find(PremiumUser.class, notInsertedUser.getUserName());
@@ -352,7 +388,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, null,
-                null, null, null, null, null);
+                null, null, null, null, null,
+                false);
 
         //postconditions
         Assert.assertEquals(users.size(), usersReturn.size());
@@ -370,7 +407,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, usernamesFriends,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), true);
 
         //postconditions
         Assert.assertEquals(1, usersReturn.size());
@@ -385,7 +423,8 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, likedSports, null,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
@@ -402,7 +441,26 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(usernames, null, null,
-                null, null, null, null, new UserSort("reputation asc"));
+                null, null, null, null,
+                new UserSort("reputation asc"), true);
+
+        //postconditions
+        Assert.assertEquals(2, usersReturn.size());
+        Assert.assertEquals(user1, usersReturn.get(0));
+        Assert.assertEquals(user4, usersReturn.get(1));
+    }
+
+    @Test
+    public void testFindListOfUserWithFilterByUsernameNotExactAndSort() {
+        //set up
+        List<String> usernames = new ArrayList<>();
+        usernames.add(user1.getUserName().substring(3));
+        usernames.add(user4.getUserName().substring(2));
+
+        //exercise class
+        List<PremiumUser> usersReturn = premiumUserDao.findUsers(usernames, null, null,
+                null, null, null, null,
+                new UserSort("reputation asc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
@@ -415,12 +473,124 @@ public class PremiumUserHibernateDaoTest implements Serializable{
 
         //exercise class
         List<PremiumUser> usersReturn = premiumUserDao.findUsers(null, null, null,
-                30, 200, null, null, new UserSort("reputation desc"));
+                30, 200, null, null,
+                new UserSort("reputation desc"), false);
 
         //postconditions
         Assert.assertEquals(2, usersReturn.size());
         Assert.assertEquals(user1, usersReturn.get(0));
         Assert.assertEquals(user3, usersReturn.get(1));
+    }
+
+    @Test
+    public void testAddLikedUser() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user2.getUserName(), user4.getUserName());
+
+        //postconditions
+        PremiumUser user2InDataBase = em.find(PremiumUser.class, user2.getUserName());
+        Assert.assertTrue(hasBeenAdded);
+        Assert.assertTrue(user2InDataBase.getFriends().contains(user4));
+    }
+
+    @Test
+    public void testAddLikedUserAndLikedUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user2.getUserName(), DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testAddLikedUserAndLikeUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(DO_NOT_EXIST_USERNAME, user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testAddLikedUserAndLikeAlreadyExist() {
+
+        //exercise class
+        boolean hasBeenAdded = premiumUserDao.addLikedUser(user1.getUserName(), user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenAdded);
+    }
+
+    @Test
+    public void testRemoveLikedUser() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(user1.getUserName(), user4.getUserName());
+
+        //postconditions
+        PremiumUser user1InDataBase = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertTrue(hasBeenRemoved);
+        Assert.assertFalse(user1InDataBase.getFriends().contains(user4));
+    }
+
+    @Test
+    public void testRemoveLikedUserAndLikedUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(user2.getUserName(), DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(hasBeenRemoved);
+    }
+
+    @Test
+    public void testRemoveLikedUserAndLikeUserDoesNotExist() {
+
+        //exercise class
+        boolean hasBeenRemoved = premiumUserDao.removeLikedUser(DO_NOT_EXIST_USERNAME, user4.getUserName());
+
+        //postconditions
+        Assert.assertFalse(hasBeenRemoved);
+    }
+
+    @Test
+    public void testGetLikedUsers() {
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(user1.getUserName());
+
+        //postconditions
+        Assert.assertTrue(optionalOfListOfLikedUsers.isPresent());
+        Assert.assertEquals(user2, optionalOfListOfLikedUsers.get().get(0));
+        Assert.assertEquals(user3, optionalOfListOfLikedUsers.get().get(1));
+        Assert.assertEquals(user4, optionalOfListOfLikedUsers.get().get(2));
+    }
+
+    @Test
+    public void testGetLikedUsersAndUserDoesNotExist() {
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(DO_NOT_EXIST_USERNAME);
+
+        //postconditions
+        Assert.assertFalse(optionalOfListOfLikedUsers.isPresent());
+    }
+
+    @Test
+    public void testGetLikedUsersAndhasNoLikes() {
+        //set up
+        user4.getFriends().remove(0);
+        em.persist(user4);
+
+        //exercise class
+        Optional<List<PremiumUser>> optionalOfListOfLikedUsers = premiumUserDao.getLikedPremiumUsers(user4.getUserName());
+
+        //postconditions
+        Assert.assertTrue(optionalOfListOfLikedUsers.isPresent());
+        Assert.assertTrue(optionalOfListOfLikedUsers.get().size() == 0);
     }
 }
 

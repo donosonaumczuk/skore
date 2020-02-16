@@ -27,7 +27,8 @@ public interface GameDao {
                          final List<String> usernamesPlayersNotInclude,
                          final List<String> usernamesCreatorsInclude,
                          final List<String> usernamesCreatorsNotInclude, final GameSort sort,
-                         final Boolean onlyWithResults);
+                         final Boolean onlyWithResults, final String currentUsername, final boolean onlyLikedUsersPlay,
+                         final boolean onlyLikedSports);
 
     List<Game> gamesThatAUserPlayInTeam1(final long userId);
 

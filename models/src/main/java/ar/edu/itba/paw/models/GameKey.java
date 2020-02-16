@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 
 public class GameKey {
@@ -14,7 +15,7 @@ public class GameKey {
 
     public GameKey(String keyString) {
         if (keyString == null) {
-            throw new IllegalArgumentException("Match key must not be null");
+            throw new InvalidParameterException("Match key must not be null");
         }
         int length = keyString.length();
 

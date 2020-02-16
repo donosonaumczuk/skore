@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const MINUTES_PER_HOUR = 60;
 
@@ -9,7 +9,7 @@ const getDuration = duration => {
         return `${duration} m`;
     } 
     else {
-        hours = duration / MINUTES_PER_HOUR;
+        hours = parseInt(duration / MINUTES_PER_HOUR);
         minutes = duration % MINUTES_PER_HOUR;
         return `${hours} h ${minutes} m`;
     }
@@ -30,7 +30,7 @@ const MatchDuration = ({ durationInMinutes }) => {
 }
 
 MatchDuration.propTypes = {
-    durationInMinutes: Proptypes.number.isRequired
+    durationInMinutes: PropTypes.number.isRequired
 }
 
 export default MatchDuration;

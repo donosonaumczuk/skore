@@ -58,31 +58,6 @@ public class UserValidatorsTest {
     }
 
     @Test
-    public void whenValidatingUpdateIfHasPasswordButNotOldPasswordThrowApiExceptionWithExpectedValues() {
-        exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("To update 'password' field you must provide an 'oldPassword' field with"
-                + " the old password");
-        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
-                "{\n" +
-                        "\t\"password\" : \"myNewPassword\",\n" +
-                        "}"
-                )
-        );
-    }
-
-    @Test
-    public void whenValidatingUpdateIfHasOldPasswordButNotPasswordThrowApiExceptionWithExpectedValues() {
-        exceptionRule.expect(ApiException.class);
-        exceptionRule.expectMessage("Field 'oldPassword' known but other field values turn it unaccepted");
-        UserValidators.updateValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
-                "{\n" +
-                        "\t\"oldPassword\" : \"myOldPassword\",\n" +
-                        "}"
-                )
-        );
-    }
-
-    @Test
     public void whenValidatingCreationIfHasAllKnownAndRequiredFieldsWithValidFormatThenSuccessByDoingNothing() {
         UserValidators.creationValidatorOf("log").validate(JSONUtils.jsonObjectFrom(
                 "{\n" +

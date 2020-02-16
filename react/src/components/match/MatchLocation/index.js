@@ -1,14 +1,15 @@
 import React from 'react';
 import LocationPropType from '../../../proptypes/LocationPropType';
+import Utils from '../../utils/Utils';
 
 const MatchLocation = ({ address }) => {
-    //TODO make toString of address @adammiano
+    const addressString = Utils.addressToString(address);
     return (
          <div className="row">
             <div className="col">
                 <p>
                     <span className="location-icon mr-2 fas fa-map-marker-alt"></span>
-                    {address.street}
+                    {addressString}
                 </p>
             </div>
         </div>

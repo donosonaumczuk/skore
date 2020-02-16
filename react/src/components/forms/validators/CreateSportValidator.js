@@ -61,10 +61,13 @@ const validateSportImage = image => {
 const validateRequiredSportImage = image => {
     let errorLabelBase = `${ERROR_BASE_LABEL}image`;
     let errorMessage = ``;
+    const sportImageError = validateSportImage(image);
     if(!image) {
         errorMessage = i18next.t(`${errorLabelBase}.required`);
     }
-    errorMessage = `${errorMessage} ${validateSportImage(image)}`;
+    if (sportImageError) {
+        errorMessage = `${errorMessage} ${sportImageError}`;
+    }
     return errorMessage;
 }
 
