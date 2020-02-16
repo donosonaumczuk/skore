@@ -14,7 +14,7 @@ exports[`Sports snapshot test 1`] = `
         Object {
           "WebkitOverflowScrolling": "touch",
           "height": "auto",
-          "overflow": "auto",
+          "overflow": "visible",
         }
       }
     >
