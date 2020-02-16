@@ -50,10 +50,12 @@ const getResultLabel = (userTeam, resultTeamOne, resultTeamTwo) => {
 }
 
 const getResultLabelClass = resultLabel => {
-    if (resultLabel === "WON") {
+    const WON_LABEL = i18next.t('profile.match.won');
+    const TIE_LABEL = i18next.t('profile.match.tie');
+    if (resultLabel === WON_LABEL) {
         return "fa-check-circle";
     }
-    else if (resultLabel === "TIE") {
+    else if (resultLabel === TIE_LABEL) {
         return "fa-minus-circle"
     }
     else {
