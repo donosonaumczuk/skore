@@ -68,27 +68,47 @@ class CreateUserFormContainer extends Component {
         };
     }
 
+    loadHome = () => {
+        const { country, state, city, street } = this.state
+        if (!country && !state && !city && !street) {
+            return null;
+        }
+        let home = {};
+        if (country) {
+            home.country = country;
+        }
+        if (state) {
+            home.state = state;
+        }
+        if (city) {
+            home.city = city;
+        }
+        if (street) {
+            home.street = street;
+        }
+        return home;
+    }
+
     loadUser = (values, image) => {
         const birthday = this.getBirthdayWithCorrectFormat(values.year, values.month, values.day);
+        const home = this.loadHome();
         let user = {
             "username": values.username,
             "password": values.password,
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email,
-            "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday,
-            "home": {
-                "country": this.state.country,
-                "state": this.state.state,
-                "city": this.state.city,
-                "street": this.state.street
-            }
         };
         if (image) {
-            user = { ...user, "image":image.data };
+            user = { ...user, "image": image.data };
         }
-        //TODO only send home if not null, only send cellphone if not null
+        if (values.cellphone) {
+            user = { ...user, "cellphone": values.cellphone };
+        }
+        if (home) {
+            user = { ...user, "home": home };
+        }
         return user;
     }
 
