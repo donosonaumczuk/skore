@@ -33,7 +33,7 @@ public interface PremiumUserService {
                                final String newEmail, final String newCellphone, final LocalDate newBirthday,
                                final String newCountry, final String newState, final String newCity,
                                final String newStreet, final Integer newReputation, final String newPassword,
-                               final String oldPassword, final byte[] file, final Locale locale);
+                               final String oldPassword, final byte[] file, final Locale locale, final String code);
 
     PremiumUser enableUser(final String username, final String code);
 
@@ -58,4 +58,6 @@ public interface PremiumUserService {
     void removeLikedSport(final String username, final String sportnameOfLiked);
 
     Page<Sport> getLikedSports(final String username, final Integer offset, final Integer limit);
+
+    void forgotPassword(final String username, final String email, final Locale locale);
 }

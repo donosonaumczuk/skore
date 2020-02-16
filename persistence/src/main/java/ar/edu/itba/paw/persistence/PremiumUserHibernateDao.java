@@ -388,4 +388,14 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
         Optional<PremiumUser> premiumUser = findByUserName(username);
         return premiumUser.map(PremiumUser::getLikes);
     }
+
+    @Override
+    public Optional<PremiumUser> resetPassword(final String username, final String newPassword, final String code) {
+        Optional<PremiumUser> currentUser = findByUserName(username);
+        if(currentUser.isPresent() && currentUser.get().getCode().equals(code)) {
+            currentUser.get().setPassword(newPassword);
+            em.merge(currentUser.get());
+        }
+        return currentUser;
+    }
 }

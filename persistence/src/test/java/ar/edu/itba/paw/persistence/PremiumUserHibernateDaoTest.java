@@ -232,6 +232,39 @@ public class PremiumUserHibernateDaoTest implements Serializable{
     }
 
     @Test
+    public void testResetPassword() {
+        //set up
+        String newPassword = "hola123";
+
+        //excercise class
+        Optional<PremiumUser> premiumUserOptional = premiumUserDao.resetPassword(user1.getUserName(),
+                newPassword, user1.getCode());
+
+        //postcondition
+        Assert.assertTrue(premiumUserOptional.isPresent());
+        Assert.assertEquals(newPassword, premiumUserOptional.get().getPassword());
+        PremiumUser premiumUser = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertEquals(newPassword, premiumUser.getPassword());
+    }
+
+    @Test
+    public void testResetPasswordInvalidCode() {
+        //set up
+        String newPassword = "hola123";
+        String code = "notCodeUser1";
+
+        //excercise class
+        Optional<PremiumUser> premiumUserOptional = premiumUserDao.resetPassword(user1.getUserName(),
+                newPassword, code);
+
+        //postcondition
+        Assert.assertTrue(premiumUserOptional.isPresent());
+        Assert.assertEquals(user1.getPassword(), premiumUserOptional.get().getPassword());
+        PremiumUser premiumUser = em.find(PremiumUser.class, user1.getUserName());
+        Assert.assertEquals(user1.getPassword(), premiumUser.getPassword());
+    }
+
+    @Test
     public void testAddRoles() {
         //set up
         Role role = new Role("ROLE_USER", 1);

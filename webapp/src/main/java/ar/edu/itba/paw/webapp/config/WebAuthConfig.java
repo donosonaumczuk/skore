@@ -97,7 +97,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RequestMatcher needAuthEndpointsMatcher() {
         return new OrRequestMatcher(//TODO make list
                 new RegexRequestMatcher("/api/auth/logout/?", "POST"),
-                new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/?", "PUT"),
                 new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/?", "DELETE"),
                 new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/likedUsers/?", "POST"),
                 new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/likedUsers/[a-zA-Z0-9_.]+/?", "DELETE"),
@@ -116,6 +115,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RequestMatcher optionalAuthEndpointsMatcher() {
         return new OrRequestMatcher( //TODO make list
                 new RegexRequestMatcher("/api/matches/?", "GET"),
+                new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/?", "PUT"),
                 new RegexRequestMatcher("/api/users/[a-zA-Z0-9_.]+/matches/?", "GET"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/?", "POST"),
                 new RegexRequestMatcher("/api/matches/[0-9.-a-zA-Z_]+/players/[0-9]+/?", "DELETE"),

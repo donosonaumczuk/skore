@@ -62,5 +62,7 @@ public interface PremiumUserDao {
     boolean removeLikedSport(final String username, final String sportnameOfLiked);
 
     Optional<List<Sport>> getLikedSports(final String username);
+
+    Optional<PremiumUser> resetPassword(final String username, final String newPassword, final String code);
 }
 
