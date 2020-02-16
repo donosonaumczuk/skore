@@ -131,7 +131,7 @@
         "addFilters": "ADD FILTERS",
         "joinMatch": "JOIN",
         "joinCompetitiveMatch": "JOIN",
-        "cancelMatch": "CANCEL ASSISTANCE",
+        "cancelMatch": "EXIT",
         "deleteMatch": "DELETE",
         "matches": "Matches",
         "toJoinTab": "TO JOIN",

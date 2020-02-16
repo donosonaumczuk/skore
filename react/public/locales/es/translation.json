@@ -131,7 +131,7 @@
         "addFilters": "AGREGAR FILTROS",
         "joinMatch": "UNIRSE",
         "joinCompetitiveMatch": "UNIRSE",
-        "cancelMatch": "CANCELAR ASISTENCIA",
+        "cancelMatch": "SALIR",
         "deleteMatch": "BORRAR",
         "matches": "Partidos",
         "toJoinTab": "PARA UNIRSE",
