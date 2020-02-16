@@ -5,6 +5,7 @@ import AuthService from '../../../services/AuthService';
 import Spinner from '../../Spinner';
 import MatchService from '../../../services/MatchService';
 import WithAuthentication from '../../hocs/WithAuthenticatication';
+import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
 
 class AuthenticatedMatch extends Component {
     mounted = false;
@@ -23,8 +24,18 @@ class AuthenticatedMatch extends Component {
         const { matchKey } = this.state;
         const response = await MatchService.joinMatchWithAccount(matchKey, userId);
         if (response.status) {
-            if (this.mounted) {
-                this.setState({ status: response.status });
+            if (response.status === SC_UNAUTHORIZED) {
+                const status = AuthService.internalLogout();
+                if (status === SC_OK) {
+                    this.props.history.push(`/login`);
+                }
+                else {
+                    this.setState({ error: status });
+                }
+            }
+            else if (this.mounted) {
+                //TODO handle 409 already joined
+                this.setState({ error: response.status, executing: false });
             }
         }
         else {

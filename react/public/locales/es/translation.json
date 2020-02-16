@@ -103,8 +103,9 @@
     },
     "login": {
         "loginButton": "INGRESAR",
-        "login": "Ingresar",
-        "newUser": "¿Sos nuevo? ",
+"login": "Ingresar",
+"newUser": "¿Sos nuevo? ",
+        "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio."
@@ -243,7 +244,7 @@
         "playersPerTeam": "Jugadores por equipo",
         "createSport": "CREAR DEPORTE",
         "editSport": "EDITAR",
-        "deleteSport": "BORRAR"  
+        "deleteSport": "BORRAR"
     },
     "confirmAccount": {
         "confirmed": "¡Felicitaciones! Creaste una cuenta.",
@@ -258,14 +259,20 @@
         "canceled": "Cancelaste tu asistencia al partido."
     },
     "setMatchScoreForm": {
-        "teamOneScore": "Resultado del equipo 1 ",
-        "teamTwoScore": "Resultado del equipo 2 ",
+        "teamOneScore": "Resultado de su equipo ",
+        "teamTwoScore": "Resultado del equipo rival ",
+        "repeatTeamOneScore": "Repita el resultado de su equipo ",
+        "repeatTeamTwoScore": "Repita el resultado del equipo rival ",
         "setScoreButton": "ACTUALIZAR RESULTADO",
         "errors": {
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
                 "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+            },
+            "repeatedScore": {
+                "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
+                "teamTwoDoesNotMatch": "El resultado no coincide con el resultado del equipo rival.\n"
             }
         }
     },
@@ -277,6 +284,12 @@
         "teamTwo": "Equipo 2",
         "matchIsPlaying": "Partido en curso...",
         "waitingForScore": "Esperando el resultado...",
-        "matchIsCanceled": "Partido cancelado"
+        "matchIsCanceled": "Partido cancelado",
+        "winner": "Ganador"
+    },
+    "accounts": {
+        "title": "Cuentas",
+        "searchPlaceholder": "Buscar usuarios..."
+
     }
 }

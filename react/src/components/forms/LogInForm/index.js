@@ -19,8 +19,14 @@ class LogInFormContainer extends Component {
     mounted = false;
     constructor(props) {
         super(props);
+        let message = null;
+        if (!AuthService.getCurrentUser() && this.props.currentUser) {
+            props.updateUser(null);
+            message = i18next.t('login.sesionExpired');
+        }
         this.state = {
             errorMessage: null,
+            message: message
         };
     }
 
@@ -79,7 +85,8 @@ class LogInFormContainer extends Component {
         return (
             <LogInForm onSubmit={this.onSubmit} errorMessage={errorMessage}
                         handleSubmit={handleSubmit} submitting={submitting}
-                        isExecuting={this.state.executing} />
+                        isExecuting={this.state.executing}
+                        message={this.state.message} />
         );
     }
 
@@ -95,7 +102,8 @@ LogInFormContainer = reduxForm({
 })(LogInFormContainer) 
 
 LogInFormContainer.propTypes = {
-    updateUser: PropTypes.func.isRequired
+    updateUser: PropTypes.func.isRequired,
+    currentUser: PropTypes.string
 }
 
 export default LogInFormContainer;

@@ -293,11 +293,12 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        List<Sport> sports = premiumUserDao.getSports(notInsertedUser.getUserName());
+        Optional<List<Sport>> sports = premiumUserDao.getLikedSports(notInsertedUser.getUserName());
 
         //postconditions
-        Assert.assertEquals(1, sports.size());
-        Assert.assertTrue(sports.contains(sport));
+        Assert.assertTrue(sports.isPresent());
+        Assert.assertEquals(1, sports.get().size());
+        Assert.assertTrue(sports.get().contains(sport));
     }
 
     @Test
@@ -308,7 +309,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        boolean returnedValue = premiumUserDao.addSport(notInsertedUser.getUserName(), sport.getName());
+        boolean returnedValue = premiumUserDao.addLikedSport(notInsertedUser.getUserName(), sport.getName());
 
         //postconditions
         PremiumUser user = em.find(PremiumUser.class, notInsertedUser.getUserName());
@@ -327,7 +328,7 @@ public class PremiumUserHibernateDaoTest implements Serializable{
         em.persist(notInsertedUser);
 
         //exercise the class
-        boolean returnedValue = premiumUserDao.removeSport(notInsertedUser.getUserName(), sport.getName());
+        boolean returnedValue = premiumUserDao.removeLikedSport(notInsertedUser.getUserName(), sport.getName());
 
         //postconditions
         PremiumUser user = em.find(PremiumUser.class, notInsertedUser.getUserName());

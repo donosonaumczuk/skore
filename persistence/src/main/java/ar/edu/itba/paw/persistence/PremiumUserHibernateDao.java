@@ -265,53 +265,6 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     }
 
     @Override
-    public boolean addSport(final String username, String sportName) {
-        Sport sport = em.find(Sport.class, sportName);
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-
-        if(sport == null || !premiumUser.isPresent()) {
-            return false;
-        }
-
-        PremiumUser user = premiumUser.get();
-        if(user.getLikes().contains(sport)) {
-            return false;
-        }
-        else {
-            user.getLikes().add(sport);
-            em.merge(user);
-            return true;
-        }
-    }
-
-    @Override
-    public List<Sport> getSports(String username) {
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-        return premiumUser.map(PremiumUser::getLikes).orElse(null);
-    }
-
-    @Override
-    public boolean removeSport(final String username, String sportName) {
-        Sport sport = em.find(Sport.class, sportName);
-        Optional<PremiumUser> premiumUser = findByUserName(username);
-
-        if(sport == null || !premiumUser.isPresent()) {
-            return false;
-        }
-
-        PremiumUser user = premiumUser.get();
-        if(user.getLikes().contains(sport)) {
-            user.getLikes().remove(sport);
-            em.merge(user);
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    @Override
     public List<PremiumUser> findUsers(final List<String> usernames, final List<String> sportLiked,
                                        final List<String> friendUsernames, final Integer minReputation,
                                        final Integer maxReputation, final Integer minWinRate,
@@ -391,5 +344,48 @@ public class PremiumUserHibernateDao implements PremiumUserDao {
     public Optional<List<PremiumUser>> getLikedPremiumUsers(String username) {
         Optional<PremiumUser> user = findByUserName(username);
         return user.map(PremiumUser::getFriends);
+    }
+
+    @Override
+    public boolean addLikedSport(final String username, final String sportName) {
+        Sport sport = em.find(Sport.class, sportName);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(sport == null || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getLikes().contains(sport)) {
+            return false;
+        }
+        else {
+            user.getLikes().add(sport);
+            em.merge(user);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean removeLikedSport(final String username, final String sportnameOfLiked) {
+        Sport sport = em.find(Sport.class, sportnameOfLiked);
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+
+        if(sport == null || !premiumUser.isPresent()) {
+            return false;
+        }
+
+        PremiumUser user = premiumUser.get();
+        if(user.getLikes().contains(sport)) {
+            user.getLikes().remove(sport);
+            em.merge(user);
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<List<Sport>> getLikedSports(final String username) {
+        Optional<PremiumUser> premiumUser = findByUserName(username);
+        return premiumUser.map(PremiumUser::getLikes);
     }
 }

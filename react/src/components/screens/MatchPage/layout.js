@@ -36,11 +36,10 @@ const getImageUrls = links => {
     };
 }
 
-const MatchPage = ({ match, updateMatchScore, joinMatch,
-                        cancelMatch, deleteMatch }) => {
+const MatchPage = ({ match, updateMatchScore, joinMatch, cancelMatch, deleteMatch }) => {
     const { creatorImageUrl, sportImageUrl } = getImageUrls(match.links);
     const { title, creator, sportName, competitive, date, time, minutesOfDuration,
-            description, location, team1, team2 } = match;
+            description, location, team1, team2, results } = match;
     return (
         <div className="container-fluid">
             <div className="row">
@@ -58,7 +57,7 @@ const MatchPage = ({ match, updateMatchScore, joinMatch,
                     <MatchPageAvailability currentMatch={match} joinMatch={joinMatch}
                                             cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
                     <MatchPageStatus currentMatch={match} updateMatchScore={updateMatchScore} />
-                    <MatchPagePlayers teamOnePlayers={team1.players} 
+                    <MatchPagePlayers score={results} teamOnePlayers={team1.players} 
                                         teamTwoPlayers={team2 ? team2.players : [] } />
                 </div>
             </div>

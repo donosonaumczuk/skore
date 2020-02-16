@@ -12,7 +12,7 @@ let SearchBar = ({ handleSubmit, submitting, onSubmit, label, inputStyle }) => {
                     <Field name="usernames" containerId="searchBar" inputType="text"
                             labelText={label} inputId="searchinput"
                             inputStyle={inputStyle} component={SearchInput} 
-                            placeholderText={i18next.t('accounts.searchPlacelder')}
+                            placeholderText={i18next.t('accounts.searchPlaceholder')}
                             submitting={submitting} />
                 </form>
             </div>
