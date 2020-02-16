@@ -112,10 +112,6 @@ public class PremiumUserServiceImpl implements PremiumUserService {
             LOGGER.trace("User with email {} already exist", email);
             throw UserAlreadyExistException.ofEmail(email);
         }
-        if (premiumUserDao.findByUserName(userName).isPresent()) {
-            LOGGER.trace("User with username {} already exist", userName);
-            throw UserAlreadyExistException.ofUsername(userName);
-        }
 
         final String encodedPassword = bcrypt.encode(password);
         PremiumUser user = premiumUserDao.create(
