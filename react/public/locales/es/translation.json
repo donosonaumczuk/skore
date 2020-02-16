@@ -31,7 +31,7 @@
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
         "signUp": "Crear Cuenta",
         "signUpButton": "CREAR CUENTA",
-        "existingUser": "ya tienes cuenta ",
+        "existingUser": "¿Ya tenés cuenta? ",
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio.\n",
@@ -103,7 +103,7 @@
     },
     "login": {
         "loginButton": "INGRESAR",
-        "login": "ingresar",
+        "login": "Ingresar",
         "newUser": "¿Sos nuevo? ",
         "errors": {
             "username": {
