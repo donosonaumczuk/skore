@@ -286,5 +286,9 @@
         "waitingForScore": "Waiting for match score...",
         "matchIsCanceled": "Match cancelled",
         "winner": "Winner"
+    },
+    "accounts": {
+        "title": "Accounts",
+        "searchPlaceholder": "Search users..."
     }
 }

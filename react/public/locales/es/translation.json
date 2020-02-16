@@ -29,9 +29,9 @@
         "month": "Mes ",
         "day": "Día ",
         "dateFormat": "Formato de fecha: MM/DD/YYYY",
-        "signUp": "Registrarse",
-        "signUpButton": "REGISTRARSE",
-        "existingUser": "ya tienes cuenta ",
+        "signUp": "Crear Cuenta",
+        "signUpButton": "CREAR CUENTA",
+        "existingUser": "¿Ya tenés cuenta? ",
         "errors": {
             "username": {
                 "required": "El nombre de usuario es obligatorio.\n",
@@ -51,12 +51,12 @@
             },
             "firstName": {
                 "required": "El nombre es obligatorio.\n",
-                "invalidSymbols": "El nombre solo puede contener letras y espacios.\n",
+                "invalidSymbols": "El nombre sólo puede contener letras y espacios.\n",
                 "invalidLength": "El nombre debe tener entre 2 y 100 caracteres.\n"
             },
             "lastName": {
                 "required": "El apellido es obligatorio.\n",
-                "invalidSymbols": "El apellido debe contener solo letras y espacios.\n",
+                "invalidSymbols": "El apellido debe contener sólo letras y espacios.\n",
                 "invalidLength": "El apellido debe tener entre 2 y 100 caracteres.\n"
             },
             "email": {
@@ -64,15 +64,15 @@
                 "invalidEmail": "No es un email bien formado, debe ser un email valido.\n"
             },
             "image": {
-                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
+                "invalidImageFormat": "La imagen pose un formato inválido. Los formatos soportados son: png, jpg y jpeg.\n",
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             },
             "cellphone": {
-                "invalidCellphone": "El Celular deben ser diez digitos o vacio.\n"
+                "invalidCellphone": "El Celular deben ser diez dígitos o vacio.\n"
             },
             "birthday": {
                 "required": "La fecha de nacimiento es obligatorio.\n",
-                "invalidSymbols": "La fecha de nacimiento solo puede tener digitos y barra('/').\n",
+                "invalidSymbols": "La fecha de nacimiento sólo puede tener dígitos y barra('/').\n",
                 "invalidLength": "La fecha de nacimiento debe tener exactamente diez caracteres.\n",
                 "invalidPastDate": "La fecha de nacimiento debe ser una fecha válida pasada.\n"
             },
@@ -103,8 +103,8 @@
     },
     "login": {
         "loginButton": "INGRESAR",
-        "login": "ingresar",
-        "newUser": "eres nuevo? ",
+        "login": "Ingresar",
+        "newUser": "¿Sos nuevo? ",
         "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
             "username": {
@@ -118,9 +118,9 @@
     },
     "home": {
         "createMatch": "CREAR UN PARTIDO",
-        "cantFindMatch": "No encontras el partido que estas buscando?",
-        "wantToCreateMatch": "Querés crear tu propio partido?\n",
-        "filtersToolTip": "Para agregar mas de un filtro podes escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
+        "cantFindMatch": "¿No encontrás el partido que estás buscando?",
+        "wantToCreateMatch": "¿Querés crear tu propio partido?\n",
+        "filtersToolTip": "Para agregar más de un filtro podés escribilos separados por espacio.\nVas a recibir los resultados que coinciden con por lo menos uno de los filtros de cada tipo.",
         "filtersAndCategories": "Filtros y Categorías",
         "countryFilter": "País",
         "stateFilter": "Estado / Provincia",
@@ -192,7 +192,7 @@
                 "required": "La duración debe contener un valor de horas.\n"
             },
             "durationMinutes": {
-                "required": "La duración debe contener un valor de minutos..\n"
+                "required": "La duración debe contener un valor de minutos.\n"
             },
             "description": {
                 "invalidLength": "La descripción no puede contener mas de 140 caracteres.\n"
@@ -225,14 +225,14 @@
                 "invalidLength": "El nombre a mostrar del deporte debe tener entre 4 y 100 caracteres.\n"
             },
             "playersPerTeam": {
-                "required": "Jugadores por equipo es obbligatorio.\n",
-                "invalidSymbols": "Jugadores por equipo debe contener unicamente digitos.\n",
-                "invalidLength": "Jugadores por equipo no puede tener entre 1 y 3 digitos.\n",
+                "required": "Jugadores por equipo es obligatorio.\n",
+                "invalidSymbols": "Jugadores por equipo debe contener unicamente dígitos.\n",
+                "invalidLength": "Jugadores por equipo no puede tener entre 1 y 3 dígitos.\n",
                 "invalidValue": "Jugadores por equipo debe tener un valor entre 1 y 100.\n"
             },
             "image": {
                 "required": "La imagen del deporte es obligatoria.\n",
-                "invalidImageFormat": "La imagen pose un formato invalido. Los formatos soportados son: png, jpg y jpeg.\n",
+                "invalidImageFormat": "La imagen pose un formato inválido. Los formatos soportados son: png, jpg y jpeg.\n",
                 "invalidImageSize": "La imagen no debe ocupar mas de 1MB.\n"
             }
         }
@@ -244,10 +244,10 @@
         "playersPerTeam": "Jugadores por equipo",
         "createSport": "CREAR DEPORTE",
         "editSport": "EDITAR",
-        "deleteSport": "BORRAR"  
+        "deleteSport": "BORRAR"
     },
     "confirmAccount": {
-        "confirmed": "Felicitaciones! Creaste una cuenta.",
+        "confirmed": "¡Felicitaciones! Creaste una cuenta.",
         "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
     },
@@ -267,7 +267,7 @@
         "errors": {
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
-                "invalidSymbols": "Resultado del equipo debe contener solo números.\n",
+                "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
                 "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
             },
             "repeatedScore": {
@@ -286,5 +286,10 @@
         "waitingForScore": "Esperando el resultado...",
         "matchIsCanceled": "Partido cancelado",
         "winner": "Ganador"
+    },
+    "accounts": {
+        "title": "Cuentas",
+        "searchPlaceholder": "Buscar usuarios..."
+
     }
 }

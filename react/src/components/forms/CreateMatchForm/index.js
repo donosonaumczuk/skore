@@ -43,7 +43,9 @@ class CreateMatchFormContainer extends Component {
 
     getSports = async () => {
         const { offset, limit } = this.state;
-        this.setState({ executing: true });
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         let response = await SportService.getSports(offset, limit);
         if (response.status) {
             if (this.mounted) {
@@ -67,7 +69,7 @@ class CreateMatchFormContainer extends Component {
         while (hasMore) {
             if (!this.state.executing) {
                 await this.getSports();
-                hasMore = this.state.hasMore;
+                hasMore = this.mounted ? this.state.hasMore : false;
             }
         }
     }

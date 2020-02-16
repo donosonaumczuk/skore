@@ -113,7 +113,8 @@ class App extends Component {
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>
-                        <Route exact path="/accounts" component={Accounts} />
+                        <Route exact path="/accounts" render={(props) => 
+                                                <Accounts {...props} currentUser={username} />} />
                         <Route exact path="/admin">
                             <Admin />
                         </Route>
