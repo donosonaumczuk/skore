@@ -9,6 +9,7 @@ import CreateUserForm from './layout';
 import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import { EC_EMAIL_EXISTS } from '../../../services/constants/ErrorCodesConstants';
 import i18next from 'i18next';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -170,7 +171,7 @@ class CreateUserFormContainer extends Component {
     render() {
         const { handleSubmit, submitting, birthday, change, touch } = this.props;
         const { country, state, city, street, executing, status } = this.state;
-        const errorMessage = this.getErrorMessage();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         let imageName = "";
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {

@@ -7,6 +7,7 @@ import AuthService from '../../../services/AuthService';
 import LogInValidator from '../validators/LogInValidator';
 import { SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
 import LogInForm from './layout';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -59,15 +60,6 @@ class LogInFormContainer extends Component {
         }
     }
 
-    getErrorMessage = () => {
-        if (this.state.errorMessage) {
-            return (<span className="invalid-feedback d-block">
-                        {this.state.errorMessage}
-                    </span>);
-        }
-        return <React.Fragment></React.Fragment>;
-    }
-
     componentDidMount() {
         this.mounted = true;
     }
@@ -75,7 +67,7 @@ class LogInFormContainer extends Component {
     render() {
         const { handleSubmit, submitting, url } = this.props; 
         const currentUser = AuthService.getCurrentUser();
-        const errorMessage = this.getErrorMessage();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         if (currentUser && !url) {
             return <Redirect to={`/users/${currentUser}`} />
         }

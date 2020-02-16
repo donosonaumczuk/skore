@@ -100,6 +100,15 @@ const addressToString = address => {
     return addressString;
 }
 
+const getErrorMessage = (errorMessage) => {
+    if (errorMessage) {
+        return (<span className="invalid-feedback d-block">
+                    {this.state.errorMessage}
+                </span>);
+    }
+    return <React.Fragment></React.Fragment>;
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
@@ -109,7 +118,8 @@ const Utils = {
     generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues,
     removeLastSpaceFromString: removeLastSpaceFromString,
     addressToString: addressToString,
-    removePlayerFromMatch: removePlayerFromMatch
+    removePlayerFromMatch: removePlayerFromMatch,
+    getErrorMessage: getErrorMessage
 };
 
 export default Utils;
