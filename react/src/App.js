@@ -98,9 +98,8 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/" render={(props) => <Home {...props} 
                                 currentUser={this.state.currentUser.username} />} />
-                        <Route exact path="/sports">
-                            <Sports />
-                        </Route>
+                        <Route exact path="/sports" render={(props) => 
+                                        <Sports {...props} currentUser={username} />} />
                         <Route exact path="/signUp" component={CreateUserForm} />
                         <Route exact path="/createdAccount">
                             <CreatedAccount />
