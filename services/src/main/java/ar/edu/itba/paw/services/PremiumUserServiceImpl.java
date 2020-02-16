@@ -404,7 +404,7 @@ public class PremiumUserServiceImpl implements PremiumUserService {
 
         if (!premiumUser.getEmail().equals(email)) {
             LOGGER.trace("Email '{}' is invalid for '{}'", email, username);
-            throw new InvalidParameterException("Email '" + email + "' is invalid for '" + username + "'");
+            throw UserInvalidStateException.ofUserWithWrongMail(username, email);
         }
 
         emailSender.sendResetPassword(premiumUser, getResetPasswordUrl(premiumUser), locale);

@@ -55,10 +55,11 @@ class UserMatchesContainer extends Component {
         const matches = this.state.matches;
         const isLoading = matches.length === 0 && this.state.hasMore;
         const error = this.state.status;
+        const { history } = this.props;
         return (
             <UserMatches matches={matches} getUserMatches={this.getUserMatches}
                             hasMore={this.state.hasMore} username={this.props.username}
-                            isLoading={isLoading} error={error} />
+                            isLoading={isLoading} error={error} history={history} />
         );
     }
 
@@ -69,7 +70,8 @@ class UserMatchesContainer extends Component {
 }
 
 UserMatchesContainer.propTypes = {
-    username: Proptypes.string.isRequired
+    username: Proptypes.string.isRequired,
+    history: Proptypes.object.isRequired
 }
 
 export default UserMatchesContainer;

@@ -26,7 +26,6 @@ SearchBar.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
     inputStyle: PropTypes.string.isRequired
-
 }
 
 SearchBar = reduxForm({

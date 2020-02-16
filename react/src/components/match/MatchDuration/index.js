@@ -9,7 +9,7 @@ const getDuration = duration => {
         return `${duration} m`;
     } 
     else {
-        hours = duration / MINUTES_PER_HOUR;
+        hours = parseInt(duration / MINUTES_PER_HOUR);
         minutes = duration % MINUTES_PER_HOUR;
         return `${hours} h ${minutes} m`;
     }

@@ -134,7 +134,8 @@ class UserProfileContainer extends Component {
                             editButtons={editButtons}
                             locationData={this.locationData}
                             winRateAndAge={this.winRateAndAge}
-                            isLoading={isLoading} error={error} />
+                            isLoading={isLoading} error={error}
+                            history={this.props.history} />
         );
     }
    
@@ -145,7 +146,8 @@ class UserProfileContainer extends Component {
 }
 
 UserProfileContainer.propTypes = {
-    match: Proptypes.object.isRequired
+    match: Proptypes.object.isRequired,
+    history: Proptypes.object.isRequired
 }
 
 export default UserProfileContainer;
