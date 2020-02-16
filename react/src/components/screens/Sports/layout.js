@@ -5,12 +5,13 @@ import Sport from './components/Sport';
 import Loader from '../../Loader';
 import SportPropType from '../../../proptypes/SportPropType';
 import WithError from '../../hocs/WithError';
+import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 
 const Sports = ({ sports, getSports, hasMore, currentUser, likes,
                     likeSport, dislikeSport }) => {
         return (
-        <div className="match-container container-fluid">
+        <div className="match-container container-fluid container p-2">
             <InfiniteScroll dataLength={sports.length} next={getSports}
                             hasMore={hasMore} loader={<Loader />}>
                 {sports.map((sport) => 
@@ -34,4 +35,4 @@ Sports.propTypes = {
     dislikeSport: PropTypes.func.isRequired
 }
 
-export default WithError(WithLoading(Sports));
+export default WithError(WithExecuting(WithLoading(Sports)));

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SportInfo from '../../../../match/SportInfo';
 import SportPlayers from '../SportPlayers';
 import SportPropTypes from '../../../../../proptypes/SportPropType';
+import SportLikeButton from '../SportLikeButton';
 
 const getSportImageUrl = links => {
     let sportImageUrl;
@@ -17,13 +18,14 @@ const getSportImageUrl = links => {
 const Sport = ({ sport, isLogged, isLiked, likeSport, dislikeSport }) => {
     const sportImageUrl = getSportImageUrl(sport.links);
     return (
-        <div className="row p-2 mt-2 ml-5 mr-5 match-card rounded-border">
+        <div className="row p-4 mt-2 ml-5 mr-5 match-card rounded-border">
             <div className="col">
                 <div className="row mb-4">
                     <SportInfo sportImageUrl={sportImageUrl} sport={sport.displayName} />
                     <SportPlayers playersQuantity={sport.playerQuantity} />
-                    {/* <SportLike isLogged={isLogged} isLiked={isLiked} 
-                                likeSport={likeSport} dislikeSport={dislikeSport} /> */}
+                    <SportLikeButton isLogged={isLogged} isLiked={isLiked} 
+                                        likeSport={likeSport} dislikeSport={dislikeSport}
+                                        sportName={sport.sportName} />
                 </div>
             </div>
         </div>

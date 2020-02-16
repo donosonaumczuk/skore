@@ -96,32 +96,38 @@ class AccountsContainer extends Component {
     likeUser = async (e, username) => {
         e.stopPropagation();
         const { currentUser } = this.props;
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await UserService.likeUser(currentUser, username);
         if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
-                this.setState({ error: response.status });
+                this.setState({ error: response.status, executing: false });
             }
         }
         else if (this.mounted) {
             const newLikes = { ...this.state.likes};
             newLikes[username] = true;
-            this.setState({ likes: newLikes });
+            this.setState({ likes: newLikes, executing: false });
         }
     }
 
     dislikeUser = async (e, username) => {
         e.stopPropagation();
         const { currentUser } = this.props;
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await UserService.dislikeUser(currentUser, username);
         if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
-                this.setState({ error: response.status });
+                this.setState({ error: response.status, executing: false });
             }
         }
         else if (this.mounted) {
             const newLikes = { ...this.state.likes};
             newLikes[username] = false;
-            this.setState({ likes: newLikes });
+            this.setState({ likes: newLikes, executing: false });
         }
     }
 
@@ -166,7 +172,7 @@ class AccountsContainer extends Component {
     }
 
     render() {
-        const { accounts, hasMore, hasMoreLikes, likes } = this.state;
+        const { accounts, hasMore, hasMoreLikes, likes, executing } = this.state;
         const { currentUser, history } = this.props;
         const isLoading = ((accounts.length === 0 && hasMore) || (hasMoreLikes));
         return (
@@ -175,7 +181,8 @@ class AccountsContainer extends Component {
                         likeUser={this.likeUser} dislikeUser={this.dislikeUser}
                         currentUser={currentUser} isLoading={isLoading}
                         error={this.state.status} onSubmit={this.onSubmit}
-                        filters={this.state.filters} history={history} />
+                        filters={this.state.filters} history={history}
+                        isExecuting={executing} />
         )
     }
 

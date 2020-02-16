@@ -9,7 +9,7 @@ import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 10;
 const LIKES_OFFSET = 0;
-const LIKES_LIMIT = 1;
+const LIKES_LIMIT = 100;
 
 class SportsContainer extends Component {
     mounted = false;
@@ -84,32 +84,38 @@ class SportsContainer extends Component {
     likeSport = async (e, sportName) => {
         e.stopPropagation();
         const { currentUser } = this.props;
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await UserService.likeSport(currentUser, sportName);
         if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
-                this.setState({ error: response.status });
+                this.setState({ error: response.status, executing: false });
             }
         }
         else if (this.mounted) {
             const newLikes = { ...this.state.likes};
             newLikes[sportName] = true;
-            this.setState({ likes: newLikes });
+            this.setState({ likes: newLikes, executing: false });
         }
     }
 
     dislikeSport = async (e, sportName) => {
         e.stopPropagation();
         const { currentUser } = this.props;
-        const response = await SportService.dislikeSport(currentUser, sportName);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await UserService.dislikeSport(currentUser, sportName);
         if (response.status && response.status !== SC_CONFLICT) {
             if (this.mounted) {
-                this.setState({ error: response.status });
+                this.setState({ error: response.status, executing: false });
             }
         }
         else if (this.mounted) {
             const newLikes = { ...this.state.likes};
             newLikes[sportName] = false;
-            this.setState({ likes: newLikes });
+            this.setState({ likes: newLikes, executing: false });
         }
     }
 
@@ -128,13 +134,14 @@ class SportsContainer extends Component {
     }
 
     render() {
-        const { sports, hasMore, status, likes, hasMoreLikes } = this.state;
+        const { sports, hasMore, status, likes, hasMoreLikes, executing } = this.state;
         const isLoading = ((sports.length === 0 && hasMore) || hasMoreLikes)
         return (
             <Sports sports={sports} getSports={this.getSports} hasMore={hasMore}
                     currentUser={this.props.currentUser} likes={likes}
                     likeSport={this.likeSport} dislikeSport={this.dislikeSport}
-                    isLoading={isLoading} error={status} />
+                    isLoading={isLoading} error={status} 
+                    isExecuting={executing} />
         );
         
     }
