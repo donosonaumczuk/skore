@@ -5,7 +5,9 @@ import AuthService from '../../../services/AuthService';
 import MatchService from '../../../services/MatchService';
 import SetMatchScoreForm from './layout';
 import SetMatchScoreValidator from '../validators/SetMatchScoreValidator';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import i18next from 'i18next';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -47,8 +49,11 @@ class SetMatchScoreFormContainer extends Component {
                     this.setState({ error: status });
                 }
             }
-            else if (this.mounted) {
-                //TODO handle 409 already has score
+            else if (this.mounted && response.status === SC_CONFLICT) {
+                const errorMessage = i18next.t('setMatchScoreForm.alreadyHasScore');
+                this.setState({ errorMessage: errorMessage, executing: false });
+            }
+            else {
                 this.setState({ error: response.status, executing: false });
             }
         }
@@ -64,12 +69,14 @@ class SetMatchScoreFormContainer extends Component {
     render() {
         const { handleSubmit, submitting } = this.props; 
         const currentUser = AuthService.getCurrentUser();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         let needsPermission = currentUser !== this.state.creator;
         needsPermission = false;
         return (
             <SetMatchScoreForm onSubmit={this.onSubmit} handleSubmit={handleSubmit}
                                 submitting={submitting} isExecuting={this.state.executing}
-                                error={this.state.status} needsPermission={needsPermission} />
+                                error={this.state.status} needsPermission={needsPermission}
+                                errorMessage={errorMessage} />
         );
     }
 

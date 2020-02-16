@@ -21,9 +21,16 @@ class LogInFormContainer extends Component {
     constructor(props) {
         super(props);
         let message = null;
-        if (!AuthService.getCurrentUser() && this.props.currentUser) {
+        if (!AuthService.getCurrentUser() && props.currentUser) {
             props.updateUser(null);
             message = i18next.t('login.sesionExpired');
+        }
+        else if(AuthService.getCurrentUser() && !props.currentUser) {
+            props.updateUser({
+                    username: AuthService.getCurrentUser(),
+                    isAdmin: AuthService.isAdmin()
+                }
+            );
         }
         this.state = {
             errorMessage: null,

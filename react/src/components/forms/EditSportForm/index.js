@@ -61,10 +61,11 @@ class EditSportFormContainer extends Component {
     
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
-        const response = await SportService.updateSport(values.sportName, sport);
         if (this.mounted) {
             this.setState({ executing: true });
         }
+        const response = await SportService.updateSport(values.sportName, sport);
+        console.log("response: ", response);
         if (response.status && this.mounted) {
             if (response.status === SC_UNAUTHORIZED) {
                 const status = AuthService.internalLogout();
@@ -76,11 +77,14 @@ class EditSportFormContainer extends Component {
                 }
             }
             else {
+                console.log("entro");
                 if (response.status === SC_CONFLICT) {
                     const errorMessage = i18next.t('editSportForm.sportWithGamesError');
                     this.setState({ errorMessage: errorMessage, executing: false });
                 }
-                this.setState({ error: response.status, executing: false });
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
