@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import ResetPassWordForm from './layout';
+import { SC_CONFLICT, SC_NOT_FOUND } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -21,7 +22,6 @@ class ResetPasswordFormContainer extends Component {
         super(props);
         const queryParams = queryString.parse(props.location.search);
         const { username, code } = queryParams;
-
         this.state = {
             executing: false,
             username: username,
@@ -30,7 +30,7 @@ class ResetPasswordFormContainer extends Component {
     }
 
     onSubmit = async (values) => {
-        let password = { "password": values.password };
+        let password = { "password": values.newPassword };
         if (this.mounted) {
             this.setState({ executing: true });
         }
@@ -58,17 +58,20 @@ class ResetPasswordFormContainer extends Component {
 
     render() {
         const { handleSubmit, submitting } = this.props;
-        const { executing, error, requested } = this.state;
+        const { executing, error, requested, username, code } = this.state;
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {
-            return <Redirect to={`/users/${currentUser}`} />
+            return <Redirect to={`/users/${currentUser}`} />;
         }
+        else if (!username || !code) {
+            return <Redirect to={`${error}/${SC_NOT_FOUND}`} />;
+        } 
         else if (requested) {
-            <Redirect to="/login" />
+            return <Redirect to="/login" />;
         }
     
         return (
-            <ResetPasswordForm handleSubmit={handleSubmit}
+            <ResetPassWordForm handleSubmit={handleSubmit}
                                     submitting={submitting}
                                     onSubmit={this.onSubmit}
                                     isExecuting={executing}

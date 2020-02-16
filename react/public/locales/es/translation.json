@@ -41,12 +41,12 @@
             "password": {
                 "required": "La contraseña es obligatoria.\n",
                 "invalidSymbols": "La contraseña sólo puede contener símbolos alfanuméricos.\n",
-                "invalidLength": "La contraseña debe tener entre 5 y 100 caracteres.\n"
+                "invalidLength": "La contraseña debe tener entre 6 y 100 caracteres.\n"
             },
             "repeatedPassword": {
                 "required": "Repetir la contraseña es obligatorio.\n",
                 "invalidSymbols": "La contraseña repetida sólo puede contener símbolos alfanuméricos.\n",
-                "invalidLength": "La contraseña repetida debe tener entre 5 y 100 caracteres.\n",
+                "invalidLength": "La contraseña repetida debe tener entre 6 y 100 caracteres.\n",
                 "passwordDoesNotMatch": "La contraseña repetida no coincide con la contraseña .\n"
             },
             "firstName": {

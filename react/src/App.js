@@ -29,6 +29,7 @@ import SetMatchScoreForm from './components/forms/SetMatchScoreForm';
 import AuthenticatedMatch from './components/screens/AuthenticatedMatch';
 import DeleteSport from './components/screens/DeleteSport';
 import RequestNewPasswordForm from './components/forms/RequestNewPasswordForm';
+import ResetPasswordForm from './components/forms/ResetPasswordForm';
 import './css/main.css';
 
 class App extends Component {
@@ -110,6 +111,7 @@ class App extends Component {
                             <LogInForm updateUser={this.updateUser} currentUser={username} />
                         </Route>
                         <Route exact path="/requestNewPassword" component={RequestNewPasswordForm} />
+                        <Route exact path="/resetPassword" component={ResetPasswordForm} />
                         <Route exact path="/logout">
                             <LogOut updateUser={this.updateUser} />
                         </Route>

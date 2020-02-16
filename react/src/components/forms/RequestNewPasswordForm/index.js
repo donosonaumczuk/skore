@@ -25,19 +25,12 @@ class RequestNewPasswordFormContainer extends Component {
         };
     }
 
-    loadUser = (values) => {
-        return {
-            "username": values.username,
-            "email": values.email,
-        };
-    }
-
     onSubmit = async (values) => {
-        let user = this.loadUser(values);
+        let user = { "email": values.email };
         if (this.mounted) {
             this.setState({ executing: true });
         }
-        const response = await UserService.requestNewPassword(user.username, user);
+        const response = await UserService.requestNewPassword(values.username, user);
         if (response.status) {
             if (response.status === SC_CONFLICT) {
                 if (this.mounted) {
