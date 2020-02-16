@@ -12,10 +12,10 @@ const Sports = ({ sports, getSports, hasMore, currentUser, likes,
                     likeSport, dislikeSport }) => {
         return (
         <div className="match-container container-fluid container p-2">
-            <InfiniteScroll dataLength={sports.length} next={getSports}
+            <InfiniteScroll dataLength={sports.length} style={{height: 'auto', overflow: 'visible'}} next={getSports}
                             hasMore={hasMore} loader={<Loader />}>
-                {sports.map((sport) => 
-                    <Sport key={sport.sportName} sport={sport} 
+                {sports.map((sport) =>
+                    <Sport key={sport.sportName} sport={sport}
                             isLogged={currentUser}
                             isLiked={likes[sport.sportName]}
                             likeSport={likeSport}

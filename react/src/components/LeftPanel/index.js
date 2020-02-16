@@ -9,7 +9,7 @@ const getTabs = (user, currentTab, handleTabChange) => {
     if (user) {
         return <Tabs currentTab={currentTab} handleTabChange={handleTabChange} />
     }
-    return <React.Fragment></React.Fragment>;
+    return <React.Fragment/>;
 }
  
 const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, updateFilters }) => {

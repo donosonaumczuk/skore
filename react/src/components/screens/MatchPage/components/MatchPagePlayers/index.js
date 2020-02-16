@@ -36,11 +36,11 @@ const getTeamAward = (score, teamNumber) => {
             }
         }
     }
-    return <Fragment></Fragment>;
+    return <Fragment/>;
 }
 
 const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
-    const gameplayers = getGamePlayersWithSameLength( teamOnePlayers, teamTwoPlayers );
+    const gamePlayers = getGamePlayersWithSameLength( teamOnePlayers, teamTwoPlayers );
     const teamOneAward = getTeamAward(score, TEAM_ONE_NUMBER);
     const teamTwoAward = getTeamAward(score, TEAM_TWO_NUMBER);
     return (
@@ -49,8 +49,8 @@ const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
                 <thead>
                 <tr>
                     <th className="team-name" scope="col">
-                        {teamOneAward}
                         {i18next.t('matchPage.teamOne')}
+                        {teamOneAward}
                     </th>
                     <th className="team-name" scope="col">
                         {teamTwoAward}
@@ -59,7 +59,7 @@ const MatchPagePlayers = ({ teamOnePlayers, teamTwoPlayers, score }) => {
                 </tr>
                 </thead>
                 <tbody>
-                    <MatchPagePlayer gamePlayers={gameplayers} />
+                    <MatchPagePlayer gamePlayers={gamePlayers} />
                 </tbody>
             </table>
         </div>

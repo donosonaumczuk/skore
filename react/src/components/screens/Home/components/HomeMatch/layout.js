@@ -8,10 +8,29 @@ import MatchDate from '../../../../match/MatchDate';
 import MatchLocation from '../../../../match/MatchLocation';
 import MatchDuration from '../../../../match/MatchDuration';
 import MatchAvailability from '../../../../match/MatchAvailability';
+import GameResult from '../../../../match/GameResult';
+
+const getAvailabilityOrResult = (currentMatch, joinMatch, cancelMatch, deleteMatch) => {
+    if (currentMatch.results) {
+        return (
+            <GameResult gameResult={currentMatch.results}
+                        username={currentMatch.creator}
+                        teamOne={currentMatch.team1.players}
+                        teamTwo={currentMatch.team2.players} />
+        );
+    }
+    else {
+        return (
+            <MatchAvailability currentMatch={currentMatch} joinMatch={joinMatch}
+                                cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
+        );
+    }
+}
 
 const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick,
                         joinMatch, cancelMatch, deleteMatch }) => {
     const address = currentMatch.location;
+    const availabilityOrResult = getAvailabilityOrResult(currentMatch, joinMatch, cancelMatch, deleteMatch);
     return (<div>
         <div className="row p-2 mt-2 match-card rounded-border" onClick ={() => handleClick(currentMatch.key)}>
             <div className="col">
@@ -19,8 +38,7 @@ const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick,
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
                                     title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
-                    <MatchAvailability currentMatch={currentMatch} joinMatch={joinMatch}
-                                        cancelMatch={cancelMatch} deleteMatch={deleteMatch} />
+                    {availabilityOrResult}
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />
