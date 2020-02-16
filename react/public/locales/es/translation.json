@@ -273,8 +273,8 @@
         "imageDescription": "Imagen del deporte."
     },
     "matchPage": {
-        "TeamOne": "Equipo 1",
-        "TeamTwo": "Equipo 2",
+        "teamOne": "Equipo 1",
+        "teamTwo": "Equipo 2",
         "matchIsPlaying": "Partido en curso...",
         "waitingForScore": "Esperando el resultado...",
         "matchIsCanceled": "Partido cancelado"
