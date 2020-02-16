@@ -21,7 +21,7 @@ const getGamePlayersWithSameLength = (teamOnePlayers, teamTwoPlayers) => {
 
 const getTeamAward = (score, teamNumber) => {
     if (score) {
-        const teamScores = score.split("-");
+        const teamScores = score.split(" - ");
         const teamOneScore = parseInt(teamScores[0]);
         const teamTwoScore = parseInt(teamScores[1]);
         if (teamOneScore !== teamTwoScore) {
