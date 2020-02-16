@@ -278,7 +278,9 @@
             "repeatedScore": {
                 "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
                 "teamTwoDoesNotMatch": "El resultado no coincide con el resultado del equipo rival.\n"
-            }
+            },
+            "alreadyHasScore": "El partido ya tiene resultado.\n"
+
         }
     },
     "sport": {

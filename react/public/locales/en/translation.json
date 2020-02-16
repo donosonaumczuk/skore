@@ -278,7 +278,8 @@
             "repeatedScore": {
                 "teamOneDoesNotMatch": "Score does not match your team score.\n",
                 "teamTwoDoesNotMatch": "Score does not match opponent team score.\n"
-            }
+            },
+            "alreadyHasScore": "Match already has score.\n"
         }
     },
     "sport": {
