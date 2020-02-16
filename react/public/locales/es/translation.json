@@ -103,8 +103,8 @@
     },
     "login": {
         "loginButton": "INGRESAR",
-"login": "Ingresar",
-"newUser": "¿Sos nuevo? ",
+        "login": "Ingresar",
+        "newUser": "¿Sos nuevo? ",
         "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
             "username": {
