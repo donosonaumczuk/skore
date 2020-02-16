@@ -26,13 +26,19 @@ const getImageUrls = links => {
     };
 }
 
-const UserMatchWithResult = ({ currentMatch, username }) => {
+const goToMatch = (e, match, history) => {
+    e.stopPropagation();
+    history.push(`/match/${match.key}`);
+}
+
+const UserMatchWithResult = ({ currentMatch, username, history }) => {
     const imageUrls = getImageUrls(currentMatch.links);
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
     const address = currentMatch.location;
     return (
-        <div className="row p-2 mt-2 match-card rounded-border" >
+        <div className="row p-2 mt-2 match-card rounded-border" 
+                        onClick={(e) => goToMatch(e, currentMatch, history)} >
             <div className="col">
                 <div className="row mb-4">
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
