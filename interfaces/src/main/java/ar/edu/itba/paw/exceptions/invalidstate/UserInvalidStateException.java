@@ -11,4 +11,8 @@ public class UserInvalidStateException extends EntityInvalidStateException {
     public static UserInvalidStateException ofUserAlreadyEnable(final String username) {
         return new UserInvalidStateException(username, "is already enabled");
     }
+
+    public static UserInvalidStateException ofUserWithWrongMail(String username, String email) {
+        return new UserInvalidStateException(username, "has not field '" + email + "' as email");
+    }
 }
