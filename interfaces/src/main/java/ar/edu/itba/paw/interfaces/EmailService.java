@@ -8,9 +8,11 @@ import java.util.Locale;
 
 public interface EmailService {
 
-    void sendConfirmAccount(PremiumUser user, String url, Locale locale);
+    void sendConfirmAccount(final PremiumUser user, final String url, final Locale locale);
 
-    void sendConfirmMatch(User user, Game game, String url, Locale locale);
+    void sendConfirmMatch(final User user, final Game game, final String url, final Locale locale);
 
-    void sendCancelMatch(User user, Game game, String url, Locale locale);
+    void sendCancelMatch(final User user, final Game game, final String url, final Locale locale);
+
+    void sendResetPassword(final PremiumUser user, final String url, final Locale locale);
 }
