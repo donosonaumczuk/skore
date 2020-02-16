@@ -253,7 +253,8 @@
     "confirmAccount": {
         "confirmed": "Congratulations! You have created a new account.",
         "confirmEmail": "An email has been sent to you to confirm your account.",
-        "alreadyConfirmed": "Your account has already been confirmed."
+        "alreadyConfirmed": "Your account has already been confirmed.",
+        "invalidCode": "The code requested is invalid."
     },
     "confirmAsistance": {
         "confirm": "An email has been sent to you to confirm your assistance.",
