@@ -105,7 +105,7 @@
         "loginButton": "INGRESAR",
         "login": "Ingresar",
         "newUser": "¿Sos nuevo? ",
-        "forgotPassword": "Olvidó su contraseña? ",
+        "forgotPassword": "¿Olvidaste tu contraseña? ",
         "recoverPassword": "Recuperar contraseña",
         "sesionExpired": "Su sesión ha expirado.\n",
         "errors": {
@@ -250,12 +250,12 @@
     },
     "confirmAccount": {
         "confirmed": "¡Felicitaciones! Creaste una cuenta.",
-        "confirmEmail": "Se te ha enviado un email para confirmar tu cuenta.",
+        "confirmEmail": "Se te envió un email para confirmar tu cuenta.",
         "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
     },
     "confirmAsistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
-        "confirmed": "Confirmaste tu asistencia al partido.\nSe te ha enviado un email para cancelar tu asistencia al partido."
+        "confirmed": "Confirmaste tu asistencia al partido.\nSe te envió un email para cancelar tu asistencia al partido."
     },
     "cancelAsistance": {
         "canceled": "Cancelaste tu asistencia al partido."
@@ -295,6 +295,6 @@
     },
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "BUSCAR",
-        "resetPasswordMessage": "Se le ha enviado un email para recuperar su contraseña.\n"
+        "resetPasswordMessage": "Se te envió un email para que puedas recuperar tu contraseña.\n"
     }
 }
