@@ -103,7 +103,7 @@ const addressToString = address => {
 const getErrorMessage = (errorMessage) => {
     if (errorMessage) {
         return (<span className="invalid-feedback d-block">
-                    {this.state.errorMessage}
+                    {errorMessage}
                 </span>);
     }
     return <React.Fragment></React.Fragment>;
