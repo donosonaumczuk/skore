@@ -299,6 +299,7 @@
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "SEARCH",
         "emailUserNotMatch": "There isn't an account with given username and email.\n",
+        "userNotExists": "There isn't an account with that username.\n",
         "resetPasswordMessage": "An email has been sent to you to reset your password.\n"
     },
     "editSportForm": {

@@ -5,7 +5,7 @@ import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import RequestNewPasswordForm from './layout';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { SC_CONFLICT, SC_NOT_FOUND } from '../../../services/constants/StatusCodesConstants';
 import Message from '../../Message';
 import i18next from 'i18next';
 import Utils from '../../utils/Utils';
@@ -38,6 +38,10 @@ class RequestNewPasswordFormContainer extends Component {
                     const errorMessage = i18next.t('requestNewPasswordForm.emailUserNotMatch');
                     this.setState({ executing: false, errorMessage: errorMessage });
                 } 
+            }
+            else if (response.status === SC_NOT_FOUND) {
+                const errorMessage = i18next.t('requestNewPasswordForm.userNotExists');
+                this.setState({ executing: false, errorMessage: errorMessage });
             }
             else {
                 this.setState({ executing: false, error: response.status })
