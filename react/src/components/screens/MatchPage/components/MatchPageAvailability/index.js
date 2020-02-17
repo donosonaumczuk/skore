@@ -34,13 +34,13 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
     if ((hasStarted && isFull) || (hasStarted && currentUser !== creator)) { 
         return <Fragment></Fragment>;
     }
-    if (currentUser && currentUser === creator) {
+    if (currentUser && currentUser === creator && !isFull) {
         return <MatchButton buttonStyle="btn btn-negative join-button" 
                             handleClick={deleteMatch} currentMatch={currentMatch}
                             buttonText={i18next.t('home.deleteMatch')}
                             fontAwesome="fas fa-trash-alt mr-1" />
     }
-    else if (currentUser && isInMatch(currentUser, currentMatch.team1, currentMatch.team2)) {
+    else if (currentUser && isInMatch(currentUser, currentMatch.team1, currentMatch.team2 && !isFull)) {
         return <MatchButton buttonStyle="btn btn-negative join-button"
                             handleClick={cancelMatch} currentMatch={currentMatch}
                             buttonText={i18next.t('home.cancelMatch')}
