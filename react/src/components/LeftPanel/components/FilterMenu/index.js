@@ -6,11 +6,15 @@ import FilterMenu from './layout';
 class FilterMenuContainer extends Component {
 
     onSubmit = (values) => {
+        let onlyLikedSports = values.onlyLikedSports ? values.onlyLikedSports : "false";
+        let onlyLikedUsers = values.onlyLikedUsers ? values.onlyLikedUsers : "false";
         this.props.updateFilters({
             "country": values.country,
             "state": values.state,
             "city": values.city,
-            "sport": values.sport
+            "sport": values.sport,
+            "onlyLikedSports": `${onlyLikedSports}`,
+            onlyLikedUsers: `${onlyLikedUsers}`
         });
     }
 
