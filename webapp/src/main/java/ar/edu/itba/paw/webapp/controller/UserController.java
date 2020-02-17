@@ -223,14 +223,6 @@ public class UserController {
                 .expires(expireDate).build();
     }
 
-    @DELETE
-    @Path("/{username}")
-    public Response deleteUser(@PathParam("username") String username) {
-        premiumUserService.remove(username);
-        LOGGER.trace("User '{}' deleted successfully", username);
-        return Response.noContent().build();
-    }
-
     @PUT
     @Path("/{username}")
     @Consumes({MediaType.APPLICATION_JSON})
