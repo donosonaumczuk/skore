@@ -36,7 +36,7 @@ public class UserDto {
         this.lastName = premiumUser.getUser().getLastName();
         this.birthday = DateDto.from(premiumUser.getBirthday());
         this.cellphone = premiumUser.getCellphone();
-        this.home = PlaceDto.from(premiumUser.getHome());
+        this.home = (premiumUser.getHome() == null) ? null : PlaceDto.from(premiumUser.getHome());
         this.password = null;
         this.oldPassword = null;
         this.image = null;
