@@ -16,7 +16,7 @@ const CreatorInfo = ({ creatorImageUrl, creator, title }) => {
                     <img src={creatorImageUrl} onClick={(e) => handleClick(e, creator, history)} className="user-avatar"
                     alt={i18next.t('profile.imageDescription')} />
             </div>
-            <div className="col-3 col-sm-4">
+            <div className="col-3 col-sm-4 ml-2 ml-xs-4">
                 <div className="row">
                     <p className="name-label">{title}</p>
                 </div>
