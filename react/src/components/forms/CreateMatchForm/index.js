@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { reduxForm, change, touch, formValueSelector } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
+import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
 import SportService from '../../../services/SportService';
 import Loader from '../../Loader';

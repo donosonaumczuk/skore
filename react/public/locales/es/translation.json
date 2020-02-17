@@ -211,9 +211,9 @@
             },
             "location": {
                 "required": "La calle y el número son obligatorios.\n"
-            }
-        },
-        "invalidPastTime": "La fecha y el tiempo deben ser una fecha y tiempo futuro.\n"
+            },
+            "invalidPastTime": "La fecha y el tiempo deben ser una fecha y tiempo futuro.\n"
+        }
     },
     "forms": {
         "requiredFields":"Los campos que contienen (*) son obligatorios."
