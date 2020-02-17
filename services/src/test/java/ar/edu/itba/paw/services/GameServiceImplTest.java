@@ -43,7 +43,7 @@ public class GameServiceImplTest {
     private static final String  FINISHTIME_PAST     = LocalDateTime.now().minusMinutes(40).toString().substring(0,16);
 
     private static final String  SPORTNAME           = "sPoRtNaMe";
-    private static final int     SPORTQUANTITY       = 2;
+    private static final int     SPORTQUANTITY       = 10;
     private static final String  SPORTDISPLAYNAME    = "sportname";
 
     private static final String  LEADER_1_FIRSTNAME  = "firstname1";
@@ -115,6 +115,8 @@ public class GameServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         Sport sport = new Sport(SPORTNAME, SPORTQUANTITY, SPORTDISPLAYNAME, null);
+        Sport sport2 = new Sport(SPORTNAME, 2, SPORTDISPLAYNAME, null);
+
 
         leaderTeam1 = new PremiumUser(LEADER_1_FIRSTNAME, LEADER_1_LASTNAME, LEADER_1_EMAIL,
                                                     LEADER_1_USERNAME, USER_3_ID);
@@ -128,6 +130,14 @@ public class GameServiceImplTest {
         team2.addPlayer(leaderTeam2.getUser());
         team2.addPlayer(new User(USER_2_FIRSTNAME, USER_2_LASTNAME, USER_2_EMAIL, USER_2_ID));
 
+        Team team3 = new Team(leaderTeam1, TEAM_1_ACRONYM, TEAMNAME_1, TEAM_1_ISTEMP, sport2, null);
+        team3.addPlayer(leaderTeam1.getUser());
+        team3.addPlayer(new User(USER_1_FIRSTNAME, USER_1_LASTNAME, USER_1_EMAIL, USER_1_ID));
+
+        Team team4 = new Team(leaderTeam1, TEAM_2_ACRONYM, TEAMNAME_2, TEAM_2_ISTEMP, sport2, null);
+        team4.addPlayer(leaderTeam2.getUser());
+        team4.addPlayer(new User(USER_2_FIRSTNAME, USER_2_LASTNAME, USER_2_EMAIL, USER_2_ID));
+
         notInsertedUser = new PremiumUser(NOT_INSERTED_FIRSTNAME, NOT_INSERTED_LASTNAME, NOT_INSERTED_EMAIL,
                 NOT_INSERTED_USERNAME, USER_5_ID);
 
@@ -135,7 +145,7 @@ public class GameServiceImplTest {
                 LocalDateTime.parse(STARTTIME_1), LocalDateTime.parse(FINISHTIME_1),
                 INDIVIDUAL.toString() + '-' + FRIENDLY.toString(), null,
                 null, null, null);
-        game2 = new Game(team1, team2, new Place("country", "state", "city", "street"),
+        game2 = new Game(team3, team4, new Place("country", "state", "city", "street"),
                 LocalDateTime.parse(STARTTIME_PAST), LocalDateTime.parse(FINISHTIME_PAST),
                 INDIVIDUAL.toString() + '-' + FRIENDLY.toString(), null,
                 null, null, null);
@@ -191,13 +201,13 @@ public class GameServiceImplTest {
     @Test
     public void deleteAUserThatIsNotInTheGame() {
         exceptionRule.expect(PlayerNotFoundException.class);
-        exceptionRule.expectMessage("No Player found with id '" + USER_3_ID + "'");
+        exceptionRule.expectMessage("No Player found with id '" + 80 + "'");
 
         when(gameDaoMock.findByKey(game1.getTeam1().getName(), game1.getStartTime(), game1.getFinishTime()))
                 .thenReturn(Optional.of(game1));
         when(sessionServiceMock.getLoggedUser()).thenReturn(Optional.of(leaderTeam1));
 
-        gameService.deleteUserInGameWithCode(game1.getKey(), USER_3_ID, null);
+        gameService.deleteUserInGameWithCode(game1.getKey(), 80, null);
     }
 
     @Test
