@@ -5,12 +5,14 @@ import WithLoading from '../../hocs/WithLoading';
 import WithError from '../../hocs/WithError';
 import WithPermission from '../../hocs/WithPermission';
 
-const EditSport = ({ initialValues, history }) =>
-    <EditSportForm initialValues={initialValues} history={history} />
+const EditSport = ({ initialValues, history, sportPlayerQuantity }) =>
+    <EditSportForm initialValues={initialValues} history={history}
+                    sportPlayerQuantity={sportPlayerQuantity} />
 
 EditSport.propTypes = {
     initialValues: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    sportPlayerQuantity: PropTypes.number
 }
 
 export default WithPermission(WithError(WithLoading(EditSport)));

@@ -61,7 +61,7 @@ const isValidTime = time => {
 const validateTime = time => {
     const errorBaseLabel = `${ERROR_BASE_LABEL}time`
     let errorMessage = ``;
-    if (!time || !time.hour || !time.minutes) {
+    if (!time || (!time.hour && time.hour !== 0) || (!time.minutes && time.minutes !== 0)) {
         errorMessage = `${errorMessage} ${i18next.t(`${errorBaseLabel}.required`)}`;
     }
     else {
