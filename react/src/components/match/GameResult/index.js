@@ -10,19 +10,13 @@ const getResult = gameResult => {
     };
 }
 
-const getUserTeam = (user, team1, team2) => {
+const getUserTeam = (isInTeamOne, isInTeamTwo) => {
     let userTeam = 0;
-    team1.forEach(player => {
-        if (player.username && player.username === user) {
-            userTeam = 1;
-        }
-    });
-    if (userTeam === 0) {
-        team2.forEach(player => {
-            if (player.username && player.username === user) {
-                userTeam = 2;
-            }
-        });
+    if (isInTeamOne) {
+        userTeam = 1;
+    }
+    else if (isInTeamTwo) {
+        userTeam =2;
     }
     return userTeam;
 }
@@ -67,9 +61,9 @@ const getFormattedResult = gameResult => {
     return `${gameResult.teamOne} - ${gameResult.teamTwo}`;
 }
 
-const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
+const GameResult = ({ gameResult, username, isInteamOne, isInteamTwo }) => {
     const result = getResult(gameResult);
-    const userTeam = getUserTeam(username, teamOne, teamTwo);
+    const userTeam = getUserTeam(username, isInteamOne, isInteamTwo);
     let resultLabel= getResultLabel(userTeam, result.teamOne, result.teamTwo);
     let resultLabelClass = getResultLabelClass(resultLabel);
     let formattedResult = getFormattedResult(result);
@@ -93,8 +87,8 @@ const GameResult = ({ gameResult, username, teamOne, teamTwo }) => {
 GameResult.propTypes = {
     gameResult: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
-    teamOne: PropTypes.array.isRequired,
-    teamTwo: PropTypes.array.isRequired
+    isInTeamOne: PropTypes.bool.isRequired,
+    isInTeamTwo: PropTypes.bool.isRequired
 }
 
 export default GameResult;

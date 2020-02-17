@@ -97,7 +97,6 @@ class MatchPageContainer extends Component {
     }
 
     cancelMatchLogged = async (match, userId) => {
-
         if (this.mounted) {
             this.setState({ executing: true });
         }

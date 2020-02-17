@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import DatePropType from './DatePropType';
 import TimePropType from './TimePropType';
+import TeamPropType from './util/TeamPropType';
 import LocationPropType from './LocationPropType';
 
-const UserMatchWithResultPropType = PropTypes.shape(
+const MatchPagePropType = PropTypes.shape(
     {
         title: PropTypes.string.isRequired,
         creator: PropTypes.string.isRequired,
         sportName: PropTypes.string.isRequired,
-        results: PropTypes.string.isRequired,
+        results: PropTypes.string,
         competitive: PropTypes.bool.isRequired,
         minutesOfDuration: PropTypes.number.isRequired,
         location: LocationPropType.isRequired,
@@ -16,9 +17,9 @@ const UserMatchWithResultPropType = PropTypes.shape(
         time: TimePropType.isRequired,
         inTeam1: PropTypes.bool.isRequired,
         inTeam2: PropTypes.bool.isRequired,
-        team1: PropTypes.array,
-        team2: PropTypes.array
+        team1: TeamPropType.isRequired,
+        team2: TeamPropType.isRequired
     }
 );
 
-export default UserMatchWithResultPropType;
+export default MatchPagePropType;

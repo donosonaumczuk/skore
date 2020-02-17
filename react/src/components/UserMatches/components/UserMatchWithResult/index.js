@@ -45,7 +45,8 @@ const UserMatchWithResult = ({ currentMatch, username, history }) => {
                                     title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
                     <GameResult gameResult={currentMatch.results} username={username}
-                         teamOne={currentMatch.team1.players} teamTwo={currentMatch.team2.players} />
+                                isInTeamOne={currentMatch.inTeam1}
+                                isInTeamTwo={currentMatch.inTeam2} />
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
 import MatchTitle from '../../match/MatchTitle';
 import MatchPageCreator from './components/MatchPageCreator';
 import MatchPageSport from './components/MatchPageSport';
@@ -17,6 +16,7 @@ import WithAnonymous from '../../hocs/WithAnonymous';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithLoading from '../../hocs/WithLoading';
 import WithMessage from '../../hocs/WithMessage';
+import MatchPagePropType from '../../../proptypes/MatchPagePropType';
 
 const getImageUrls = links => {
     let creatorImageUrl;
@@ -66,7 +66,7 @@ const MatchPage = ({ match, updateMatchScore, joinMatch, cancelMatch, deleteMatc
 }
 
 MatchPage.propTypes = {
-    match: HomeMatchPropType.isRequired,
+    match: MatchPagePropType.isRequired,
     updateMatchScore: PropTypes.func.isRequired,
     joinMatch: PropTypes.func.isRequired,
     cancelMatch: PropTypes.func.isRequired,

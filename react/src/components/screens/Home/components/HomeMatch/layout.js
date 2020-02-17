@@ -15,8 +15,8 @@ const getAvailabilityOrResult = (currentMatch, joinMatch, cancelMatch, deleteMat
         return (
             <GameResult gameResult={currentMatch.results}
                         username={currentMatch.creator}
-                        teamOne={currentMatch.team1.players}
-                        teamTwo={currentMatch.team2.players} />
+                        isInTeamOne={currentMatch.inTeam1}
+                        isInTeamTwo={currentMatch.inTeam2} />
         );
     }
     else {
