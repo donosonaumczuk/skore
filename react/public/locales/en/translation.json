@@ -211,7 +211,8 @@
             },
             "location": {
                 "required": "Street and number are required.\n"
-            }
+            },
+            "invalidPastTime": "Date and time must be future date and time.\n"
         }
     },
     "forms": {

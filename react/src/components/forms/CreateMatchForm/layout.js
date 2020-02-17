@@ -14,10 +14,12 @@ import SubLocationInput from '../inputs/SubLocationInput';
 import RenderMatchDatePicker from '../inputs/RenderMatchDatePicker';
 import MatchTime from './components/MatchTime';
 import MatchDuration from './components/MatchDuration';
+import WithExecuting from '../../hocs/WithExecuting';
 
 const CreateMatchForm = ({ handleSubmit, submitting, onSubmit, 
                             sportOptions, hourOptions, minuteOptions,
-                            location, changeFieldsValue, touchField }) => {
+							location, changeFieldsValue, touchField,
+							errorMessage }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -26,6 +28,7 @@ const CreateMatchForm = ({ handleSubmit, submitting, onSubmit,
                                     offset-xl-4 col-xl-4">
                         <FormTitle />
                         <form onSubmit={handleSubmit(onSubmit)}>
+							{errorMessage}
                             <Field name="title" inputType="text" required={true}
                                     label={i18next.t('createMatchForm.matchName')} 
                                      component={RenderInput} />
@@ -92,4 +95,4 @@ CreateMatchForm.propTypes = {
         touchField: PropTypes.func.isRequired
 }
 
-export default CreateMatchForm;
+export default WithExecuting(CreateMatchForm);

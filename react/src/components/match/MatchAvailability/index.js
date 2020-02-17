@@ -37,7 +37,8 @@ const matchHasStarted = currentMatch => {
 }
 
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
-    if (matchHasStarted(currentMatch)) {
+    const isFull = currentMatch.currentPlayers === currentMatch.totalPlayers;
+    if (matchHasStarted(currentMatch) || isFull) {
         return <Fragment></Fragment>;
     }
     if (currentUser && currentUser === currentMatch.creator) {
