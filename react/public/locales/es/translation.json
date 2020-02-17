@@ -139,8 +139,12 @@
         "createdTab": "CREADOS"
     },
     "errorPage": {
-        "404": "Esta no es la página que buscabas.\n",
-        "returnToHome": "Volver a inicio."
+        "401": "Alerta de entrada sin autorización\n",
+        "403": "¡No pasarás!\n",
+        "404": "Esta no es la página que estás buscando\n",
+        "408": "¡Tempo fuera! Nos cansamos de esperar una respuesta\n",
+        "500": "Ups, algo salió mal, intentá de nuevo más tarde\n",
+        "returnToHome": "Volver a inicio"
     },
     "editUserInfoForm": {
         "updateInfoButton": "ACTUALIZAR"
