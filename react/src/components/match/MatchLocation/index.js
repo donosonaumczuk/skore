@@ -22,7 +22,7 @@ const MatchLocation = ({ address }) => {
     const googleLink = getGoogleLink(address);
     return (
          <div className="row">
-            <div className="col">
+            <div className="col pb-2">
                 <i className="location-icon mr-2 fas fa-map-marker-alt"></i>
                 <a className="address-text skore-link" target="_blank"
                     rel="noopener noreferrer" href={googleLink} 
