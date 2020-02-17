@@ -22,7 +22,7 @@ const HomeMatches = (props) => {
 }
 
 HomeMatches.propTypes = {
-    matches: PropTypes.array.isRequired,//TODO validate array of HomeMatchProptype
+    matches: PropTypes.array.isRequired,
     getMatches: PropTypes.func.isRequired,
     hasMore: PropTypes.bool.isRequired,
     handleMatchClick: PropTypes.func.isRequired,

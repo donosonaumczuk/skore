@@ -25,7 +25,7 @@ exports[`Sports snapshot test 1`] = `
           className="col"
         >
           <div
-            className="row mb-4"
+            className="row"
           >
             <div
               className="col-2 col-sm-3"
@@ -37,7 +37,7 @@ exports[`Sports snapshot test 1`] = `
                   className="row"
                 >
                   <div
-                    className="col col-xl-4 mr-0 mt-1"
+                    className="col col-xl-4 mr-0"
                   >
                     <img
                       alt="sport-pic"
@@ -46,7 +46,7 @@ exports[`Sports snapshot test 1`] = `
                     />
                   </div>
                   <div
-                    className="col-6 col-xl d-none d-sm-block pl-0"
+                    className="col-6 col-xl d-none d-sm-block pl-0 my-auto"
                   >
                     <p
                       className="sport-label"
@@ -58,27 +58,19 @@ exports[`Sports snapshot test 1`] = `
               </div>
             </div>
             <div
-              className="row"
+              className="offset-1 col my-auto"
             >
-              <div
-                className="col"
-              >
-                <i
-                  className="name-label fas fa-users mr-2"
-                />
-                <label />
-                <span>
-                   1
-                </span>
-              </div>
+              <i
+                className="name-label fas fa-users mr-2"
+              />
+              <label />
+              <span>
+                 1
+              </span>
             </div>
             <div
-              className="row"
-            >
-              <div
-                className="col offset-2"
-              />
-            </div>
+              className="offset-1 col my-auto"
+            />
           </div>
         </div>
       </div>

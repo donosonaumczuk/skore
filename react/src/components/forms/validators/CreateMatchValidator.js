@@ -25,7 +25,6 @@ const MAX_DESCRIPTION_LENGTH = 140;
 
 const hasTitleValidSymbols = title => hasStringValidSymbols(title, titleInvalidSymbols);
 
-//TODO make string validation
 const validateTitle = title => validateRequiredField(title, `${ERROR_BASE_LABEL}title`,
                                                         hasTitleValidSymbols, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH)
 

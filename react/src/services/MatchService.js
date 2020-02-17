@@ -4,7 +4,8 @@ import { MATCHES_ENDPOINT } from './constants/EndpointConstants';
 import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging,
             addFutureMinTimeToParams, addMinFreePlacesToParams,
             addCreatedByToParams, addWithoutPlayersToParams,
-            addWithPlayersToParams } from './Util';
+            addWithPlayersToParams, 
+            addSortByStartTimeToParam} from './Util';
 import { SC_TIME_OUT, SC_CLIENT_CLOSED_REQUEST } from './constants/StatusCodesConstants';
 
 const getMatches = async (offset, limit, filters, token) => {
@@ -12,6 +13,7 @@ const getMatches = async (offset, limit, filters, token) => {
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     paramObject = addFutureMinTimeToParams(paramObject);
     paramObject = addMinFreePlacesToParams(paramObject);
+    paramObject = addSortByStartTimeToParam(paramObject, "asc");
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
@@ -34,6 +36,7 @@ const getMatchesCreatedBy =  async (username, offset, limit, filters, token) => 
     const config = { cancelToken: token };
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     paramObject = addCreatedByToParams(paramObject, username);
+    paramObject = addSortByStartTimeToParam(paramObject, "desc");
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
@@ -58,6 +61,7 @@ const getMatchesJoinedBy =  async (username, offset, limit, filters, token) => {
     let paramObject = createObjectFromFiltersAndPaging(offset, limit, filters);
     paramObject = addFutureMinTimeToParams(paramObject);
     paramObject = addWithPlayersToParams(paramObject, username);
+    paramObject = addSortByStartTimeToParam(paramObject, "asc");
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);
@@ -83,6 +87,7 @@ const getMatchesToJoin =  async (username, offset, limit, filters, token) => {
     paramObject = addFutureMinTimeToParams(paramObject);
     paramObject = addMinFreePlacesToParams(paramObject);
     paramObject = addWithoutPlayersToParams(paramObject, username);
+    paramObject = addSortByStartTimeToParam(paramObject, "asc");
     const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
         const res = await api.get(`${MATCHES_ENDPOINT}${paramsUrl}`, config);

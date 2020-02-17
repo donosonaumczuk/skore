@@ -134,7 +134,7 @@
         "onlyLikedSports": "sports",
         "onlyLikedUsers": "users",
         "onlyLikedSuffix": "",
-        "addFilters": "ADD FILTERS",
+        "addFilters": "APPLY FILTERS",
         "joinMatch": "JOIN",
         "joinCompetitiveMatch": "JOIN",
         "cancelMatch": "EXIT",
@@ -315,6 +315,9 @@
     },
     "editSportForm": {
         "sportWithGamesError": "Can't modify sport with played games.\n"
+    },
+    "deleteSportForm": {
+        "sportWithGamesError": "Can't delete sport with played games.\n"
     },
     "matchErrors": {
         "cancelMatchFullOrPlayed": "Can't exit a match that is full or has been already played.\n",

@@ -88,6 +88,20 @@ const addMinFreePlacesToParams = params => {
     };
 }
 
+const addSortByStartTimeToParam = (params, orderType) => {
+    return {
+        ...params,
+        "sortBy": `startTime+${orderType}`
+    };
+}
+
+const addhasResultToParam = (params, hasResult) => {
+    return {
+        ...params,
+        "hasResult": hasResult
+    };
+}
+
 const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     let paramObject = {
         "offset": `${offset}`,
@@ -102,6 +116,8 @@ const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     return paramObject;
 }
 
+
+
 export {
     buildUrlFromParamQueries,
     buildUrlFromParamsWithCommas,
@@ -112,5 +128,7 @@ export {
     addWithoutPlayersToParams,
     addFutureMinTimeToParams,
     addMinFreePlacesToParams,
+    addSortByStartTimeToParam,
+    addhasResultToParam,
     getStringWithTwoDigits
 };

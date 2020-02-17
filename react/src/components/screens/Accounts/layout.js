@@ -15,11 +15,13 @@ const Accounts = ({ accounts, getUsers, hasMore, onSubmit, filters,
     const inputStyle = "form-control filter-input mb-2";
     return (
         <div>
-            <center>
-                <h1>
-                    {i18next.t('accounts.title')}
-                </h1>
-            </center>
+            <div className="row text-center mt-5">
+                <div className="col">
+                    <h1>
+                        {i18next.t('accounts.title')}
+                    </h1>
+                </div>
+            </div>
             <div className="container">
                 <SearchBar onSubmit={onSubmit} inputStyle={inputStyle}
                             label={i18next.t('createUserForm.username')}

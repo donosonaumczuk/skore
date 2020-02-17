@@ -2,18 +2,14 @@
 
 exports[`SportPlayers snapshot test 1`] = `
 <div
-  className="row"
+  className="offset-1 col my-auto"
 >
-  <div
-    className="col"
-  >
-    <i
-      className="name-label fas fa-users mr-2"
-    />
-    <label />
-    <span>
-       2
-    </span>
-  </div>
+  <i
+    className="name-label fas fa-users mr-2"
+  />
+  <label />
+  <span>
+     2
+  </span>
 </div>
 `;
