@@ -51,18 +51,11 @@ class EditSportFormContainer extends Component {
     loadSport = (values, image) => {
         let sport = {
             "displayName": values.displayName,
-            "playerQuantity": values.playersPerTeam,
         };
         if (image) {
             sport = { ...sport, "imageSport": image.data };
         }
-        console.log("initial: ", this.props.sportPlayerQuantity);
-        console.log("type initial: ", typeof(this.props.sportPlayerQuantity));
-        console.log("type ending: ", typeof(values.playersPerTeam));
-        console.log("type ending: ", parseInt(typeof(values.playersPerTeam)));
-        console.log("!== without parse: ", this.props.sportPlayerQuantity !== values.playersPerTeam);
-        console.log("!== with parse: ", this.props.sportPlayerQuantity !== parseInt(values.playersPerTeam));
-        if (this.props.sportPlayerQuantity !== parseInt(values.playersPerTeam)) {
+        if (`${this.props.sportPlayerQuantity}` !== values.playersPerTeam) {
             sport = { ...sport, "playerQuantity": values.playersPerTeam };
         }
         return sport;
@@ -95,7 +88,7 @@ class EditSportFormContainer extends Component {
             }
         }
         else {
-            this.props.history.push(`/sports`);
+            this.props.history.push(`/admin`);
         }
     }
 

@@ -12,7 +12,7 @@ const EditSport = ({ initialValues, history, sportPlayerQuantity }) =>
 EditSport.propTypes = {
     initialValues: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    sportPlayerQuantity: PropTypes.number.isRequired
+    sportPlayerQuantity: PropTypes.number
 }
 
 export default WithPermission(WithError(WithLoading(EditSport)));
