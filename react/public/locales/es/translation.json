@@ -84,7 +84,9 @@
             },
             "day": {
                 "required": "El día es obligatorio.\n"
-            }
+            },
+            "emailExists": "Ya existe una cuenta con ese email.\n",
+            "usernameExists": "Ya existe una cuenta con ese nombre de usuario.\n"
         }
     },
     "profile": {
@@ -131,7 +133,7 @@
         "addFilters": "AGREGAR FILTROS",
         "joinMatch": "UNIRSE",
         "joinCompetitiveMatch": "UNIRSE",
-        "cancelMatch": "CANCELAR ASISTENCIA",
+        "cancelMatch": "SALIR",
         "deleteMatch": "BORRAR",
         "matches": "Partidos",
         "toJoinTab": "PARA UNIRSE",
@@ -174,7 +176,7 @@
             "title": {
                 "required": "El nombre del partido es obligatorio.\n",
                 "invalidSymbols": "El nombre del partido sólo puede tener caracteres alfanuméricos, espacios y los siguientes caracteres '¿?¡!-_.'\n",
-                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 100 caracteres.\n"
+                "invalidLength": "El nombre del partido debe tener una longitud de entre 4 y 140 caracteres.\n"
             },
             "competitivity": {
                 "required": "La competitividad es obligatoria.\n"
@@ -251,10 +253,13 @@
     "confirmAccount": {
         "confirmed": "¡Felicitaciones! Creaste una cuenta.",
         "confirmEmail": "Se te envió un email para confirmar tu cuenta.",
-        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada."
+        "alreadyConfirmed": "Tu cuenta ya ha sido confirmada.",
+        "invalidCode": "El code enviado es inválido."
     },
-    "confirmAsistance": {
+    "confirmAssistance": {
         "confirm": "Se te ha enviado un mail para confirmar tu asistencia al partido.",
+        "alreadyJoined": "Ya estás unido al partido.\n",
+        "matchFullOrPlayed": "No podés unirte a un partido que ya empezó o se encuentra lleno.\n",
         "confirmed": "Confirmaste tu asistencia al partido.\nSe te envió un email para cancelar tu asistencia al partido."
     },
     "cancelAsistance": {
@@ -270,12 +275,14 @@
             "teamScore": {
                 "required": "Resultado del equipo es obligatorio.\n",
                 "invalidSymbols": "Resultado del equipo debe contener sólo números.\n",
-                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y diez dígitos.\n"
+                "invalidLength": "Resultado del equipo debe tener una longitud entre uno y cuatro dígitos.\n"
             },
             "repeatedScore": {
                 "teamOneDoesNotMatch": "El resultado no coincide con el resultado de tu equipo.\n",
                 "teamTwoDoesNotMatch": "El resultado no coincide con el resultado del equipo rival.\n"
-            }
+            },
+            "alreadyHasScore": "El partido ya tiene resultado.\n"
+
         }
     },
     "sport": {
@@ -295,6 +302,11 @@
     },
     "requestNewPasswordForm": {
         "requestNewPasswordButton": "BUSCAR",
+        "emailUserNotMatch": "No existe una cuenta con ese nombre de usuario y ese email.\n",
+        "userNotExists": "No existe un usuario con ese nombre.\n",
         "resetPasswordMessage": "Se te envió un email para que puedas recuperar tu contraseña.\n"
+    },
+    "editSportForm": {
+        "sportWithGamesError": "No se puede modificar un deporte que ya tiene partidos jugados.\n"
     }
 }

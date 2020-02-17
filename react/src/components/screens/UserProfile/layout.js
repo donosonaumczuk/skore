@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import UserProfilePropType from '../../../proptypes/UserProfilePropType';
 import UserData from './components/UserData';
@@ -7,7 +7,17 @@ import UserMatches from '../../UserMatches';
 import WithLoading from '../../hocs/WithLoading';
 import WithError from '../../hocs/WithError';
 
+const getLocationData = (locationData, location) => {
+    if (location) {
+        return <UserData styleClass="profile-data" tag={locationData(location)} />;
+    }
+    else {
+        return <Fragment/>;
+    }
+}
+
 const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRateAndAge, history }) => {
+    const locationTag = getLocationData(locationData, currentUser.location);
     return (
         <div className="container-fluid">
             <div className="row">
@@ -17,7 +27,7 @@ const UserProfile = ({ imageUrl, currentUser, editButtons, locationData, winRate
                     <div className="container-fluid profile-container bg-white rounded-border">
                         <UserData styleClass="profile-name" value={currentUser.firstName + " " + currentUser.lastName} />
                         <UserData styleClass="profile-username" value={currentUser.username} />
-                        <UserData styleClass="profile-data" tag={locationData(currentUser.location)} />
+                        {locationTag}
                         <UserData styleClass="profile-data" tag={winRateAndAge(currentUser.winRate, currentUser.age)} />
                         {editButtons}
                     </div>

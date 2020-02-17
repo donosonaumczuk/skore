@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LeftPanel from '../../LeftPanel';
 import WithAnonymous from '../../hocs/WithAnonymous';
 import WithError from '../../hocs/WithError';
+import WithMessage from '../../hocs/WithMessage';
 
 const Home = (props) => {
     const { currentTab, handleTabChange, filters, updateFilters,
@@ -33,4 +34,4 @@ Home.propTypes = {
     currentUser: PropTypes.string,
 }
 
-export default WithError(WithAnonymous(Home));
+export default WithError(WithAnonymous(WithMessage(Home)));

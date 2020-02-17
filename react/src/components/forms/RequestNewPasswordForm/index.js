@@ -5,9 +5,10 @@ import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import RequestNewPasswordForm from './layout';
-import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { SC_CONFLICT, SC_NOT_FOUND } from '../../../services/constants/StatusCodesConstants';
 import Message from '../../Message';
 import i18next from 'i18next';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -34,17 +35,20 @@ class RequestNewPasswordFormContainer extends Component {
         if (response.status) {
             if (response.status === SC_CONFLICT) {
                 if (this.mounted) {
-                    //TODO handle error 409 add message for error
-                    this.setState({ executing: false});
+                    const errorMessage = i18next.t('requestNewPasswordForm.emailUserNotMatch');
+                    this.setState({ executing: false, errorMessage: errorMessage });
                 } 
             }
+            else if (response.status === SC_NOT_FOUND) {
+                const errorMessage = i18next.t('requestNewPasswordForm.userNotExists');
+                this.setState({ executing: false, errorMessage: errorMessage });
+            }
             else {
-                this.setState({ executing: false, error: response.status})
+                this.setState({ executing: false, error: response.status })
             }
         }
         else {
             this.setState({ requested: true });
-            //TODO page with message of emailSent
         }
     }
 
@@ -56,6 +60,7 @@ class RequestNewPasswordFormContainer extends Component {
         const { handleSubmit, submitting } = this.props;
         const { executing, error, requested } = this.state;
         const currentUser = AuthService.getCurrentUser();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         if (currentUser) {
             return <Redirect to={`/users/${currentUser}`} />
         }
@@ -68,7 +73,8 @@ class RequestNewPasswordFormContainer extends Component {
                                     submitting={submitting}
                                     onSubmit={this.onSubmit}
                                     isExecuting={executing}
-                                    error={error} />
+                                    error={error} 
+                                    errorMessage={errorMessage} />
         );
     }
 

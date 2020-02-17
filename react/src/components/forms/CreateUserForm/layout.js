@@ -11,11 +11,14 @@ import FormComment from '../elements/FormComment';
 import LocationInput from '../inputs/LocationInput';
 import SubLocationInput from '../inputs/SubLocationInput';
 import BirthdayInput from '../inputs/BirthdayInput';
+import WithExecuting from '../../hocs/WithExecuting';
+import WithError from '../../hocs/WithError';
 
 const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             imageName, handleChange, updateLocation,
                             country, state, city, street, birthday,
-                            changeFieldsValue, touchField }) => {
+                            changeFieldsValue, touchField,
+                            errorMessage }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -24,6 +27,7 @@ const CreateUserForm = ({ handleSubmit, submitting, onSubmit,
                             offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                         <FormTitle />
                         <form onSubmit={handleSubmit(onSubmit)}>
+                                {errorMessage}
                             <Field name="username" id="username" inputType="text"
                                     label={i18next.t('createUserForm.username')}
                                     required={true} component={RenderInput} />
@@ -97,4 +101,4 @@ CreateUserForm.propTypes = {
     birthday: PropTypes.object.isRequired
 }
 
-export default CreateUserForm;
+export default WithError(WithExecuting(CreateUserForm));

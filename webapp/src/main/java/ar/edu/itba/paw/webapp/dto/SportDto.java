@@ -41,7 +41,7 @@ public class SportDto {
         return sportName;
     }
 
-    public int getPlayerQuantity() {
+    public Integer getPlayerQuantity() {
         return playerQuantity;
     }
 

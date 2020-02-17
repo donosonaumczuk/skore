@@ -6,14 +6,14 @@ import FilterTitle from '../../../panel/filterMenu/FilterTitle';
 import FilterInput from '../../../panel/filterMenu/FilterInput';
 import AddFilterButton from '../../../panel/filterMenu/AddFilterButton';
 
-const FilterMenu = (props) => {
-    const { handleSubmit, submitting, onSubmit } = props; 
+const FilterMenu = ({ handleSubmit, submitting, onSubmit, tabs }) => {
     const inputStyle = "form-control filter-input mb-2";
     return (
         <div className="row filters p-4 mt-2">
             <div className="container-fluid">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FilterTitle title={i18next.t('home.filtersAndCategories')} titleStyle="left-panel-title" />
+                    {tabs}
                     <Field name="country" containerId="country" labelText={i18next.t('home.countryFilter')}
                                 inputStyle={inputStyle} inputId="country-filter" inputType="text"
                                 component={FilterInput} />

@@ -50,9 +50,9 @@ const createSport = async sport => {
     }
 }
 
-const updateSport = async sport => {
+const updateSport = async (sportName, sport) => {
     try {
-        const res = await api.put(`${SPORTS_ENDPOINT}/${sport.sportName}`, sport);
+        const res = await api.put(`${SPORTS_ENDPOINT}/${sportName}`, sport);
         return res.data;
     }
     catch(err) {
