@@ -146,8 +146,13 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already deleted
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
