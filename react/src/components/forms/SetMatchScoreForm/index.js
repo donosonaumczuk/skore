@@ -50,7 +50,7 @@ class SetMatchScoreFormContainer extends Component {
                 }
             }
             else if (this.mounted && response.status === SC_CONFLICT) {
-                const errorMessage = i18next.t('setMatchScoreForm.alreadyHasScore');
+                const errorMessage = i18next.t('setMatchScoreForm.errors.alreadyHasScore');
                 this.setState({ errorMessage: errorMessage, executing: false });
             }
             else {
