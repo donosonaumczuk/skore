@@ -161,6 +161,9 @@ class CreateMatchFormContainer extends Component {
 
     onSubmit = async (values) => {
         let match = this.loadMatch(values, this.state.image);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await MatchService.createMatch(match);
         if (response.status) {
             if (response.status === SC_UNAUTHORIZED) {
@@ -203,7 +206,7 @@ class CreateMatchFormContainer extends Component {
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
                              location={matchLocation} changeFieldsValue={change}
-                             touchField={touch} />
+                             touchField={touch} isExecuting={this.state.executing} />
         );
     }
 

@@ -14,6 +14,7 @@ import SubLocationInput from '../inputs/SubLocationInput';
 import RenderMatchDatePicker from '../inputs/RenderMatchDatePicker';
 import MatchTime from './components/MatchTime';
 import MatchDuration from './components/MatchDuration';
+import WithExecuting from '../../hocs/WithExecuting';
 
 const CreateMatchForm = ({ handleSubmit, submitting, onSubmit, 
                             sportOptions, hourOptions, minuteOptions,
@@ -92,4 +93,4 @@ CreateMatchForm.propTypes = {
         touchField: PropTypes.func.isRequired
 }
 
-export default CreateMatchForm;
+export default WithExecuting(CreateMatchForm);
