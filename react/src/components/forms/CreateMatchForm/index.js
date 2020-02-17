@@ -188,8 +188,7 @@ class CreateMatchFormContainer extends Component {
         else {
             const matchKey= response.key;
             this.props.history.push(`match/${matchKey}`);
-        }
-        
+        }    
     }
 
     render() {

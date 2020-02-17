@@ -2,6 +2,7 @@ import React from 'react';
 import { Field } from 'redux-form';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import FormTitle from '../elements/FormTitle';
 import RenderInput from '../inputs/RenderInput';
 import SubmitButton from '../elements/SubmitButton';
