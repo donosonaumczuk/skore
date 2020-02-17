@@ -69,7 +69,7 @@ public class GameServiceImpl implements GameService {
                        final String title, final String sportName) {
         if (startTime.isBefore(LocalDateTime.now())) {
             LOGGER.trace("StartTime must happen in the future");
-            throw new InvalidParameterException("Birthday must happen in the past");
+            throw new InvalidParameterException("StartTime must happen in the past");
         }
         PremiumUser logged = sessionService.getLoggedUser()
                 .orElseThrow(() -> new UnauthorizedException("Must be logged to create match"));
