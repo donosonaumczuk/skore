@@ -5,7 +5,7 @@ import UserMatches from './layout';
 import Utils from '../utils/Utils';
 
 const INITIAL_OFFSET = 0;
-const QUERY_QUANTITY = 1;
+const QUERY_QUANTITY = 10;
 
 class UserMatchesContainer extends Component {
     mounted = false;

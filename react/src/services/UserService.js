@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import { USERS_ENDPOINT } from './constants/EndpointConstants';
 import  { SC_TIME_OUT } from './constants/StatusCodesConstants';
 import AuthService from './AuthService';
-import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging } from './Util';
+import { buildUrlFromParamsWithCommas, createObjectFromFiltersAndPaging, addhasResultToParam, addSortByStartTimeToParam } from './Util';
 
 const getUsers = async (offset, limit, filters, token) => {
     const config = { cancelToken: token };
@@ -84,8 +84,12 @@ const getUserMatches = async (username, offset, limit) => {
 }
 
 const getUserMatchesWithResults = async (username, offset, limit) => {
+    let paramObject = createObjectFromFiltersAndPaging(offset, limit);
+    paramObject = addhasResultToParam(paramObject, `true`);
+    paramObject = addSortByStartTimeToParam(paramObject, "desc");
+    const paramsUrl =  buildUrlFromParamsWithCommas(paramObject);
     try {
-        const res = await api.get(`${USERS_ENDPOINT}/${username}/matches?hasResult=${true}&offset=${offset}&limit=${limit}`);
+        const res = await api.get(`${USERS_ENDPOINT}/${username}/matches${paramsUrl}`);
         return res.data;
     }
     catch (err) {
