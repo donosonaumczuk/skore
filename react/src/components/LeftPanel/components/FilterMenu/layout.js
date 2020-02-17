@@ -12,10 +12,16 @@ const getCheckboxTags = currentUser => {
         return (
             <Fragment>
                 <Field name="onlyLikedSports" containerId="onlyLikedSports" inputType="checkbox"
-                        labelText={i18next.t('home.onlyLikedSports')} inputId="liked-sports-filter"
-                        component={FilterCheckbox} inputStyle="filter-input" />
+                       prefixLabelText={i18next.t('home.onlyLikedPrefix')}
+                       linkedLabelText={i18next.t('home.onlyLikedSports')}
+                       suffixLabelText={i18next.t('home.onlyLikedSuffix')}
+                       link="/sports" inputId="liked-sports-filter"
+                       component={FilterCheckbox} inputStyle="filter-input" />
                 <Field name="onlyLikedUsers" containerId="onlyLikedUsers" inputType="checkbox"
-                        labelText={i18next.t('home.onlyLikedUsers')} inputId="liked-users-filter"
+                       prefixLabelText={i18next.t('home.onlyLikedPrefix')}
+                       linkedLabelText={i18next.t('home.onlyLikedUsers')}
+                       suffixLabelText={i18next.t('home.onlyLikedSuffix')}
+                       link="/accounts" inputId="liked-users-filter"
                         component={FilterCheckbox} inputStyle="filter-input" />
             </Fragment>
         );
