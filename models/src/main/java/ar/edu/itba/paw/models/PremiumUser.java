@@ -108,6 +108,15 @@ public class PremiumUser {
         enabled        = false;
     }
 
+    public PremiumUser(String firstName, String lastName, String email, String userName, long userId) {
+        this.user      = new User(firstName, lastName, email, userId);
+        this.email     = email;
+        this.userName  = userName;
+        likes          = new ArrayList<>();
+        roles          = new HashSet<>();
+        enabled        = false;
+    }
+
     public String getUserName() {
         return userName;
     }
