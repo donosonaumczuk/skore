@@ -11,7 +11,7 @@ const getTabs = (user, currentTab, handleTabChange) => {
     }
     return <React.Fragment/>;
 }
- 
+
 const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, updateFilters }) => {
     const user = currentUser;
     const tabs = getTabs(user, currentTab, handleTabChange);
@@ -20,10 +20,11 @@ const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, upda
         <div className="container-fluid">
             <div className="row">
                 <PosterWithButton posterStyle ="create-match" message={message}
-                                    currentUser={user} buttonText={i18next.t('home.createMatch')} 
+                                    currentUser={user} buttonText={i18next.t('home.createMatch')}
                                     buttonUrl="/createMatch" />
             </div>
-            <FilterMenu initialValues={filters} updateFilters={updateFilters} tabs={tabs}/>
+            <FilterMenu initialValues={filters} updateFilters={updateFilters} tabs={tabs}
+                        currentUser={user} />
         </div>
     );
 }
