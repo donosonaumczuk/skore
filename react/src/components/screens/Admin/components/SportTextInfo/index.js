@@ -6,7 +6,6 @@ const SportTextInfo = ({ text, isTitle }) => {
     if (isTitle) {
         textElement = <h3>{text}</h3>
     }
-    
     return (
         <div className="col">
             <div className="row mb-4 pt-4">
