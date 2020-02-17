@@ -140,7 +140,7 @@ const joinMatchWithAccount = async (matchKey, userId) => {
     }
     catch (err) {
         if (err.response) {
-            return { status: err.response.status };
+            return err.response;
         }
         else {
             return { status: SC_TIME_OUT };
@@ -183,7 +183,7 @@ const confirmAssistance = async (matchKey, userId, code) => {
     }
     catch (err) {
         if (err.response) {
-            return { status: err.response.status };
+            return err.response;
         }
         else {
             return { status: SC_TIME_OUT };

@@ -8,6 +8,8 @@ import ImageInput from '../inputs/ImageInput';
 import SubmitButton from '../elements/SubmitButton';
 import FormComment from '../elements/FormComment';
 import WithError from '../../hocs/WithError';
+import WithExecuting from '../../hocs/WithExecuting';
+
 
 const CreateSportForm = ({ handleSubmit, submitting, onSubmit, sportNameError,
                             imageName, handleChange }) => {
@@ -57,4 +59,4 @@ CreateSportForm.propTypes = {
     handleChange: PropTypes.func.isRequired
 }
 
-export default WithError(CreateSportForm);
+export default WithError(WithExecuting(CreateSportForm));

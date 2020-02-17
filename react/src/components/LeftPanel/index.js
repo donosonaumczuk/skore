@@ -23,8 +23,7 @@ const HomeLeftPanel = ({ currentTab, handleTabChange, currentUser, filters, upda
                                     currentUser={user} buttonText={i18next.t('home.createMatch')} 
                                     buttonUrl="/createMatch" />
             </div>
-            {tabs}
-            <FilterMenu initialValues={filters} updateFilters={updateFilters} />
+            <FilterMenu initialValues={filters} updateFilters={updateFilters} tabs={tabs}/>
         </div>
     );
 }
