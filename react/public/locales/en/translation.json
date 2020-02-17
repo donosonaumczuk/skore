@@ -307,5 +307,10 @@
     },
     "editSportForm": {
         "sportWithGamesError": "Can't modify sport with played games.\n"
+    },
+    "matchErrors": {
+        "cancelMatchFullOrPlayed": "Can't exit a match that is full or has been already played.\n",
+        "deleteMatchFullOrPlayed": "Can't delete a match that is full or has been already played.\n"
+
     }
 }
