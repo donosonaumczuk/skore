@@ -14,6 +14,9 @@ const FilterMenu = ({ handleSubmit, submitting, onSubmit, tabs }) => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FilterTitle title={i18next.t('home.filtersAndCategories')} titleStyle="left-panel-title" />
                     {tabs}
+                    <Field name="onlyLikedSports" containerId="onlyLikedSports" inputType="checkbox"
+                            labelText={i18next.t('home.onlyLikedSports')} inputId="liked-sports-filter"
+                            component={FilterInput} />
                     <Field name="country" containerId="country" labelText={i18next.t('home.countryFilter')}
                                 inputStyle={inputStyle} inputId="country-filter" inputType="text"
                                 component={FilterInput} />
