@@ -10,7 +10,7 @@ import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_BAD_REQUEST } from '../../../services/constants/StatusCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 100;
@@ -214,7 +214,7 @@ class CreateMatchFormContainer extends Component {
                              sportOptions={sportOptions}
                              location={matchLocation} changeFieldsValue={change}
                              touchField={touch} isExecuting={this.state.executing}
-                             errorMessage={errorMesage} />
+                             errorMessage={errorMessage} />
         );
     }
 
