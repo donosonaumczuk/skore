@@ -6,7 +6,7 @@ import i18next from 'i18next';
 
 let SearchBar = ({ handleSubmit, submitting, onSubmit, label, inputStyle }) => {
     return (
-         <div className="row filters p-4 mt-2 mb-2">
+         <div className="row p-2 mt-2 mb-2">
             <div className="container-fluid">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Field name="usernames" containerId="searchBar" inputType="text"
