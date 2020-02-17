@@ -182,6 +182,14 @@ public class GameDto {
         return Optional.ofNullable(team2);
     }
 
+    public Boolean getInTeam1() {
+        return isInTeam1;
+    }
+
+    public Boolean getInTeam2() {
+        return isInTeam2;
+    }
+
     public List<Link> getLinks() {
         return links;
     }
@@ -200,13 +208,5 @@ public class GameDto {
 
     public String getTeamName2() {
         return teamName2;
-    }
-
-    public Boolean getInTeam1() {
-        return isInTeam1;
-    }
-
-    public Boolean getInTeam2() {
-        return isInTeam2;
     }
 }
