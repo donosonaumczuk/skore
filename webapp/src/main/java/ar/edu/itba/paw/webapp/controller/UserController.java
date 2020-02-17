@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.exceptions.notfound.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
 import ar.edu.itba.paw.interfaces.PremiumUserService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
@@ -97,6 +98,10 @@ public class UserController {
     private TeamService teamService;
 
     @Autowired
+    @Qualifier("sessionServiceImpl")
+    private SessionService sessionService;
+
+    @Autowired
     private JWTUtility jwtUtility;
 
     private static Resource defaultImage = new ClassPathResource("user-default.png");
@@ -174,6 +179,7 @@ public class UserController {
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                                  @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
                                  @QueryParam("onlyLikedSports") String onlyLikedSports) {
+        PremiumUser user = sessionService.getLoggedUser().orElse(null);
         if (usernamesPlayersInclude == null) {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
@@ -190,7 +196,7 @@ public class UserController {
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult), QueryParamsUtils.booleanOrElse(onlyLikedUsers, false),
                 QueryParamsUtils.booleanOrElse(onlyLikedSports, false))
-                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+                .map((game) ->GameDto.from(game, user));
 
         LOGGER.trace("'{}' matches successfully gotten", username);
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();
