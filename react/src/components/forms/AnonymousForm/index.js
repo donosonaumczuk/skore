@@ -40,10 +40,10 @@ class AnonymousFormContainer extends Component {
         const response = await MatchService.joinMatchAnonymous(currentMatch.key, user);
         if (this.mounted) {
             if (response.status) {
-                this.setState({ status: response.status })
+                this.setState({ status: response.status, isLoading: false })
             }
             else {
-                this.setState({ created: true });
+                this.setState({ created: true, isLoading: false });
             }
         }
     }
@@ -52,7 +52,7 @@ class AnonymousFormContainer extends Component {
         const { handleSubmit, submitting } = this.props; 
         if (this.state.created) {
             return (
-                <Message message={i18next.t('confirmAsistance.confirm')} />
+                <Message message={i18next.t('confirmAssistance.confirm')} />
             );
         }
         return (

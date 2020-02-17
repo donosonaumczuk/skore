@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     public void sendConfirmMatchAssistance(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendConfirmMatch(user, game, getUrl("url.frontend.confirm.match", data,
+        emailSender.sendConfirmMatch(user, game, getUrl(".url.frontend.confirm.match", data,
                 user.getUserId(), phrase), locale);
     }
 
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
     public void sendCancelOptionMatch(final User user, final Game game, final String data, final Locale locale) {
         String phrase = user.getUserId() + user.getFirstName() + "$" + data;
         phrase = encrypter.encryptString(phrase);
-        emailSender.sendCancelMatch(user, game, getUrl("url.frontend.cancel.match", data,
+        emailSender.sendCancelMatch(user, game, getUrl(".url.frontend.cancel.match", data,
                 user.getUserId(), phrase), locale);
     }
 

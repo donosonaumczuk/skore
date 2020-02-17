@@ -113,7 +113,7 @@ class App extends Component {
                         <Route exact path="/requestNewPassword" component={RequestNewPasswordForm} />
                         <Route exact path="/resetPassword" component={ResetPasswordForm} />
                         <Route exact path="/logout">
-                            <LogOut updateUser={this.updateUser} />
+                            <LogOut updateUser={this.updateUser} currentUser={username} />
                         </Route>
                         <Route exact path="/accounts" render={(props) => 
                                                 <Accounts {...props} currentUser={username} />} />

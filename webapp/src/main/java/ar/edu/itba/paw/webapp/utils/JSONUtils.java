@@ -21,7 +21,7 @@ public final class JSONUtils {
 
     public static <T> T jsonToObject(final String json, final Class<T> classToConvertTo) {
         try {
-            return OBJECT_MAPPER.readValue(json, classToConvertTo);
+            return OBJECT_MAPPER.readValue(jsonObjectFrom(json).toString(), classToConvertTo);
         } catch (IOException e) {
             LOGGER.error("Error when converting JSON to " + classToConvertTo.getName() + " object", e);
             throw ApiException.of(HttpStatus.INTERNAL_SERVER_ERROR, MessageConstants.SERVER_ERROR_GENERIC_MESSAGE);

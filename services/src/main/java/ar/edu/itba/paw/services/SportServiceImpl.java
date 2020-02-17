@@ -42,10 +42,6 @@ public class SportServiceImpl implements SportService {
     @Override
     public Sport create(final String sportName, final int playerQuantity, final String displayName,
                         final byte[] file) {
-        if (findByName(sportName).isPresent()) {
-            LOGGER.trace("Sport with name {} already exist", sportName);
-            throw SportAlreadyExistException.ofId(sportName);
-        }
         return sportDao.create(sportName, playerQuantity, displayName, file).orElseThrow(() -> {
             LOGGER.error("Sport creation failed, sport '{}' already exist", sportName);
             return SportAlreadyExistException.ofId(sportName);
@@ -56,10 +52,6 @@ public class SportServiceImpl implements SportService {
     @Override
     public Sport modifySport(final String sportName, final String displayName, final Integer playerQuantity, final byte[] file) {
         LOGGER.trace("Trying to modify sport '{}'", sportName);
-        if (findByName(sportName).isPresent()) {
-            LOGGER.trace("Sport with name {} already exist", sportName);
-            throw SportAlreadyExistException.ofId(sportName);
-        }
         ArrayList<String> sport = new ArrayList<>();
         sport.add(sportName);
         if (playerQuantity != null && !gameService.findGamesPage(null, null, null,

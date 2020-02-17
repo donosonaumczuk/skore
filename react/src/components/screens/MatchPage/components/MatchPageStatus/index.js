@@ -5,10 +5,15 @@ import AuthService from '../../../../../services/AuthService';
 import StatusLabel from './components/StatusLabel';
 
 const getFormattedResult = gameResult => {
-    const results = gameResult.split("-");
-    const teamOneScore = parseInt(results[0], 10);
-    const teamTwoScore = parseInt(results[1], 10);
-    return `${teamOneScore} - ${teamTwoScore}`;
+    if (gameResult) {
+        const results = gameResult.split("-");
+        const teamOneScore = parseInt(results[0], 10);
+        const teamTwoScore = parseInt(results[1], 10);
+        return `${teamOneScore} - ${teamTwoScore}`;
+    }
+    else {
+        return null;
+    }
 }
 
 const getTag = (currentMatch, currentUser, updateMatchScore) => {

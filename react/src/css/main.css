@@ -14,6 +14,10 @@ body {
     background-color: var(--light-gray);
 }
 
+.spinner-margin {
+    margin-top: 6rem;
+}
+
 .white-text {
     color: white;
 }
@@ -55,6 +59,13 @@ body {
     font-weight: bold;
     font-size: 2rem;
     margin-bottom: 0rem;
+}
+
+.error-message {
+    color: black;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0;
 }
 
 .match-name {
@@ -264,6 +275,14 @@ body {
 
 .bg-green {
     background-color: var(--light-green);
+}
+
+.return-to-home {
+    color: var(--dark-secondary-color);
+}
+
+.return-to-home:hover {
+    color: var(--secondary-color);
 }
 
 .login-link {

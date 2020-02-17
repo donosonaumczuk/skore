@@ -10,13 +10,14 @@ import WithError from '../../hocs/WithError';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithPermission from '../../hocs/WithPermission';
 
-const SetMatchScoreForm = ({ onSubmit, handleSubmit, submitting}) => {
+const SetMatchScoreForm = ({ onSubmit, handleSubmit, submitting, errorMessage }) => {
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="container-fluid sign-in-container offset-sm-2 col-sm-8 offset-md-3 col-md-6 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                     <FormTitle />
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        {errorMessage}
                         <Field name="teamOneScore" id="teamOneScore" inputType="text"
                                 label={i18next.t('setMatchScoreForm.teamOneScore')}
                                 required={true} component={RenderInput} />

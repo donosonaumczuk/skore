@@ -25,7 +25,7 @@ public class ProfileDto {
         this.lastName = premiumUser.getUser().getLastName();
         this.winRate = premiumUser.getWinRate();
         this.age = Period.between(premiumUser.getBirthday(), LocalDate.now()).getYears(); //TODO: maybe the GET request of the profile can pass the UTC offset of the Locale?
-        this.location = premiumUser.getHome().toString();
+        this.location = (premiumUser.getHome() == null) ? null : premiumUser.getHome().toString();
         this.links = getHateoasLinks(premiumUser);
     }
 
