@@ -31,7 +31,7 @@ const isInMatch = (currentUser, teamOne, teamTwo) => {
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
     const { hasStarted, creator, currentPlayers, totalPlayers } = currentMatch;
     const isFull = currentPlayers === totalPlayers;     
-    if ((hasStarted && isFull) || (hasStarted && currentUser !== creator)) { 
+    if ((hasStarted && isFull) || (hasStarted && currentUser !== creator) || isFull) { 
         return <Fragment></Fragment>;
     }
     if (currentUser && currentUser === creator) {
