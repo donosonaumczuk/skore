@@ -4,9 +4,28 @@ import AuthService from '../../../../../services/AuthService';
 import MatchButton from '../../../../match/MatchButton';
 import i18next from 'i18next';
 
-const isInMatch = (currentMatch) => {
-    const { inTeam1, inTeam2 } = currentMatch;
-    return inTeam1 || inTeam2;
+const isUserInTeam = (currentUser, team) => {
+    if (!currentUser || !team) {
+        return false;
+    }
+    let userFound = false;
+    team.players.forEach(player => {
+        if (player.username === currentUser) {
+            userFound = true;
+        }
+    });
+    return userFound;
+}
+
+const isInMatch = (currentUser, teamOne, teamTwo) => {
+    if (!currentUser) {
+        return false;
+    }
+    let userFound = isUserInTeam(currentUser, teamOne);
+    if (!userFound) {
+        userFound = isUserInTeam(currentUser, teamTwo);
+    }
+    return userFound;
 }
 
 const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatch) => {
@@ -21,7 +40,7 @@ const getButton = (currentMatch, currentUser, joinMatch, cancelMatch, deleteMatc
                             buttonText={i18next.t('home.deleteMatch')}
                             fontAwesome="fas fa-trash-alt mr-1" />
     }
-    else if (currentUser && isInMatch(currentMatch)) {
+    else if (currentUser && isInMatch(currentUser, currentMatch.team1, currentMatch.team2)) {
         return <MatchButton buttonStyle="btn btn-negative join-button"
                             handleClick={cancelMatch} currentMatch={currentMatch}
                             buttonText={i18next.t('home.cancelMatch')}

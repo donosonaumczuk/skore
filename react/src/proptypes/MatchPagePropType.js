@@ -15,8 +15,6 @@ const MatchPagePropType = PropTypes.shape(
         location: LocationPropType.isRequired,
         date: DatePropType.isRequired,
         time: TimePropType.isRequired,
-        inTeam1: PropTypes.bool.isRequired,
-        inTeam2: PropTypes.bool.isRequired,
         team1: TeamPropType.isRequired,
         team2: TeamPropType.isRequired
     }
