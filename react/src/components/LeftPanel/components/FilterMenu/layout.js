@@ -1,12 +1,30 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import FilterTitle from '../../../panel/filterMenu/FilterTitle';
 import FilterInput from '../../../panel/filterMenu/FilterInput';
 import AddFilterButton from '../../../panel/filterMenu/AddFilterButton';
+import FilterCheckbox from '../../../panel/filterMenu/FilterCheckbox';
 
-const FilterMenu = ({ handleSubmit, submitting, onSubmit, tabs }) => {
+const getCheckboxTags = currentUser => {
+    if (currentUser) {
+        return (
+            <Fragment>
+                <Field name="onlyLikedSports" containerId="onlyLikedSports" inputType="checkbox"
+                        labelText={i18next.t('home.onlyLikedSports')} inputId="liked-sports-filter"
+                        component={FilterCheckbox} inputStyle="filter-input" />
+                <Field name="onlyLikedUsers" containerId="onlyLikedUsers" inputType="checkbox"
+                        labelText={i18next.t('home.onlyLikedUsers')} inputId="liked-users-filter"
+                        component={FilterCheckbox} inputStyle="filter-input" />
+            </Fragment>
+        );
+    }
+    return <Fragment/>
+}
+
+const FilterMenu = ({ handleSubmit, submitting, onSubmit, tabs, currentUser }) => {
+    const checkboxTags = getCheckboxTags(currentUser);
     const inputStyle = "form-control filter-input mb-2";
     return (
         <div className="row filters p-4 mt-2">
@@ -14,12 +32,7 @@ const FilterMenu = ({ handleSubmit, submitting, onSubmit, tabs }) => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FilterTitle title={i18next.t('home.filtersAndCategories')} titleStyle="left-panel-title" />
                     {tabs}
-                    <Field name="onlyLikedSports" containerId="onlyLikedSports" inputType="checkbox"
-                            labelText={i18next.t('home.onlyLikedSports')} inputId="liked-sports-filter"
-                            component={FilterInput} inputStyle="filter-input" />
-                    <Field name="onlyLikedUsers" containerId="onlyLikedUsers" inputType="checkbox"
-                            labelText={i18next.t('home.onlyLikedUsers')} inputId="liked-users-filter"
-                            component={FilterInput} inputStyle="filter-input" />
+                    {checkboxTags}
                     <Field name="country" containerId="country" labelText={i18next.t('home.countryFilter')}
                                 inputStyle={inputStyle} inputId="country-filter" inputType="text"
                                 component={FilterInput} />

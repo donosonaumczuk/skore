@@ -19,16 +19,18 @@ class FilterMenuContainer extends Component {
     }
 
     render() {
-        const { handleSubmit, submitting, tabs } = this.props; 
+        const { handleSubmit, submitting, tabs, currentUser } = this.props; 
         return (
             <FilterMenu handleSubmit={handleSubmit} submitting={submitting}
-                        onSubmit={this.onSubmit} tabs={tabs} />
+                        onSubmit={this.onSubmit} tabs={tabs}
+                        currentUser={currentUser} />
         );
     }
 }
 
 FilterMenuContainer.propTypes = {
-    updateFilters: PropTypes.func.isRequired
+    updateFilters: PropTypes.func.isRequired,
+    currentUser: PropTypes.string
 }
 
 FilterMenuContainer = reduxForm({

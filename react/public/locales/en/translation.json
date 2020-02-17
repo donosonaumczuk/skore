@@ -130,6 +130,8 @@
         "stateFilter": "State / Province",
         "cityFilter": "City / Locality",
         "sportFilter": "Sport",
+        "onlyLikedSports": "Only liked sports",
+        "onlyLikedUsers": "Only liked users",
         "addFilters": "ADD FILTERS",
         "joinMatch": "JOIN",
         "joinCompetitiveMatch": "JOIN",
