@@ -161,6 +161,9 @@ class CreateMatchFormContainer extends Component {
 
     onSubmit = async (values) => {
         let match = this.loadMatch(values, this.state.image);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await MatchService.createMatch(match);
         if (response.status) {
             if (response.status === SC_UNAUTHORIZED) {
@@ -170,6 +173,12 @@ class CreateMatchFormContainer extends Component {
                 }
                 else {
                     this.setState({ error: status });
+                }
+            }
+            else if (response.status === SC_BAD_REQUEST) {
+                if (this.mounted) {
+                    const errorMessage = i18next.t('createMatchForm.errors.invalidPastTime');
+                    this.setState({ errorMessage: errorMessage, executing: false });
                 }
             }
             else if (this.mounted) {
@@ -188,6 +197,7 @@ class CreateMatchFormContainer extends Component {
         const currentUser = AuthService.getCurrentUser();
         const hourOptions = this.generateHourOptions();
         const minuteOptions = this.generateMinuteOptions();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         if (!currentUser) {
             return <Redirect to="/" />
         }
@@ -203,7 +213,8 @@ class CreateMatchFormContainer extends Component {
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
                              location={matchLocation} changeFieldsValue={change}
-                             touchField={touch} />
+                             touchField={touch} isExecuting={this.state.executing}
+                             errorMessage={errorMesage} />
         );
     }
 
