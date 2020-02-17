@@ -180,10 +180,8 @@ class HomeContainer extends Component {
                         this.setState({ errorMessage: errorMessage, executing: false });
                     }
                     else {
-                        console.log("lleno");
                         const errorMessage = i18next.t('confirmAssistance.matchFullOrPlayed');
                         this.setState({ errorMessage: errorMessage, executing: false });
-                        console.log(errorMessage);
                     }
                 }
                 else {
