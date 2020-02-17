@@ -19,6 +19,8 @@ const SC_CONFLICT = 409;
 
 const SC_CLIENT_CLOSED_REQUEST = 499;
 
+const SC_SERVER_ERROR = 500;
+
 export {
     SC_OK,
     SC_CREATED,
@@ -29,5 +31,6 @@ export {
     SC_NOT_FOUND,
     SC_TIME_OUT,
     SC_CONFLICT,
-    SC_CLIENT_CLOSED_REQUEST
+    SC_CLIENT_CLOSED_REQUEST,
+    SC_SERVER_ERROR
 };

@@ -19,7 +19,7 @@ class FilterMenuContainer extends Component {
     }
 
     render() {
-        const { handleSubmit, submitting, tabs, currentUser } = this.props; 
+        const { handleSubmit, submitting, tabs, currentUser } = this.props;
         return (
             <FilterMenu handleSubmit={handleSubmit} submitting={submitting}
                         onSubmit={this.onSubmit} tabs={tabs}

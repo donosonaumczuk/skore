@@ -143,7 +143,11 @@
         "createdTab": "CREATED"
     },
     "errorPage": {
-        "404": "This is not the page you are looking for.\n",
+        "401": "Unauthorized entry alert\n",
+        "403": "You shall not pass!\n",
+        "404": "This is not the page you are looking for\n",
+        "408": "Time out! We get tired of waiting for an answer\n",
+        "500": "Oops, something went wrong, try again later\n",
         "returnToHome": "Return to home"
     },
     "editUserInfoForm": {
@@ -250,7 +254,7 @@
         "playersPerTeam": "Players per team",
         "createSport": "CREATE SPORT",
         "editSport": "EDIT",
-        "deleteSport": "DELETE"  
+        "deleteSport": "DELETE"
     },
     "confirmAccount": {
         "confirmed": "Congratulations! You have created a new account.",

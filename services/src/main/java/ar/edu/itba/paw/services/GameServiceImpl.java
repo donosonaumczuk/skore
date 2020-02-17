@@ -144,6 +144,12 @@ public class GameServiceImpl implements GameService {
             throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
 
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() ==
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
+            LOGGER.trace("Delete player from game failed, game '{}' is full", key);
+            throw GameInvalidStateException.ofGameFull(key);
+        }
+
         if (code != null) {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
