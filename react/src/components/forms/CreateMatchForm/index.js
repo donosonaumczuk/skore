@@ -10,7 +10,8 @@ import CreateMatchValidator from '../validators/CreateMatchValidator';
 import CreateMatchForm from './layout';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_BAD_REQUEST } from '../../../services/constants/StatusCodesConstants';
+import i18next from 'i18next';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 100;
@@ -175,6 +176,10 @@ class CreateMatchFormContainer extends Component {
                     this.setState({ error: status });
                 }
             }
+            else if (response.status === SC_BAD_REQUEST) {
+                const errorMessage = i18next.t('createMatchForm.errors.invalidPastTime');
+                this.setState({ errorMessage: errorMessage, executing: false });
+            }
             else if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
             }
@@ -191,6 +196,7 @@ class CreateMatchFormContainer extends Component {
         const currentUser = AuthService.getCurrentUser();
         const hourOptions = this.generateHourOptions();
         const minuteOptions = this.generateMinuteOptions();
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         if (!currentUser) {
             return <Redirect to="/" />
         }
@@ -206,7 +212,8 @@ class CreateMatchFormContainer extends Component {
                              minuteOptions={minuteOptions}
                              sportOptions={sportOptions}
                              location={matchLocation} changeFieldsValue={change}
-                             touchField={touch} isExecuting={this.state.executing} />
+                             touchField={touch} isExecuting={this.state.executing}
+                             errorMessage={errorMessage} />
         );
     }
 
