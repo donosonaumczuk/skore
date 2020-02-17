@@ -72,7 +72,7 @@ const MatchAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMatch }
     let button = getButton(currentMatch, AuthService.getCurrentUser(), 
                             joinMatch, cancelMatch, deleteMatch);
     return (
-        <div className="offset-1 col-4 col-sm-3">
+        <div className="offset-1 col-4 col-sm-3 ml-0 mr-0">
             <div className="row text-center">
                 <div className="col">
                     <i className="name-label fas fa-users mr-2"></i>
