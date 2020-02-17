@@ -5,6 +5,7 @@ import SportPropType from '../../../proptypes/SportPropType';
 import Loader from '../../Loader';
 import AdminSport from './components/AdminSport';
 import AdminSportTitle from './components/AdminSportTitle';
+import WithError from '../../hocs/WithError';
 
 const Admin = ({ sports, getSports, hasMore }) => {
     return (
@@ -25,4 +26,4 @@ Admin.propTypes = {
     hasMore: PropTypes.bool.isRequired
 }
 
-export default Admin;
+export default WithError(Admin);

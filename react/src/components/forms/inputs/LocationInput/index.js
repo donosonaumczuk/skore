@@ -72,9 +72,8 @@ class LocationInput extends Component {
             updateLocation(this.state, changeFieldsValue, touchField);
         }
         catch(err) {
-            //TODO handle error
-        }
-        
+            this.setState({ error: err });
+        }  
     };
 
     componentDidMount() {

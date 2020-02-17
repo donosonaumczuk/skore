@@ -305,10 +305,10 @@ class HomeContainer extends Component {
         const { currentUser } = this.props;
         let currentMatches;
         if (this.state.executing) {
-            currentMatches = <Spinner name="ball-spin-fade-loader" /> //TODO center and hoc
+            currentMatches = <Spinner name="ball-spin-fade-loader" /> 
         }
         else if (matches.length === 0 && hasMore) {
-            currentMatches = <Loader />;//TODO hoc
+            currentMatches = <Loader />;
         }
         else {
             currentMatches = <HomeMatches matches={matches} hasMore={hasMore} 
@@ -329,7 +329,6 @@ class HomeContainer extends Component {
     }
 
     componentWillUnmount() {
-        //TODO stop request
         this.mounted = false;
     }
 }
