@@ -1,6 +1,5 @@
 import React from 'react';
 import Proptypes from 'prop-types';
-import i18next from "i18next";
 import {Link} from "react-router-dom";
 
 const FilterCheckbox = ({ containerId, prefixLabelText, linkedLabelText, suffixLabelText, link,
