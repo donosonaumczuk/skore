@@ -61,9 +61,9 @@ const getFormattedResult = gameResult => {
     return `${gameResult.teamOne} - ${gameResult.teamTwo}`;
 }
 
-const GameResult = ({ gameResult, username, isInteamOne, isInteamTwo }) => {
+const GameResult = ({ gameResult, isInTeamOne, isInTeamTwo }) => {
     const result = getResult(gameResult);
-    const userTeam = getUserTeam(username, isInteamOne, isInteamTwo);
+    const userTeam = getUserTeam(isInTeamOne, isInTeamTwo);
     let resultLabel= getResultLabel(userTeam, result.teamOne, result.teamTwo);
     let resultLabelClass = getResultLabelClass(resultLabel);
     let formattedResult = getFormattedResult(result);
@@ -86,7 +86,6 @@ const GameResult = ({ gameResult, username, isInteamOne, isInteamTwo }) => {
 
 GameResult.propTypes = {
     gameResult: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
     isInTeamOne: PropTypes.bool.isRequired,
     isInTeamTwo: PropTypes.bool.isRequired
 }

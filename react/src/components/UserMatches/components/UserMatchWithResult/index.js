@@ -44,7 +44,7 @@ const UserMatchWithResult = ({ currentMatch, username, history }) => {
                     <CreatorInfo creatorImageUrl={creatorImageUrl} creator={currentMatch.creator}
                                     title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
-                    <GameResult gameResult={currentMatch.results} username={username}
+                    <GameResult gameResult={currentMatch.results}
                                 isInTeamOne={currentMatch.inTeam1}
                                 isInTeamTwo={currentMatch.inTeam2} />
                 </div>
