@@ -36,6 +36,7 @@ const UserMatchWithResult = ({ currentMatch, username, history }) => {
     const creatorImageUrl = imageUrls.creatorImageUrl;
     const sportImageUrl = imageUrls.sportImageUrl;
     const address = currentMatch.location;
+    console.log(currentMatch);
     return (
         <div className="row p-2 mt-2 match-card rounded-border" 
                         onClick={(e) => goToMatch(e, currentMatch, history)} >

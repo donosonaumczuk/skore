@@ -12,6 +12,8 @@ const getResult = gameResult => {
 
 const getUserTeam = (isInTeamOne, isInTeamTwo) => {
     let userTeam = 0;
+    console.log("team1: ",isInTeamOne);
+    console.log("team2: ",isInTeamTwo);
     if (isInTeamOne) {
         userTeam = 1;
     }
