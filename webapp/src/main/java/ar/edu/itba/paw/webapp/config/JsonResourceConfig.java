@@ -11,7 +11,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 public class JsonResourceConfig extends ResourceConfig {
 
-    public JsonResourceConfig() {//TODO: avoid json without "
+    public JsonResourceConfig() {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); /* Check done by us manually */
