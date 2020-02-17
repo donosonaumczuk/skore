@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 const RadioInput = ({ input, meta, labelStyle, id, labelText,
                         radioValue, showError, ...rest }) => {
     const checked = input.value === radioValue;
-    //TODO update state with selected tab to implement future form with competitive and individual
     return (
         <React.Fragment>
             <label className={labelStyle} id={id}>

@@ -34,7 +34,9 @@ class AdminContainer extends Component {
         const { offset, total } = this.state;
         const response = await SportService.getSports(offset, total);
         if (response.status) {
-            //TODO handle error only 400
+            if (this.mounted) {
+                this.setState({ status: response.status });
+            }
         }
         else if (this.mounted) {
             this.addSports(response);
@@ -53,7 +55,8 @@ class AdminContainer extends Component {
         else {
             const { sports, hasMore } = this.state;
             return (
-                <Admin sports={sports} getSports={this.getSports} hasMore={hasMore} />
+                <Admin sports={sports} getSports={this.getSports} hasMore={hasMore}
+                        error={this.state.status} />
             );
         }
     }

@@ -124,7 +124,6 @@ class UserProfileContainer extends Component {
         let editButtons = this.getEditButtons(loggedUser, this.state.username);
         const isLoading = imageUrl == null;
         let error = null;
-        //TODO check when winrate is negative if it is a valid value
         if (this.state.status && this.state.staus !== SC_OK) {
             error = this.state.status;
         }

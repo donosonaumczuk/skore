@@ -170,10 +170,14 @@ class AccountsContainer extends Component {
         this.cancelRequestIfPending();
         const token = this.getSourceToken();
         const response = await UserService.getUsers(offset, limit, filters, token);
-        if (this.mounted) {
+        if (response.status) {
+            if (this.mounted) {
+                this.setState({ status: response.status });
+            }
+        }
+        else if (this.mounted) {
             this.updateUsers(response);
         }
-        //TODO validate error
     }
 
     componentDidMount = async () => {

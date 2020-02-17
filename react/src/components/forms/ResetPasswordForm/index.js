@@ -7,7 +7,7 @@ import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import ResetPassWordForm from './layout';
-import { SC_CONFLICT, SC_NOT_FOUND } from '../../../services/constants/StatusCodesConstants';
+import { SC_NOT_FOUND } from '../../../services/constants/StatusCodesConstants';
 
 const validate = values => {
     const errors = {}
@@ -37,15 +37,7 @@ class ResetPasswordFormContainer extends Component {
         const { username, code } = this.state;
         const response = await UserService.resetPassword(username, password, code);
         if (response.status) {
-            if (response.status === SC_CONFLICT) {
-                if (this.mounted) {
-                    //TODO handle error 409 add message for error
-                    this.setState({ executing: false});
-                } 
-            }
-            else {
-                this.setState({ executing: false, error: response.status})
-            }
+            this.setState({ executing: false, error: response.status})
         }
         else {
             this.setState({ requested: true });

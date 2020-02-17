@@ -50,7 +50,6 @@ class ChangePasswordFormContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 invalid password
                 this.setState({ error: response.status, executing: false });
             }
         }

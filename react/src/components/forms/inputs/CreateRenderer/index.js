@@ -4,11 +4,6 @@ const createRenderer = render => ({ input, meta, label, inputType, id, required,
                                     isDisabled, ...rest }) => {
 return (
     <div className="form-group" >
-        {/* className={[
-        meta.error && meta.touched ? 'error' : '',
-        meta.active ? 'active' : ''
-        ].join(' ')} //TODO replace class we want to style error afte meta.error && meta.touchedr*/}
-
         <label htmlFor={id}>
             {label}
             <span className="text-muted">{required ? " *" : ""}</span>
