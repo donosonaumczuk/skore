@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import HomeMatchPropType from '../../../proptypes/HomeMatchPropType';
 
-//TODO replace with Action Button
 const MatchButton = ({ buttonStyle, handleClick, buttonText, fontAwesome,
                         currentMatch }) => {
     return (

@@ -6,6 +6,4 @@ const RenderTextArea = createRenderer((input, label, inputType, id, isDisabled, 
                         className="form-control" rows={3} maxLength={140}/>);
 });
 
-//TODO maybe add PropTypes
-
 export default RenderTextArea;

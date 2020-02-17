@@ -173,7 +173,6 @@ class CreateMatchFormContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 if any
                 this.setState({ error: response.status, executing: false });
             }
         }
