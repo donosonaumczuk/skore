@@ -317,6 +317,5 @@
     "matchErrors": {
         "cancelMatchFullOrPlayed": "No podés cancelar un partido que esta lleno o ya fue jugado.\n",
         "deleteMatchFullOrPlayed": "No podés borrar un partido que esta lleno o ya fue jugado.\n"
-
     }
 }
