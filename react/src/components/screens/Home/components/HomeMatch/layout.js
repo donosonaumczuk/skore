@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import HomeMatchPropType from '../../../../../proptypes/HomeMatchPropType';
 import CreatorInfo from '../../../../match/CreatorInfo';
 import SportInfo from '../../../../match/SportInfo';
@@ -26,11 +27,21 @@ const getAvailabilityOrResult = (currentMatch, joinMatch, cancelMatch, deleteMat
         );
     }
 }
+const getCancelledLabel = currentMatch => {
+    const { hasStarted, currentPlayers, totalPlayers } = currentMatch;
+    if (hasStarted && currentPlayers < totalPlayers) {
+        return (
+            <p>{i18next.t('matchStatus.cancelled')}</p>
+        )
+    }
+    return <Fragment />;
+}
 
 const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick,
                         joinMatch, cancelMatch, deleteMatch }) => {
     const address = currentMatch.location;
     const availabilityOrResult = getAvailabilityOrResult(currentMatch, joinMatch, cancelMatch, deleteMatch);
+    const CancelledLabel = getCancelledLabel(currentMatch);
     return (<div>
         <div className="row p-2 mt-2 match-card rounded-border" onClick ={() => handleClick(currentMatch.key)}>
             <div className="col">
@@ -39,6 +50,7 @@ const HomeMatch = ({ currentMatch, creatorImageUrl, sportImageUrl, handleClick,
                                     title={currentMatch.title} />
                     <SportInfo sportImageUrl={sportImageUrl} sport={currentMatch.sportName} />
                     {availabilityOrResult}
+                    {CancelledLabel}
                 </div>
                 <MatchCompetitivity isCompetitive={currentMatch.competitive} />
                 <MatchDate date={currentMatch.date} time ={currentMatch.time} />

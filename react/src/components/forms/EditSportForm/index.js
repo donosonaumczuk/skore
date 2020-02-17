@@ -51,10 +51,12 @@ class EditSportFormContainer extends Component {
     loadSport = (values, image) => {
         let sport = {
             "displayName": values.displayName,
-            "playerQuantity": values.playersPerTeam,
         };
         if (image) {
             sport = { ...sport, "imageSport": image.data };
+        }
+        if (`${this.props.sportPlayerQuantity}` !== values.playersPerTeam) {
+            sport = { ...sport, "playerQuantity": values.playersPerTeam };
         }
         return sport;
     }
@@ -86,7 +88,7 @@ class EditSportFormContainer extends Component {
             }
         }
         else {
-            this.props.history.push(`/sports`);
+            this.props.history.push(`/admin`);
         }
     }
 
