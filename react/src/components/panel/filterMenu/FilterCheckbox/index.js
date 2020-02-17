@@ -1,6 +1,6 @@
 import React from 'react';
 import Proptypes from 'prop-types';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FilterCheckbox = ({ containerId, prefixLabelText, linkedLabelText, suffixLabelText, link,
                             inputStyle, inputId, input }) => {
