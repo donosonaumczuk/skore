@@ -24,7 +24,8 @@ const MatchPageLocation = ({ address }) => {
          <div className="row text-center mb-5 mt-3">
             <div className="col">
                 <i className="location-icon mr-2 fas fa-map-marker-alt"></i>
-                <a className="address-text skore-link" href={googleLink}>
+                <a className="address-text skore-link" target="_blank"
+                    rel="noopener noreferrer" href={googleLink}>
                     {addressString}
                 </a>
             </div>

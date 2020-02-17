@@ -134,7 +134,7 @@
         "onlyLikedSports": "deportes",
         "onlyLikedUsers": "usuarios",
         "onlyLikedSuffix": " que me gustan",
-        "addFilters": "AGREGAR FILTROS",
+        "addFilters": "APLICAR FILTROS",
         "joinMatch": "UNIRSE",
         "joinCompetitiveMatch": "UNIRSE",
         "cancelMatch": "SALIR",
@@ -323,5 +323,8 @@
     "matchErrors": {
         "cancelMatchFullOrPlayed": "No podés cancelar un partido que está lleno o ya fue jugado.\n",
         "deleteMatchFullOrPlayed": "No podés borrar un partido que está lleno o ya fue jugado.\n"
+    },
+    "matchStatus": {
+        "cancelled": "Cancelado"
     }
 }

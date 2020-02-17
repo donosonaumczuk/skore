@@ -29,6 +29,7 @@ class EditSportContainer extends Component {
             let sport = await SportService.getSportByName(this.state.sportName);
             if (this.mounted) {
                 this.updateStateWithSport(sport);
+                this.setState({ sportPlayerQuantity: sport.playerQuantity });
             }
         }
     }
@@ -49,13 +50,15 @@ class EditSportContainer extends Component {
         const isAdmin = AuthService.isAdmin();
         const formInitialValues = this.loadFormInitialValues();
         const isLoading = !this.state.sport;
+        const { sportPlayerQuantity } = this.state;
         let error = this.state.status;
         const needsPermission = !isAdmin;
         return (
             <EditSport initialValues={formInitialValues}
                         history={this.props.history}
                         isLoading={isLoading} error={error}
-                        needsPermission={needsPermission} />
+                        needsPermission={needsPermission}
+                        sportPlayerQuantity={sportPlayerQuantity} />
         );
     }
 
