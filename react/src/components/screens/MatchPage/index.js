@@ -112,8 +112,13 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already cancelled asistance
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -141,8 +146,13 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already deleted
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -174,7 +184,7 @@ class MatchPageContainer extends Component {
         }
         return (
             <MatchPage currentMatch={this.state.match} match={this.state.match}
-                        error={this.state.status} isLoading={!this.state.match}
+                        error={this.state.error} isLoading={!this.state.match}
                         message={message} updateMatchScore={this.updateMatchScore} 
                         joinMatch={this.joinMatch} cancelMatch={this.cancelMatch}
                         deleteMatch={this.deleteMatch} anonymous={this.state.anonymous} 
