@@ -2,11 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.exceptions.notfound.GameNotFoundException;
 import ar.edu.itba.paw.interfaces.GameService;
+import ar.edu.itba.paw.interfaces.SessionService;
 import ar.edu.itba.paw.interfaces.TeamService;
 import ar.edu.itba.paw.models.Game;
 import ar.edu.itba.paw.models.GameSort;
 import ar.edu.itba.paw.models.Page;
 import ar.edu.itba.paw.models.Place;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.models.QueryList;
 import ar.edu.itba.paw.models.Team;
 import ar.edu.itba.paw.webapp.constants.URLConstants;
@@ -64,6 +66,10 @@ public class GameController {
     public static final String BASE_PATH = "matches";
 
     @Autowired
+    @Qualifier("sessionServiceImpl")
+    private SessionService sessionService;
+
+    @Autowired
     @Qualifier("gameServiceImpl")
     private GameService gameService;
 
@@ -97,6 +103,7 @@ public class GameController {
                              @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                              @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
                              @QueryParam("onlyLikedSports") String onlyLikedSports) {
+        PremiumUser user = sessionService.getLoggedUser().orElse(null);
         Page<GameDto> page = gameService.findGamesPage(QueryParamsUtils.localDateTimeOrNull(minStartTime),
                 QueryParamsUtils.localDateTimeOrNull(maxStartTime), QueryParamsUtils.localDateTimeOrNull(minFinishTime),
                 QueryParamsUtils.localDateTimeOrNull(maxFinishTime), QueryParamsUtils.getQueryListOrNull(types),
@@ -109,7 +116,7 @@ public class GameController {
                 QueryParamsUtils.positiveIntegerOrNull(limit), QueryParamsUtils.positiveIntegerOrNull(offset), sort,
                 QueryParamsUtils.booleanOrNull(hasResult), QueryParamsUtils.booleanOrElse(onlyLikedUsers, false),
                 QueryParamsUtils.booleanOrElse(onlyLikedSports, false))
-                .map((game) ->GameDto.from(game, getTeam(game.getTeam1()), getTeam(game.getTeam2())));
+                .map((game) -> GameDto.from(game, user));
 
         LOGGER.trace("Matches successfully gotten");
         return Response.ok().entity(GamePageDto.from(page, uriInfo)).build();

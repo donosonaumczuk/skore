@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Game;
+import ar.edu.itba.paw.models.PremiumUser;
 import ar.edu.itba.paw.webapp.controller.GameController;
 import ar.edu.itba.paw.webapp.controller.SportController;
 import ar.edu.itba.paw.webapp.controller.UserController;
@@ -40,13 +41,17 @@ public class GameDto {
     private TeamDto team2;
     private String teamName2;
     private String key;
+    private Boolean isInTeam1;
+    private Boolean isInTeam2;
     private List<Link> links;
 
     private GameDto() {
         /* Required by JSON object mapper */
     }
 
-    private GameDto(Game game, TeamDto team1, TeamDto team2) {
+    private GameDto(Game game, TeamDto team1, TeamDto team2, Boolean isInTeam1, Boolean isInTeam2) {
+        this.isInTeam1 = isInTeam1;
+        this.isInTeam2 = isInTeam2;
         title = game.getTitle();
         description = game.getDescription();
         creator = game.getTeam1().getLeader().getUserName();
@@ -62,7 +67,8 @@ public class GameDto {
         tornamentNameThatIsFrom = game.getTornament();
         location = PlaceDto.from(game.getPlace());
         totalPlayers = game.getTeam1().getSport().getQuantity() * TEAMS_PER_SPORT;
-        currentPlayers = team1.getPlayerQuantity() + (team2 == null ? 0 : team2.getPlayerQuantity());
+        currentPlayers = game.getTeam1().getPlayers().size() +
+                (game.getTeam2() == null ? 0 : game.getTeam2().getPlayers().size());
         hasStarted = game.getStartTime().isBefore(LocalDateTime.now());
         hasFinished = game.getFinishTime().isBefore(LocalDateTime.now());
         results = game.getResult();
@@ -73,7 +79,21 @@ public class GameDto {
     }
 
     public static GameDto from(Game game, TeamDto team1, TeamDto team2) {
-        return new GameDto(game, team1, team2);
+        return new GameDto(game, team1, team2, null, null);
+    }
+
+    public static GameDto from(Game game, PremiumUser loggedUser) {
+        boolean isInTeam1 = false, isInTeam2 = false;
+        if (loggedUser != null) {
+            if (game.getTeam1().getPlayers().contains(loggedUser.getUser())) {
+                isInTeam1 = true;
+                isInTeam2 = false;
+            } else if (game.getTeam2().getPlayers().contains(loggedUser.getUser())) {
+                isInTeam1 = false;
+                isInTeam2 = true;
+            }
+        }
+        return new GameDto(game, null, null, isInTeam1, isInTeam2);
     }
 
     private List<Link> getHateoasLinks(Game game, String creator) {
@@ -180,5 +200,13 @@ public class GameDto {
 
     public String getTeamName2() {
         return teamName2;
+    }
+
+    public Boolean getInTeam1() {
+        return isInTeam1;
+    }
+
+    public Boolean getInTeam2() {
+        return isInTeam2;
     }
 }
