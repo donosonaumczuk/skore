@@ -179,7 +179,7 @@ public class UserController {
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                                  @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
                                  @QueryParam("onlyLikedSports") String onlyLikedSports) {
-        PremiumUser user = sessionService.getLoggedUser().orElse(null);
+        PremiumUser user = premiumUserService.findByUserName(username).orElse(null);
         if (usernamesPlayersInclude == null) {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
@@ -227,14 +227,6 @@ public class UserController {
         LOGGER.trace("Returning image for {}", username);
         return Response.ok(media.get()).header(HttpHeaders.CONTENT_TYPE, "image/*").cacheControl(cache)
                 .expires(expireDate).build();
-    }
-
-    @DELETE
-    @Path("/{username}")
-    public Response deleteUser(@PathParam("username") String username) {
-        premiumUserService.remove(username);
-        LOGGER.trace("User '{}' deleted successfully", username);
-        return Response.noContent().build();
     }
 
     @PUT
