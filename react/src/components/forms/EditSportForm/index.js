@@ -56,6 +56,15 @@ class EditSportFormContainer extends Component {
         if (image) {
             sport = { ...sport, "imageSport": image.data };
         }
+        console.log("initial: ", this.props.sportPlayerQuantity);
+        console.log("type initial: ", typeof(this.props.sportPlayerQuantity));
+        console.log("type ending: ", typeof(values.playersPerTeam));
+        console.log("type ending: ", parseInt(typeof(values.playersPerTeam)));
+        console.log("!== without parse: ", this.props.sportPlayerQuantity !== values.playersPerTeam);
+        console.log("!== with parse: ", this.props.sportPlayerQuantity !== parseInt(values.playersPerTeam));
+        if (this.props.sportPlayerQuantity !== parseInt(values.playersPerTeam)) {
+            sport = { ...sport, "playerQuantity": values.playersPerTeam };
+        }
         return sport;
     }
     
