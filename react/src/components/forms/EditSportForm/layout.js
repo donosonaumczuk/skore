@@ -7,9 +7,11 @@ import ImageInput from '../inputs/ImageInput';
 import SubmitButton from '../elements/SubmitButton';
 import FormTitle from '../elements/FormTitle';
 import FormComment from '../elements/FormComment';
+import WithExecuting from '../../hocs/WithExecuting';
+import WithError from '../../hocs/WithError';
 
 const EditSportForm = ({ handleSubmit, submitting, onSubmit, 
-                            imageName, handleChange }) => {
+                            imageName, handleChange, errorMessage }) => {
     return (
         <div className="container-fluid">
             <div className="row">
@@ -18,6 +20,7 @@ const EditSportForm = ({ handleSubmit, submitting, onSubmit,
                                 col-lg-6 offset-xl-4 col-xl-4">
                     <FormTitle />
                     <form onSubmit={handleSubmit(onSubmit)} >
+                        {errorMessage}
                         <Field name="sportName" id="sportName" inputType="text"
                                 label={i18next.t('createSportForm.sportName')}
                                 required={true} isDisabled={true}
@@ -53,5 +56,5 @@ EditSportForm.propTypes = {
     handleChange: PropTypes.func.isRequired
 }
 
-export default EditSportForm;
+export default WithError(WithExecuting(EditSportForm));
 

@@ -6,6 +6,10 @@ import AuthService from '../../../services/AuthService';
 import CreateUserFormValidator from '../validators/CreateUserValidator';
 import UserService from '../../../services/UserService';
 import CreateUserForm from './layout';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_EMAIL_EXISTS } from '../../../services/constants/ErrorCodesConstants';
+import i18next from 'i18next';
+import Utils from '../../utils/Utils';
 
 const validate = values => {
     const errors = {}
@@ -68,27 +72,47 @@ class CreateUserFormContainer extends Component {
         };
     }
 
+    loadHome = () => {
+        const { country, state, city, street } = this.state
+        if (!country && !state && !city && !street) {
+            return null;
+        }
+        let home = {};
+        if (country) {
+            home.country = country;
+        }
+        if (state) {
+            home.state = state;
+        }
+        if (city) {
+            home.city = city;
+        }
+        if (street) {
+            home.street = street;
+        }
+        return home;
+    }
+
     loadUser = (values, image) => {
         const birthday = this.getBirthdayWithCorrectFormat(values.year, values.month, values.day);
+        const home = this.loadHome();
         let user = {
             "username": values.username,
             "password": values.password,
             "firstName": values.firstName,
             "lastName": values.lastName,
             "email": values.email,
-            "cellphone": values.cellphone ? values.cellphone : null ,
             "birthday": birthday,
-            "home": {
-                "country": this.state.country,
-                "state": this.state.state,
-                "city": this.state.city,
-                "street": this.state.street
-            }
         };
         if (image) {
-            user = { ...user, "image":image.data };
+            user = { ...user, "image": image.data };
         }
-        //TODO only send home if not null, only send cellphone if not null
+        if (values.cellphone) {
+            user = { ...user, "cellphone": values.cellphone };
+        }
+        if (home) {
+            user = { ...user, "home": home };
+        }
         return user;
     }
 
@@ -105,13 +129,39 @@ class CreateUserFormContainer extends Component {
 
     onSubmit = async (values) => {
         let user = this.loadUser(values, this.state.image);
-        const res = await UserService.createUser(user);
-        if (res.status) {
-           //TODO handle error 409
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
+        const response = await UserService.createUser(user);
+        if (response.status) {
+            if (this.mounted) {
+                if (response.status === SC_CONFLICT) {
+                    if (response.data.errorCode === EC_EMAIL_EXISTS) {
+                        const errorMessage = i18next.t('createUserForm.errors.emailExists');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                    else {
+                        const errorMessage = i18next.t('createUserForm.errors.usernameExists');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                }
+                else {
+                    this.setState({ status: response.status, executing: false });
+                }
+            }
         }
         else {
             this.props.history.push(`/createdAccount`);
         }
+    }
+
+    getErrorMessage = () => {
+        if (this.state.errorMessage) {
+            return (<span className="invalid-feedback d-block">
+                        {this.state.errorMessage}
+                    </span>);
+        }
+        return <React.Fragment></React.Fragment>;
     }
 
     componentDidMount() {
@@ -120,7 +170,8 @@ class CreateUserFormContainer extends Component {
 
     render() {
         const { handleSubmit, submitting, birthday, change, touch } = this.props;
-        const { country, state, city, street } = this.state;
+        const { country, state, city, street, executing, status } = this.state;
+        const errorMessage = Utils.getErrorMessage(this.state.errorMessage);
         let imageName = "";
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {
@@ -138,7 +189,8 @@ class CreateUserFormContainer extends Component {
                             country={country} state={state} city={city}
                             street={street} birthday={birthday} 
                             changeFieldsValue={change}
-                            touchField={touch} />
+                            touchField={touch} isExecuting={executing}
+                            error={status} errorMessage={errorMessage} />
         );
     }
 

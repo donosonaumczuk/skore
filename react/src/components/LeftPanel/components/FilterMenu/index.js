@@ -6,24 +6,31 @@ import FilterMenu from './layout';
 class FilterMenuContainer extends Component {
 
     onSubmit = (values) => {
+        let onlyLikedSports = values.onlyLikedSports ? values.onlyLikedSports : "false";
+        let onlyLikedUsers = values.onlyLikedUsers ? values.onlyLikedUsers : "false";
         this.props.updateFilters({
             "country": values.country,
             "state": values.state,
             "city": values.city,
-            "sport": values.sport
+            "sport": values.sport,
+            "onlyLikedSports": `${onlyLikedSports}`,
+            onlyLikedUsers: `${onlyLikedUsers}`
         });
     }
 
     render() {
-        const { handleSubmit, submitting } = this.props; 
+        const { handleSubmit, submitting, tabs, currentUser } = this.props;
         return (
-            <FilterMenu handleSubmit={handleSubmit} submitting={submitting} onSubmit={this.onSubmit} />
+            <FilterMenu handleSubmit={handleSubmit} submitting={submitting}
+                        onSubmit={this.onSubmit} tabs={tabs}
+                        currentUser={currentUser} />
         );
     }
 }
 
 FilterMenuContainer.propTypes = {
-    updateFilters: PropTypes.func.isRequired
+    updateFilters: PropTypes.func.isRequired,
+    currentUser: PropTypes.string
 }
 
 FilterMenuContainer = reduxForm({

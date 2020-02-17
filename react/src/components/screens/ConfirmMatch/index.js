@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import MatchService from '../../../services/MatchService';
 import ConfirmMatch from './layout';
 import i18next from 'i18next';
+import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_ALREADY_JOINED } from '../../../services/constants/ErrorCodesConstants';
+
 
 class ConfirmMatchContainer extends Component {
     mounted = false;
@@ -26,7 +29,19 @@ class ConfirmMatchContainer extends Component {
         const { matchKey, id, code } = this.state;
         const response = await MatchService.confirmAssistance(matchKey, id, code);
         if (response.status && this.mounted) {
-            this.setState({ status: response.status, loading: false });
+            if (response.status === SC_CONFLICT) {
+                if (response.data.errorCode === EC_ALREADY_JOINED) {
+                    const errorMessage = i18next.t('confirmAssistance.alreadyJoined');
+                    this.setState({ errorMessage: errorMessage, loading: false });
+                }
+                else {
+                    const errorMessage = i18next.t('confirmAssistance.matchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, loading: false });
+                }
+            }
+            else {
+                this.setState({ status: response.status, loading: false });
+            }
         }
         else {
             this.setState({ loading: false });
@@ -34,10 +49,13 @@ class ConfirmMatchContainer extends Component {
     }
 
     render() {
+        let message = i18next.t('confirmAssistance.confirmed');
+        if (this.state.errorMessage) {
+            message = this.state.errorMessage
+        }
         return (
             <ConfirmMatch error={this.state.status} isLoading={this.state.loading} 
-                            message={i18next.t('confirmAsistance.confirmed')}
-                            matchKey={this.state.matchKey} />
+                            message={message} matchKey={this.state.matchKey} />
         );
     }
 

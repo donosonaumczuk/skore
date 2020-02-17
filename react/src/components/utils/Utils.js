@@ -34,7 +34,9 @@ const removeUnknownHomeFilters = filters => {
         country: filters.country,
         state: filters.state,
         city: filters.city,
-        sport: filters.sport
+        sport: filters.sport,
+        onlyLikedSports: filters.onlyLikedSports,
+        onlyLikedUsers: filters.onlyLikedUsers,
     };
 }
 
@@ -100,6 +102,15 @@ const addressToString = address => {
     return addressString;
 }
 
+const getErrorMessage = (errorMessage) => {
+    if (errorMessage) {
+        return (<span className="invalid-feedback d-block">
+                    {errorMessage}
+                </span>);
+    }
+    return <React.Fragment></React.Fragment>;
+}
+
 const Utils = {
     hasMorePages: hasMorePages,
     buildUrlFromParamQueriesAndTab: buildUrlFromParamQueriesAndTab,
@@ -109,7 +120,8 @@ const Utils = {
     generateOptionsForSelectBetweenValues: generateOptionsForSelectBetweenValues,
     removeLastSpaceFromString: removeLastSpaceFromString,
     addressToString: addressToString,
-    removePlayerFromMatch: removePlayerFromMatch
+    removePlayerFromMatch: removePlayerFromMatch,
+    getErrorMessage: getErrorMessage
 };
 
 export default Utils;

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import MatchPage from './layout';
 import MatchService from '../../../services/MatchService';
 import AuthService from '../../../services/AuthService';
 import Utils from '../../utils/Utils';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_ALREADY_JOINED } from '../../../services/constants/ErrorCodesConstants';
 
 class MatchPageContainer extends Component {
     mounted = false;
@@ -52,8 +54,19 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already joined
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    if (response.data.errorCode === EC_ALREADY_JOINED) {
+                        const errorMessage = i18next.t('confirmAssistance.alreadyJoined');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                    else {
+                        const errorMessage = i18next.t('confirmAssistance.matchFullOrPlayed');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -84,7 +97,6 @@ class MatchPageContainer extends Component {
     }
 
     cancelMatchLogged = async (match, userId) => {
-
         if (this.mounted) {
             this.setState({ executing: true });
         }
@@ -100,8 +112,13 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already cancelled asistance
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -129,8 +146,13 @@ class MatchPageContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already deleted
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -156,10 +178,13 @@ class MatchPageContainer extends Component {
     }
 
     render() {
-        const { message } = this.props; 
+        let { message } = this.props; 
+        if (this.state.errorMessage) {
+            message = this.state.errorMessage;
+        }
         return (
             <MatchPage currentMatch={this.state.match} match={this.state.match}
-                        error={this.state.status} isLoading={!this.state.match}
+                        error={this.state.error} isLoading={!this.state.match}
                         message={message} updateMatchScore={this.updateMatchScore} 
                         joinMatch={this.joinMatch} cancelMatch={this.cancelMatch}
                         deleteMatch={this.deleteMatch} anonymous={this.state.anonymous} 

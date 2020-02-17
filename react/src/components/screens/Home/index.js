@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import Axios from 'axios';
 import PropTypes from 'prop-types';
-import Spinner from 'react-spinkit'
+import Spinner from 'react-spinkit';
+import i18next from 'i18next';
 import HomeMatches from './components/HomeMatches';
 import MatchService from '../../../services/MatchService';
 import Utils from '../../utils/Utils';
 import Loader from '../../Loader';
 import Home from './layout';
 import AuthService from '../../../services/AuthService';
-import { SC_CLIENT_CLOSED_REQUEST, SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_CLIENT_CLOSED_REQUEST, SC_UNAUTHORIZED, SC_OK, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_ALREADY_JOINED } from '../../../services/constants/ErrorCodesConstants';
 
 const INITIAL_OFFSET = 0;
 const QUERY_QUANTITY = 5;
@@ -172,8 +174,19 @@ class HomeContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already joined
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    if (response.data.errorCode === EC_ALREADY_JOINED) {
+                        const errorMessage = i18next.t('confirmAssistance.alreadyJoined');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                    else {
+                        const errorMessage = i18next.t('confirmAssistance.matchFullOrPlayed');
+                        this.setState({ errorMessage: errorMessage, executing: false });
+                    }
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -222,8 +235,13 @@ class HomeContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already cancelled asistance
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -252,8 +270,13 @@ class HomeContainer extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already deleted
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    const errorMessage = i18next.t('matchErrors.cancelMatchFullOrPlayed');
+                    this.setState({ errorMessage: errorMessage, executing: false });
+                }
+                else {
+                    this.setState({ status: response.status, executing: false });
+                }
             }
         }
         else {
@@ -300,7 +323,8 @@ class HomeContainer extends Component {
                     currentUser={currentUser} filters={this.state.filters}
                     updateFilters={this.updateFilters} currentMatches={currentMatches}
                     anonymous={this.state.anonymous} error={this.state.status} 
-                    currentMatch={this.state.currentMatch} />
+                    currentMatch={this.state.currentMatch}
+                    message={this.state.errorMessage} />
         );
     }
 

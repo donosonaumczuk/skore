@@ -5,7 +5,10 @@ import AuthService from '../../../services/AuthService';
 import Spinner from '../../Spinner';
 import MatchService from '../../../services/MatchService';
 import WithAuthentication from '../../hocs/WithAuthenticatication';
-import { SC_UNAUTHORIZED, SC_OK } from '../../../services/constants/StatusCodesConstants';
+import { SC_UNAUTHORIZED, SC_OK, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
+import { EC_ALREADY_JOINED } from '../../../services/constants/ErrorCodesConstants';
+import i18next from 'i18next';
+import Message from '../../Message';
 
 class AuthenticatedMatch extends Component {
     mounted = false;
@@ -34,8 +37,19 @@ class AuthenticatedMatch extends Component {
                 }
             }
             else if (this.mounted) {
-                //TODO handle 409 already joined
-                this.setState({ error: response.status, executing: false });
+                if (response.status === SC_CONFLICT) {
+                    if (response.data.errorCode === EC_ALREADY_JOINED) {
+                        const errorMessage = i18next.t('confirmAssistance.alreadyJoined');
+                        this.setState({ errorMessage: errorMessage });
+                    }
+                    else {
+                        const errorMessage = i18next.t('confirmAssistance.matchFullOrPlayed');
+                        this.setState({ errorMessage: errorMessage });
+                    }
+                }
+                else {
+                    this.setState({ error: response.status, executing: false });
+                }
             }
         }
         else {
@@ -44,7 +58,10 @@ class AuthenticatedMatch extends Component {
     }
 
     render() {
-        if (this.state.status) {
+        if (this.state.errorMessage) {
+            return <Message message={this.state.errorMessage} />;
+        }
+        else if (this.state.status) {
             return <Redirect to={`/error/${this.state.status}`} />;
         }
         return (

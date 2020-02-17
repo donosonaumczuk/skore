@@ -9,7 +9,7 @@ import FormComment from '../elements/FormComment';
 import WithExecuting from '../../hocs/WithExecuting';
 import WithError from '../../hocs/WithError';
 
-const RequestNewPasswordForm = ({ handleSubmit, submitting, onSubmit }) => {
+const RequestNewPasswordForm = ({ handleSubmit, submitting, onSubmit, errorMessage }) => {
     return (
         <div className="container-fluid">
                 <div className="row">
@@ -18,6 +18,7 @@ const RequestNewPasswordForm = ({ handleSubmit, submitting, onSubmit }) => {
                             offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
                         <FormTitle />
                         <form onSubmit={handleSubmit(onSubmit)}>
+                            {errorMessage}
                             <Field name="username" id="username" inputType="text"
                                     label={i18next.t('createUserForm.username')}
                                     required={true} component={RenderInput} />
