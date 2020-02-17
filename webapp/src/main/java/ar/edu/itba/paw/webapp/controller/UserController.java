@@ -179,7 +179,7 @@ public class UserController {
                                  @QueryParam("sortBy") GameSort sort, @Context UriInfo uriInfo,
                                  @QueryParam("hasResult") String hasResult, @QueryParam("onlyLikedUsers") String onlyLikedUsers,
                                  @QueryParam("onlyLikedSports") String onlyLikedSports) {
-        PremiumUser user = sessionService.getLoggedUser().orElse(null);
+        PremiumUser user = premiumUserService.findByUserName(username).orElse(null);
         if (usernamesPlayersInclude == null) {
             usernamesPlayersInclude = new QueryList(new ArrayList<>());
         }
