@@ -95,6 +95,13 @@ const addSortByStartTimeToParam = (params, orderType) => {
     };
 }
 
+const addhasResultToParam = (params, hasResult) => {
+    return {
+        ...params,
+        "hasResult": hasResult
+    };
+}
+
 const createObjectFromFiltersAndPaging = (offset, limit, filters) => {
     let paramObject = {
         "offset": `${offset}`,
@@ -122,5 +129,6 @@ export {
     addFutureMinTimeToParams,
     addMinFreePlacesToParams,
     addSortByStartTimeToParam,
+    addhasResultToParam,
     getStringWithTwoDigits
 };
