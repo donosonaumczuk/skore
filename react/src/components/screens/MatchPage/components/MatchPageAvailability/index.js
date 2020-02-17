@@ -4,19 +4,6 @@ import AuthService from '../../../../../services/AuthService';
 import MatchButton from '../../../../match/MatchButton';
 import i18next from 'i18next';
 
-const isUserInTeam = (currentUser, team) => {
-    if (!currentUser || !team) {
-        return false;
-    }
-    let userFound = false;
-    team.players.forEach(player => {
-        if (player.username === currentUser) {
-            userFound = true;
-        }
-    });
-    return userFound;
-}
-
 const isInMatch = (currentMatch) => {
     const { inTeam1, inTeam2 } = currentMatch;
     return inTeam1 || inTeam2;
