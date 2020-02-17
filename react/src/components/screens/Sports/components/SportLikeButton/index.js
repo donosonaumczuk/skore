@@ -25,11 +25,9 @@ if (!isLogged) {
 const SportLikeButton = ({ isLogged, isLiked, likeSport, dislikeSport, sportName }) => {
     const likeButton = getLikeButton(isLogged, isLiked, likeSport, dislikeSport, sportName);
     return (
-        <div className="row">
-            <div className="col offset-2">
+            <div className="offset-1 col my-auto">
                 {likeButton}
             </div>
-        </div>        
     );
 }
 

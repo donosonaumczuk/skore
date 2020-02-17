@@ -20,7 +20,7 @@ const Sport = ({ sport, isLogged, isLiked, likeSport, dislikeSport }) => {
     return (
         <div className="row p-4 mt-2 ml-5 mr-5 match-card rounded-border">
             <div className="col">
-                <div className="row mb-4">
+                <div className="row">
                     <SportInfo sportImageUrl={sportImageUrl} sport={sport.displayName} />
                     <SportPlayers playersQuantity={sport.playerQuantity} />
                     <SportLikeButton isLogged={isLogged} isLiked={isLiked} 

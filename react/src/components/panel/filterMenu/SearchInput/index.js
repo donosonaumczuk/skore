@@ -5,15 +5,12 @@ import SearchButton from '../SearchButton';
 const SearchInput = ({ containerId, labelText, inputStyle, inputId,
                         inputType, input, placeholderText, submitting }) => {
     return (
-        <div className="row mb-4 center" id={containerId}>
-            <div className ="col-2">
-                    <label>{labelText}</label>
-            </div>
-            <div className="col-3">
-                <input {...input} className="form-control filter-input mb-2" 
+        <div className="row my-auto" id={containerId}>
+            <div className="offset-4 col-3 my-auto">
+                <input {...input} className="form-control filter-input"
                         type={inputType} id={inputId} placeholder={placeholderText} />             
             </div>
-            <div className="col-1">
+            <div className="col-1 my-auto">
                 <SearchButton submitting={submitting} />
             </div>
         </div>

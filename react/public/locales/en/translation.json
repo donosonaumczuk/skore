@@ -134,7 +134,7 @@
         "onlyLikedSports": "sports",
         "onlyLikedUsers": "users",
         "onlyLikedSuffix": "",
-        "addFilters": "ADD FILTERS",
+        "addFilters": "APPLY FILTERS",
         "joinMatch": "JOIN",
         "joinCompetitiveMatch": "JOIN",
         "cancelMatch": "EXIT",

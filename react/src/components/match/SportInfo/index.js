@@ -6,10 +6,10 @@ const SportInfo = ({ sportImageUrl, sport }) => {
         <div className="col-2 col-sm-3">
             <div className="container-fluid pt-2">
                 <div className="row">
-                    <div className="col col-xl-4 mr-0 mt-1">
+                    <div className="col col-xl-4 mr-0">
                         <img src={sportImageUrl} className="sport-img" alt="sport-pic" />
                     </div>
-                    <div className="col-6 col-xl d-none d-sm-block pl-0">
+                    <div className="col-6 col-xl d-none d-sm-block pl-0 my-auto">
                         <p className="sport-label">{sport}</p>
                     </div>
                 </div>
