@@ -130,6 +130,10 @@
         "stateFilter": "Estado / Provincia",
         "cityFilter": "Ciudad / Localidad",
         "sportFilter": "Deporte",
+        "onlyLikedPrefix": "Sólo ",
+        "onlyLikedSports": "deportes",
+        "onlyLikedUsers": "usuarios",
+        "onlyLikedSuffix": " que me gustan",
         "addFilters": "AGREGAR FILTROS",
         "joinMatch": "UNIRSE",
         "joinCompetitiveMatch": "UNIRSE",
@@ -313,9 +317,8 @@
     "editSportForm": {
         "sportWithGamesError": "No se puede modificar un deporte que ya tiene partidos jugados.\n"
     },
-
     "matchErrors": {
-        "cancelMatchFullOrPlayed": "No podés cancelar un partido que esta lleno o ya fue jugado.\n",
-        "deleteMatchFullOrPlayed": "No podés borrar un partido que esta lleno o ya fue jugado.\n"
+        "cancelMatchFullOrPlayed": "No podés cancelar un partido que está lleno o ya fue jugado.\n",
+        "deleteMatchFullOrPlayed": "No podés borrar un partido que está lleno o ya fue jugado.\n"
     }
 }

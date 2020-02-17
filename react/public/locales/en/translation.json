@@ -130,6 +130,10 @@
         "stateFilter": "State / Province",
         "cityFilter": "City / Locality",
         "sportFilter": "Sport",
+        "onlyLikedPrefix": "Only liked ",
+        "onlyLikedSports": "sports",
+        "onlyLikedUsers": "users",
+        "onlyLikedSuffix": "",
         "addFilters": "ADD FILTERS",
         "joinMatch": "JOIN",
         "joinCompetitiveMatch": "JOIN",
@@ -252,7 +256,7 @@
         "playersPerTeam": "Players per team",
         "createSport": "CREATE SPORT",
         "editSport": "EDIT",
-        "deleteSport": "DELETE"  
+        "deleteSport": "DELETE"
     },
     "confirmAccount": {
         "confirmed": "Congratulations! You have created a new account.",

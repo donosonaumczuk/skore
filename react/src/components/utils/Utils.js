@@ -34,7 +34,9 @@ const removeUnknownHomeFilters = filters => {
         country: filters.country,
         state: filters.state,
         city: filters.city,
-        sport: filters.sport
+        sport: filters.sport,
+        onlyLikedSports: filters.onlyLikedSports,
+        onlyLikedUsers: filters.onlyLikedUsers,
     };
 }
 
