@@ -15,7 +15,7 @@ public class EntityInvalidStateExceptionMapper implements ExceptionMapper<Entity
     public Response toResponse(EntityInvalidStateException e) {
         return Response
                 .status(Response.Status.CONFLICT)
-                .entity(ApiErrorDto.of(HttpStatus.CONFLICT, e.getMessage()))
+                .entity(ApiErrorDto.of(HttpStatus.CONFLICT, e.getType(), e.getMessage()))
                 .build();
     }
 }

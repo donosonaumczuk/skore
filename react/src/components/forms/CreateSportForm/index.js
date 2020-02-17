@@ -61,18 +61,21 @@ class CreateSportFormContainer extends Component {
 
     onSubmit = async (values) => {
         let sport = this.loadSport(values, this.state.image);
+        if (this.mounted) {
+            this.setState({ executing: true });
+        }
         const response = await SportService.createSport(sport);
         if (response.status && this.mounted) {
             if (response.status === SC_CONFLICT) {
-                this.setState({ sportNameError: true });
+                this.setState({ sportNameError: true, executing: false });
             }
-            if (response.status === SC_UNAUTHORIZED) {
+            else if (response.status === SC_UNAUTHORIZED) {
                 const status = AuthService.internalLogout();
                 if (status === SC_OK) {
                     this.props.history.push(`/login`);
                 }
                 else {
-                    this.setState({ error: status });
+                    this.setState({ error: status, executing: false });
                 }
             }
             else {
@@ -90,7 +93,7 @@ class CreateSportFormContainer extends Component {
 
     render() {
         const { handleSubmit, submitting } = this.props;
-        const { sportNameError } = this.state;
+        const { sportNameError, executing } = this.state;
         const isAdmin = AuthService.isAdmin();
         let imageName = "";
         let error;
@@ -104,7 +107,7 @@ class CreateSportFormContainer extends Component {
             <CreateSportForm handleSubmit={handleSubmit} submitting={submitting}
                                 onSubmit={this.onSubmit} sportNameError={sportNameError}
                                 imageName={imageName} handleChange={this.handleChange}
-                                error={error} />
+                                error={error} isExecuting={executing} />
         );
     }
 

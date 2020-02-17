@@ -25,7 +25,6 @@ const Tabs = ({ currentTab, handleTabChange }) => {
     const tabState = getTabState(currentTab);
     return (
         <div className="row mb-4 text-center">
-            <label>{i18next.t('home.matches')}</label>
             <div className="btn-group ml-5 input-group btn-group-toggle" data-toggle="buttons" id="matches">
                 <Tab text={i18next.t('home.toJoinTab')} isActive={tabState.tabOne} 
                                             number={1} handleChange={handleTabChange} />

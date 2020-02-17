@@ -73,7 +73,8 @@ class SportsContainer extends Component {
     }
 
     getSports = async () => {
-        const response = await SportService.getSports();
+        const { offset, total } = this.state;
+        const response = await SportService.getSports(offset, total);
         if (response.status) {
             this.setState({ status: response.status });
         }

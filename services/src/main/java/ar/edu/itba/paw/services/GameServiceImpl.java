@@ -144,6 +144,12 @@ public class GameServiceImpl implements GameService {
             throw GameInvalidStateException.ofGameAlreadyStarted(key);
         }
 
+        if (game.getTeam1().getPlayers().size() + game.getTeam2().getPlayers().size() ==
+                game.getTeam1().getSport().getQuantity() * NUMBER_OF_TEAMS) {
+            LOGGER.trace("Delete player from game failed, game '{}' is full", key);
+            throw GameInvalidStateException.ofGameFull(key);
+        }
+
         if (code != null) {
             User user = userService.getUserFromData(code, key);
             if (user.getUserId() != userId) {
@@ -389,19 +395,16 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game insertUserInGameTeam(final Game game, final long userId, final boolean toTeam1) {
+        if(!game.getTeam1().getPlayers().stream()
+                .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty() ||
+                (game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
+                        .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty())) {
+            LOGGER.trace("Inset user to game failed, user already joined to match");
+            throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
+        }
         if (!toTeam1) {
-            if(!game.getTeam1().getPlayers().stream()
-                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
-                LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
-            }
             game.setTeam2(teamService.addPlayer(game.team2Name(), userId));
         } else {
-            if(game.getTeam2() != null && !game.getTeam2().getPlayers().stream()
-                    .filter((u) -> u.getUserId() == userId).collect(Collectors.toList()).isEmpty()) {
-                LOGGER.trace("Inset user to game failed, user already joined to match");
-                throw GameInvalidStateException.ofGameAlreadyJoined(game.getKey(), userId);
-            }
             game.getPrimaryKey().setTeam1(teamService.addPlayer(game.team1Name(), userId));
         }
         return game;

@@ -8,6 +8,7 @@ import UserService from '../../../services/UserService';
 import Loader from '../../Loader';
 import { SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 import Message from '../../Message';
+import { EC_INVALID_CODE } from '../../../services/constants/ErrorCodesConstants';
 
 class ConfirmAccountContainer extends Component {
     mounted = false;
@@ -28,6 +29,16 @@ class ConfirmAccountContainer extends Component {
         const { username, code } = this.state;
         const response = await UserService.verifyUser(username, code);
         if (response.status && this.mounted) {
+            if (response.status === SC_CONFLICT) {
+                if (response.data.errorCode === EC_INVALID_CODE) {
+                    const errorMessage = i18next.t('confirmAccount.invalidCode');
+                    this.setState({ isLoading: false, errorMessage: errorMessage });
+                }
+                else {
+                    const errorMessage = i18next.t('confirmAccount.alreadyConfirmed');
+                    this.setState({ isLoading: false, errorMessage: errorMessage });
+                }
+            }
             this.setState({ status: response.status, isLoading: false });
         }
         else {
@@ -43,14 +54,12 @@ class ConfirmAccountContainer extends Component {
         if (AuthService.getCurrentUser()) {
             return <Redirect to="/" />
         }
-        const { status } = this.state;
-        if (status) {
-            if (status === SC_CONFLICT) {
-                return <Message message={i18next.t('confirmAccount.alreadyConfirmed')} />
-            }
-            else {
-                return <Redirect to={`/error/${status}`} />
-            }
+        const { status, errorMessage } = this.state;
+        if (errorMessage) {
+            return <Message message={errorMessage} />
+        }
+        else if (status) {
+            return <Redirect to={`/error/${status}`} />
         }
         return <Loader />;
     }
