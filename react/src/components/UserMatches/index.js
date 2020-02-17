@@ -51,7 +51,6 @@ class UserMatchesContainer extends Component {
     }
 
     render() {
-        //TODO depending on users choice change between match with result and only finished, and created not played
         const matches = this.state.matches;
         const isLoading = matches.length === 0 && this.state.hasMore;
         const error = this.state.status;
@@ -65,7 +64,6 @@ class UserMatchesContainer extends Component {
 
     componentWillUnmount = () => {
         this.mounted = false;
-        //TODO cancel fetch if still fetching matches
     }
 }
 

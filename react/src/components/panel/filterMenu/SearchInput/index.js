@@ -2,7 +2,6 @@ import React from 'react';
 import Proptypes from 'prop-types';
 import SearchButton from '../SearchButton';
 
-//TODO improve layout
 const SearchInput = ({ containerId, labelText, inputStyle, inputId,
                         inputType, input, placeholderText, submitting }) => {
     return (

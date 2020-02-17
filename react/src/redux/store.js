@@ -1,6 +1,5 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { composeWithDevTools } from 'redux-devtools-extension';
 
 const rootReducer = combineReducers({
   // ...your other reducers here
@@ -9,7 +8,7 @@ const rootReducer = combineReducers({
   form: formReducer
 })
 
-// const store = createStore(rootReducer); //TODO uncomment on production
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
+const store = createStore(rootReducer);
+
 
 export default store;

@@ -36,9 +36,6 @@ const logInUser = async user => {
             return { status: SC_TIME_OUT };
         }
     }
-
-    //TODO if error of token expiry remove token and user and catch other errors
-    //TODO token expiry should be controlled on every get or post that uses authentication
 }
 
 const autoLogin = (token, username, userId) => {

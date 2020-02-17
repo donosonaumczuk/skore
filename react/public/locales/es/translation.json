@@ -317,6 +317,9 @@
     "editSportForm": {
         "sportWithGamesError": "No se puede modificar un deporte que ya tiene partidos jugados.\n"
     },
+    "deleteSportForm": {
+        "sportWithGamesError": "No se puede borrar un deporte que ya tiene partidos jugados.\n"
+    },
     "matchErrors": {
         "cancelMatchFullOrPlayed": "No podés cancelar un partido que está lleno o ya fue jugado.\n",
         "deleteMatchFullOrPlayed": "No podés borrar un partido que está lleno o ya fue jugado.\n"

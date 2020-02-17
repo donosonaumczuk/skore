@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import AuthService from '../../../services/AuthService';
 import Spinner from '../../Spinner';
 import SportService from '../../../services/SportService';
-import { SC_OK, SC_UNAUTHORIZED } from '../../../services/constants/StatusCodesConstants';
+import Message from '../../Message';
+import { SC_OK, SC_UNAUTHORIZED, SC_CONFLICT } from '../../../services/constants/StatusCodesConstants';
 
 class DeleteSport extends Component {
     mounted = false;
@@ -30,6 +32,12 @@ class DeleteSport extends Component {
                     this.setState({ error: status });
                 }
             }
+            else if (response.status === SC_CONFLICT) {
+                if (this.mounted) {
+                    const errorMessage = i18next.t('deleteSportForm.sportWithGamesError');
+                    this.setState({ errorMessage: errorMessage });
+                }
+            }
             else if (this.mounted) {
                 this.setState({ error: response.status, executing: false });
                 //TODO check for status of sport with played games 409
@@ -44,6 +52,9 @@ class DeleteSport extends Component {
         const isAdmin = AuthService.isAdmin();
         if (!isAdmin) {
             return <Redirect to="/error/403" />;
+        }
+        else if (this.state.errorMessage) {
+            return <Message message={this.state.errorMessage} />;
         }
         else if (this.state.error) {
             return <Redirect to={`/error/${this.state.error}`} />;

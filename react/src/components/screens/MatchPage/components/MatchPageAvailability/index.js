@@ -75,7 +75,6 @@ const MatchPageAvailability = ({ currentMatch, joinMatch, cancelMatch, deleteMat
                 </div>
                 <div className="col">
                     {button}
-                    {/* TODO update with corresponding button */}
                 </div>
             </div>
         );
